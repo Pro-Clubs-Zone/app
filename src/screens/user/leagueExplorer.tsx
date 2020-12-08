@@ -13,7 +13,7 @@ export default function LeagueExplorer({navigation}) {
   const leagueCollection = db.collection('leagues');
 
   useEffect(() => {
-    leagueCollection.get().then((querySnapshot) => {
+    const subscriber = leagueCollection.onSnapshot((querySnapshot) => {
       let retrievedLeagues: any = [];
       querySnapshot.forEach((doc) => {
         retrievedLeagues.push({...doc.data(), key: doc.id});
@@ -21,6 +21,8 @@ export default function LeagueExplorer({navigation}) {
       setData(retrievedLeagues);
       setLoading(false);
     });
+
+    return subscriber;
   }, []);
 
   if (loading) {

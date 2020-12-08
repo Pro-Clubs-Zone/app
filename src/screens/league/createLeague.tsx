@@ -27,7 +27,7 @@ export default function CreateLeague() {
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
-  const uid: string = user.uid;
+  const uid: string = user?.uid;
 
   const onCreateLeague = () => {
     const batch = db.batch();

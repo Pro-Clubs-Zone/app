@@ -19,7 +19,7 @@ export default function LeaguePreview({data, navigation, route}) {
   }, []);
 
   const user = useContext(AuthContext);
-  const uid: string = user.uid;
+  const uid: string = user?.uid;
 
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');

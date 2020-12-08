@@ -12,7 +12,7 @@ export default function League({route, navigation}) {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const user = useContext(AuthContext);
-  const uid: string = user.uid;
+  const uid: string = user?.uid;
   const leagueId = route.params.leagueId;
   const leagueRef = db.collection('leagues').doc(leagueId);
 

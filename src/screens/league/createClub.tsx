@@ -52,7 +52,6 @@ export default function CreateClub({route, navigation}) {
     );
     batch.commit().then(() => {
       setLoading(false);
-      console.log('context:', context);
       navigation.goBack();
     });
   };

@@ -31,7 +31,6 @@ function Leagues() {
 
 function LeaguesContent({navigation}) {
   const context = useContext(AppContext);
-  console.log(context);
   return (
     <View>
       <Text>Leagues Screen</Text>
