@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import {Text, View, Button} from 'react-native';
 import SignUp from '../auth/signUp';
-import {AppContext} from '../../utils/context';
+import {AppContext, AuthContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
 import {League, UserLeague} from './interface';
 
@@ -26,7 +26,8 @@ export default function CreateLeague() {
   const [loading, setLoading] = useState(false);
 
   const context = useContext(AppContext);
-  const uid: string = context.user.uid;
+  const user = useContext(AuthContext);
+  const uid: string = user.uid;
 
   const onCreateLeague = () => {
     const batch = db.batch();

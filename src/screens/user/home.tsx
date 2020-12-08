@@ -1,6 +1,6 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button} from 'react-native';
-import {AppContext} from '../../utils/context';
+import {AppContext, AuthContext} from '../../utils/context';
 import auth from '@react-native-firebase/auth';
 import {createStackNavigator} from '@react-navigation/stack';
 import SignUp from '../auth/signUp';
@@ -24,9 +24,12 @@ function Home() {
 }
 
 function HomeContent({navigation}) {
+  const [loading, setLoading] = useState(true);
+  //const [data, setData] = useState({})
+
   const context = useContext(AppContext);
-  const user: object = context?.user;
-  const uid: string = user.uid;
+  const user = useContext(AuthContext);
+  const uid: string = user?.uid;
   const onSignOut = () => {
     firAuth.signOut().then(() => console.log('User signed out!'));
   };
@@ -34,46 +37,47 @@ function HomeContent({navigation}) {
   const userRef = db.collection('users').doc(uid);
 
   const getLeaguesClubs = (userData: object) => {
-    console.log(userData);
     let userLeagueData: object = {};
     let userClubData: object = {};
     const leaguesRef = db.collection('leagues');
-    //  const userLeagues: any[] = Object.entries(userData.leagues);
-    // for (const [league, data] of userLeagues) {
-    //   leaguesRef
-    //     .doc(league)
-    //     .get()
-    //     .then((doc) => {
-    //       userLeagueData = {...userLeagueData, [doc.id]: doc.data()};
-    //     })
-    //     .then(() => {
-    //       leaguesRef
-    //         .doc(league)
-    //         .collection('clubs')
-    //         .doc(data.club)
-    //         .get()
-    //         .then((doc) => {
-    //           userClubData = {...userClubData, [doc.id]: doc.data()};
-    //           context.update({
-    //             userData: userData,
-    //             userClubData: userClubData,
-    //             userLeagueData: userLeagueData,
-    //           });
-    //         });
-    //     });
-    // }
+    const userLeagues: any[] = Object.entries(userData.leagues);
+    for (const [league, data] of userLeagues) {
+      leaguesRef
+        .doc(league)
+        .get()
+        .then((doc) => {
+          userLeagueData = {...userLeagueData, [doc.id]: doc.data()};
+        })
+        .then(() => {
+          leaguesRef
+            .doc(league)
+            .collection('clubs')
+            .doc(data.club)
+            .get()
+            .then((doc) => {
+              userClubData = {...userClubData, [doc.id]: doc.data()};
+              context.update({
+                userData: userData,
+                userClubData: userClubData,
+                userLeagueData: userLeagueData,
+              });
+            })
+            .then(() => {
+              setLoading(false);
+            });
+        });
+    }
   };
 
   useEffect(() => {
     if (user) {
       let userData: any;
-      console.log(user);
       userRef
         .get()
         .then((doc) => (userData = doc.data()))
         .then((receivedData) => getLeaguesClubs(receivedData));
     }
-  }, [user]);
+  }, []);
 
   //TODO get requests to club
   //TODO get requests to leagues
@@ -90,6 +94,14 @@ function HomeContent({navigation}) {
   //       console.log(error);
   //     });
   // };
+
+  if (loading) {
+    return (
+      <View>
+        <Text>LOADING....</Text>
+      </View>
+    );
+  }
 
   return (
     <View>

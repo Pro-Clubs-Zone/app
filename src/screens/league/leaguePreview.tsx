@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Text, View, ActivityIndicator, Alert, Button} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {AppContext} from '../../utils/context';
+import {AuthContext} from '../../utils/context';
 import {UserLeague} from './interface';
 
 const db = firestore();
@@ -18,8 +18,7 @@ export default function LeaguePreview({data, navigation, route}) {
     console.log(data, leagueId);
   }, []);
 
-  const context = useContext(AppContext);
-  const user: object = context?.user;
+  const user = useContext(AuthContext);
   const uid: string = user.uid;
 
   const leagueRef = db.collection('leagues').doc(leagueId);
