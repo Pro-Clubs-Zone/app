@@ -26,17 +26,17 @@ function Home() {
 function HomeContent({navigation}) {
   const [loading, setLoading] = useState(true);
   //const [data, setData] = useState({})
+  const [userUid, setUserUid] = useState(null);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
-  const uid: string = user?.uid;
+
   const onSignOut = () => {
     firAuth.signOut().then(() => console.log('User signed out!'));
   };
 
-  const userRef = db.collection('users').doc(uid);
-
-  const getLeaguesClubs = (userData: object) => {
+  const getLeaguesClubs = (userData: object, uid: string) => {
+    console.log('getLeagueClub', userData);
     let userLeagueData: object = {};
     let userClubData: object = {};
     const leaguesRef = db.collection('leagues');
@@ -57,10 +57,10 @@ function HomeContent({navigation}) {
             .then((doc) => {
               userClubData = {...userClubData, [doc.id]: doc.data()};
               context.update({
-                userData: userData,
                 userClubData: userClubData,
                 userLeagueData: userLeagueData,
               });
+              console.log('test');
             })
             .then(() => {
               setLoading(false);
@@ -71,13 +71,28 @@ function HomeContent({navigation}) {
 
   useEffect(() => {
     if (user) {
-      let userData: any;
-      userRef
-        .get()
-        .then((doc) => (userData = doc.data()))
-        .then((receivedData) => getLeaguesClubs(receivedData));
+      const uid: string = user.uid;
+      setUserUid(uid);
+      console.log('updateUserUid');
     }
-  }, []);
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      const userRef = db.collection('users').doc(userUid);
+      let userData: any;
+      userRef.onSnapshot((doc) => {
+        console.log('call to fir', doc);
+        userData = doc.data();
+        context.update({
+          userData: userData,
+        });
+        userData.leagues && getLeaguesClubs(userData, userUid);
+      });
+    } else {
+      setLoading(false);
+    }
+  }, [userUid]);
 
   //TODO get requests to club
   //TODO get requests to leagues
@@ -106,7 +121,7 @@ function HomeContent({navigation}) {
   return (
     <View>
       <Text>Home Screen</Text>
-      <Text>{context.userData.username}</Text>
+      <Text>{context.userData?.username}</Text>
       <CustomButton
         onPress={user ? onSignOut : () => navigation.navigate('Sign Up')}
         title={user ? 'Logout' : 'Sign Up'}

@@ -1,6 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {Text, View, Button, TextInput, ActivityIndicator} from 'react-native';
-import {AppContext} from '../../utils/context';
+
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import CheckBox from '@react-native-community/checkbox';
@@ -19,7 +19,7 @@ function SignUp({navigation}) {
 
     const createDbEntry = (data) => {
       db.collection('users')
-        .doc(data.context.user.uid)
+        .doc(data.user.uid)
         .set({
           username: username,
         })

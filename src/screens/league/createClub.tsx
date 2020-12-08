@@ -23,7 +23,6 @@ export default function CreateClub({route, navigation}) {
       .doc(leagueId)
       .collection('clubs')
       .doc();
-    const leagueRef = db.collection('leagues').doc(leagueId);
 
     const clubInfo: Club = {
       name: clubName,
@@ -53,6 +52,7 @@ export default function CreateClub({route, navigation}) {
     );
     batch.commit().then(() => {
       setLoading(false);
+      console.log('context:', context);
       navigation.goBack();
     });
   };

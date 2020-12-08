@@ -33,6 +33,7 @@ export default function CreateLeague() {
     const batch = db.batch();
     const leagueRef = db.collection('leagues').doc();
     const userRef = db.collection('users').doc(uid);
+
     setLoading(true);
     batch.set(leagueRef, {...leagueInfo, admin: uid});
     batch.set(

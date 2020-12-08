@@ -2,6 +2,7 @@ import React, {useEffect, useState, createContext} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
+import App from '../../App';
 
 const AppContext = createContext(null);
 const AuthContext = createContext(null);
@@ -13,15 +14,19 @@ interface AppContext {
   userData: object;
   userLeagueData: object;
   userClubData: object;
-  update: any;
+  userLeagueAdminData: object;
+  update?: any;
 }
 
+const defaultValues: AppContext = {
+  userData: {},
+  userLeagueData: {},
+  userClubData: {},
+  userLeagueAdminData: {},
+};
+
 const AppProvider = (props: any) => {
-  const [data, setData] = useState({
-    userData: {},
-    userLeagueData: {},
-    userClubData: {},
-  });
+  const [data, setData] = useState(defaultValues);
 
   const update = (newData: object) => {
     setData({...data, ...newData});
@@ -31,6 +36,7 @@ const AppProvider = (props: any) => {
     userData: data.userData,
     userLeagueData: data.userLeagueData,
     userClubData: data.userClubData,
+    userLeagueAdminData: data.userLeagueAdminData,
     update: update,
   };
 
@@ -40,7 +46,7 @@ const AppProvider = (props: any) => {
 };
 
 const AuthProvider = (props: any) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [emu] = useState(true);
 
   function onAuthStateChanged(firUser: any): void {
@@ -54,6 +60,7 @@ const AuthProvider = (props: any) => {
     }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
+    //FIXME:  double call;
   }, []);
 
   return (
