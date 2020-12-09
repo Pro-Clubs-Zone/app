@@ -39,7 +39,7 @@ export default function CreateLeague() {
     batch.set(
       userRef,
       {
-        leagueAdmin: {
+        createdLeagues: {
           [leagueRef.id]: true,
         },
       },

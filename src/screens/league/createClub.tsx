@@ -2,7 +2,7 @@ import React, {useContext, useState} from 'react';
 import {Text, View, Button, TextInput} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {Club, UserLeague} from './interface';
-import {AppContext, AuthContext} from '../../utils/context';
+import {AuthContext} from '../../utils/context';
 
 const db = firestore();
 
@@ -10,7 +10,6 @@ export default function CreateClub({route, navigation}) {
   const [clubName, setClubName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const context = useContext(AppContext);
   const user = useContext(AuthContext);
 
   const leagueId: string = route.params.leagueId;

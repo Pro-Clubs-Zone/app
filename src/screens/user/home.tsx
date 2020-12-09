@@ -40,15 +40,15 @@ function HomeContent({navigation}) {
 
   const getLeaguesClubs = (userData: object) => {
     console.log('getLeaguesClubs');
-    let userLeagueData: object = {};
-    let userClubData: object = {};
-    const userLeagues: any[] = Object.entries(userData.leagues);
-    for (const [league, data] of userLeagues) {
+    let userLeagues: object = {};
+    let userClubs: object = {};
+    const leagues: any[] = Object.entries(userData.leagues);
+    for (const [league, data] of leagues) {
       leaguesRef
         .doc(league)
         .get()
         .then((doc) => {
-          userLeagueData = {...userLeagueData, [doc.id]: doc.data()};
+          userLeagues = {...userLeagues, [doc.id]: doc.data()};
         })
         .then(() => {
           leaguesRef
@@ -57,34 +57,24 @@ function HomeContent({navigation}) {
             .doc(data.club)
             .get()
             .then((doc) => {
-              userClubData = {...userClubData, [doc.id]: doc.data()};
-              context.update({
-                userClubData: userClubData,
-                userLeagueData: userLeagueData,
-              });
-            })
-            .then(() => {
-              userData?.leagueAdmin
-                ? getAdminLeagues(userData)
-                : setLoading(false);
+              userClubs = {...userClubs, [doc.id]: doc.data()};
+              context.update({userClubs: userClubs, userLeagues: userLeagues});
             });
         });
     }
   };
 
-  const getAdminLeagues = (userData) => {
+  const getCreatedLeagues = (userData) => {
     console.log('getAdmin');
-    let userLeagueAdminData: object = {};
-    const userLeagues: any[] = Object.keys(userData.leagueAdmin);
-    userLeagues.forEach((league) => {
+    let userCreatedLeagues: object = {};
+    const leagues: any[] = Object.keys(userData.createdLeagues);
+    leagues.forEach((league) => {
       leaguesRef
         .doc(league)
         .get()
         .then((doc) => {
-          userLeagueAdminData = {...userLeagueAdminData, [doc.id]: doc.data()};
-          context.update({
-            userLeagueAdminData: userLeagueAdminData,
-          });
+          userCreatedLeagues = {...userCreatedLeagues, [doc.id]: doc.data()};
+          context.update({userCreatedLeagues: userCreatedLeagues});
         })
         .then(() => {
           setLoading(false);
@@ -93,16 +83,15 @@ function HomeContent({navigation}) {
   };
 
   useEffect(() => {
-    if (userUid) {
+    if (user) {
       const userRef = db.collection('users').doc(userUid);
       let userData: any;
       const subscriber = userRef.onSnapshot((doc) => {
-        console.log('call to fir', doc);
+        console.log('call to fir');
         userData = doc.data();
-        context.update({
-          userData: userData,
-        });
+        context.update({userData: userData});
         userData?.leagues && getLeaguesClubs(userData);
+        userData?.createdLeagues && getCreatedLeagues(userData);
       });
       return subscriber;
     } else {
@@ -131,9 +120,9 @@ function HomeContent({navigation}) {
       setUserUid(null);
       context.update({
         userData: {},
-        userLeagueData: {},
-        userClubData: {},
-        userLeagueAdminData: {},
+        userLeagues: {},
+        userClubs: {},
+        userCreatedLeagues: {},
       });
     });
   };
@@ -149,7 +138,7 @@ function HomeContent({navigation}) {
   return (
     <View>
       <Text>Home Screen</Text>
-      <Text>{context.userData?.username}</Text>
+      <Text>{context.data?.userData?.username}</Text>
       <CustomButton
         onPress={user ? onSignOut : () => navigation.navigate('Sign Up')}
         title={user ? 'Logout' : 'Sign Up'}

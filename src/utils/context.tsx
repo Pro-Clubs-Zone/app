@@ -4,44 +4,49 @@ import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
 import App from '../../App';
 
+interface AppContext {
+  userData: object;
+  userLeagues: object;
+  userClubs: object;
+  userCreatedLeagues: object;
+  update?: any;
+}
+
+const appContextValue: AppContext = {
+  userData: {},
+  userLeagues: {},
+  userClubs: {},
+  userCreatedLeagues: {},
+};
+
 const AppContext = createContext(null);
 const AuthContext = createContext(null);
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
-interface AppContext {
-  userData: object;
-  userLeagueData: object;
-  userClubData: object;
-  userLeagueAdminData: object;
-  update?: any;
-}
-
-const defaultValues: AppContext = {
-  userData: {},
-  userLeagueData: {},
-  userClubData: {},
-  userLeagueAdminData: {},
-};
-
 const AppProvider = (props: any) => {
-  const [data, setData] = useState(defaultValues);
+  const [data, setData] = useState();
 
   const update = (newData: object) => {
+    console.log('new data', newData);
+    console.log('old data', data);
+    console.log('how it looks', {...data, ...newData});
     setData({...data, ...newData});
   };
 
-  const value: AppContext | null = {
-    userData: data.userData,
-    userLeagueData: data.userLeagueData,
-    userClubData: data.userClubData,
-    userLeagueAdminData: data.userLeagueAdminData,
-    update: update,
-  };
+  // const value: AppContext | null = {
+  //   userData: data.userData,
+  //   userLeagues: data.userLeagues,
+  //   userClubs: data.userClubs,
+  //   userCreatedLeagues: data.userCreatedLeagues,
+  //   update: update,
+  // };
 
   return (
-    <AppContext.Provider value={value}>{props.children}</AppContext.Provider>
+    <AppContext.Provider value={{data, update}}>
+      {props.children}
+    </AppContext.Provider>
   );
 };
 
