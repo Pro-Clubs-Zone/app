@@ -7,6 +7,7 @@ import SignUp from '../auth/signUp';
 import functions from '@react-native-firebase/functions';
 import SignIn from '../auth/signIn';
 import firestore from '@react-native-firebase/firestore';
+import Requests from './requests';
 
 const firFunc = functions();
 const firAuth = auth();
@@ -19,6 +20,7 @@ function Home() {
       <Stack.Screen name="Home" component={HomeContent} />
       <Stack.Screen name="Sign Up" component={SignUp} />
       <Stack.Screen name="Sign In" component={SignIn} />
+      <Stack.Screen name="Requests" component={Requests} />
     </Stack.Navigator>
   );
 }
@@ -229,7 +231,16 @@ function HomeContent({navigation}) {
     <View>
       <Text>Home Screen</Text>
       <Text>{context.data?.userData?.username}</Text>
-      <Text>Requests {leagueRequestCount + clubRequestCount}</Text>
+      <Button
+        onPress={() =>
+          navigation.navigate('Requests', {
+            clubRequests: clubRequests,
+            leagueRequests: leagueRequests,
+          })
+        }
+        title={`Requests ${leagueRequestCount + clubRequestCount}`}
+      />
+      <Text></Text>
       <CustomButton
         onPress={user ? onSignOut : () => navigation.navigate('Sign Up')}
         title={user ? 'Logout' : 'Sign Up'}
