@@ -25,7 +25,6 @@ export default function CreateLeague() {
   const [leagueInfo, setLeagueInfo] = useState(leagueInfoDefault);
   const [loading, setLoading] = useState(false);
 
-  const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const uid: string = user?.uid;
 
@@ -39,8 +38,10 @@ export default function CreateLeague() {
     batch.set(
       userRef,
       {
-        createdLeagues: {
-          [leagueRef.id]: true,
+        leagues: {
+          [leagueRef.id]: {
+            admin: true,
+          },
         },
       },
       {merge: true},

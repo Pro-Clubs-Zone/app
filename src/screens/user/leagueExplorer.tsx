@@ -21,7 +21,6 @@ export default function LeagueExplorer({navigation}) {
       setData(retrievedLeagues);
       setLoading(false);
     });
-
     return subscriber;
   }, []);
 

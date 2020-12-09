@@ -39,7 +39,6 @@ function HomeContent({navigation}) {
   }, [user]);
 
   const getLeaguesClubs = (userData: object) => {
-    console.log('getLeaguesClubs');
     let userLeagues: object = {};
     let userClubs: object = {};
     const leagues: any[] = Object.entries(userData.leagues);
@@ -58,29 +57,36 @@ function HomeContent({navigation}) {
             .get()
             .then((doc) => {
               userClubs = {...userClubs, [doc.id]: doc.data()};
-              context.update({userClubs: userClubs, userLeagues: userLeagues});
+              context.update({
+                userClubs: userClubs,
+                userLeagues: userLeagues,
+                userData: userData,
+              });
+            })
+            .then(() => {
+              setLoading(false);
             });
         });
     }
   };
 
-  const getCreatedLeagues = (userData) => {
-    console.log('getAdmin');
-    let userCreatedLeagues: object = {};
-    const leagues: any[] = Object.keys(userData.createdLeagues);
-    leagues.forEach((league) => {
-      leaguesRef
-        .doc(league)
-        .get()
-        .then((doc) => {
-          userCreatedLeagues = {...userCreatedLeagues, [doc.id]: doc.data()};
-          context.update({userCreatedLeagues: userCreatedLeagues});
-        })
-        .then(() => {
-          setLoading(false);
-        });
-    });
-  };
+  // const getCreatedLeagues = (userData) => {
+  //   console.log('getAdmin');
+  //   let userCreatedLeagues: object = {};
+  //   const leagues: any[] = Object.keys(userData.createdLeagues);
+  //   leagues.forEach((league) => {
+  //     leaguesRef
+  //       .doc(league)
+  //       .get()
+  //       .then((doc) => {
+  //         userCreatedLeagues = {...userCreatedLeagues, [doc.id]: doc.data()};
+  //         context.update({userCreatedLeagues: userCreatedLeagues});
+  //       })
+  //       .then(() => {
+  //         setLoading(false);
+  //       });
+  //   });
+  // };
 
   useEffect(() => {
     if (user) {
@@ -89,9 +95,12 @@ function HomeContent({navigation}) {
       const subscriber = userRef.onSnapshot((doc) => {
         console.log('call to fir');
         userData = doc.data();
-        context.update({userData: userData});
-        userData?.leagues && getLeaguesClubs(userData);
-        userData?.createdLeagues && getCreatedLeagues(userData);
+        if (userData?.leagues) {
+          getLeaguesClubs(userData);
+        } else {
+          context.update({userData: userData});
+          setLoading(false);
+        }
       });
       return subscriber;
     } else {
@@ -122,7 +131,6 @@ function HomeContent({navigation}) {
         userData: {},
         userLeagues: {},
         userClubs: {},
-        userCreatedLeagues: {},
       });
     });
   };

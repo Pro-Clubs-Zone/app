@@ -8,40 +8,26 @@ interface AppContext {
   userData: object;
   userLeagues: object;
   userClubs: object;
-  userCreatedLeagues: object;
-  update?: any;
 }
 
 const appContextValue: AppContext = {
   userData: {},
   userLeagues: {},
   userClubs: {},
-  userCreatedLeagues: {},
 };
 
-const AppContext = createContext(null);
+const AppContext = createContext({});
 const AuthContext = createContext(null);
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
 const AppProvider = (props: any) => {
-  const [data, setData] = useState();
+  const [data, setData] = useState(appContextValue);
 
-  const update = (newData: object) => {
-    console.log('new data', newData);
-    console.log('old data', data);
-    console.log('how it looks', {...data, ...newData});
-    setData({...data, ...newData});
+  const update = (newData: AppContext) => {
+    setData(newData);
   };
-
-  // const value: AppContext | null = {
-  //   userData: data.userData,
-  //   userLeagues: data.userLeagues,
-  //   userClubs: data.userClubs,
-  //   userCreatedLeagues: data.userCreatedLeagues,
-  //   update: update,
-  // };
 
   return (
     <AppContext.Provider value={{data, update}}>
