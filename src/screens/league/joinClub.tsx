@@ -47,7 +47,10 @@ export default function JoinClub({navigation, route}) {
       clubRef,
       {
         roster: {
-          [uid]: false,
+          [uid]: {
+            accepted: false,
+            username: context.data.userData.username,
+          },
         },
       },
       {merge: true},

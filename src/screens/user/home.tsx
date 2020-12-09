@@ -25,7 +25,8 @@ function Home() {
 
 function HomeContent({navigation}) {
   const [loading, setLoading] = useState(true);
-  const [userUid, setUserUid] = useState(null);
+  const [uid, setUid] = useState(null);
+  const [requests, setRequests] = useState([]);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -33,39 +34,66 @@ function HomeContent({navigation}) {
 
   useEffect(() => {
     if (user) {
-      setUserUid(user.uid);
+      setUid(user.uid);
       console.log('updateUserUid');
     }
   }, [user]);
 
   const getLeaguesClubs = (userData: object) => {
-    let userLeagues: object = {};
-    let userClubs: object = {};
     const leagues: any[] = Object.entries(userData.leagues);
-    for (const [league, data] of leagues) {
-      const clubRef = leaguesRef.doc(league).collection('clubs').doc(data.club);
 
-      leaguesRef
-        .doc(league)
-        .get()
-        .then((doc) => {
-          userLeagues = {...userLeagues, [doc.id]: doc.data()};
-        })
-        .then(() => {
-          clubRef
-            .get()
-            .then((doc) => {
-              userClubs = {...userClubs, [doc.id]: doc.data()};
-              context.update({
-                userClubs: userClubs,
-                userLeagues: userLeagues,
-                userData: userData,
-              });
-            })
-            .then(() => {
-              setLoading(false);
+    let userLeagues: object = {};
+    const fetchData = async () => {
+      console.log('fetch');
+      for (const [leagueId, league] of leagues) {
+        const clubRef = leaguesRef
+          .doc(leagueId)
+          .collection('clubs')
+          .doc(league.club);
+
+        await leaguesRef
+          .doc(leagueId)
+          .get()
+          .then((doc) => {
+            userLeagues = {...userLeagues, [doc.id]: doc.data()};
+          })
+          .then(async () => {
+            await clubRef.get().then((doc) => {
+              if (doc.exists) {
+                userLeagues[leagueId].clubs = {
+                  [doc.id]: doc.data(),
+                };
+              }
+              //     console.log({...userLeagues});
             });
-        });
+          });
+      }
+
+      return {
+        userLeagues,
+        userData,
+      };
+    };
+
+    fetchData().then((data) => {
+      // console.log({...data.userLeagues});
+      getClubRequests(data.userLeagues);
+      context.update(data);
+    });
+  };
+
+  const getClubRequests = (data) => {
+    //console.log(receivedLeagues);
+    let userLeagues: object = {};
+    let clubRequests = [];
+    let club = {
+      title: '',
+      data: [],
+    };
+    let player = {};
+
+    for (const [leagueId, league] of Object.entries(data)) {
+      console.log(league.clubs);
     }
   };
 
@@ -89,7 +117,7 @@ function HomeContent({navigation}) {
 
   useEffect(() => {
     if (user) {
-      const userRef = db.collection('users').doc(userUid);
+      const userRef = db.collection('users').doc(uid);
       let userData: any;
       const subscriber = userRef.onSnapshot((doc) => {
         console.log('call to fir');
@@ -105,10 +133,15 @@ function HomeContent({navigation}) {
     } else {
       setLoading(false);
     }
-  }, [userUid]);
+  }, [uid]);
 
   //TODO get requests to club
+  // get all the unconfirmed players from context
+  // create a list of uncofirmed players
+
   //TODO get requests to leagues
+
+  // if Admin, get all the unconfirmed clubs from db
   //TODO Get scheduled matches for all leagues
   //TODO report center
   //TODO my requests (club/leagues)
@@ -126,11 +159,10 @@ function HomeContent({navigation}) {
 
   const onSignOut = () => {
     firAuth.signOut().then(() => {
-      setUserUid(null);
+      setUid(null);
       context.update({
         userData: {},
         userLeagues: {},
-        userClubs: {},
       });
     });
   };

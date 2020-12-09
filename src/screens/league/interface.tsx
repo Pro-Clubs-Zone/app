@@ -22,7 +22,10 @@ export interface Club {
   managerId: string;
   accepted: boolean;
   roster: {
-    [uid: string]: boolean;
+    [uid: string]: {
+      accepted: boolean;
+      username: string;
+    };
   };
   created: Timestamp;
 }

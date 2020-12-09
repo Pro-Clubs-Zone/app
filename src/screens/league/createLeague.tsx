@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, TextInput} from 'react-native';
 import SignUp from '../auth/signUp';
 import {AppContext, AuthContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
@@ -24,6 +24,7 @@ const db = firestore();
 export default function CreateLeague() {
   const [leagueInfo, setLeagueInfo] = useState(leagueInfoDefault);
   const [loading, setLoading] = useState(false);
+  const [leagueName, setLeagueName] = useState('');
 
   const user = useContext(AuthContext);
   const uid: string = user?.uid;
@@ -34,7 +35,7 @@ export default function CreateLeague() {
     const userRef = db.collection('users').doc(uid);
 
     setLoading(true);
-    batch.set(leagueRef, {...leagueInfo, admin: uid});
+    batch.set(leagueRef, {...leagueInfo, admin: uid, name: leagueName});
     batch.set(
       userRef,
       {
@@ -54,6 +55,13 @@ export default function CreateLeague() {
   return (
     <View>
       <Text>Create new League</Text>
+      <TextInput
+        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        onChangeText={(text) => setLeagueName(text)}
+        value={leagueName}
+        placeholder="League Name"
+        autoCorrect={true}
+      />
       <Button onPress={onCreateLeague} title="Create League" />
     </View>
   );

@@ -2,18 +2,17 @@ import React, {useEffect, useState, createContext} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
-import App from '../../App';
 
 interface AppContext {
   userData: object;
   userLeagues: object;
-  userClubs: object;
+  //  userClubs: object;
 }
 
 const appContextValue: AppContext = {
   userData: {},
   userLeagues: {},
-  userClubs: {},
+  //  userClubs: {},
 };
 
 const AppContext = createContext({});
