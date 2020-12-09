@@ -31,4 +31,5 @@ export interface UserLeague {
   club?: string;
   manager?: boolean;
   admin?: boolean;
+  accepted?: boolean;
 }

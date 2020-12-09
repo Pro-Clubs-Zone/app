@@ -6,38 +6,30 @@ import {UserLeague} from './interface';
 
 const db = firestore();
 
-export default function LeaguePreview({data, navigation, route}) {
-  const [inLeague, setInLeague] = useState({
-    member: true,
-    confirmedPlayer: false,
-  });
+export default function LeaguePreview({navigation, route}) {
+  const [accepted, setAccepted] = useState(false);
 
   const leagueId = route.params.leagueId;
-
-  useEffect(() => {
-    console.log(data, leagueId);
-  }, []);
-
   const user = useContext(AuthContext);
+
   const uid: string = user?.uid;
 
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
-  const userRef = db.collection('users').doc(uid);
+  //  const userRef = db.collection('users').doc(uid);
 
   const onCheckUserInLeague = () => {
-    let confirmed: boolean;
+    let playerAccepted: boolean;
     leagueClubs
       .where(`roster.${uid}`, 'in', [true, false])
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.empty) {
-          setInLeague({...inLeague, member: false});
           return showUserTypeSelection();
         } else {
           querySnapshot.forEach((doc) => {
-            confirmed = doc.data().roster[uid];
-            setInLeague({...inLeague, confirmedPlayer: confirmed});
+            playerAccepted = doc.data().roster[uid];
+            setAccepted(playerAccepted);
             userInLeague();
           });
         }
@@ -50,7 +42,7 @@ export default function LeaguePreview({data, navigation, route}) {
   const userInLeague = () => {
     Alert.alert(
       'Join League',
-      inLeague.confirmedPlayer ? 'League not started' : 'Request already sent',
+      accepted ? 'League not started' : 'Request already sent',
       [
         {
           text: 'Cancel',

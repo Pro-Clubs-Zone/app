@@ -43,6 +43,8 @@ function HomeContent({navigation}) {
     let userClubs: object = {};
     const leagues: any[] = Object.entries(userData.leagues);
     for (const [league, data] of leagues) {
+      const clubRef = leaguesRef.doc(league).collection('clubs').doc(data.club);
+
       leaguesRef
         .doc(league)
         .get()
@@ -50,10 +52,7 @@ function HomeContent({navigation}) {
           userLeagues = {...userLeagues, [doc.id]: doc.data()};
         })
         .then(() => {
-          leaguesRef
-            .doc(league)
-            .collection('clubs')
-            .doc(data.club)
+          clubRef
             .get()
             .then((doc) => {
               userClubs = {...userClubs, [doc.id]: doc.data()};
@@ -112,6 +111,7 @@ function HomeContent({navigation}) {
   //TODO get requests to leagues
   //TODO Get scheduled matches for all leagues
   //TODO report center
+  //TODO my requests (club/leagues)
 
   // const testFunc = async () => {
   //   const test = firFunc.httpsCallable('scheduleMatches');

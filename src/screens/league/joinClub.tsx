@@ -20,6 +20,7 @@ export default function JoinClub({navigation, route}) {
   const leagueClubs = leagueRef.collection('clubs');
 
   useEffect(() => {
+    console.log(leagueId);
     let retrievedClubs: [] = [];
     leagueClubs
       .where('accepted', '==', false)
@@ -28,6 +29,7 @@ export default function JoinClub({navigation, route}) {
         querySnapshot.forEach((doc) => {
           retrievedClubs.push({...doc.data(), key: doc.id});
         });
+        console.log('clubs', retrievedClubs);
         setData(retrievedClubs);
         setLoading(false);
       });
@@ -37,7 +39,8 @@ export default function JoinClub({navigation, route}) {
     const clubRef = leagueClubs.doc(clubId);
     const userInfo: UserLeague = {
       club: clubId,
-      manager: false,
+      // manager: false,
+      accepted: false,
     };
     const batch = db.batch();
     batch.set(
