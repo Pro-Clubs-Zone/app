@@ -26,7 +26,9 @@ function Home() {
 function HomeContent({navigation}) {
   const [loading, setLoading] = useState(true);
   const [uid, setUid] = useState(null);
-  const [requests, setRequests] = useState([]);
+  const [clubRequests, setClubRequests] = useState([]);
+  const [leagueRequests, setLeagueRequests] = useState([]);
+  const [requestCount, setRequestCount] = useState(0);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -82,19 +84,39 @@ function HomeContent({navigation}) {
     });
   };
 
+  //TODO get requests to club
+  // get all the unconfirmed players from context
+  // create a list of uncofirmed players
+
   const getClubRequests = (data) => {
     //console.log(receivedLeagues);
     let userLeagues: object = {};
     let clubRequests = [];
-    let club = {
+    let clubData = {
       title: '',
       data: [],
     };
-    let player = {};
+    let playerData = {};
 
     for (const [leagueId, league] of Object.entries(data)) {
-      console.log(league.clubs);
+      for (const [clubId, club] of Object.entries(league.clubs)) {
+        const roster = club.roster;
+        clubData.title = club.name + ' / ' + league.name;
+        for (const [playerId, player] of Object.entries(roster)) {
+          if (player.accepted === false) {
+            playerData = {
+              ...player,
+              club: clubId,
+              league: leagueId,
+            };
+            clubData.data = [...clubData.data, {[playerId]: playerData}];
+          }
+        }
+      }
+      clubRequests.push(clubData);
+      setRequestCount(requestCount + clubData.data.length);
     }
+    setClubRequests(clubRequests);
   };
 
   // const getCreatedLeagues = (userData) => {
@@ -134,10 +156,6 @@ function HomeContent({navigation}) {
       setLoading(false);
     }
   }, [uid]);
-
-  //TODO get requests to club
-  // get all the unconfirmed players from context
-  // create a list of uncofirmed players
 
   //TODO get requests to leagues
 
@@ -179,6 +197,7 @@ function HomeContent({navigation}) {
     <View>
       <Text>Home Screen</Text>
       <Text>{context.data?.userData?.username}</Text>
+      <Text>Requests {requestCount}</Text>
       <CustomButton
         onPress={user ? onSignOut : () => navigation.navigate('Sign Up')}
         title={user ? 'Logout' : 'Sign Up'}
