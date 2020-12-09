@@ -28,18 +28,80 @@ function HomeContent({navigation}) {
   const [uid, setUid] = useState(null);
   const [clubRequests, setClubRequests] = useState([]);
   const [leagueRequests, setLeagueRequests] = useState([]);
-  const [requestCount, setRequestCount] = useState(0);
+  const [clubRequestCount, setClubRequestCount] = useState(0);
+  const [leagueRequestCount, setLeagueRequestCount] = useState(0);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const leaguesRef = db.collection('leagues');
-
   useEffect(() => {
     if (user) {
       setUid(user.uid);
       console.log('updateUserUid');
+      setLoading(true);
+    } else {
+      console.log('no user');
+      setLoading(false);
     }
   }, [user]);
+
+  const getClubRequests = (data) => {
+    let requests = [];
+    let clubData = {
+      title: '',
+      data: [],
+    };
+    let playerData = {};
+
+    for (const [leagueId, league] of Object.entries(data)) {
+      for (const [clubId, club] of Object.entries(league.clubs)) {
+        const roster = club.roster;
+        clubData.title = club.name + ' / ' + league.name;
+        for (const [playerId, player] of Object.entries(roster)) {
+          if (player.accepted === false) {
+            playerData = {
+              ...player,
+              club: clubId,
+              league: leagueId,
+            };
+            clubData.data = [...clubData.data, {[playerId]: playerData}];
+          }
+        }
+      }
+      requests.push(clubData);
+    }
+    setClubRequestCount(clubRequestCount + clubData.data.length);
+
+    setClubRequests(requests);
+  };
+
+  const getLeagueRequests = (data) => {
+    let requests = [];
+    let leagueData = {
+      title: '',
+      data: [],
+    };
+    let clubData = {};
+
+    for (const [leagueId, league] of Object.entries(data)) {
+      for (const [clubId, club] of Object.entries(league.clubs)) {
+        leagueData.title = league.name;
+
+        if (club.accepted === false) {
+          clubData = {
+            ...club,
+            league: leagueId,
+          };
+          leagueData.data = [...leagueData.data, {[clubId]: clubData}];
+        }
+      }
+      requests.push(leagueData);
+      //  console.log(leagueData.data.length);
+    }
+
+    setLeagueRequestCount(leagueRequestCount + leagueData.data.length);
+    setLeagueRequests(requests);
+  };
 
   const getLeaguesClubs = (userData: object) => {
     const leagues: any[] = Object.entries(userData.leagues);
@@ -66,7 +128,6 @@ function HomeContent({navigation}) {
                   [doc.id]: doc.data(),
                 };
               }
-              //     console.log({...userLeagues});
             });
           });
       }
@@ -77,46 +138,17 @@ function HomeContent({navigation}) {
       };
     };
 
-    fetchData().then((data) => {
-      // console.log({...data.userLeagues});
-      getClubRequests(data.userLeagues);
-      context.update(data);
-    });
-  };
+    fetchData()
+      .then((data) => {
+        getClubRequests(data.userLeagues);
 
-  //TODO get requests to club
-  // get all the unconfirmed players from context
-  // create a list of uncofirmed players
-
-  const getClubRequests = (data) => {
-    //console.log(receivedLeagues);
-    let userLeagues: object = {};
-    let clubRequests = [];
-    let clubData = {
-      title: '',
-      data: [],
-    };
-    let playerData = {};
-
-    for (const [leagueId, league] of Object.entries(data)) {
-      for (const [clubId, club] of Object.entries(league.clubs)) {
-        const roster = club.roster;
-        clubData.title = club.name + ' / ' + league.name;
-        for (const [playerId, player] of Object.entries(roster)) {
-          if (player.accepted === false) {
-            playerData = {
-              ...player,
-              club: clubId,
-              league: leagueId,
-            };
-            clubData.data = [...clubData.data, {[playerId]: playerData}];
-          }
-        }
-      }
-      clubRequests.push(clubData);
-      setRequestCount(requestCount + clubData.data.length);
-    }
-    setClubRequests(clubRequests);
+        context.update(data);
+        return data;
+      })
+      .then((data) => {
+        setLoading(false);
+        getLeagueRequests(data.userLeagues);
+      });
   };
 
   // const getCreatedLeagues = (userData) => {
@@ -147,13 +179,13 @@ function HomeContent({navigation}) {
         if (userData?.leagues) {
           getLeaguesClubs(userData);
         } else {
+          console.log('no leagues');
+
           context.update({userData: userData});
           setLoading(false);
         }
       });
       return subscriber;
-    } else {
-      setLoading(false);
     }
   }, [uid]);
 
@@ -197,7 +229,7 @@ function HomeContent({navigation}) {
     <View>
       <Text>Home Screen</Text>
       <Text>{context.data?.userData?.username}</Text>
-      <Text>Requests {requestCount}</Text>
+      <Text>Requests {leagueRequestCount + clubRequestCount}</Text>
       <CustomButton
         onPress={user ? onSignOut : () => navigation.navigate('Sign Up')}
         title={user ? 'Logout' : 'Sign Up'}
