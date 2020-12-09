@@ -13,7 +13,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import Home from './src/screens/user/home';
 import Leagues from './src/screens/user/leagues';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {AppProvider, AuthProvider} from './src/utils/context';
+import {AppProvider, AuthProvider, RequestProvider} from './src/utils/context';
 
 const App = () => {
   const Tab = createBottomTabNavigator();
@@ -21,12 +21,14 @@ const App = () => {
     <>
       <AuthProvider>
         <AppProvider>
-          <NavigationContainer>
-            <Tab.Navigator>
-              <Tab.Screen name="Home" component={Home} />
-              <Tab.Screen name="Leagues" component={Leagues} />
-            </Tab.Navigator>
-          </NavigationContainer>
+          <RequestProvider>
+            <NavigationContainer>
+              <Tab.Navigator>
+                <Tab.Screen name="Home" component={Home} />
+                <Tab.Screen name="Leagues" component={Leagues} />
+              </Tab.Navigator>
+            </NavigationContainer>
+          </RequestProvider>
         </AppProvider>
       </AuthProvider>
     </>

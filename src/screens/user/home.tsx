@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button} from 'react-native';
-import {AppContext, AuthContext} from '../../utils/context';
+import {AppContext, AuthContext, RequestContext} from '../../utils/context';
 import auth from '@react-native-firebase/auth';
 import {createStackNavigator} from '@react-navigation/stack';
 import SignUp from '../auth/signUp';
@@ -35,6 +35,8 @@ function HomeContent({navigation}) {
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
+  const requestContext = useContext(RequestContext);
+
   const leaguesRef = db.collection('leagues');
   useEffect(() => {
     if (user) {
@@ -75,6 +77,7 @@ function HomeContent({navigation}) {
     setClubRequestCount(clubRequestCount + clubData.data.length);
 
     setClubRequests(requests);
+    requestContext.updateClubs(requests);
   };
 
   const getLeagueRequests = (data) => {
@@ -103,6 +106,7 @@ function HomeContent({navigation}) {
 
     setLeagueRequestCount(leagueRequestCount + leagueData.data.length);
     setLeagueRequests(requests);
+    requestContext.updateLeagues(requests);
   };
 
   const getLeaguesClubs = (userData: object) => {

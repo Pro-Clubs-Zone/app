@@ -17,9 +17,28 @@ const appContextValue: AppContext = {
 
 const AppContext = createContext({});
 const AuthContext = createContext(null);
+const RequestContext = createContext(null);
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
+
+const RequestProvider = (props) => {
+  const [club, setClub] = useState();
+  const [league, setLeague] = useState();
+
+  const updateClubs = (newData: AppContext) => {
+    setClub(newData);
+  };
+  const updateLeagues = (newData: AppContext) => {
+    setLeague(newData);
+  };
+
+  return (
+    <RequestContext.Provider value={{club, league, updateClubs, updateLeagues}}>
+      {props.children}
+    </RequestContext.Provider>
+  );
+};
 
 const AppProvider = (props: any) => {
   const [data, setData] = useState(appContextValue);
@@ -58,4 +77,11 @@ const AuthProvider = (props: any) => {
   );
 };
 
-export {AppProvider, AppContext, AuthProvider, AuthContext};
+export {
+  AppProvider,
+  AppContext,
+  AuthProvider,
+  AuthContext,
+  RequestContext,
+  RequestProvider,
+};
