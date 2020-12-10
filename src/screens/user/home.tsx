@@ -8,6 +8,15 @@ import functions from '@react-native-firebase/functions';
 import SignIn from '../auth/signIn';
 import firestore from '@react-native-firebase/firestore';
 import Requests from './requests';
+import {
+  AppContextInt,
+  ClubInt,
+  DocumentData,
+  LeagueInt,
+  RequestInt,
+  UserDataInt,
+  UserLeagueInt,
+} from '../../utils/globalTypes';
 
 const firFunc = functions();
 const firAuth = auth();
@@ -26,10 +35,10 @@ function Home() {
 }
 
 function HomeContent({navigation}) {
-  const [loading, setLoading] = useState(true);
-  const [uid, setUid] = useState(null);
-  const [clubRequests, setClubRequests] = useState([]);
-  const [leagueRequests, setLeagueRequests] = useState([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [uid, setUid] = useState<string | undefined>();
+  const [clubRequests, setClubRequests] = useState<RequestInt[]>([]);
+  const [leagueRequests, setLeagueRequests] = useState<RequestInt[]>([]);
   const [clubRequestCount, setClubRequestCount] = useState(0);
   const [leagueRequestCount, setLeagueRequestCount] = useState(0);
 
@@ -49,17 +58,17 @@ function HomeContent({navigation}) {
     }
   }, [user]);
 
-  const getClubRequests = (data) => {
-    let requests = [];
-    let clubData = {
+  const getClubRequests = (data: {[leagueId: string]: LeagueInt}) => {
+    let requests: RequestInt[] = [];
+    let clubData: RequestInt = {
       title: '',
       data: [],
     };
-    let playerData = {};
+    let playerData: UserLeagueInt = {};
 
     for (const [leagueId, league] of Object.entries(data)) {
       for (const [clubId, club] of Object.entries(league.clubs)) {
-        const roster = club.roster;
+        const roster: {} = club.roster;
         clubData.title = club.name + ' / ' + league.name;
         for (const [playerId, player] of Object.entries(roster)) {
           if (player.accepted === false) {
@@ -80,9 +89,9 @@ function HomeContent({navigation}) {
     requestContext.updateClubs(requests);
   };
 
-  const getLeagueRequests = (data) => {
-    let requests = [];
-    let leagueData = {
+  const getLeagueRequests = (data: {[leagueId: string]: LeagueInt}) => {
+    let requests: RequestInt[] = [];
+    let leagueData: RequestInt = {
       title: '',
       data: [],
     };
@@ -109,10 +118,10 @@ function HomeContent({navigation}) {
     requestContext.updateLeagues(requests);
   };
 
-  const getLeaguesClubs = (userData: object) => {
-    const leagues: any[] = Object.entries(userData.leagues);
+  const getLeaguesClubs = (userData: UserDataInt) => {
+    const leagues = Object.entries(userData.leagues);
 
-    let userLeagues: object = {};
+    let userLeagues: {[league: string]: LeagueInt} = {};
     const fetchData = async () => {
       console.log('fetch');
       for (const [leagueId, league] of leagues) {
@@ -125,13 +134,13 @@ function HomeContent({navigation}) {
           .doc(leagueId)
           .get()
           .then((doc) => {
-            userLeagues = {...userLeagues, [doc.id]: doc.data()};
+            userLeagues = {...userLeagues, [doc.id]: doc.data() as LeagueInt};
           })
           .then(async () => {
             await clubRef.get().then((doc) => {
               if (doc.exists) {
                 userLeagues[leagueId].clubs = {
-                  [doc.id]: doc.data(),
+                  [doc.id]: doc.data() as ClubInt,
                 };
               }
             });
@@ -178,10 +187,10 @@ function HomeContent({navigation}) {
   useEffect(() => {
     if (user) {
       const userRef = db.collection('users').doc(uid);
-      let userData: any;
+      let userData: UserDataInt;
       const subscriber = userRef.onSnapshot((doc) => {
         console.log('call to fir');
-        userData = doc.data();
+        userData = doc.data() as UserDataInt;
         if (userData?.leagues) {
           getLeaguesClubs(userData);
         } else {
@@ -234,7 +243,7 @@ function HomeContent({navigation}) {
   return (
     <View>
       <Text>Home Screen</Text>
-      <Text>{context.data?.userData?.username}</Text>
+      <Text>{context?.data.userData?.username}</Text>
       <Button
         onPress={() =>
           navigation.navigate('Requests', {

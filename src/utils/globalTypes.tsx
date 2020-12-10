@@ -5,7 +5,12 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
-export interface League {
+export interface RequestInt {
+  title: string;
+  data: {[key: string]: {}};
+}
+
+export interface LeagueInt {
   name: any;
   description: string;
   platform: string;
@@ -15,9 +20,12 @@ export interface League {
   private: boolean;
   scheduled: boolean;
   created: Timestamp;
+  clubs?: {
+    [club: string]: ClubInt;
+  };
 }
 
-export interface Club {
+export interface ClubInt {
   name: string;
   managerId: string;
   accepted: boolean;
@@ -30,9 +38,23 @@ export interface Club {
   created: Timestamp;
 }
 
-export interface UserLeague {
+export interface UserLeagueInt {
   club?: string;
   manager?: boolean;
   admin?: boolean;
   accepted?: boolean;
+}
+
+export interface UserDataInt {
+  username: string;
+  leagues?: {
+    [league: string]: UserLeagueInt;
+  };
+}
+
+export interface AppContextInt {
+  userData: UserDataInt;
+  userLeagues: {
+    [league: string]: LeagueInt;
+  };
 }

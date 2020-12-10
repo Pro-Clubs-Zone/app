@@ -2,34 +2,38 @@ import React, {useEffect, useState, createContext} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
+import {AppContextInt, LeagueInt, RequestInt, UserDataInt} from './globalTypes';
 
-interface AppContext {
-  userData: object;
-  userLeagues: object;
-  //  userClubs: object;
-}
-
-const appContextValue: AppContext = {
-  userData: {},
-  userLeagues: {},
-  //  userClubs: {},
+const appContextValue: AppContextInt = {
+  userData: {
+    username: '',
+  },
+  userLeagues: {} as LeagueInt,
 };
 
-const AppContext = createContext({});
-const AuthContext = createContext(null);
-const RequestContext = createContext(null);
+const AppContext = createContext<{
+  data: Partial<AppContextInt>;
+  update: (newData: Partial<AppContextInt>) => void;
+} | null>(null);
+const AuthContext = createContext<{uid: string} | null>(null);
+const RequestContext = createContext<{
+  club: RequestInt[] | null;
+  league: RequestInt[] | null;
+  updateClubs: (newData: RequestInt[]) => void;
+  updateLeagues: (newData: RequestInt[]) => void;
+} | null>(null);
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
-const RequestProvider = (props) => {
-  const [club, setClub] = useState();
-  const [league, setLeague] = useState();
+const RequestProvider = (props: any) => {
+  const [club, setClub] = useState<RequestInt[] | null>(null);
+  const [league, setLeague] = useState<RequestInt[] | null>(null);
 
-  const updateClubs = (newData: AppContext) => {
+  const updateClubs = (newData: RequestInt[]) => {
     setClub(newData);
   };
-  const updateLeagues = (newData: AppContext) => {
+  const updateLeagues = (newData: RequestInt[]) => {
     setLeague(newData);
   };
 
@@ -41,9 +45,9 @@ const RequestProvider = (props) => {
 };
 
 const AppProvider = (props: any) => {
-  const [data, setData] = useState(appContextValue);
+  const [data, setData] = useState<Partial<AppContextInt>>(appContextValue);
 
-  const update = (newData: AppContext) => {
+  const update = (newData: Partial<AppContextInt>) => {
     setData(newData);
   };
 
@@ -55,7 +59,7 @@ const AppProvider = (props: any) => {
 };
 
 const AuthProvider = (props: any) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{uid: string} | null>(null);
   const [emu] = useState(true);
 
   function onAuthStateChanged(firUser: any): void {
