@@ -7,7 +7,7 @@ export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
 export interface RequestInt {
   title: string;
-  data: {[key: string]: {}};
+  data: {[key: string]: {}}[];
 }
 
 export interface LeagueInt {
@@ -25,15 +25,16 @@ export interface LeagueInt {
   };
 }
 
+export interface ClubRosterMemberInt {
+  accepted: boolean;
+  username: string;
+}
 export interface ClubInt {
   name: string;
   managerId: string;
   accepted: boolean;
   roster: {
-    [uid: string]: {
-      accepted: boolean;
-      username: string;
-    };
+    [uid: string]: ClubRosterMemberInt;
   };
   created: Timestamp;
 }
@@ -47,7 +48,7 @@ export interface UserLeagueInt {
 
 export interface UserDataInt {
   username: string;
-  leagues?: {
+  leagues: {
     [league: string]: UserLeagueInt;
   };
 }

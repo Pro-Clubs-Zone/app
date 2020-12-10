@@ -5,10 +5,8 @@ import functions from '@react-native-firebase/functions';
 import {AppContextInt, LeagueInt, RequestInt, UserDataInt} from './globalTypes';
 
 const appContextValue: AppContextInt = {
-  userData: {
-    username: '',
-  },
-  userLeagues: {} as LeagueInt,
+  userData: {} as UserDataInt,
+  userLeagues: {},
 };
 
 const AppContext = createContext<{

@@ -11,6 +11,7 @@ import Requests from './requests';
 import {
   AppContextInt,
   ClubInt,
+  ClubRosterMemberInt,
   DocumentData,
   LeagueInt,
   RequestInt,
@@ -64,20 +65,22 @@ function HomeContent({navigation}) {
       title: '',
       data: [],
     };
-    let playerData: UserLeagueInt = {};
+    let playerData: UserLeagueInt & {club: string; league: string};
 
     for (const [leagueId, league] of Object.entries(data)) {
-      for (const [clubId, club] of Object.entries(league.clubs)) {
-        const roster: {} = club.roster;
-        clubData.title = club.name + ' / ' + league.name;
-        for (const [playerId, player] of Object.entries(roster)) {
-          if (player.accepted === false) {
-            playerData = {
-              ...player,
-              club: clubId,
-              league: leagueId,
-            };
-            clubData.data = [...clubData.data, {[playerId]: playerData}];
+      if (league.clubs) {
+        for (const [clubId, club] of Object.entries(league.clubs)) {
+          const roster: {[uid: string]: ClubRosterMemberInt} = club.roster;
+          clubData.title = club.name + ' / ' + league.name;
+          for (const [playerId, player] of Object.entries(roster)) {
+            if (player.accepted === false) {
+              playerData = {
+                ...player,
+                club: clubId,
+                league: leagueId,
+              };
+              clubData.data = [...clubData.data, {[playerId]: playerData}];
+            }
           }
         }
       }
@@ -86,7 +89,7 @@ function HomeContent({navigation}) {
     setClubRequestCount(clubRequestCount + clubData.data.length);
 
     setClubRequests(requests);
-    requestContext.updateClubs(requests);
+    requestContext?.updateClubs(requests);
   };
 
   const getLeagueRequests = (data: {[leagueId: string]: LeagueInt}) => {
@@ -95,18 +98,21 @@ function HomeContent({navigation}) {
       title: '',
       data: [],
     };
-    let clubData = {};
+    let clubData: ClubInt & {league: string};
 
     for (const [leagueId, league] of Object.entries(data)) {
-      for (const [clubId, club] of Object.entries(league.clubs)) {
-        leagueData.title = league.name;
+      if (league.clubs) {
+        for (const [clubId, club] of Object.entries(league.clubs)) {
+          leagueData.title = league.name;
+          console.log(club);
 
-        if (club.accepted === false) {
-          clubData = {
-            ...club,
-            league: leagueId,
-          };
-          leagueData.data = [...leagueData.data, {[clubId]: clubData}];
+          if (club.accepted === false) {
+            clubData = {
+              ...club,
+              league: leagueId,
+            };
+            leagueData.data = [...leagueData.data, {[clubId]: clubData}];
+          }
         }
       }
       requests.push(leagueData);
@@ -115,7 +121,7 @@ function HomeContent({navigation}) {
 
     setLeagueRequestCount(leagueRequestCount + leagueData.data.length);
     setLeagueRequests(requests);
-    requestContext.updateLeagues(requests);
+    requestContext?.updateLeagues(requests);
   };
 
   const getLeaguesClubs = (userData: UserDataInt) => {
@@ -157,7 +163,7 @@ function HomeContent({navigation}) {
       .then((data) => {
         getClubRequests(data.userLeagues);
 
-        context.update(data);
+        context?.update(data);
         return data;
       })
       .then((data) => {
@@ -165,24 +171,6 @@ function HomeContent({navigation}) {
         getLeagueRequests(data.userLeagues);
       });
   };
-
-  // const getCreatedLeagues = (userData) => {
-  //   console.log('getAdmin');
-  //   let userCreatedLeagues: object = {};
-  //   const leagues: any[] = Object.keys(userData.createdLeagues);
-  //   leagues.forEach((league) => {
-  //     leaguesRef
-  //       .doc(league)
-  //       .get()
-  //       .then((doc) => {
-  //         userCreatedLeagues = {...userCreatedLeagues, [doc.id]: doc.data()};
-  //         context.update({userCreatedLeagues: userCreatedLeagues});
-  //       })
-  //       .then(() => {
-  //         setLoading(false);
-  //       });
-  //   });
-  // };
 
   useEffect(() => {
     if (user) {
@@ -196,7 +184,7 @@ function HomeContent({navigation}) {
         } else {
           console.log('no leagues');
 
-          context.update({userData: userData});
+          context?.update({userData: userData});
           setLoading(false);
         }
       });
@@ -224,9 +212,9 @@ function HomeContent({navigation}) {
 
   const onSignOut = () => {
     firAuth.signOut().then(() => {
-      setUid(null);
-      context.update({
-        userData: {},
+      setUid(undefined);
+      context?.update({
+        userData: {} as UserDataInt,
         userLeagues: {},
       });
     });
