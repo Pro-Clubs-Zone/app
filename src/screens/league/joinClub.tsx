@@ -1,35 +1,38 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button, Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {UserLeague} from './interface';
 import {AppContext, AuthContext} from '../../utils/context';
 import {FlatList} from 'react-native-gesture-handler';
+import {
+  ClubInt,
+  ClubRosterMemberInt,
+  UserLeagueInt,
+} from '../../utils/globalTypes';
 
 const db = firestore();
+type ClubData = ClubInt & {key: string};
 
 export default function JoinClub({navigation, route}) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ClubData[]>([]);
   const [loading, setLoading] = useState(true);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
-  const uid: string = user.uid;
+  const uid = user?.uid;
   const userRef = db.collection('users').doc(uid);
   const leagueId = route.params.leagueId;
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
 
   useEffect(() => {
-    console.log(leagueId);
-    let retrievedClubs: [] = [];
+    let retrievedClubs: ClubData[] = [];
     leagueClubs
       .where('accepted', '==', false)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          retrievedClubs.push({...doc.data(), key: doc.id});
+          retrievedClubs.push({...(doc.data() as ClubInt), key: doc.id});
         });
-        console.log('clubs', retrievedClubs);
         setData(retrievedClubs);
         setLoading(false);
       });
@@ -37,30 +40,31 @@ export default function JoinClub({navigation, route}) {
 
   const onSendRequestConfirm = (clubId: string) => {
     const clubRef = leagueClubs.doc(clubId);
-    const userInfo: UserLeague = {
-      club: clubId,
-      // manager: false,
-      accepted: false,
+    const userInfo: {[leagueId: string]: UserLeagueInt} = {
+      [leagueId]: {
+        club: clubId,
+        accepted: false,
+      },
+    };
+    const rosterMember: {[uid: string]: ClubRosterMemberInt} = {
+      [uid]: {
+        accepted: false,
+        username: context?.data.userData?.username,
+      },
     };
     const batch = db.batch();
+
     batch.set(
       clubRef,
       {
-        roster: {
-          [uid]: {
-            accepted: false,
-            username: context.data.userData.username,
-          },
-        },
+        roster: rosterMember,
       },
       {merge: true},
     );
     batch.set(
       userRef,
       {
-        leagues: {
-          [leagueId]: userInfo,
-        },
+        leagues: userInfo,
       },
       {merge: true},
     );
