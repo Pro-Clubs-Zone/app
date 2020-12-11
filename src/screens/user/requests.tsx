@@ -6,6 +6,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {
   ClubRequestInt,
   LeagueRequestInt,
+  MyRequests,
   SectionListInt,
 } from '../../utils/globalTypes';
 
@@ -26,13 +27,18 @@ export default function Requests({navigation}) {
         component={LeagueRequests}
         initialParams={[requests?.league]}
       />
-      <Tab.Screen name="Sent" component={MyRequests} />
+      <Tab.Screen
+        name="Sent"
+        component={MySentRequests}
+        initialParams={[requests?.myRequests]}
+      />
     </Tab.Navigator>
   );
 }
 
 function ClubRequests({navigation, route}) {
   const DATA: ClubRequestInt[] = route.params[0];
+  console.log(DATA, 'clubs');
   return (
     <View>
       <SectionList
@@ -47,6 +53,8 @@ function ClubRequests({navigation, route}) {
 
 function LeagueRequests({navigation, route}) {
   const DATA: LeagueRequestInt[] = route.params[0];
+  console.log(DATA, 'leagues');
+
   return (
     <View>
       <SectionList
@@ -59,10 +67,17 @@ function LeagueRequests({navigation, route}) {
   );
 }
 
-function MyRequests() {
+function MySentRequests({navigation, route}) {
+  const DATA: MyRequests[] = route.params[0];
+  console.log(DATA);
   return (
     <View>
-      <Text>My Requests</Text>
+      <SectionList
+        sections={DATA}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({item}) => <Item title={item.clubName} />}
+        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+      />
     </View>
   );
 }

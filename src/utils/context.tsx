@@ -7,6 +7,7 @@ import {
   ClubRequestInt,
   LeagueInt,
   LeagueRequestInt,
+  MyRequests,
   SectionListInt,
   UserDataInt,
 } from './globalTypes';
@@ -22,20 +23,25 @@ const AppContext = createContext<{
 } | null>(null);
 const AuthContext = createContext<{uid: string} | undefined>(undefined);
 const RequestContext = createContext<{
-  club: ClubRequestInt[] | undefined;
-  league: LeagueRequestInt[] | undefined;
+  club: ClubRequestInt[];
+  league: LeagueRequestInt[];
+  myRequests: MyRequests[];
   updateClubs: (newData: ClubRequestInt[]) => void;
   updateLeagues: (newData: LeagueRequestInt[]) => void;
+  updateMyRequests: (newData: MyRequests) => void;
 } | null>(null);
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
 const RequestProvider = (props: any) => {
-  const [club, setClub] = useState<ClubRequestInt[] | undefined>(undefined);
-  const [league, setLeague] = useState<LeagueRequestInt[] | undefined>(
-    undefined,
-  );
+  const [myRequests, setMyRequests] = useState<MyRequests[]>([]);
+  const [club, setClub] = useState<ClubRequestInt[]>([]);
+  const [league, setLeague] = useState<LeagueRequestInt[]>([]);
+
+  const updateMyRequests = (newData: MyRequests) => {
+    setMyRequests([...myRequests, newData]);
+  };
 
   const updateClubs = (newData: ClubRequestInt[]) => {
     setClub(newData);
@@ -45,7 +51,15 @@ const RequestProvider = (props: any) => {
   };
 
   return (
-    <RequestContext.Provider value={{club, league, updateClubs, updateLeagues}}>
+    <RequestContext.Provider
+      value={{
+        myRequests,
+        club,
+        league,
+        updateClubs,
+        updateLeagues,
+        updateMyRequests,
+      }}>
       {props.children}
     </RequestContext.Provider>
   );

@@ -24,6 +24,8 @@ export default function LeaguePreview({navigation, route}) {
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.empty) {
+          console.log('not in league');
+
           return showUserTypeSelection();
         } else {
           querySnapshot.forEach((doc) => {

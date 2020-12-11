@@ -38,7 +38,7 @@ export default function CreateClub({route, navigation}) {
       created: firestore.Timestamp.now(),
     };
     const userInfo: UserLeague = {
-      club: clubRef.id,
+      clubId: clubRef.id,
       manager: true,
     };
 

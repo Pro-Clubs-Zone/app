@@ -38,7 +38,7 @@ export default function JoinClub({navigation, route}) {
     const clubRef = leagueClubs.doc(clubId);
     const userInfo: {[leagueId: string]: UserLeague} = {
       [leagueId]: {
-        club: clubId,
+        clubId: clubId,
         accepted: false,
       },
     };

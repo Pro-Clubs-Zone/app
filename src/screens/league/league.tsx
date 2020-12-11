@@ -28,7 +28,7 @@ export default function League({route, navigation}) {
 
   return data?.scheduled ? (
     console.log('scheduled')
-  ) : data?.admin === uid ? (
+  ) : data?.adminId === uid ? (
     <LeaguePreSeason navigation={navigation} route={route}></LeaguePreSeason>
   ) : (
     <LeaguePreview

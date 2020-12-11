@@ -10,6 +10,19 @@ export interface SectionListInt {
   data: {}[];
 }
 
+export interface MyRequests extends SectionListInt {
+  data: MyRequestData[];
+}
+
+export interface MyRequestData {
+  clubId: string;
+  clubName: string;
+  accepted: boolean;
+  leagueId: string;
+  leagueName: string;
+  playerId?: string;
+}
+
 export interface ClubRequestInt extends SectionListInt {
   data: PlayerRequestData[];
 }
@@ -19,15 +32,15 @@ export interface LeagueRequestInt extends SectionListInt {
 }
 
 export interface PlayerRequestData extends ClubRosterMember {
-  league: string;
+  leagueId: string;
   username: string;
-  player: string;
-  club: string;
+  playerId: string;
+  clubId: string;
 }
 
 export interface ClubRequestData extends ClubInt {
-  club: string;
-  league: string;
+  clubId: string;
+  leagueId: string;
 }
 
 export interface LeagueInt {
@@ -36,7 +49,7 @@ export interface LeagueInt {
   platform: string;
   teamNum: number;
   matchNum: number;
-  admin: string;
+  adminId: string;
   private: boolean;
   scheduled: boolean;
   created: Timestamp;
@@ -60,7 +73,7 @@ export interface ClubInt {
 }
 
 export interface UserLeague {
-  club?: string;
+  clubId?: string;
   manager?: boolean;
   admin?: boolean;
   accepted?: boolean;

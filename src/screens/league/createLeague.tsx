@@ -11,7 +11,7 @@ const leagueInfoDefault: LeagueInt = {
   platform: 'Playstation',
   teamNum: 4,
   matchNum: 2,
-  admin: '',
+  adminId: '',
   private: false,
   scheduled: false,
   created: firestore.Timestamp.now(),
@@ -35,7 +35,7 @@ export default function CreateLeague() {
     const userRef = db.collection('users').doc(uid);
 
     setLoading(true);
-    batch.set(leagueRef, {...leagueInfo, admin: uid, name: leagueName});
+    batch.set(leagueRef, {...leagueInfo, adminId: uid, name: leagueName});
     batch.set(
       userRef,
       {
