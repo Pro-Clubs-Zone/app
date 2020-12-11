@@ -13,7 +13,7 @@ const AppContext = createContext<{
   data: Partial<AppContextInt>;
   update: (newData: Partial<AppContextInt>) => void;
 } | null>(null);
-const AuthContext = createContext<{uid: string} | null>(null);
+const AuthContext = createContext<{uid: string} | undefined>(undefined);
 const RequestContext = createContext<{
   club: RequestInt[] | undefined;
   league: RequestInt[] | undefined;
@@ -57,7 +57,7 @@ const AppProvider = (props: any) => {
 };
 
 const AuthProvider = (props: any) => {
-  const [user, setUser] = useState<{uid: string} | null>(null);
+  const [user, setUser] = useState<{uid: string} | undefined>(undefined);
   const [emu] = useState(true);
 
   function onAuthStateChanged(firUser: any): void {

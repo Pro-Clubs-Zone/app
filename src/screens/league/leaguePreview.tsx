@@ -2,17 +2,16 @@ import React, {useState, useEffect, useContext} from 'react';
 import {Text, View, ActivityIndicator, Alert, Button} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../utils/context';
-import {UserLeague} from './interface';
 
 const db = firestore();
 
 export default function LeaguePreview({navigation, route}) {
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState<boolean>(false);
 
   const leagueId = route.params.leagueId;
   const user = useContext(AuthContext);
 
-  const uid: string = user?.uid;
+  const uid = user?.uid;
 
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
@@ -21,16 +20,17 @@ export default function LeaguePreview({navigation, route}) {
   const onCheckUserInLeague = () => {
     let playerAccepted: boolean;
     leagueClubs
-      .where(`roster.${uid}`, 'in', [true, false])
+      .where(`roster.${uid}.accepted`, 'in', [true, false])
       .get()
       .then((querySnapshot) => {
         if (querySnapshot.empty) {
           return showUserTypeSelection();
         } else {
           querySnapshot.forEach((doc) => {
-            playerAccepted = doc.data().roster[uid];
+            playerAccepted = doc.data().roster[uid].accepted;
             setAccepted(playerAccepted);
             userInLeague();
+            console.log(playerAccepted, 'player accepted?');
           });
         }
       })
