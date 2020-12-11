@@ -15,8 +15,8 @@ const AppContext = createContext<{
 } | null>(null);
 const AuthContext = createContext<{uid: string} | null>(null);
 const RequestContext = createContext<{
-  club: RequestInt[] | null;
-  league: RequestInt[] | null;
+  club: RequestInt[] | undefined;
+  league: RequestInt[] | undefined;
   updateClubs: (newData: RequestInt[]) => void;
   updateLeagues: (newData: RequestInt[]) => void;
 } | null>(null);
@@ -25,8 +25,8 @@ const firAuth = auth();
 const firFunc = functions();
 
 const RequestProvider = (props: any) => {
-  const [club, setClub] = useState<RequestInt[] | null>(null);
-  const [league, setLeague] = useState<RequestInt[] | null>(null);
+  const [club, setClub] = useState<RequestInt[] | undefined>(undefined);
+  const [league, setLeague] = useState<RequestInt[] | undefined>(undefined);
 
   const updateClubs = (newData: RequestInt[]) => {
     setClub(newData);

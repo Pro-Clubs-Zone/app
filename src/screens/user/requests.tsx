@@ -16,12 +16,12 @@ export default function Requests({navigation}) {
       <Tab.Screen
         name="Club"
         component={ClubRequests}
-        initialParams={requests.club}
+        initialParams={requests?.club}
       />
       <Tab.Screen
         name="League"
         component={LeagueRequests}
-        initialParams={requests.league}
+        initialParams={requests?.league}
       />
       <Tab.Screen name="Sent" component={MyRequests} />
     </Tab.Navigator>

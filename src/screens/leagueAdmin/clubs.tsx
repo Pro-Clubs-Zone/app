@@ -1,19 +1,27 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, Button, SectionList} from 'react-native';
+import {
+  Text,
+  View,
+  Button,
+  SectionList,
+  NativeSyntheticEvent,
+  NativeTouchEvent,
+} from 'react-native';
 import {AppContext} from '../../utils/context';
 
 import firestore from '@react-native-firebase/firestore';
+import {ClubInt} from '../../utils/globalTypes';
 
 const db = firestore();
 
+type ClubData = ClubInt & {id: string};
+
 interface ClubList {
   title: string;
-  data: object[];
+  data: ClubData[];
 }
 
-interface SectionedList extends Array<ClubList> {}
-
-let sectionedDataDefault: SectionedList = [
+let defaultData: ClubList[] = [
   {
     title: 'New requests',
     data: [],
@@ -25,9 +33,9 @@ let sectionedDataDefault: SectionedList = [
 ];
 
 export default function Clubs({navigation, route}) {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<ClubData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sectionedData, setSectionedData] = useState(sectionedDataDefault);
+  const [sectionedData, setSectionedData] = useState(defaultData);
 
   const leagueId = route.params.leagueId;
 
@@ -36,17 +44,8 @@ export default function Clubs({navigation, route}) {
     .doc(leagueId)
     .collection('clubs');
 
-  const sortClubs = (clubs: []) => {
-    let sortedClubs: SectionedList = [
-      {
-        title: 'New requests',
-        data: [],
-      },
-      {
-        title: 'Accepted',
-        data: [],
-      },
-    ];
+  const sortClubs = (clubs: ClubData[]) => {
+    let sortedClubs = defaultData;
 
     clubs.forEach((club) => {
       if (club.accepted) {
@@ -60,13 +59,11 @@ export default function Clubs({navigation, route}) {
 
   useEffect(() => {
     leagueClubs.get().then((querySnapshot) => {
-      let clubList: any = [];
-      let clubInfo: any;
+      let clubList: ClubData[] = [];
+      let clubInfo: ClubData;
       querySnapshot.forEach((doc) => {
-        clubInfo = doc.data();
-        clubInfo.id = doc.id;
-        clubList = [...clubList, clubInfo];
-        // doc.data() is never undefined for query doc snapshots
+        clubInfo = {...(doc.data() as ClubInt), id: doc.id};
+        clubList.push(clubInfo);
       });
 
       console.log(clubList, 'clublist');
@@ -75,8 +72,8 @@ export default function Clubs({navigation, route}) {
     });
   }, []);
 
-  const onClubAccept = (clubId) => {
-    const updatedList: any = data;
+  const onClubAccept = (clubId: string) => {
+    const updatedList: ClubData[] = data;
     updatedList.map((club) => {
       if (club.id === clubId) {
         club.accepted = true;
@@ -90,13 +87,15 @@ export default function Clubs({navigation, route}) {
     });
   };
 
-  const onClubDecline = (clubId) => {
-    const declinedClub: any = data.find((club) => club.id === clubId);
-    const updatedList: any = data.filter((club) => club.id !== clubId);
+  const onClubDecline = (clubId: string) => {
+    const declinedClub: ClubData | undefined = data.find(
+      (club) => club.id === clubId,
+    );
+    const updatedList: ClubData[] = data.filter((club) => club.id !== clubId);
     setData(updatedList);
     sortClubs(updatedList);
     const clubRef = leagueClubs.doc(clubId);
-    const managerRef = db.collection('users').doc(declinedClub.managerId);
+    const managerRef = db.collection('users').doc(declinedClub?.managerId);
     const batch = db.batch();
     batch.update(managerRef, {
       [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
