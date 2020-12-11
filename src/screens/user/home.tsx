@@ -213,6 +213,8 @@ function HomeContent({navigation}) {
   const onSignOut = () => {
     firAuth.signOut().then(() => {
       setUid(undefined);
+      setClubRequestCount(0);
+      setLeagueRequestCount(0);
       context?.update({
         userData: {} as UserDataInt,
         userLeagues: {},

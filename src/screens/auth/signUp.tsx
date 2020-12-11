@@ -9,15 +9,15 @@ const db = firestore();
 const firAuth = auth();
 
 function SignUp({navigation}) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onSignUp = () => {
     setLoading(true);
 
-    const createDbEntry = (data) => {
+    const createDbEntry = (data: {user: {uid: string}}) => {
       db.collection('users')
         .doc(data.user.uid)
         .set({

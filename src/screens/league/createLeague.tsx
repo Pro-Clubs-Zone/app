@@ -3,9 +3,9 @@ import {Text, View, Button, TextInput} from 'react-native';
 import SignUp from '../auth/signUp';
 import {AppContext, AuthContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
-import {League, UserLeague} from './interface';
+import {LeagueInt} from '../../utils/globalTypes';
 
-const leagueInfoDefault: League = {
+const leagueInfoDefault: LeagueInt = {
   name: Math.floor(Math.random() * Math.floor(200)),
   description: 'some good description',
   platform: 'Playstation',
@@ -22,12 +22,12 @@ const leagueInfoDefault: League = {
 const db = firestore();
 
 export default function CreateLeague() {
-  const [leagueInfo, setLeagueInfo] = useState(leagueInfoDefault);
-  const [loading, setLoading] = useState(false);
-  const [leagueName, setLeagueName] = useState('');
+  const [leagueInfo, setLeagueInfo] = useState<LeagueInt>(leagueInfoDefault);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [leagueName, setLeagueName] = useState<string>('');
 
   const user = useContext(AuthContext);
-  const uid: string = user?.uid;
+  const uid = user?.uid;
 
   const onCreateLeague = () => {
     const batch = db.batch();

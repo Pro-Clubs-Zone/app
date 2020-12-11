@@ -1,20 +1,21 @@
 import React, {useContext, useState} from 'react';
 import {Text, View, Button, TextInput} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {Club, UserLeague} from './interface';
+//import {Club, UserLeague} from './interface';
 import {AppContext, AuthContext} from '../../utils/context';
+import {ClubInt, UserLeagueInt} from '../../utils/globalTypes';
 
 const db = firestore();
 
 export default function CreateClub({route, navigation}) {
-  const [clubName, setClubName] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [clubName, setClubName] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
 
   const leagueId: string = route.params.leagueId;
-  const uid: string = user.uid;
+  const uid = user?.uid;
 
   const onCreateClub = () => {
     const userRef = db.collection('users').doc(uid);
@@ -24,19 +25,19 @@ export default function CreateClub({route, navigation}) {
       .collection('clubs')
       .doc();
 
-    const clubInfo: Club = {
+    const clubInfo: ClubInt = {
       name: clubName,
       managerId: uid,
       accepted: false,
       roster: {
         [uid]: {
           accepted: true,
-          username: context.data.userData.username,
+          username: context?.data.userData?.username,
         },
       },
       created: firestore.Timestamp.now(),
     };
-    const userInfo: UserLeague = {
+    const userInfo: UserLeagueInt = {
       club: clubRef.id,
       manager: true,
     };
