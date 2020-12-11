@@ -2,7 +2,14 @@ import React, {useEffect, useState, createContext} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
-import {AppContextInt, LeagueInt, RequestInt, UserDataInt} from './globalTypes';
+import {
+  AppContextInt,
+  ClubRequestInt,
+  LeagueInt,
+  LeagueRequestInt,
+  SectionListInt,
+  UserDataInt,
+} from './globalTypes';
 
 const appContextValue: AppContextInt = {
   userData: {} as UserDataInt,
@@ -15,23 +22,25 @@ const AppContext = createContext<{
 } | null>(null);
 const AuthContext = createContext<{uid: string} | undefined>(undefined);
 const RequestContext = createContext<{
-  club: RequestInt[] | undefined;
-  league: RequestInt[] | undefined;
-  updateClubs: (newData: RequestInt[]) => void;
-  updateLeagues: (newData: RequestInt[]) => void;
+  club: ClubRequestInt[] | undefined;
+  league: LeagueRequestInt[] | undefined;
+  updateClubs: (newData: ClubRequestInt[]) => void;
+  updateLeagues: (newData: LeagueRequestInt[]) => void;
 } | null>(null);
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
 const RequestProvider = (props: any) => {
-  const [club, setClub] = useState<RequestInt[] | undefined>(undefined);
-  const [league, setLeague] = useState<RequestInt[] | undefined>(undefined);
+  const [club, setClub] = useState<ClubRequestInt[] | undefined>(undefined);
+  const [league, setLeague] = useState<LeagueRequestInt[] | undefined>(
+    undefined,
+  );
 
-  const updateClubs = (newData: RequestInt[]) => {
+  const updateClubs = (newData: ClubRequestInt[]) => {
     setClub(newData);
   };
-  const updateLeagues = (newData: RequestInt[]) => {
+  const updateLeagues = (newData: LeagueRequestInt[]) => {
     setLeague(newData);
   };
 

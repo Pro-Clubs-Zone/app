@@ -3,7 +3,7 @@ import {Text, View, Button, TextInput} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 //import {Club, UserLeague} from './interface';
 import {AppContext, AuthContext} from '../../utils/context';
-import {ClubInt, UserLeagueInt} from '../../utils/globalTypes';
+import {ClubInt, UserLeague} from '../../utils/globalTypes';
 
 const db = firestore();
 
@@ -37,7 +37,7 @@ export default function CreateClub({route, navigation}) {
       },
       created: firestore.Timestamp.now(),
     };
-    const userInfo: UserLeagueInt = {
+    const userInfo: UserLeague = {
       club: clubRef.id,
       manager: true,
     };

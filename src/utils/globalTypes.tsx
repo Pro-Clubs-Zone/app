@@ -5,9 +5,29 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
-export interface RequestInt {
+export interface SectionListInt {
   title: string;
-  data: {[key: string]: {}}[];
+  data: {}[];
+}
+
+export interface ClubRequestInt extends SectionListInt {
+  data: PlayerRequestData[];
+}
+
+export interface LeagueRequestInt extends SectionListInt {
+  data: ClubRequestData[];
+}
+
+export interface PlayerRequestData extends ClubRosterMember {
+  league: string;
+  username: string;
+  player: string;
+  club: string;
+}
+
+export interface ClubRequestData extends ClubInt {
+  club: string;
+  league: string;
 }
 
 export interface LeagueInt {
@@ -25,7 +45,7 @@ export interface LeagueInt {
   };
 }
 
-export interface ClubRosterMemberInt {
+export interface ClubRosterMember {
   accepted: boolean;
   username: string;
 }
@@ -34,12 +54,12 @@ export interface ClubInt {
   managerId: string;
   accepted: boolean;
   roster: {
-    [uid: string]: ClubRosterMemberInt;
+    [uid: string]: ClubRosterMember;
   };
   created: Timestamp;
 }
 
-export interface UserLeagueInt {
+export interface UserLeague {
   club?: string;
   manager?: boolean;
   admin?: boolean;
@@ -49,7 +69,7 @@ export interface UserLeagueInt {
 export interface UserDataInt {
   username: string;
   leagues: {
-    [league: string]: UserLeagueInt;
+    [league: string]: UserLeague;
   };
 }
 

@@ -11,12 +11,15 @@ import Requests from './requests';
 import {
   AppContextInt,
   ClubInt,
-  ClubRosterMemberInt,
+  ClubRequestData,
+  ClubRequestInt,
+  ClubRosterMember,
   DocumentData,
   LeagueInt,
-  RequestInt,
+  LeagueRequestInt,
+  SectionListInt,
   UserDataInt,
-  UserLeagueInt,
+  UserLeague,
 } from '../../utils/globalTypes';
 
 const firFunc = functions();
@@ -38,8 +41,8 @@ function Home() {
 function HomeContent({navigation}) {
   const [loading, setLoading] = useState<boolean>(true);
   const [uid, setUid] = useState<string | undefined>();
-  const [clubRequests, setClubRequests] = useState<RequestInt[]>([]);
-  const [leagueRequests, setLeagueRequests] = useState<RequestInt[]>([]);
+  const [clubRequests, setClubRequests] = useState<SectionListInt[]>([]);
+  const [leagueRequests, setLeagueRequests] = useState<SectionListInt[]>([]);
   const [clubRequestCount, setClubRequestCount] = useState(0);
   const [leagueRequestCount, setLeagueRequestCount] = useState(0);
 
@@ -60,17 +63,19 @@ function HomeContent({navigation}) {
   }, [user]);
 
   const getClubRequests = (data: {[leagueId: string]: LeagueInt}) => {
-    let requests: RequestInt[] = [];
-    let clubData: RequestInt = {
+    let requests: ClubRequestInt[] = [];
+    let clubData: ClubRequestInt = {
       title: '',
       data: [],
     };
-    let playerData: UserLeagueInt & {club: string; league: string};
+    let playerData: ClubRosterMember & {league: string} & {
+      username: string;
+    } & {player: string} & {club: string};
 
     for (const [leagueId, league] of Object.entries(data)) {
       if (league.clubs) {
         for (const [clubId, club] of Object.entries(league.clubs)) {
-          const roster: {[uid: string]: ClubRosterMemberInt} = club.roster;
+          const roster: {[uid: string]: ClubRosterMember} = club.roster;
           clubData.title = club.name + ' / ' + league.name;
           for (const [playerId, player] of Object.entries(roster)) {
             if (player.accepted === false) {
@@ -78,8 +83,9 @@ function HomeContent({navigation}) {
                 ...player,
                 club: clubId,
                 league: leagueId,
+                player: playerId,
               };
-              clubData.data = [...clubData.data, {[playerId]: playerData}];
+              clubData.data = [...clubData.data, playerData];
             }
           }
         }
@@ -89,38 +95,40 @@ function HomeContent({navigation}) {
     setClubRequestCount(clubRequestCount + clubData.data.length);
 
     setClubRequests(requests);
+    console.log(requests);
+
     requestContext?.updateClubs(requests);
   };
 
   const getLeagueRequests = (data: {[leagueId: string]: LeagueInt}) => {
-    let requests: RequestInt[] = [];
-    let leagueData: RequestInt = {
+    let requests: LeagueRequestInt[] = [];
+    let leagueData: LeagueRequestInt = {
       title: '',
       data: [],
     };
-    let clubData: ClubInt & {league: string};
+    let clubData: ClubRequestData;
 
     for (const [leagueId, league] of Object.entries(data)) {
       if (league.clubs) {
         for (const [clubId, club] of Object.entries(league.clubs)) {
           leagueData.title = league.name;
-          console.log(club);
 
           if (club.accepted === false) {
             clubData = {
               ...club,
               league: leagueId,
+              club: clubId,
             };
-            leagueData.data = [...leagueData.data, {[clubId]: clubData}];
+            leagueData.data = [...leagueData.data, clubData];
           }
         }
       }
       requests.push(leagueData);
-      //  console.log(leagueData.data.length);
     }
 
     setLeagueRequestCount(leagueRequestCount + leagueData.data.length);
     setLeagueRequests(requests);
+
     requestContext?.updateLeagues(requests);
   };
 

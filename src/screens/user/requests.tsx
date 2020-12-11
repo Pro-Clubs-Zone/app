@@ -1,9 +1,13 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, SectionList} from 'react-native';
 import {AppContext, AuthContext, RequestContext} from '../../utils/context';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {
+  ClubRequestInt,
+  LeagueRequestInt,
+  SectionListInt,
+} from '../../utils/globalTypes';
 
 const db = firestore();
 const Tab = createMaterialTopTabNavigator();
@@ -16,12 +20,12 @@ export default function Requests({navigation}) {
       <Tab.Screen
         name="Club"
         component={ClubRequests}
-        initialParams={requests?.club}
+        initialParams={[requests?.club]}
       />
       <Tab.Screen
         name="League"
         component={LeagueRequests}
-        initialParams={requests?.league}
+        initialParams={[requests?.league]}
       />
       <Tab.Screen name="Sent" component={MyRequests} />
     </Tab.Navigator>
@@ -29,19 +33,29 @@ export default function Requests({navigation}) {
 }
 
 function ClubRequests({navigation, route}) {
-  console.log(route.params);
+  const DATA: ClubRequestInt[] = route.params[0];
   return (
     <View>
-      <Text>Club Requests</Text>
+      <SectionList
+        sections={DATA}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({item}) => <Item title={item.username} />}
+        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+      />
     </View>
   );
 }
 
 function LeagueRequests({navigation, route}) {
-  console.log(route.params);
+  const DATA: LeagueRequestInt[] = route.params[0];
   return (
     <View>
-      <Text>League Requests</Text>
+      <SectionList
+        sections={DATA}
+        keyExtractor={(item, index) => item + index}
+        renderItem={({item}) => <Item title={item.name} />}
+        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+      />
     </View>
   );
 }
@@ -53,3 +67,9 @@ function MyRequests() {
     </View>
   );
 }
+
+const Item = ({title}) => (
+  <View>
+    <Text>{title}</Text>
+  </View>
+);
