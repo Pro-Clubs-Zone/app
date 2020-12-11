@@ -93,10 +93,7 @@ function HomeContent({navigation}) {
       requests.push(clubData);
     }
     setClubRequestCount(clubRequestCount + clubData.data.length);
-
     setClubRequests(requests);
-    console.log(requests);
-
     requestContext?.updateClubs(requests);
   };
 
@@ -128,56 +125,41 @@ function HomeContent({navigation}) {
 
     setLeagueRequestCount(leagueRequestCount + leagueData.data.length);
     setLeagueRequests(requests);
-
     requestContext?.updateLeagues(requests);
   };
 
-  const getLeaguesClubs = (userData: UserDataInt) => {
+  const getLeaguesClubs = async (userData: UserDataInt) => {
     const leagues = Object.entries(userData.leagues);
 
     let userLeagues: {[league: string]: LeagueInt} = {};
-    const fetchData = async () => {
-      console.log('fetch');
-      for (const [leagueId, league] of leagues) {
-        const clubRef = leaguesRef
-          .doc(leagueId)
-          .collection('clubs')
-          .doc(league.club);
+    console.log('fetch');
+    for (const [leagueId, league] of leagues) {
+      const clubRef = leaguesRef
+        .doc(leagueId)
+        .collection('clubs')
+        .doc(league.club);
 
-        await leaguesRef
-          .doc(leagueId)
-          .get()
-          .then((doc) => {
-            userLeagues = {...userLeagues, [doc.id]: doc.data() as LeagueInt};
-          })
-          .then(async () => {
-            await clubRef.get().then((doc) => {
-              if (doc.exists) {
-                userLeagues[leagueId].clubs = {
-                  [doc.id]: doc.data() as ClubInt,
-                };
-              }
-            });
+      await leaguesRef
+        .doc(leagueId)
+        .get()
+        .then((doc) => {
+          userLeagues = {...userLeagues, [doc.id]: doc.data() as LeagueInt};
+        })
+        .then(async () => {
+          await clubRef.get().then((doc) => {
+            if (doc.exists) {
+              userLeagues[leagueId].clubs = {
+                [doc.id]: doc.data() as ClubInt,
+              };
+            }
           });
-      }
+        });
+    }
 
-      return {
-        userLeagues,
-        userData,
-      };
+    return {
+      userLeagues,
+      userData,
     };
-
-    fetchData()
-      .then((data) => {
-        getClubRequests(data.userLeagues);
-
-        context?.update(data);
-        return data;
-      })
-      .then((data) => {
-        setLoading(false);
-        getLeagueRequests(data.userLeagues);
-      });
   };
 
   useEffect(() => {
@@ -188,7 +170,15 @@ function HomeContent({navigation}) {
         console.log('call to fir');
         userData = doc.data() as UserDataInt;
         if (userData?.leagues) {
-          getLeaguesClubs(userData);
+          getLeaguesClubs(userData)
+            .then((data) => {
+              context?.update(data);
+              getClubRequests(data.userLeagues);
+              getLeagueRequests(data.userLeagues);
+            })
+            .then(() => {
+              setLoading(false);
+            });
         } else {
           console.log('no leagues');
 
@@ -199,13 +189,10 @@ function HomeContent({navigation}) {
       return subscriber;
     }
   }, [uid]);
+  //TODO my requests (club/leagues)
 
-  //TODO get requests to leagues
-
-  // if Admin, get all the unconfirmed clubs from db
   //TODO Get scheduled matches for all leagues
   //TODO report center
-  //TODO my requests (club/leagues)
 
   // const testFunc = async () => {
   //   const test = firFunc.httpsCallable('scheduleMatches');

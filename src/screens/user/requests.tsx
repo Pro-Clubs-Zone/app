@@ -14,7 +14,6 @@ const Tab = createMaterialTopTabNavigator();
 
 export default function Requests({navigation}) {
   const requests = useContext(RequestContext);
-  //console.log(requests);
   return (
     <Tab.Navigator>
       <Tab.Screen
