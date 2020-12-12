@@ -105,7 +105,7 @@ function HomeContent({navigation}) {
     }
     console.log(uid, myClubRequests, 'my league requests');
     requestContext?.setClubCount(clubData.data.length);
-    requestContext?.updateClubs(requests);
+    requestContext?.setClubs(requests);
     requestContext?.updateMyRequests(myClubRequests);
   };
 
@@ -161,7 +161,7 @@ function HomeContent({navigation}) {
     requestContext?.setLeagueCount(requestCount);
     console.log(requests, 'requests');
     console.log(myLeagueRequests, 'myLeagueRequests');
-    requestContext?.updateLeagues(requests);
+    requestContext?.setLeagues(requests);
     requestContext?.updateMyRequests(myLeagueRequests);
   };
 
@@ -231,7 +231,7 @@ function HomeContent({navigation}) {
         if (userData?.leagues) {
           getLeaguesClubs(userData)
             .then((data) => {
-              context?.update(data);
+              context?.setData(data);
               getClubRequests(data.userLeagues);
               getLeagueRequests(data.userLeagues);
             })
@@ -241,7 +241,7 @@ function HomeContent({navigation}) {
         } else {
           console.log('no leagues');
 
-          context?.update({userData: userData});
+          context?.setData({userData: userData});
           setLoading(false);
         }
       });
@@ -269,7 +269,7 @@ function HomeContent({navigation}) {
       setUid(undefined);
       setClubRequestCount(0);
       setLeagueRequestCount(0);
-      context?.update({
+      context?.setData({
         userData: {} as UserDataInt,
         userLeagues: {},
       });

@@ -23,7 +23,7 @@ export default function JoinClub({navigation, route}) {
   useEffect(() => {
     let retrievedClubs: ClubData[] = [];
     leagueClubs
-      .where('accepted', '==', false)
+      .where('accepted', '==', true)
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {

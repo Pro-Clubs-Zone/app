@@ -16,23 +16,23 @@ const db = firestore();
 const Tab = createMaterialTopTabNavigator();
 
 export default function Requests({navigation}) {
-  const requests = useContext(RequestContext);
+  const requestsContext = useContext(RequestContext);
   return (
     <Tab.Navigator>
       <Tab.Screen
         name="Club"
         component={ClubRequests}
-        initialParams={[requests?.club]}
+        initialParams={[requestsContext?.clubs]}
       />
       <Tab.Screen
         name="League"
         component={LeagueRequests}
-        initialParams={[requests?.league]}
+        initialParams={[requestsContext?.leagues]}
       />
       <Tab.Screen
         name="Sent"
         component={MySentRequests}
-        initialParams={[requests?.myRequests]}
+        initialParams={[requestsContext?.myRequests]}
       />
     </Tab.Navigator>
   );
@@ -86,7 +86,7 @@ function LeagueRequests({navigation, route}) {
     }
     setData(newData);
 
-    requestContext?.updateLeagues(newData);
+    requestContext?.setLeagues(newData);
     requestContext?.setLeagueCount(requestContext.leagueCount - 1);
   };
 

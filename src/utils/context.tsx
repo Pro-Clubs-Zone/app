@@ -11,10 +11,8 @@ import functions from '@react-native-firebase/functions';
 import {
   AppContextInt,
   ClubRequestInt,
-  LeagueInt,
   LeagueRequestInt,
   MyRequests,
-  SectionListInt,
   UserDataInt,
 } from './globalTypes';
 
@@ -25,15 +23,15 @@ const appContextValue: AppContextInt = {
 
 const AppContext = createContext<{
   data: Partial<AppContextInt>;
-  update: (newData: Partial<AppContextInt>) => void;
+  setData: Dispatch<SetStateAction<Partial<AppContextInt>>>;
 } | null>(null);
 const AuthContext = createContext<{uid: string} | undefined>(undefined);
 const RequestContext = createContext<{
-  club: ClubRequestInt[];
-  league: LeagueRequestInt[];
+  clubs: ClubRequestInt[];
+  leagues: LeagueRequestInt[];
   myRequests: MyRequests[];
-  updateClubs: (newData: ClubRequestInt[]) => void;
-  updateLeagues: (newData: LeagueRequestInt[]) => void;
+  setClubs: Dispatch<SetStateAction<ClubRequestInt[]>>;
+  setLeagues: Dispatch<SetStateAction<LeagueRequestInt[]>>;
   updateMyRequests: (newData: MyRequests) => void;
   setLeagueCount: Dispatch<SetStateAction<number>>;
   setClubCount: Dispatch<SetStateAction<number>>;
@@ -46,8 +44,8 @@ const firFunc = functions();
 
 const RequestProvider = (props: any) => {
   const [myRequests, setMyRequests] = useState<MyRequests[]>([]);
-  const [club, setClub] = useState<ClubRequestInt[]>([]);
-  const [league, setLeague] = useState<LeagueRequestInt[]>([]);
+  const [clubs, setClubs] = useState<ClubRequestInt[]>([]);
+  const [leagues, setLeagues] = useState<LeagueRequestInt[]>([]);
   const [leagueCount, setLeagueCount] = useState<number>(0);
   const [clubCount, setClubCount] = useState<number>(0);
 
@@ -55,21 +53,14 @@ const RequestProvider = (props: any) => {
     setMyRequests([...myRequests, newData]);
   };
 
-  const updateClubs = (newData: ClubRequestInt[]) => {
-    setClub(newData);
-  };
-  const updateLeagues = (newData: LeagueRequestInt[]) => {
-    setLeague(newData);
-  };
-
   return (
     <RequestContext.Provider
       value={{
         myRequests,
-        club,
-        league,
-        updateClubs,
-        updateLeagues,
+        clubs,
+        leagues,
+        setClubs,
+        setLeagues,
         updateMyRequests,
         setLeagueCount,
         setClubCount,
@@ -84,12 +75,8 @@ const RequestProvider = (props: any) => {
 const AppProvider = (props: any) => {
   const [data, setData] = useState<Partial<AppContextInt>>(appContextValue);
 
-  const update = (newData: Partial<AppContextInt>) => {
-    setData(newData);
-  };
-
   return (
-    <AppContext.Provider value={{data, update}}>
+    <AppContext.Provider value={{data, setData}}>
       {props.children}
     </AppContext.Provider>
   );
