@@ -32,7 +32,8 @@ const RequestContext = createContext<{
   myRequests: MyRequests[];
   setClubs: Dispatch<SetStateAction<ClubRequestInt[]>>;
   setLeagues: Dispatch<SetStateAction<LeagueRequestInt[]>>;
-  updateMyRequests: (newData: MyRequests) => void;
+  setMyLeagueRequests: Dispatch<SetStateAction<MyRequests>>;
+  setMyClubRequests: Dispatch<SetStateAction<MyRequests>>;
   setLeagueCount: Dispatch<SetStateAction<number>>;
   setClubCount: Dispatch<SetStateAction<number>>;
   leagueCount: number;
@@ -43,15 +44,22 @@ const firAuth = auth();
 const firFunc = functions();
 
 const RequestProvider = (props: any) => {
-  const [myRequests, setMyRequests] = useState<MyRequests[]>([]);
+  const defaultRequest = {
+    title: '',
+    data: [],
+  };
+  const [myClubRequests, setMyClubRequests] = useState<MyRequests>(
+    defaultRequest,
+  );
+  const [myLeagueRequests, setMyLeagueRequests] = useState<MyRequests>(
+    defaultRequest,
+  );
   const [clubs, setClubs] = useState<ClubRequestInt[]>([]);
   const [leagues, setLeagues] = useState<LeagueRequestInt[]>([]);
   const [leagueCount, setLeagueCount] = useState<number>(0);
   const [clubCount, setClubCount] = useState<number>(0);
 
-  const updateMyRequests = (newData: MyRequests) => {
-    setMyRequests([...myRequests, newData]);
-  };
+  const myRequests: MyRequests[] = [myClubRequests, myLeagueRequests];
 
   return (
     <RequestContext.Provider
@@ -61,7 +69,8 @@ const RequestProvider = (props: any) => {
         leagues,
         setClubs,
         setLeagues,
-        updateMyRequests,
+        setMyLeagueRequests,
+        setMyClubRequests,
         setLeagueCount,
         setClubCount,
         leagueCount,
@@ -93,7 +102,7 @@ const AuthProvider = (props: any) => {
     if (__DEV__ && emu) {
       firFunc.useFunctionsEmulator('http://localhost:5001');
       firAuth.useEmulator('http://localhost:9099');
-      db.settings({host: 'localhost:8080', ssl: false});
+      db.settings({host: 'localhost:8080', ssl: false, persistence: false});
     }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount

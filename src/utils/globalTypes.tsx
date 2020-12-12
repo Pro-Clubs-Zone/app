@@ -20,7 +20,6 @@ export interface MyRequestData {
   accepted: boolean;
   leagueId: string;
   leagueName: string;
-  playerId?: string;
 }
 
 export interface ClubRequestInt extends SectionListInt {

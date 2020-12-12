@@ -43,7 +43,6 @@ function ClubRequests({navigation, route}) {
     ...route.params[0],
   ]);
   const requestContext = useContext(RequestContext);
-
   type Props = {
     playerId: string;
     clubId: string;
@@ -54,19 +53,19 @@ function ClubRequests({navigation, route}) {
     {playerId, clubId, leagueId}: Props,
     sectionTitle: string,
   ) => {
-    const leagueIndex = data.findIndex(
-      (league) => league.title === sectionTitle,
+    const sectionIndex = data.findIndex(
+      (section) => section.title === sectionTitle,
     );
 
-    const unacceptedPlayers = data[leagueIndex].data.filter((player) => {
+    const unacceptedPlayers = data[sectionIndex].data.filter((player) => {
       return player.playerId !== playerId;
     });
 
     const newData = [...data];
-    newData[leagueIndex].data = unacceptedPlayers;
+    newData[sectionIndex].data = unacceptedPlayers;
 
     if (unacceptedPlayers.length === 0) {
-      newData.splice(leagueIndex, 1);
+      newData.splice(sectionIndex, 1);
     }
     setData(newData);
 
@@ -95,6 +94,7 @@ function ClubRequests({navigation, route}) {
           <Item
             title={item.username}
             onPress={() => onAcceptPlayer(item, section.title)}
+            button="accept"
           />
         )}
         renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
@@ -124,18 +124,19 @@ function LeagueRequests({navigation, route}) {
     clubRef.update({
       accepted: true,
     });
-    const leagueIndex = data.findIndex(
-      (league) => league.title === sectionTitle,
+
+    const sectionIndex = data.findIndex(
+      (section) => section.title === sectionTitle,
     );
 
-    const unacceptedClubs = data[leagueIndex].data.filter((club) => {
+    const unacceptedClubs = data[sectionIndex].data.filter((club) => {
       return club.clubId !== clubId;
     });
     const newData = [...data];
-    newData[leagueIndex].data = unacceptedClubs;
+    newData[sectionIndex].data = unacceptedClubs;
 
     if (unacceptedClubs.length === 0) {
-      newData.splice(leagueIndex, 1);
+      newData.splice(sectionIndex, 1);
     }
     setData(newData);
 
@@ -151,6 +152,7 @@ function LeagueRequests({navigation, route}) {
         <Item
           title={item.name}
           onPress={() => onAcceptClub(item, section.title)}
+          button="accept"
         />
       )}
       renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
@@ -159,13 +161,89 @@ function LeagueRequests({navigation, route}) {
 }
 
 function MySentRequests({navigation, route}) {
-  const DATA: MyRequests[] = route.params[0];
+  const [data, setData] = useState<MyRequests[]>(() => [...route.params[0]]);
+
+  const requestContext = useContext(RequestContext);
+  const user = useContext(AuthContext);
+
+  const uid = user?.uid;
+
+  type Props = {
+    clubId: string;
+    leagueId: string;
+  };
+
+  const onCancelRequest = ({clubId, leagueId}: Props, sectionTitle: string) => {
+    const clubRef = db
+      .collection('leagues')
+      .doc(leagueId)
+      .collection('clubs')
+      .doc(clubId);
+
+    const userRef = db.collection('users').doc(uid);
+    const batch = db.batch();
+
+    const sectionIndex = data.findIndex(
+      (section) => section.title === sectionTitle,
+    );
+
+    const newData = [...data];
+
+    if (sectionTitle == 'Club Requests') {
+      const openClubRequests = data[sectionIndex].data.filter((club) => {
+        return club.clubId !== clubId;
+      });
+
+      newData[sectionIndex].data = openClubRequests;
+
+      if (openClubRequests.length === 0) {
+        newData.splice(sectionIndex, 1);
+      }
+
+      setData(newData);
+
+      requestContext?.setMyClubRequests(newData[sectionIndex]);
+
+      batch.update(clubRef, {
+        ['roster.' + uid]: firestore.FieldValue.delete(),
+      });
+      batch.update(userRef, {
+        ['leagues.' + leagueId]: firestore.FieldValue.delete(),
+      });
+    } else {
+      const openLeagueRequests = data[sectionIndex].data.filter((league) => {
+        return league.leagueId !== leagueId;
+      });
+
+      newData[sectionIndex].data = openLeagueRequests;
+
+      if (openLeagueRequests.length === 0) {
+        newData.splice(sectionIndex, 1);
+      }
+
+      setData(newData);
+      requestContext?.setMyLeagueRequests(newData[sectionIndex]);
+
+      batch.delete(clubRef);
+      batch.update(userRef, {
+        ['leagues.' + leagueId]: firestore.FieldValue.delete(),
+      });
+    }
+    batch.commit();
+  };
+
   return (
     <View>
       <SectionList
-        sections={DATA}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({item}) => <Item title={item.clubName} />}
+        sections={data}
+        keyExtractor={(item) => item.clubId}
+        renderItem={({item, section}) => (
+          <Item
+            title={item.clubName}
+            button="cancel"
+            onPress={() => onCancelRequest(item, section.title)}
+          />
+        )}
         renderSectionHeader={({section: {title, key}}) => (
           <Text key={key}>{title}</Text>
         )}
@@ -174,9 +252,9 @@ function MySentRequests({navigation, route}) {
   );
 }
 
-const Item = ({title, onPress}) => (
+const Item = ({title, button, onPress}) => (
   <View>
     <Text>{title}</Text>
-    <Button title="accept" onPress={onPress} />
+    <Button title={button} onPress={onPress} />
   </View>
 );

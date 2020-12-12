@@ -19,7 +19,6 @@ import {
   MyRequestData,
   MyRequests,
   PlayerRequestData,
-  SectionListInt,
   UserDataInt,
 } from '../../utils/globalTypes';
 
@@ -99,7 +98,6 @@ function HomeContent({navigation}) {
                 playerId: playerId,
               };
               clubData.data = [...clubData.data, playerData];
-
               requestCount++;
             }
           }
@@ -111,7 +109,7 @@ function HomeContent({navigation}) {
     }
     requestContext?.setClubCount(requestCount);
     requestContext?.setClubs(requests);
-    requestContext?.updateMyRequests(myClubRequests);
+    requestContext?.setMyClubRequests(myClubRequests);
   };
 
   const getLeagueRequests = (data: {[leagueId: string]: LeagueInt}) => {
@@ -121,7 +119,7 @@ function HomeContent({navigation}) {
       title: '',
       data: [],
     };
-    let myLeagueRequestData: MyRequestData;
+
     let requestCount = 0;
 
     for (const [leagueId, league] of Object.entries(data)) {
@@ -130,6 +128,7 @@ function HomeContent({navigation}) {
         data: [],
       };
       if (league.clubs) {
+        let myLeagueRequestData: MyRequestData;
         for (const [clubId, club] of Object.entries(league.clubs)) {
           if (club.managerId === uid && club.accepted === false) {
             myLeagueRequests.title = 'League Requests';
@@ -140,10 +139,8 @@ function HomeContent({navigation}) {
               leagueName: league.name,
               clubName: club.name,
             };
-            myLeagueRequests.data = [
-              ...myLeagueRequests.data,
-              myLeagueRequestData,
-            ];
+
+            myLeagueRequests.data.push(myLeagueRequestData);
           }
           if (club.accepted === false && league.adminId === uid) {
             leagueData.title = league.name;
@@ -161,9 +158,12 @@ function HomeContent({navigation}) {
         }
       }
     }
+
     requestContext?.setLeagueCount(requestCount);
     requestContext?.setLeagues(requests);
-    requestContext?.updateMyRequests(myLeagueRequests);
+    if (myLeagueRequests.data.length !== 0) {
+      requestContext?.setMyLeagueRequests(myLeagueRequests);
+    }
   };
 
   const getLeaguesClubs = async (
@@ -215,7 +215,6 @@ function HomeContent({navigation}) {
       // });
     }
 
-    console.log(userLeagues, 'user leagues');
     return {
       userLeagues,
       userData,
@@ -249,7 +248,6 @@ function HomeContent({navigation}) {
       return subscriber;
     }
   }, [uid]);
-  //TODO my requests (club/leagues)
 
   //TODO Get scheduled matches for all leagues
   //TODO report center
@@ -268,8 +266,8 @@ function HomeContent({navigation}) {
   const onSignOut = () => {
     firAuth.signOut().then(() => {
       setUid(undefined);
-      setClubRequestCount(0);
-      setLeagueRequestCount(0);
+      requestContext?.setClubCount(0);
+      requestContext?.setLeagueCount(0);
       context?.setData({
         userData: {} as UserDataInt,
         userLeagues: {},
