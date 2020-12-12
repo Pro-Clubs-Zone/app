@@ -61,23 +61,25 @@ function HomeContent({navigation}) {
 
   const getClubRequests = (data: {[leagueId: string]: LeagueInt}) => {
     let requests: ClubRequestInt[] = [];
-    let clubData: ClubRequestInt = {
-      title: '',
-      data: [],
-    };
+    let requestCount = 0;
     let playerData: PlayerRequestData;
     let myClubRequests: MyRequests = {
-      title: 'Club Requests',
+      title: '',
       data: [],
     };
     let myClubRequestData: MyRequestData;
 
     for (const [leagueId, league] of Object.entries(data)) {
+      let clubData: ClubRequestInt = {
+        title: '',
+        data: [],
+      };
       if (league.clubs) {
         for (const [clubId, club] of Object.entries(league.clubs)) {
           const roster: {[uid: string]: ClubRosterMember} = club.roster;
           for (const [playerId, player] of Object.entries(roster)) {
             if (playerId === uid && player.accepted === false) {
+              myClubRequests.title = 'Club Requests';
               myClubRequestData = {
                 accepted: player.accepted,
                 clubId: clubId,
@@ -88,7 +90,7 @@ function HomeContent({navigation}) {
               };
               myClubRequests.data = [...myClubRequests.data, myClubRequestData];
             }
-            if (player.accepted === false) {
+            if (player.accepted === false && club.managerId === uid) {
               clubData.title = club.name + ' / ' + league.name;
               playerData = {
                 ...player,
@@ -97,21 +99,22 @@ function HomeContent({navigation}) {
                 playerId: playerId,
               };
               clubData.data = [...clubData.data, playerData];
+
+              requestCount++;
             }
           }
         }
+        if (clubData.data.length !== 0) {
+          requests.push(clubData);
+        }
       }
-      requests.push(clubData);
     }
-    console.log(uid, myClubRequests, 'my league requests');
-    requestContext?.setClubCount(clubData.data.length);
+    requestContext?.setClubCount(requestCount);
     requestContext?.setClubs(requests);
     requestContext?.updateMyRequests(myClubRequests);
   };
 
   const getLeagueRequests = (data: {[leagueId: string]: LeagueInt}) => {
-    console.log(data, 'data from home');
-
     let requests: LeagueRequestInt[] = [];
     let clubData: ClubRequestData;
     let myLeagueRequests: MyRequests = {
@@ -126,7 +129,6 @@ function HomeContent({navigation}) {
         title: '',
         data: [],
       };
-      console.log('found club', leagueId, league);
       if (league.clubs) {
         for (const [clubId, club] of Object.entries(league.clubs)) {
           if (club.managerId === uid && club.accepted === false) {
@@ -154,13 +156,12 @@ function HomeContent({navigation}) {
             requestCount++;
           }
         }
+        if (leagueData.data.length !== 0) {
+          requests.push(leagueData);
+        }
       }
-
-      requests.push(leagueData);
     }
     requestContext?.setLeagueCount(requestCount);
-    console.log(requests, 'requests');
-    console.log(myLeagueRequests, 'myLeagueRequests');
     requestContext?.setLeagues(requests);
     requestContext?.updateMyRequests(myLeagueRequests);
   };
