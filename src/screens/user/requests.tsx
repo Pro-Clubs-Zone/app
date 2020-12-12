@@ -4,6 +4,8 @@ import {AppContext, AuthContext, RequestContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {
+  ClubInt,
+  ClubRequestData,
   ClubRequestInt,
   LeagueRequestInt,
   MyRequests,
@@ -38,7 +40,6 @@ export default function Requests({navigation}) {
 
 function ClubRequests({navigation, route}) {
   const DATA: ClubRequestInt[] = route.params[0];
-  console.log(DATA, 'clubs');
   return (
     <View>
       <SectionList
@@ -52,38 +53,79 @@ function ClubRequests({navigation, route}) {
 }
 
 function LeagueRequests({navigation, route}) {
-  const DATA: LeagueRequestInt[] = route.params[0];
-  console.log(DATA, 'leagues');
+  const [data, setData] = useState<LeagueRequestInt[]>(() => [
+    ...route.params[0],
+  ]);
+  const requestContext = useContext(RequestContext);
+  const onAcceptClub = (
+    clubId: string,
+    leagueId: string,
+    leagueTitle: string,
+  ) => {
+    const clubRef = db
+      .collection('leagues')
+      .doc(leagueId)
+      .collection('clubs')
+      .doc(clubId);
+
+    clubRef.update({
+      accepted: true,
+    });
+    const leagueIndex = data.findIndex(
+      (league) => league.title === leagueTitle,
+    );
+
+    const unacceptedClubs = data[leagueIndex].data.filter((club) => {
+      return club.clubId !== clubId;
+    });
+    const newData = [...data];
+    newData[leagueIndex].data = unacceptedClubs;
+
+    if (unacceptedClubs.length === 0) {
+      newData.splice(leagueIndex, 1);
+    }
+    setData(newData);
+
+    requestContext?.updateLeagues(newData);
+    requestContext?.setLeagueCount(requestContext.leagueCount - 1);
+  };
 
   return (
-    <View>
-      <SectionList
-        sections={DATA}
-        keyExtractor={(item, index) => item + index}
-        renderItem={({item}) => <Item title={item.name} />}
-        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
-      />
-    </View>
+    <SectionList
+      sections={data}
+      keyExtractor={(item) => item.name}
+      renderItem={({item, section}) => (
+        <Item
+          title={item.name}
+          onPress={() =>
+            onAcceptClub(item.clubId, item.leagueId, section.title)
+          }
+        />
+      )}
+      renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+    />
   );
 }
 
 function MySentRequests({navigation, route}) {
   const DATA: MyRequests[] = route.params[0];
-  console.log(DATA);
   return (
     <View>
       <SectionList
         sections={DATA}
         keyExtractor={(item, index) => item + index}
         renderItem={({item}) => <Item title={item.clubName} />}
-        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+        renderSectionHeader={({section: {title, key}}) => (
+          <Text key={key}>{title}</Text>
+        )}
       />
     </View>
   );
 }
 
-const Item = ({title}) => (
+const Item = ({title, onPress}) => (
   <View>
     <Text>{title}</Text>
+    <Button title="accept" onPress={onPress} />
   </View>
 );

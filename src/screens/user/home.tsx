@@ -42,11 +42,6 @@ function Home() {
 function HomeContent({navigation}) {
   const [loading, setLoading] = useState<boolean>(true);
   const [uid, setUid] = useState<string | undefined>();
-  //const [clubRequests, setClubRequests] = useState<ClubRequestInt[]>([]);
-  //const [leagueRequests, setLeagueRequests] = useState<LeagueRequestInt[]>([]);
-  //const [myRequests, setMyRequests] = useState<MyRequests[]>([]);
-  const [clubRequestCount, setClubRequestCount] = useState(0);
-  const [leagueRequestCount, setLeagueRequestCount] = useState(0);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -109,29 +104,33 @@ function HomeContent({navigation}) {
       requests.push(clubData);
     }
     console.log(uid, myClubRequests, 'my league requests');
-    setClubRequestCount(clubRequestCount + clubData.data.length);
+    requestContext?.setClubCount(clubData.data.length);
     requestContext?.updateClubs(requests);
     requestContext?.updateMyRequests(myClubRequests);
   };
 
   const getLeagueRequests = (data: {[leagueId: string]: LeagueInt}) => {
+    console.log(data, 'data from home');
+
     let requests: LeagueRequestInt[] = [];
-    let leagueData: LeagueRequestInt = {
+    let clubData: ClubRequestData;
+    let myLeagueRequests: MyRequests = {
       title: '',
       data: [],
     };
-    let clubData: ClubRequestData;
-    let myLeagueRequests: MyRequests = {
-      title: 'League Requests',
-      data: [],
-    };
     let myLeagueRequestData: MyRequestData;
+    let requestCount = 0;
 
     for (const [leagueId, league] of Object.entries(data)) {
+      let leagueData: LeagueRequestInt = {
+        title: '',
+        data: [],
+      };
       console.log('found club', leagueId, league);
       if (league.clubs) {
         for (const [clubId, club] of Object.entries(league.clubs)) {
           if (club.managerId === uid && club.accepted === false) {
+            myLeagueRequests.title = 'League Requests';
             myLeagueRequestData = {
               accepted: club.accepted,
               clubId: clubId,
@@ -152,15 +151,16 @@ function HomeContent({navigation}) {
               clubId: clubId,
             };
             leagueData.data = [...leagueData.data, clubData];
+            requestCount++;
           }
         }
-
-        requests.push(leagueData);
       }
-    }
 
-    setLeagueRequestCount(leagueRequestCount + leagueData.data.length);
+      requests.push(leagueData);
+    }
+    requestContext?.setLeagueCount(requestCount);
     console.log(requests, 'requests');
+    console.log(myLeagueRequests, 'myLeagueRequests');
     requestContext?.updateLeagues(requests);
     requestContext?.updateMyRequests(myLeagueRequests);
   };
@@ -290,7 +290,9 @@ function HomeContent({navigation}) {
       <Text>{context?.data.userData?.username}</Text>
       <Button
         onPress={() => navigation.navigate('Requests')}
-        title={`Requests ${leagueRequestCount + clubRequestCount}`}
+        title={`Requests ${
+          requestContext?.clubCount + requestContext?.leagueCount
+        }`}
       />
       <Text></Text>
       <CustomButton

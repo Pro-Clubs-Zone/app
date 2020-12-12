@@ -1,4 +1,10 @@
-import React, {useEffect, useState, createContext} from 'react';
+import React, {
+  useEffect,
+  useState,
+  createContext,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
@@ -29,6 +35,10 @@ const RequestContext = createContext<{
   updateClubs: (newData: ClubRequestInt[]) => void;
   updateLeagues: (newData: LeagueRequestInt[]) => void;
   updateMyRequests: (newData: MyRequests) => void;
+  setLeagueCount: Dispatch<SetStateAction<number>>;
+  setClubCount: Dispatch<SetStateAction<number>>;
+  leagueCount: number;
+  clubCount: number;
 } | null>(null);
 const db = firestore();
 const firAuth = auth();
@@ -38,6 +48,8 @@ const RequestProvider = (props: any) => {
   const [myRequests, setMyRequests] = useState<MyRequests[]>([]);
   const [club, setClub] = useState<ClubRequestInt[]>([]);
   const [league, setLeague] = useState<LeagueRequestInt[]>([]);
+  const [leagueCount, setLeagueCount] = useState<number>(0);
+  const [clubCount, setClubCount] = useState<number>(0);
 
   const updateMyRequests = (newData: MyRequests) => {
     setMyRequests([...myRequests, newData]);
@@ -59,6 +71,10 @@ const RequestProvider = (props: any) => {
         updateClubs,
         updateLeagues,
         updateMyRequests,
+        setLeagueCount,
+        setClubCount,
+        leagueCount,
+        clubCount,
       }}>
       {props.children}
     </RequestContext.Provider>
