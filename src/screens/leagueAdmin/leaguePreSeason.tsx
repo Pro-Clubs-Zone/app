@@ -20,6 +20,15 @@ export default function LeaguePreSeason({route, navigation}) {
         }
       />
       <Button title="Invite Clubs" />
+      <Button
+        title="Create Clubs"
+        onPress={() =>
+          navigation.navigate('Create Club', {
+            leagueId: route.params.leagueId,
+            admin: true,
+          })
+        }
+      />
     </View>
   );
 }

@@ -73,7 +73,7 @@ export interface ClubInt {
 
 export interface UserLeague {
   clubId?: string;
-  manager?: boolean;
+  manager: boolean;
   admin?: boolean;
   accepted?: boolean;
 }

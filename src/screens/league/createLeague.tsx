@@ -3,7 +3,7 @@ import {Text, View, Button, TextInput} from 'react-native';
 import SignUp from '../auth/signUp';
 import {AppContext, AuthContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
-import {LeagueInt} from '../../utils/globalTypes';
+import {LeagueInt} from '../../utils/interface';
 
 const leagueInfoDefault: LeagueInt = {
   name: Math.floor(Math.random() * Math.floor(200)),

@@ -5,7 +5,7 @@ import {AuthContext} from '../../utils/context';
 import LeaguePreview from './leaguePreview';
 import CreateClub from './createClub';
 import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
-import {LeagueInt} from '../../utils/globalTypes';
+import {LeagueInt} from '../../utils/interface';
 
 const db = firestore();
 

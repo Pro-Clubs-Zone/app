@@ -10,7 +10,7 @@ import {
   LeagueRequestInt,
   MyRequests,
   SectionListInt,
-} from '../../utils/globalTypes';
+} from '../../utils/interface';
 
 const db = firestore();
 const Tab = createMaterialTopTabNavigator();
@@ -81,8 +81,10 @@ function ClubRequests({navigation, route}) {
       ['roster.' + playerId + '.accepted']: true,
     });
 
+    const currentCount = requestContext?.requestCount;
+
     requestContext?.setClubs(newData);
-    requestContext?.setClubCount(requestContext.clubCount - 1);
+    requestContext?.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
   };
 
   return (
@@ -141,7 +143,9 @@ function LeagueRequests({navigation, route}) {
     setData(newData);
 
     requestContext?.setLeagues(newData);
-    requestContext?.setLeagueCount(requestContext.leagueCount - 1);
+
+    const currentCount = requestContext?.requestCount;
+    requestContext?.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
   };
 
   return (

@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Text, View, ActivityIndicator, FlatList, Button} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
-import {LeagueInt} from '../../utils/globalTypes';
+import {LeagueInt} from '../../utils/interface';
 
 const Stack = createStackNavigator();
 const db = firestore();

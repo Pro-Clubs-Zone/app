@@ -3,7 +3,7 @@ import {Text, View, Button, Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext, AuthContext} from '../../utils/context';
 import {FlatList} from 'react-native-gesture-handler';
-import {ClubInt, ClubRosterMember, UserLeague} from '../../utils/globalTypes';
+import {ClubInt, ClubRosterMember, UserLeague} from '../../utils/interface';
 
 const db = firestore();
 type ClubData = ClubInt & {key: string};
@@ -40,6 +40,7 @@ export default function JoinClub({navigation, route}) {
       [leagueId]: {
         clubId: clubId,
         accepted: false,
+        manager: false,
       },
     };
     const rosterMember: {[uid: string]: ClubRosterMember} = {

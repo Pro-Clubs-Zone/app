@@ -10,7 +10,7 @@ import {
 import {AppContext} from '../../utils/context';
 
 import firestore from '@react-native-firebase/firestore';
-import {ClubInt} from '../../utils/globalTypes';
+import {ClubInt} from '../../utils/interface';
 
 const db = firestore();
 

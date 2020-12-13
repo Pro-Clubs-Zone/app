@@ -14,7 +14,7 @@ import {
   LeagueRequestInt,
   MyRequests,
   UserDataInt,
-} from './globalTypes';
+} from './interface';
 
 const appContextValue: AppContextInt = {
   userData: {} as UserDataInt,
@@ -36,15 +36,14 @@ const RequestContext = createContext<{
   setMyClubRequests: Dispatch<SetStateAction<MyRequests>>;
   setLeagueCount: Dispatch<SetStateAction<number>>;
   setClubCount: Dispatch<SetStateAction<number>>;
-  leagueCount: number;
-  clubCount: number;
+  requestCount: number;
 } | null>(null);
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
 const RequestProvider = (props: any) => {
-  const defaultRequest = {
+  const defaultRequest: MyRequests = {
     title: '',
     data: [],
   };
@@ -60,6 +59,7 @@ const RequestProvider = (props: any) => {
   const [clubCount, setClubCount] = useState<number>(0);
 
   const myRequests: MyRequests[] = [myClubRequests, myLeagueRequests];
+  const requestCount: number = leagueCount + clubCount;
 
   return (
     <RequestContext.Provider
@@ -73,8 +73,7 @@ const RequestProvider = (props: any) => {
         setMyClubRequests,
         setLeagueCount,
         setClubCount,
-        leagueCount,
-        clubCount,
+        requestCount,
       }}>
       {props.children}
     </RequestContext.Provider>

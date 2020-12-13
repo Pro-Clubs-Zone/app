@@ -20,11 +20,24 @@ import {
   MyRequests,
   PlayerRequestData,
   UserDataInt,
-} from '../../utils/globalTypes';
+} from '../../utils/interface';
+import Match from '../league/match';
 
 const firFunc = functions();
 const firAuth = auth();
 const db = firestore();
+
+type Match = {
+  [matchId: string]: {
+    leagueName: string;
+    clubName: string;
+    clubId: string;
+    opponentId: string;
+    leagueId: string;
+    manager: boolean;
+    opponentName: string;
+  };
+};
 
 function Home() {
   const Stack = createStackNavigator();
@@ -34,6 +47,7 @@ function Home() {
       <Stack.Screen name="Sign Up" component={SignUp} />
       <Stack.Screen name="Sign In" component={SignIn} />
       <Stack.Screen name="Requests" component={Requests} />
+      <Stack.Screen name="Match" component={Match} />
     </Stack.Navigator>
   );
 }
@@ -41,12 +55,14 @@ function Home() {
 function HomeContent({navigation}) {
   const [loading, setLoading] = useState<boolean>(true);
   const [uid, setUid] = useState<string | undefined>();
+  const [matches, setMatches] = useState<Match[]>([]);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const requestContext = useContext(RequestContext);
 
   const leaguesRef = db.collection('leagues');
+
   useEffect(() => {
     if (user) {
       setUid(user.uid);
@@ -185,17 +201,21 @@ function HomeContent({navigation}) {
           await clubRef.get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
               console.log('club', doc.data());
-              if (league.admin === true) {
-                userLeagues[leagueId].clubs = {
-                  ...userLeagues[leagueId].clubs,
-                  [doc.id]: doc.data() as ClubInt,
-                };
-              } else if (league.clubId === doc.id) {
-                userLeagues[leagueId].clubs = {
-                  ...userLeagues[leagueId].clubs,
-                  [doc.id]: doc.data() as ClubInt,
-                };
-              }
+              userLeagues[leagueId].clubs = {
+                ...userLeagues[leagueId].clubs,
+                [doc.id]: doc.data() as ClubInt,
+              };
+              // if (league.admin === true) {
+              //   userLeagues[leagueId].clubs = {
+              //     ...userLeagues[leagueId].clubs,
+              //     [doc.id]: doc.data() as ClubInt,
+              //   };
+              // } else if (league.clubId === doc.id) {
+              //   userLeagues[leagueId].clubs = {
+              //     ...userLeagues[leagueId].clubs,
+              //     [doc.id]: doc.data() as ClubInt,
+              //   };
+              // }
             });
           });
         });
@@ -221,6 +241,45 @@ function HomeContent({navigation}) {
     };
   };
 
+  const getMatches = async (data: AppContextInt) => {
+    let upcomingMatches: Match[] = [];
+
+    for (const [leagueId, league] of Object.entries(data.userData.leagues)) {
+      const clubId = league.clubId;
+
+      const matchesSnapshot = db
+        .collection('leagues')
+        .doc(leagueId)
+        .collection('matches2');
+
+      await matchesSnapshot
+        .where('teams', 'array-contains', clubId)
+        .orderBy('id', 'asc')
+        .limit(10)
+        .get()
+        .then((snapshot) => {
+          snapshot.forEach((doc) => {
+            const {home, away} = doc.data();
+            const leagueData = data.userLeagues[leagueId];
+
+            let matchData: Match = {
+              [doc.id]: {
+                clubId: home,
+                opponentId: away,
+                manager: league.manager,
+                leagueId: leagueId,
+                leagueName: leagueData.name,
+                clubName: leagueData.clubs[home].name,
+                opponentName: leagueData.clubs[away].name,
+              },
+            };
+            upcomingMatches.push(matchData);
+          });
+        });
+    }
+    setMatches(upcomingMatches);
+  };
+
   useEffect(() => {
     if (user) {
       const userRef = db.collection('users').doc(uid);
@@ -234,6 +293,7 @@ function HomeContent({navigation}) {
               context?.setData(data);
               getClubRequests(data.userLeagues);
               getLeagueRequests(data.userLeagues);
+              getMatches(data);
             })
             .then(() => {
               setLoading(false);
@@ -249,19 +309,25 @@ function HomeContent({navigation}) {
     }
   }, [uid]);
 
-  //TODO Get scheduled matches for all leagues
+  // TODO Match submission
+  // Match Preview Screen
+  // Match submission
+  // Ratings
+
+  // TODO Table Logic
+  // TODO Stats
   //TODO report center
 
-  // const testFunc = async () => {
-  //   const test = firFunc.httpsCallable('scheduleMatches');
-  //   test({message: 'hey yooo'})
-  //     .then((response) => {
-  //       console.log('message from cloud', response);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const testFunc = async () => {
+    const test = firFunc.httpsCallable('scheduleMatches');
+    test({message: 'hey yooo'})
+      .then((response) => {
+        console.log('message from cloud', response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   const onSignOut = () => {
     firAuth.signOut().then(() => {
@@ -289,9 +355,7 @@ function HomeContent({navigation}) {
       <Text>{context?.data.userData?.username}</Text>
       <Button
         onPress={() => navigation.navigate('Requests')}
-        title={`Requests ${
-          requestContext?.clubCount + requestContext?.leagueCount
-        }`}
+        title={`Requests ${requestContext?.requestCount}`}
       />
       <Text></Text>
       <CustomButton
@@ -299,6 +363,15 @@ function HomeContent({navigation}) {
         title={user ? 'Logout' : 'Sign Up'}
       />
       <Button onPress={() => navigation.navigate('Sign In')} title="SignIn" />
+      <Button onPress={testFunc} title="Schedule Matches" />
+      <Button
+        onPress={() =>
+          navigation.navigate('Match', {
+            matchInfo: matches,
+          })
+        }
+        title="Match Screen"
+      />
     </View>
   );
 }

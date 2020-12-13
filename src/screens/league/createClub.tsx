@@ -3,7 +3,7 @@ import {Text, View, Button, TextInput} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 //import {Club, UserLeague} from './interface';
 import {AppContext, AuthContext} from '../../utils/context';
-import {ClubInt, UserLeague} from '../../utils/globalTypes';
+import {ClubInt, UserLeague} from '../../utils/interface';
 
 const db = firestore();
 
@@ -16,6 +16,7 @@ export default function CreateClub({route, navigation}) {
 
   const leagueId: string = route.params.leagueId;
   const uid = user?.uid;
+  const isAdmin: boolean = route.params.admin;
 
   const onCreateClub = () => {
     const userRef = db.collection('users').doc(uid);
@@ -28,7 +29,7 @@ export default function CreateClub({route, navigation}) {
     const clubInfo: ClubInt = {
       name: clubName,
       managerId: uid,
-      accepted: false,
+      accepted: isAdmin ? true : false,
       roster: {
         [uid]: {
           accepted: true,
