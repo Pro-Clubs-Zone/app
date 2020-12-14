@@ -5,6 +5,34 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
+export interface MatchData {
+  matchId: string;
+  leagueName: string;
+  clubName: string;
+  home: string;
+  away: string;
+  clubId: string;
+  leagueId: string;
+  manager: boolean;
+  opponentName: string;
+  submissions?: {
+    [team: string]: {
+      [team: string]: number;
+    };
+  };
+}
+
+export interface MatchInt {
+  away: string;
+  home: string;
+  id: number;
+  submissions?: {
+    [team: string]: {
+      [team: string]: number;
+    };
+  };
+}
+
 export interface SectionListInt {
   title: string;
   data: {}[];
@@ -20,6 +48,7 @@ export interface MyRequestData {
   accepted: boolean;
   leagueId: string;
   leagueName: string;
+  playerId: string;
 }
 
 export interface ClubRequestInt extends SectionListInt {

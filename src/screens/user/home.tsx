@@ -16,28 +16,18 @@ import {
   ClubRosterMember,
   LeagueInt,
   LeagueRequestInt,
+  MatchInt,
   MyRequestData,
   MyRequests,
   PlayerRequestData,
   UserDataInt,
+  MatchData,
 } from '../../utils/interface';
 import Match from '../league/match';
 
 const firFunc = functions();
 const firAuth = auth();
 const db = firestore();
-
-type Match = {
-  [matchId: string]: {
-    leagueName: string;
-    clubName: string;
-    clubId: string;
-    opponentId: string;
-    leagueId: string;
-    manager: boolean;
-    opponentName: string;
-  };
-};
 
 function Home() {
   const Stack = createStackNavigator();
@@ -55,7 +45,7 @@ function Home() {
 function HomeContent({navigation}) {
   const [loading, setLoading] = useState<boolean>(true);
   const [uid, setUid] = useState<string | undefined>();
-  const [matches, setMatches] = useState<Match[]>([]);
+  const [matches, setMatches] = useState<MatchData[]>([]);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -242,40 +232,44 @@ function HomeContent({navigation}) {
   };
 
   const getMatches = async (data: AppContextInt) => {
-    let upcomingMatches: Match[] = [];
+    let upcomingMatches: MatchData[] = [];
 
     for (const [leagueId, league] of Object.entries(data.userData.leagues)) {
       const clubId = league.clubId;
 
-      const matchesSnapshot = db
-        .collection('leagues')
-        .doc(leagueId)
-        .collection('matches2');
+      if (clubId) {
+        const matchesSnapshot = db
+          .collection('leagues')
+          .doc(leagueId)
+          .collection('matches');
 
-      await matchesSnapshot
-        .where('teams', 'array-contains', clubId)
-        .orderBy('id', 'asc')
-        .limit(10)
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            const {home, away} = doc.data();
-            const leagueData = data.userLeagues[leagueId];
+        await matchesSnapshot
+          .where('teams', 'array-contains', clubId)
+          .orderBy('id', 'asc')
+          .limit(10)
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              const {home, away, submissions} = doc.data() as MatchInt;
+              const leagueData = data.userLeagues[leagueId];
 
-            let matchData: Match = {
-              [doc.id]: {
-                clubId: home,
-                opponentId: away,
+              let matchData: MatchData = {
+                matchId: doc.id,
+                home: home,
+                away: away,
+                clubId: clubId,
                 manager: league.manager,
                 leagueId: leagueId,
                 leagueName: leagueData.name,
                 clubName: leagueData.clubs[home].name,
                 opponentName: leagueData.clubs[away].name,
-              },
-            };
-            upcomingMatches.push(matchData);
-          });
-        });
+                submissions: submissions,
+              };
+              upcomingMatches.push(matchData);
+            });
+          })
+          .catch((err) => console.log('matches error', err));
+      }
     }
     setMatches(upcomingMatches);
   };
