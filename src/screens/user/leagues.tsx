@@ -10,6 +10,7 @@ import CreateClub from '../league/createClub';
 import League from '../league/league';
 import Clubs from '../leagueAdmin/clubs';
 import JoinClub from '../league/joinClub';
+import LeagueStandings from '../league/standings';
 
 const Stack = createStackNavigator();
 
@@ -25,6 +26,7 @@ function Leagues() {
       <Stack.Screen name="Sign Up" component={SignUp} />
       <Stack.Screen name="Create Club" component={CreateClub} />
       <Stack.Screen name="Join Club" component={JoinClub} />
+      <Stack.Screen name="Standings" component={LeagueStandings} />
     </Stack.Navigator>
   );
 }

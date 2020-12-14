@@ -24,16 +24,34 @@ export default function League({route, navigation}) {
       setData(leagueInfo);
       setLoading(false);
     });
-  }, []);
+  }, [leagueRef]);
 
   return data?.scheduled ? (
-    console.log('scheduled')
+    <LeagueHome navigation={navigation} route={route} />
   ) : data?.adminId === uid ? (
-    <LeaguePreSeason navigation={navigation} route={route}></LeaguePreSeason>
+    <LeaguePreSeason navigation={navigation} route={route} />
   ) : (
     <LeaguePreview
       //  data={data}
       route={route}
-      navigation={navigation}></LeaguePreview>
+      navigation={navigation}
+    />
+  );
+}
+
+function LeagueHome({route, navigation}) {
+  const leagueId: string = route.params.leagueId;
+  return (
+    <View>
+      <Text>League Home</Text>
+      <Button
+        title="Standings"
+        onPress={() =>
+          navigation.navigate('Standings', {
+            leagueId: leagueId,
+          })
+        }
+      />
+    </View>
   );
 }

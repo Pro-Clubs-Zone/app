@@ -120,3 +120,14 @@ export interface AppContextInt {
     [league: string]: LeagueInt;
   };
 }
+
+export interface ClubStanding {
+  name: string;
+  played: number;
+  won: number;
+  lost: number;
+  draw: number;
+  points: number;
+  scored: number;
+  conceded: number;
+}

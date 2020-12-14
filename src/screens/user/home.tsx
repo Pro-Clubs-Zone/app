@@ -303,11 +303,6 @@ function HomeContent({navigation}) {
     }
   }, [uid]);
 
-  // TODO Match submission
-  // Match Preview Screen
-  // Match submission
-  // Ratings
-
   // TODO Table Logic
   // TODO Stats
   //TODO report center
