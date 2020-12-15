@@ -16,16 +16,20 @@ import {
   UserDataInt,
 } from './interface';
 
+//TODO Fix undefined context problem
+
 const appContextValue: AppContextInt = {
   userData: {} as UserDataInt,
   userLeagues: {},
 };
 
 const AppContext = createContext<{
-  data: Partial<AppContextInt>;
-  setData: Dispatch<SetStateAction<Partial<AppContextInt>>>;
+  data: AppContextInt;
+  setData: Dispatch<SetStateAction<AppContextInt>>;
 } | null>(null);
+
 const AuthContext = createContext<{uid: string} | undefined>(undefined);
+
 const RequestContext = createContext<{
   clubs: ClubRequestInt[];
   leagues: LeagueRequestInt[];
@@ -38,6 +42,7 @@ const RequestContext = createContext<{
   setClubCount: Dispatch<SetStateAction<number>>;
   requestCount: number;
 } | null>(null);
+
 const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
@@ -81,7 +86,7 @@ const RequestProvider = (props: any) => {
 };
 
 const AppProvider = (props: any) => {
-  const [data, setData] = useState<Partial<AppContextInt>>(appContextValue);
+  const [data, setData] = useState<AppContextInt>(appContextValue);
 
   return (
     <AppContext.Provider value={{data, setData}}>

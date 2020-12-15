@@ -8,7 +8,8 @@ const db = firestore();
 const firFunc = functions();
 
 export default function Match({navigation, route}) {
-  let matchData: MatchData = route.params.matchInfo[0];
+  let matchData: MatchData = route.params.matchInfo;
+  console.log(matchData);
 
   const teamSubmission = {
     [matchData.clubId]: {
@@ -16,7 +17,6 @@ export default function Match({navigation, route}) {
       [matchData.away]: 1,
     },
   };
-  console.log(matchData);
   const matchRef = db
     .collection('leagues')
     .doc(matchData.leagueId)
@@ -59,7 +59,9 @@ export default function Match({navigation, route}) {
   return (
     <View>
       <Text>hello from matches</Text>
-      <Button title="submit" onPress={onSubmit} />
+      {matchData.teams?.includes(matchData.clubId) && matchData.manager && (
+        <Button title="submit" onPress={onSubmit} />
+      )}
     </View>
   );
 }

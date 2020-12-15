@@ -1,44 +1,60 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Text, View, ActivityIndicator, Alert, Button} from 'react-native';
+import {Text, View, Button} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {AuthContext} from '../../utils/context';
+import {AppContext, AuthContext} from '../../utils/context';
 import LeaguePreview from './leaguePreview';
-import CreateClub from './createClub';
 import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
 import {LeagueInt} from '../../utils/interface';
 
 const db = firestore();
 
 export default function League({route, navigation}) {
-  const [data, setData] = useState<LeagueInt>();
+  const [league, setLeague] = useState<LeagueInt>();
   const [loading, setLoading] = useState<boolean>(true);
   const user = useContext(AuthContext);
+  const context = useContext(AppContext);
+  const userData = context?.data.userData;
   const uid = user?.uid;
   const leagueId: string = route.params.leagueId;
-  const leagueRef = db.collection('leagues').doc(leagueId);
 
   useEffect(() => {
+    console.log('effect on league');
+
+    const leagueRef = db.collection('leagues').doc(leagueId);
     let leagueInfo: LeagueInt;
     leagueRef.get().then((doc) => {
       leagueInfo = doc.data() as LeagueInt;
-      setData(leagueInfo);
+      setLeague(leagueInfo);
       setLoading(false);
     });
-  }, [leagueRef]);
+  }, [leagueId]);
 
-  return data?.scheduled ? (
-    <LeagueHome navigation={navigation} route={route} />
-  ) : data?.adminId === uid ? (
-    <LeaguePreSeason navigation={navigation} route={route} />
-  ) : (
-    <LeaguePreview
-      //  data={data}
-      route={route}
-      navigation={navigation}
-    />
-  );
+  if (userData?.leagues && userData?.leagues[leagueId]) {
+    if (league?.scheduled) {
+      return <LeagueHome navigation={navigation} route={route} />;
+    } else {
+      if (league?.adminId === uid) {
+        return <LeaguePreSeason navigation={navigation} route={route} />;
+      } else {
+        return (
+          <LeaguePreview
+            //  data={data}
+            route={route}
+            navigation={navigation}
+          />
+        );
+      }
+    }
+  } else {
+    return (
+      <LeaguePreview
+        //  data={data}
+        route={route}
+        navigation={navigation}
+      />
+    );
+  }
 }
-
 function LeagueHome({route, navigation}) {
   const leagueId: string = route.params.leagueId;
   return (
@@ -48,6 +64,14 @@ function LeagueHome({route, navigation}) {
         title="Standings"
         onPress={() =>
           navigation.navigate('Standings', {
+            leagueId: leagueId,
+          })
+        }
+      />
+      <Button
+        title="Fixtures"
+        onPress={() =>
+          navigation.navigate('Fixtures', {
             leagueId: leagueId,
           })
         }
