@@ -2,12 +2,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button} from 'react-native';
 import {AppContext, AuthContext, RequestContext} from '../../utils/context';
 import auth from '@react-native-firebase/auth';
-import {createStackNavigator} from '@react-navigation/stack';
-import SignUp from '../auth/signUp';
+import {StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
-import SignIn from '../auth/signIn';
 import firestore from '@react-native-firebase/firestore';
-import Requests from './requests';
 import {
   ClubInt,
   ClubRequestData,
@@ -21,27 +18,20 @@ import {
   UserDataInt,
   MatchData,
 } from '../../utils/interface';
-import Match from '../league/match';
 import getUserMatches from './functions/getUserMatches';
+import {HomeStackType} from './homeStack';
 
 const firFunc = functions();
 const firAuth = auth();
 const db = firestore();
 
-function Home() {
-  const Stack = createStackNavigator();
-  return (
-    <Stack.Navigator initialRouteName="Leagues">
-      <Stack.Screen name="Home" component={HomeContent} />
-      <Stack.Screen name="Sign Up" component={SignUp} />
-      <Stack.Screen name="Sign In" component={SignIn} />
-      <Stack.Screen name="Requests" component={Requests} />
-      <Stack.Screen name="Match" component={Match} />
-    </Stack.Navigator>
-  );
-}
+type HomeNavigationProp = StackNavigationProp<HomeStackType, 'Home'>;
 
-function HomeContent({navigation}) {
+type Props = {
+  navigation: HomeNavigationProp;
+};
+
+export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [uid, setUid] = useState<string | undefined>();
   const [matches, setMatches] = useState<MatchData[]>([]);
@@ -320,5 +310,3 @@ const CustomButton = (props) => {
     />
   );
 };
-
-export default Home;

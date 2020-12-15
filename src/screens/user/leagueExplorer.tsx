@@ -1,14 +1,23 @@
 import React, {useState, useEffect} from 'react';
 import {Text, View, ActivityIndicator, FlatList, Button} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {LeaguesStackType} from './leaguesStack';
 import firestore from '@react-native-firebase/firestore';
 import {LeagueInt} from '../../utils/interface';
 
-const Stack = createStackNavigator();
+type LeaguesNavigationProp = StackNavigationProp<
+  LeaguesStackType,
+  'League Explorer'
+>;
+
+type Props = {
+  navigation: LeaguesNavigationProp;
+};
+
 const db = firestore();
 type Leagues = LeagueInt[] & {key: string}[];
 
-export default function LeagueExplorer({navigation}: any) {
+export default function LeagueExplorer({navigation}: Props) {
   const [data, setData] = useState<Leagues>([]);
   const [loading, setLoading] = useState(true);
 
