@@ -1,12 +1,20 @@
-import {AppContextInt, MatchInt, MatchData} from '../../../utils/interface';
+import {
+  MatchInt,
+  MatchData,
+  UserDataInt,
+  LeagueInt,
+} from '../../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
 
 const db = firestore();
 
-const getUserMatches = async (data: AppContextInt) => {
+const getUserMatches = async (
+  userData: UserDataInt,
+  userLeagues: {[id: string]: LeagueInt},
+) => {
   let upcomingMatches: MatchData[] = [];
 
-  for (const [leagueId, league] of Object.entries(data.userData.leagues)) {
+  for (const [leagueId, league] of Object.entries(userData.leagues)) {
     const clubId = league.clubId;
 
     if (clubId) {
@@ -23,7 +31,7 @@ const getUserMatches = async (data: AppContextInt) => {
         .then((snapshot) => {
           snapshot.forEach((doc) => {
             const {home, away, submissions} = doc.data() as MatchInt;
-            const leagueData = data.userLeagues[leagueId];
+            const leagueData = userLeagues[leagueId];
 
             let matchData: MatchData = {
               matchId: doc.id,

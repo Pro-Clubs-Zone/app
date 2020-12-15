@@ -46,7 +46,7 @@ export default function JoinClub({navigation, route}) {
     const rosterMember: {[uid: string]: ClubRosterMember} = {
       [uid]: {
         accepted: false,
-        username: context?.data.userData?.username,
+        username: context?.userData?.username,
       },
     };
     const batch = db.batch();

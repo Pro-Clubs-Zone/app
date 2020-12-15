@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Text, View, FlatList, Button} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {AppContext} from '../../utils/context';
 import useGetMatches from './functions/useGetMatches';
 
 const Tab = createMaterialTopTabNavigator();

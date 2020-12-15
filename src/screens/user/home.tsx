@@ -9,7 +9,6 @@ import SignIn from '../auth/signIn';
 import firestore from '@react-native-firebase/firestore';
 import Requests from './requests';
 import {
-  AppContextInt,
   ClubInt,
   ClubRequestData,
   ClubRequestInt,
@@ -174,7 +173,10 @@ function HomeContent({navigation}) {
 
   const getLeaguesClubs = async (
     userData: UserDataInt,
-  ): Promise<AppContextInt> => {
+  ): Promise<{
+    userData: UserDataInt;
+    userLeagues: {[league: string]: LeagueInt};
+  }> => {
     const leagues = Object.entries(userData.leagues);
     let userLeagues: {[league: string]: LeagueInt} = {};
 
@@ -220,17 +222,19 @@ function HomeContent({navigation}) {
   useEffect(() => {
     if (user) {
       const userRef = db.collection('users').doc(uid);
-      let userData: UserDataInt;
+      let userInfo: UserDataInt;
       const subscriber = userRef.onSnapshot((doc) => {
         console.log('call to fir');
-        userData = doc.data() as UserDataInt;
-        if (userData?.leagues) {
-          getLeaguesClubs(userData)
+        userInfo = doc.data() as UserDataInt;
+        if (userInfo?.leagues) {
+          getLeaguesClubs(userInfo)
             .then((data) => {
-              context?.setData(data);
-              getClubRequests(data.userLeagues);
-              getLeagueRequests(data.userLeagues);
-              getUserMatches(data).then((matchesData) =>
+              const {userData, userLeagues} = data;
+              context?.setUserData(userData);
+              context?.setUserLeagues(userLeagues);
+              getClubRequests(userLeagues);
+              getLeagueRequests(userLeagues);
+              getUserMatches(userData, userLeagues).then((matchesData) =>
                 setMatches(matchesData),
               );
             })
@@ -240,7 +244,7 @@ function HomeContent({navigation}) {
         } else {
           console.log('no leagues');
 
-          context?.setData({userData: userData});
+          context?.setUserData(userInfo);
           setLoading(false);
         }
       });
@@ -268,10 +272,7 @@ function HomeContent({navigation}) {
       setUid(undefined);
       requestContext?.setClubCount(0);
       requestContext?.setLeagueCount(0);
-      context?.setData({
-        userData: {} as UserDataInt,
-        userLeagues: {},
-      });
+      context?.setUserData(null);
     });
   };
 
@@ -286,12 +287,11 @@ function HomeContent({navigation}) {
   return (
     <View>
       <Text>Home Screen</Text>
-      <Text>{context?.data.userData?.username}</Text>
+      <Text>{context?.userData?.username}</Text>
       <Button
         onPress={() => navigation.navigate('Requests')}
         title={`Requests ${requestContext?.requestCount}`}
       />
-      <Text></Text>
       <CustomButton
         onPress={user ? onSignOut : () => navigation.navigate('Sign Up')}
         title={user ? 'Logout' : 'Sign Up'}

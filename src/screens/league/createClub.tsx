@@ -33,7 +33,7 @@ export default function CreateClub({route, navigation}) {
       roster: {
         [uid]: {
           accepted: true,
-          username: context?.data.userData?.username,
+          username: context?.userData?.username,
         },
       },
       created: firestore.Timestamp.now(),

@@ -111,12 +111,12 @@ export interface UserDataInt {
   };
 }
 
-export interface AppContextInt {
-  userData: UserDataInt;
-  userLeagues: {
-    [league: string]: LeagueInt;
-  };
-}
+// export interface AppContextInt {
+//   userData: UserDataInt;
+//   userLeagues: {
+//     [league: string]: LeagueInt;
+//   };
+// }
 
 export interface ClubStanding {
   name: string;

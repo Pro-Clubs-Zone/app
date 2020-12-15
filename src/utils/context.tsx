@@ -9,23 +9,26 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
 import {
-  AppContextInt,
   ClubRequestInt,
   LeagueRequestInt,
   MyRequests,
   UserDataInt,
+  LeagueInt,
 } from './interface';
 
 //TODO Fix undefined context problem
 
-const appContextValue: AppContextInt = {
-  userData: {} as UserDataInt,
-  userLeagues: {},
-};
-
 const AppContext = createContext<{
-  data: AppContextInt;
-  setData: Dispatch<SetStateAction<AppContextInt>>;
+  userData: UserDataInt | null;
+  setUserData: Dispatch<SetStateAction<UserDataInt | null>>;
+  userLeagues: {
+    [league: string]: LeagueInt;
+  } | null;
+  setUserLeagues: Dispatch<
+    SetStateAction<{
+      [league: string]: LeagueInt;
+    } | null>
+  >;
 } | null>(null);
 
 const AuthContext = createContext<{uid: string} | undefined>(undefined);
@@ -86,10 +89,14 @@ const RequestProvider = (props: any) => {
 };
 
 const AppProvider = (props: any) => {
-  const [data, setData] = useState<AppContextInt>(appContextValue);
+  const [userData, setUserData] = useState<UserDataInt | null>(null);
+  const [userLeagues, setUserLeagues] = useState<{
+    [league: string]: LeagueInt;
+  } | null>(null);
 
   return (
-    <AppContext.Provider value={{data, setData}}>
+    <AppContext.Provider
+      value={{userData, setUserData, userLeagues, setUserLeagues}}>
       {props.children}
     </AppContext.Provider>
   );
@@ -97,16 +104,20 @@ const AppProvider = (props: any) => {
 
 const AuthProvider = (props: any) => {
   const [user, setUser] = useState<{uid: string} | undefined>(undefined);
-  const [emu] = useState(true);
 
   function onAuthStateChanged(firUser: any): void {
     setUser(firUser);
   }
   useEffect(() => {
-    if (__DEV__ && emu) {
+    if (__DEV__) {
       firFunc.useFunctionsEmulator('http://localhost:5001');
       firAuth.useEmulator('http://localhost:9099');
-      db.settings({host: 'localhost:8080', ssl: false, persistence: false});
+      db.settings({
+        host: 'localhost:8080',
+        ssl: false,
+        persistence: false,
+        cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
+      });
     }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount

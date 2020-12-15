@@ -13,7 +13,7 @@ export default function League({route, navigation}) {
   const [loading, setLoading] = useState<boolean>(true);
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
-  const userData = context?.data.userData;
+  const userData = context?.userData;
   const uid = user?.uid;
   const leagueId: string = route.params.leagueId;
 

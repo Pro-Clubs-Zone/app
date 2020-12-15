@@ -21,10 +21,10 @@ const useGetMatches = (
   const context = useContext(AppContext);
 
   useEffect(() => {
-    const leagueData = context?.data.userLeagues[leagueId];
-    const userleague = context?.data.userData.leagues[leagueId];
-    const {clubId, manager} = userleague;
-    console.log('UseGetMatches', context, userleague);
+    const league = context?.userLeagues[leagueId];
+    const userLeague = context?.userData?.leagues[leagueId];
+    const clubId = userLeague?.clubId;
+    const manager = userLeague?.manager;
 
     const leagueRef = db
       .collection('leagues')
@@ -46,8 +46,8 @@ const useGetMatches = (
         snapshot.forEach((doc) => {
           const matchData = doc.data() as MatchInt;
           const matchId = doc.id;
-          const awayTeamName = leagueData.clubs[matchData.away].name;
-          const homeTeamName = leagueData.clubs[matchData.home].name;
+          const awayTeamName = league.clubs[matchData.away].name;
+          const homeTeamName = league.clubs[matchData.home].name;
 
           const match: MatchData = {
             ...matchData,
@@ -56,7 +56,7 @@ const useGetMatches = (
             clubId: clubId,
             manager: manager,
             matchId: matchId,
-            leagueId: leagueData.name,
+            leagueId: league?.name,
           };
 
           const fixture: FixtureList = {
@@ -69,7 +69,7 @@ const useGetMatches = (
         setLastVisible(lastVisibleDoc);
       }
     });
-  }, [context, leagueId]);
+  }, [leagueId]);
 
   const onLoadMore = () => {
     const leagueRef = db
