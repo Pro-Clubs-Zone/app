@@ -4,11 +4,23 @@ import firestore from '@react-native-firebase/firestore';
 import {AppContext, AuthContext} from '../../utils/context';
 import {FlatList} from 'react-native-gesture-handler';
 import {ClubInt, ClubRosterMember, UserLeague} from '../../utils/interface';
+import {LeaguesStackType} from '../user/leaguesStack';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+
+// type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Join Club'>;
+
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'Join Club'>;
+
+type Props = {
+  //  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
 
 const db = firestore();
 type ClubData = ClubInt & {key: string};
 
-export default function JoinClub({navigation, route}) {
+export default function JoinClub({route}: Props) {
   const [data, setData] = useState<ClubData[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -102,11 +114,7 @@ export default function JoinClub({navigation, route}) {
 
 const Club = (props) => {
   return (
-    <View
-      style={{
-        height: 100,
-        width: '100%',
-      }}>
+    <View>
       <Text>{props.name}</Text>
       <Button title="Send Request" onPress={props.onPress} />
     </View>

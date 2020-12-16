@@ -3,11 +3,23 @@ import {Button, Text, View} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {MatchData} from '../../utils/interface';
 import functions from '@react-native-firebase/functions';
+import {LeaguesStackType} from '../user/leaguesStack';
+// import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+
+// type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Match'>;
+
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'Match'>;
+
+type Props = {
+  // navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
 
 const db = firestore();
 const firFunc = functions();
 
-export default function Match({navigation, route}) {
+export default function Match({route}: Props) {
   let matchData: MatchData = route.params.matchInfo;
   console.log(matchData);
 

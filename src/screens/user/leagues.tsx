@@ -4,10 +4,10 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {AppContext} from '../../utils/context';
 import {LeaguesStackType} from './leaguesStack';
 
-type LeaguesNavigationProp = StackNavigationProp<LeaguesStackType, 'Leagues'>;
+type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Leagues'>;
 
 type Props = {
-  navigation: LeaguesNavigationProp;
+  navigation: ScreenNavigationProp;
 };
 
 export default function Leagues({navigation}: Props) {
@@ -16,7 +16,7 @@ export default function Leagues({navigation}: Props) {
     <View>
       <Text>Leagues Screen</Text>
       <Button
-        onPress={() => navigation.navigate('Create league')}
+        onPress={() => navigation.navigate('Create League')}
         title="Create League"
       />
       <Button

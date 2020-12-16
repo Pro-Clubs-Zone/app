@@ -25,10 +25,10 @@ const firFunc = functions();
 const firAuth = auth();
 const db = firestore();
 
-type HomeNavigationProp = StackNavigationProp<HomeStackType, 'Home'>;
+type ScreenNavigationProp = StackNavigationProp<HomeStackType, 'Home'>;
 
 type Props = {
-  navigation: HomeNavigationProp;
+  navigation: ScreenNavigationProp;
 };
 
 export default function Home({navigation}: Props) {
@@ -290,8 +290,11 @@ export default function Home({navigation}: Props) {
       <Button onPress={testFunc} title="Schedule Matches" />
       <Button
         onPress={() =>
-          navigation.navigate('Match', {
-            matchInfo: matches, //FIXME pass correct match from array
+          navigation.navigate('Leagues', {
+            screen: 'Match',
+            params: {
+              matchInfo: matches, //FIXME pass correct match from array}
+            },
           })
         }
         title="Match Screen"

@@ -4,19 +4,34 @@ import firestore from '@react-native-firebase/firestore';
 //import {Club, UserLeague} from './interface';
 import {AppContext, AuthContext} from '../../utils/context';
 import {ClubInt, UserLeague} from '../../utils/interface';
+import {LeaguesStackType} from '../user/leaguesStack';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+
+type ScreenNavigationProp = StackNavigationProp<
+  LeaguesStackType,
+  'Create Club'
+>;
+
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'Create Club'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
 
 const db = firestore();
 
-export default function CreateClub({route, navigation}) {
+export default function CreateClub({route, navigation}: Props) {
   const [clubName, setClubName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
 
-  const leagueId: string = route.params.leagueId;
+  const leagueId = route.params.leagueId;
   const uid = user?.uid;
-  const isAdmin: boolean = route.params.admin;
+  const isAdmin = route.params.isAdmin;
 
   const onCreateClub = () => {
     const userRef = db.collection('users').doc(uid);

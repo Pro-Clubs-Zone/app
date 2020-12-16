@@ -1,38 +1,41 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {
-  Text,
-  View,
-  Button,
-  SectionList,
-  NativeSyntheticEvent,
-  NativeTouchEvent,
-} from 'react-native';
+import {Text, View, Button, SectionList} from 'react-native';
 import {AppContext} from '../../utils/context';
 
 import firestore from '@react-native-firebase/firestore';
 import {ClubInt} from '../../utils/interface';
+import {LeaguesStackType} from '../user/leaguesStack';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
-const db = firestore();
+type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Clubs'>;
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'Clubs'>;
 
 type ClubData = ClubInt & {id: string};
-
 interface ClubList {
   title: string;
   data: ClubData[];
 }
 
-let defaultData: ClubList[] = [
-  {
-    title: 'New requests',
-    data: [],
-  },
-  {
-    title: 'Accepted',
-    data: [],
-  },
-];
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
 
-export default function Clubs({navigation, route}) {
+const db = firestore();
+
+export default function Clubs({route}: Props) {
+  let defaultData: ClubList[] = [
+    {
+      title: 'New requests',
+      data: [],
+    },
+    {
+      title: 'Accepted',
+      data: [],
+    },
+  ];
+
   const [data, setData] = useState<ClubData[]>([]);
   const [loading, setLoading] = useState(true);
   const [sectionedData, setSectionedData] = useState(defaultData);
@@ -107,7 +110,7 @@ export default function Clubs({navigation, route}) {
   return (
     <SectionList
       sections={sectionedData}
-      keyExtractor={(item, index) => item + index}
+      keyExtractor={(item) => item.id}
       renderItem={({item}) => (
         <Club
           name={item.name}
@@ -122,11 +125,7 @@ export default function Clubs({navigation, route}) {
 
 const Club = (props) => {
   return (
-    <View
-      style={{
-        height: 100,
-        width: '100%',
-      }}>
+    <View>
       <Text>{props.name}</Text>
       <Button title="acp" onPress={props.onAccept} />
       <Button title="decline" onPress={props.onDecline} />

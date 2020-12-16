@@ -1,14 +1,22 @@
 import React, {useContext, useState} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {AppContext} from '../../utils/context';
-import {FlatList} from 'react-native-gesture-handler';
-import firestore from '@react-native-firebase/firestore';
+import {LeaguesStackType} from '../user/leaguesStack';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 
-const Stack = createStackNavigator();
-const db = firestore();
+type ScreenNavigationProp = StackNavigationProp<
+  LeaguesStackType,
+  'League Pre-Season'
+>;
 
-export default function LeaguePreSeason({route, navigation}) {
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'League Pre-Season'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function LeaguePreSeason({route, navigation}: Props) {
   return (
     <View>
       <Button
@@ -25,7 +33,7 @@ export default function LeaguePreSeason({route, navigation}) {
         onPress={() =>
           navigation.navigate('Create Club', {
             leagueId: route.params.leagueId,
-            admin: true,
+            isAdmin: true,
           })
         }
       />

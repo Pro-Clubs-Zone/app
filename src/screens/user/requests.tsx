@@ -18,10 +18,10 @@ type RequestTopTabNav = {
   Sent: [MyRequests[]];
 };
 
-type RequestsRouteProp = RouteProp<HomeStackType, 'Requests'>;
+type ScreenRouteProp = RouteProp<HomeStackType, 'Requests'>;
 
 type Props = {
-  route: RequestsRouteProp;
+  route: ScreenRouteProp;
 };
 
 const db = firestore();

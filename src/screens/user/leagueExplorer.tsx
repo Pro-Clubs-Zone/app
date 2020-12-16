@@ -5,13 +5,13 @@ import {LeaguesStackType} from './leaguesStack';
 import firestore from '@react-native-firebase/firestore';
 import {LeagueInt} from '../../utils/interface';
 
-type LeaguesNavigationProp = StackNavigationProp<
+type ScreenNavigationProp = StackNavigationProp<
   LeaguesStackType,
   'League Explorer'
 >;
 
 type Props = {
-  navigation: LeaguesNavigationProp;
+  navigation: ScreenNavigationProp;
 };
 
 const db = firestore();
@@ -21,9 +21,8 @@ export default function LeagueExplorer({navigation}: Props) {
   const [data, setData] = useState<Leagues>([]);
   const [loading, setLoading] = useState(true);
 
-  const leagueCollection = db.collection('leagues');
-
   useEffect(() => {
+    const leagueCollection = db.collection('leagues');
     const subscriber = leagueCollection.onSnapshot((querySnapshot) => {
       let retrievedLeagues: Leagues = [];
       querySnapshot.forEach((doc) => {

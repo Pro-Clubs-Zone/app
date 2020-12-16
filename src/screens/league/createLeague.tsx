@@ -4,6 +4,17 @@ import SignUp from '../auth/signUp';
 import {AppContext, AuthContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
 import {LeagueInt} from '../../utils/interface';
+import {LeaguesStackType} from '../user/leaguesStack';
+import {StackNavigationProp} from '@react-navigation/stack';
+
+type ScreenNavigationProp = StackNavigationProp<
+  LeaguesStackType,
+  'Create League'
+>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+};
 
 const leagueInfoDefault: LeagueInt = {
   name: Math.floor(Math.random() * Math.floor(200)),

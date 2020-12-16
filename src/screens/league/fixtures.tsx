@@ -2,10 +2,26 @@ import React from 'react';
 import {Text, View, FlatList, Button} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import useGetMatches from './functions/useGetMatches';
+import {LeaguesStackType} from '../user/leaguesStack';
+import {RouteProp} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-const Tab = createMaterialTopTabNavigator();
+type FixturesStack = {
+  Upcoming: {leagueId: string};
+  Past: {leagueId: string};
+};
 
-export default function Fixtures({navigation, route}) {
+const Tab = createMaterialTopTabNavigator<FixturesStack>();
+
+type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Fixtures'>;
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'Fixtures'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function Fixtures({route}: Props) {
   const leagueId: string = route.params.leagueId;
 
   return (
@@ -24,7 +40,7 @@ export default function Fixtures({navigation, route}) {
   );
 }
 
-function UpcomingFixtures({navigation, route}) {
+function UpcomingFixtures({navigation, route}: Props) {
   const leagueId = route.params.leagueId;
 
   const getMatches = useGetMatches(leagueId, true, [true, false]);
@@ -56,7 +72,7 @@ function UpcomingFixtures({navigation, route}) {
   );
 }
 
-export function PastFixtures({navigation, route}) {
+export function PastFixtures({navigation, route}: Props) {
   const leagueId = route.params.leagueId;
 
   const getMatches = useGetMatches(leagueId, false, [true, false]);

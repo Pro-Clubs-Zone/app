@@ -2,10 +2,25 @@ import React, {useState, useEffect, useContext} from 'react';
 import {Text, View, ActivityIndicator, Alert, Button} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../utils/context';
+import {LeaguesStackType} from '../user/leaguesStack';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
+
+type ScreenNavigationProp = StackNavigationProp<
+  LeaguesStackType,
+  'League Preview'
+>;
+
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'League Preview'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
 
 const db = firestore();
 
-export default function LeaguePreview({navigation, route}) {
+export default function LeaguePreview({navigation, route}: Props) {
   const [accepted, setAccepted] = useState<boolean>(false);
 
   const leagueId = route.params.leagueId;
