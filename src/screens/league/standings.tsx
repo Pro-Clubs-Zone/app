@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {Text, View, FlatList} from 'react-native';
-import {ClubStanding} from '../../utils/interface';
+import {IClubStanding} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {RouteProp} from '@react-navigation/native';
 // import {StackNavigationProp} from '@react-navigation/stack';
@@ -13,7 +13,7 @@ const db = firestore();
 
 type StandingsList = {
   key: string;
-  data: ClubStanding;
+  data: IClubStanding;
 };
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function LeagueStandings({route}: Props) {
-  const [data, setData] = useState<{[id: string]: ClubStanding}>({});
+  const [data, setData] = useState<{[id: string]: IClubStanding}>({});
   const [standings, setStandings] = useState<StandingsList[]>([]);
 
   const leagueId = route.params.leagueId;
@@ -35,7 +35,7 @@ export default function LeagueStandings({route}: Props) {
       .doc('standings');
 
     standingsRef.get().then((doc) => {
-      const standingsData = doc.data() as {[id: string]: ClubStanding};
+      const standingsData = doc.data() as {[id: string]: IClubStanding};
       setData(standingsData);
     });
   }, [leagueId]);

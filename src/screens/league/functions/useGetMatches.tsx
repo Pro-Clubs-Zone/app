@@ -1,11 +1,11 @@
 import {useContext, useEffect, useState} from 'react';
-import {MatchData, MatchInt, LeagueInt} from '../../../utils/interface';
+import {IMatchNavData, IMatch, ILeague} from '../../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../../utils/context';
 
 type FixtureList = {
   key: string;
-  data: MatchData;
+  data: IMatchNavData;
 };
 const db = firestore();
 
@@ -44,12 +44,12 @@ const useGetMatches = (
         console.log('first page', published);
 
         snapshot.forEach((doc) => {
-          const matchData = doc.data() as MatchInt;
+          const matchData = doc.data() as IMatch;
           const matchId = doc.id;
           const awayTeamName = league.clubs[matchData.away].name;
           const homeTeamName = league.clubs[matchData.home].name;
 
-          const match: MatchData = {
+          const match: IMatchNavData = {
             ...matchData,
             homeTeamName: homeTeamName,
             awayTeamName: awayTeamName,
@@ -89,12 +89,12 @@ const useGetMatches = (
         const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
 
         snapshot.forEach((doc) => {
-          const matchData = doc.data() as MatchInt;
+          const matchData = doc.data() as IMatch;
           const matchId = doc.id;
           const awayTeamName = leagueData?.clubs[matchData.away].name;
           const homeTeamName = leagueData?.clubs[matchData.home].name;
 
-          const match: MatchData = {
+          const match: IMatchNavData = {
             ...matchData,
             homeTeamName: homeTeamName,
             awayTeamName: awayTeamName,

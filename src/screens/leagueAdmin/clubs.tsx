@@ -3,7 +3,7 @@ import {Text, View, Button, SectionList} from 'react-native';
 import {AppContext} from '../../utils/context';
 
 import firestore from '@react-native-firebase/firestore';
-import {ClubInt} from '../../utils/interface';
+import {IClub} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -11,7 +11,7 @@ import {RouteProp} from '@react-navigation/native';
 type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeaguesStackType, 'Clubs'>;
 
-type ClubData = ClubInt & {id: string};
+type ClubData = IClub & {id: string};
 interface ClubList {
   title: string;
   data: ClubData[];
@@ -65,7 +65,7 @@ export default function Clubs({route}: Props) {
       let clubList: ClubData[] = [];
       let clubInfo: ClubData;
       querySnapshot.forEach((doc) => {
-        clubInfo = {...(doc.data() as ClubInt), id: doc.id};
+        clubInfo = {...(doc.data() as IClub), id: doc.id};
         clubList.push(clubInfo);
       });
 

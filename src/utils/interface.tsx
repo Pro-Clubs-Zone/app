@@ -5,7 +5,7 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
-export interface MatchData extends MatchInt {
+export interface IMatchNavData extends IMatch {
   matchId: string;
   leagueName: string;
   homeTeamName: string;
@@ -15,7 +15,7 @@ export interface MatchData extends MatchInt {
   awayTeamName: string;
 }
 
-export interface MatchInt {
+export interface IMatch {
   away: string;
   home: string;
   id: number;
@@ -30,16 +30,16 @@ export interface MatchInt {
   result?: {[team: string]: number};
 }
 
-export interface SectionListInt {
+export interface IFlatList {
   title: string;
   data: {}[];
 }
 
-export interface MyRequests extends SectionListInt {
-  data: MyRequestData[];
+export interface IMyRequests extends IFlatList {
+  data: ISentRequest[];
 }
 
-export interface MyRequestData {
+export interface ISentRequest {
   clubId: string;
   clubName: string;
   accepted: boolean;
@@ -48,27 +48,27 @@ export interface MyRequestData {
   playerId: string;
 }
 
-export interface ClubRequestInt extends SectionListInt {
-  data: PlayerRequestData[];
+export interface IClubRequest extends IFlatList {
+  data: IPlayerRequest[];
 }
 
-export interface LeagueRequestInt extends SectionListInt {
-  data: ClubRequestData[];
+export interface ILeagueRequest extends IFlatList {
+  data: IClubRequest[];
 }
 
-export interface PlayerRequestData extends ClubRosterMember {
+export interface IPlayerRequest extends IClubRosterMember {
   leagueId: string;
   username: string;
   playerId: string;
   clubId: string;
 }
 
-export interface ClubRequestData extends ClubInt {
+export interface IClubRequest extends IClub {
   clubId: string;
   leagueId: string;
 }
 
-export interface LeagueInt {
+export interface ILeague {
   name: any;
   description: string;
   platform: string;
@@ -79,35 +79,35 @@ export interface LeagueInt {
   scheduled: boolean;
   created: Timestamp;
   clubs?: {
-    [club: string]: ClubInt;
+    [club: string]: IClub;
   };
 }
 
-export interface ClubRosterMember {
+export interface IClubRosterMember {
   accepted: boolean;
   username: string;
 }
-export interface ClubInt {
+export interface IClub {
   name: string;
   managerId: string;
   accepted: boolean;
   roster: {
-    [uid: string]: ClubRosterMember;
+    [uid: string]: IClubRosterMember;
   };
   created: Timestamp;
 }
 
-export interface UserLeague {
+export interface IUserLeague {
   clubId?: string;
   manager: boolean;
   admin?: boolean;
   accepted?: boolean;
 }
 
-export interface UserDataInt {
+export interface IUser {
   username: string;
   leagues: {
-    [league: string]: UserLeague;
+    [league: string]: IUserLeague;
   };
 }
 
@@ -118,7 +118,7 @@ export interface UserDataInt {
 //   };
 // }
 
-export interface ClubStanding {
+export interface IClubStanding {
   name: string;
   played: number;
   won: number;

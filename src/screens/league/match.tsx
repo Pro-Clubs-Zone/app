@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Text, View} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {MatchData} from '../../utils/interface';
+import {IMatchNavData} from '../../utils/interface';
 import functions from '@react-native-firebase/functions';
 import {LeaguesStackType} from '../user/leaguesStack';
 // import {StackNavigationProp} from '@react-navigation/stack';
@@ -20,7 +20,7 @@ const db = firestore();
 const firFunc = functions();
 
 export default function Match({route}: Props) {
-  let matchData: MatchData = route.params.matchInfo;
+  let matchData: IMatchNavData = route.params.matchInfo;
   console.log(matchData);
 
   const teamSubmission = {
@@ -49,7 +49,7 @@ export default function Match({route}: Props) {
           Object.keys(matchData.submissions).length === 1
         ) {
           const controlMatch = firFunc.httpsCallable('matchSubmission');
-          const match: MatchData = {
+          const match: IMatchNavData = {
             ...matchData,
             submissions: {...matchData.submissions, ...teamSubmission},
           };

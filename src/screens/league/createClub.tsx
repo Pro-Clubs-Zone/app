@@ -3,7 +3,7 @@ import {Text, View, Button, TextInput} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 //import {Club, UserLeague} from './interface';
 import {AppContext, AuthContext} from '../../utils/context';
-import {ClubInt, UserLeague} from '../../utils/interface';
+import {IClub, IUserLeague} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -41,7 +41,7 @@ export default function CreateClub({route, navigation}: Props) {
       .collection('clubs')
       .doc();
 
-    const clubInfo: ClubInt = {
+    const clubInfo: IClub = {
       name: clubName,
       managerId: uid,
       accepted: isAdmin ? true : false,
@@ -53,7 +53,7 @@ export default function CreateClub({route, navigation}: Props) {
       },
       created: firestore.Timestamp.now(),
     };
-    const userInfo: UserLeague = {
+    const userInfo: IUserLeague = {
       clubId: clubRef.id,
       manager: true,
     };

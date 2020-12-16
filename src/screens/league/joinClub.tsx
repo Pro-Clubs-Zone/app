@@ -3,7 +3,7 @@ import {Text, View, Button, Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext, AuthContext} from '../../utils/context';
 import {FlatList} from 'react-native-gesture-handler';
-import {ClubInt, ClubRosterMember, UserLeague} from '../../utils/interface';
+import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -18,7 +18,7 @@ type Props = {
 };
 
 const db = firestore();
-type ClubData = ClubInt & {key: string};
+type ClubData = IClub & {key: string};
 
 export default function JoinClub({route}: Props) {
   const [data, setData] = useState<ClubData[]>([]);
@@ -39,7 +39,7 @@ export default function JoinClub({route}: Props) {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          retrievedClubs.push({...(doc.data() as ClubInt), key: doc.id});
+          retrievedClubs.push({...(doc.data() as IClub), key: doc.id});
         });
         setData(retrievedClubs);
         setLoading(false);
@@ -48,14 +48,14 @@ export default function JoinClub({route}: Props) {
 
   const onSendRequestConfirm = (clubId: string) => {
     const clubRef = leagueClubs.doc(clubId);
-    const userInfo: {[leagueId: string]: UserLeague} = {
+    const userInfo: {[leagueId: string]: IUserLeague} = {
       [leagueId]: {
         clubId: clubId,
         accepted: false,
         manager: false,
       },
     };
-    const rosterMember: {[uid: string]: ClubRosterMember} = {
+    const rosterMember: {[uid: string]: IClubRosterMember} = {
       [uid]: {
         accepted: false,
         username: context?.userData?.username,

@@ -1,5 +1,5 @@
 import React from 'react';
-import {MatchData} from '../../utils/interface';
+import {IMatchNavData} from '../../utils/interface';
 import {createStackNavigator} from '@react-navigation/stack';
 
 // Screens
@@ -39,7 +39,7 @@ export type LeaguesStackType = {
   'Join Club': Props;
   Standings: Props;
   Fixtures: Props;
-  Match: {matchInfo: MatchData};
+  Match: {matchInfo: IMatchNavData};
 };
 
 export default function LeagueNavigator() {

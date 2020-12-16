@@ -3,25 +3,21 @@ import {Text, View, Button} from 'react-native';
 import {AppContext, AuthContext, RequestContext} from '../../utils/context';
 import auth from '@react-native-firebase/auth';
 import {StackNavigationProp} from '@react-navigation/stack';
-import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
 import {
-  ClubInt,
-  ClubRequestData,
-  ClubRequestInt,
-  ClubRosterMember,
-  LeagueInt,
-  LeagueRequestInt,
-  MyRequestData,
-  MyRequests,
-  PlayerRequestData,
-  UserDataInt,
-  MatchData,
+  IClub,
+  IClubRosterMember,
+  ILeague,
+  ILeagueRequest,
+  ISentRequest,
+  IMyRequests,
+  IPlayerRequest,
+  IUser,
+  IMatchNavData,
 } from '../../utils/interface';
 import getUserMatches from './functions/getUserMatches';
 import {HomeStackType} from './homeStack';
 
-const firFunc = functions();
 const firAuth = auth();
 const db = firestore();
 
@@ -34,7 +30,7 @@ type Props = {
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [uid, setUid] = useState<string | undefined>();
-  const [matches, setMatches] = useState<MatchData[]>([]);
+  const [matches, setMatches] = useState<IMatchNavData[]>([]);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -53,24 +49,24 @@ export default function Home({navigation}: Props) {
     }
   }, [user]);
 
-  const getClubRequests = (data: {[leagueId: string]: LeagueInt}) => {
-    let requests: ClubRequestInt[] = [];
+  const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
+    let requests: IClubRequest[] = [];
     let requestCount = 0;
-    let playerData: PlayerRequestData;
-    let myClubRequests: MyRequests = {
+    let playerData: IPlayerRequest;
+    let myClubRequests: IMyRequests = {
       title: '',
       data: [],
     };
-    let myClubRequestData: MyRequestData;
+    let myClubRequestData: ISentRequest;
 
     for (const [leagueId, league] of Object.entries(data)) {
-      let clubData: ClubRequestInt = {
+      let clubData: IClubRequest = {
         title: '',
         data: [],
       };
       if (league.clubs) {
         for (const [clubId, club] of Object.entries(league.clubs)) {
-          const roster: {[uid: string]: ClubRosterMember} = club.roster;
+          const roster: {[uid: string]: IClubRosterMember} = club.roster;
           for (const [playerId, player] of Object.entries(roster)) {
             if (playerId === uid && player.accepted === false) {
               myClubRequests.title = 'Club Requests';
@@ -107,10 +103,10 @@ export default function Home({navigation}: Props) {
     requestContext?.setMyClubRequests(myClubRequests);
   };
 
-  const getLeagueRequests = (data: {[leagueId: string]: LeagueInt}) => {
-    let requests: LeagueRequestInt[] = [];
-    let clubData: ClubRequestData;
-    let myLeagueRequests: MyRequests = {
+  const getLeagueRequests = (data: {[leagueId: string]: ILeague}) => {
+    let requests: ILeagueRequest[] = [];
+    let clubData: IClubRequest;
+    let myLeagueRequests: IMyRequests = {
       title: '',
       data: [],
     };
@@ -118,12 +114,12 @@ export default function Home({navigation}: Props) {
     let requestCount = 0;
 
     for (const [leagueId, league] of Object.entries(data)) {
-      let leagueData: LeagueRequestInt = {
+      let leagueData: ILeagueRequest = {
         title: '',
         data: [],
       };
       if (league.clubs) {
-        let myLeagueRequestData: MyRequestData;
+        let myLeagueRequestData: ISentRequest;
         for (const [clubId, club] of Object.entries(league.clubs)) {
           if (club.managerId === uid && club.accepted === false) {
             myLeagueRequests.title = 'League Requests';
@@ -162,13 +158,13 @@ export default function Home({navigation}: Props) {
   };
 
   const getLeaguesClubs = async (
-    userData: UserDataInt,
+    userData: IUser,
   ): Promise<{
-    userData: UserDataInt;
-    userLeagues: {[league: string]: LeagueInt};
+    userData: IUser;
+    userLeagues: {[league: string]: ILeague};
   }> => {
     const leagues = Object.entries(userData.leagues);
-    let userLeagues: {[league: string]: LeagueInt} = {};
+    let userLeagues: {[league: string]: ILeague} = {};
 
     for (const [leagueId, league] of leagues) {
       const clubRef = leaguesRef.doc(leagueId).collection('clubs');
@@ -177,7 +173,7 @@ export default function Home({navigation}: Props) {
         .doc(leagueId)
         .get()
         .then((doc) => {
-          userLeagues = {...userLeagues, [doc.id]: doc.data() as LeagueInt};
+          userLeagues = {...userLeagues, [doc.id]: doc.data() as ILeague};
         })
         .then(async () => {
           await clubRef.get().then((querySnapshot) => {
@@ -185,7 +181,7 @@ export default function Home({navigation}: Props) {
               console.log('club', doc.data());
               userLeagues[leagueId].clubs = {
                 ...userLeagues[leagueId].clubs,
-                [doc.id]: doc.data() as ClubInt,
+                [doc.id]: doc.data() as IClub,
               };
               // if (league.admin === true) {
               //   userLeagues[leagueId].clubs = {
@@ -212,10 +208,10 @@ export default function Home({navigation}: Props) {
   useEffect(() => {
     if (user) {
       const userRef = db.collection('users').doc(uid);
-      let userInfo: UserDataInt;
+      let userInfo: IUser;
       const subscriber = userRef.onSnapshot((doc) => {
         console.log('call to fir');
-        userInfo = doc.data() as UserDataInt;
+        userInfo = doc.data() as IUser;
         if (userInfo?.leagues) {
           getLeaguesClubs(userInfo)
             .then((data) => {
@@ -242,21 +238,9 @@ export default function Home({navigation}: Props) {
     }
   }, [uid]);
 
-  //TODO Typescript Navigation
-  // TODO Stats
   //TODO report center
-
-  const testFunc = async () => {
-    const test = firFunc.httpsCallable('scheduleMatches');
-    test({message: 'hey yooo'})
-      .then((response) => {
-        console.log('message from cloud', response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
+  //TODO UI
+  // TODO Stats
   const onSignOut = () => {
     firAuth.signOut().then(() => {
       setUid(undefined);
@@ -287,7 +271,6 @@ export default function Home({navigation}: Props) {
         title={user ? 'Logout' : 'Sign Up'}
       />
       <Button onPress={() => navigation.navigate('Sign In')} title="SignIn" />
-      <Button onPress={testFunc} title="Schedule Matches" />
       <Button
         onPress={() =>
           navigation.navigate('Leagues', {

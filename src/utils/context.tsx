@@ -9,24 +9,24 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
 import {
-  ClubRequestInt,
-  LeagueRequestInt,
-  MyRequests,
-  UserDataInt,
-  LeagueInt,
+  IClubRequest,
+  ILeagueRequest,
+  IMyRequests,
+  IUser,
+  ILeague,
 } from './interface';
 
 //TODO Fix undefined context problem
 
 const AppContext = createContext<{
-  userData: UserDataInt | null;
-  setUserData: Dispatch<SetStateAction<UserDataInt | null>>;
+  userData: IUser | null;
+  setUserData: Dispatch<SetStateAction<IUser | null>>;
   userLeagues: {
-    [league: string]: LeagueInt;
+    [league: string]: ILeague;
   } | null;
   setUserLeagues: Dispatch<
     SetStateAction<{
-      [league: string]: LeagueInt;
+      [league: string]: ILeague;
     } | null>
   >;
 } | null>(null);
@@ -34,13 +34,13 @@ const AppContext = createContext<{
 const AuthContext = createContext<{uid: string} | undefined>(undefined);
 
 const RequestContext = createContext<{
-  clubs: ClubRequestInt[];
-  leagues: LeagueRequestInt[];
-  myRequests: MyRequests[];
-  setClubs: Dispatch<SetStateAction<ClubRequestInt[]>>;
-  setLeagues: Dispatch<SetStateAction<LeagueRequestInt[]>>;
-  setMyLeagueRequests: Dispatch<SetStateAction<MyRequests>>;
-  setMyClubRequests: Dispatch<SetStateAction<MyRequests>>;
+  clubs: IClubRequest[];
+  leagues: ILeagueRequest[];
+  myRequests: IMyRequests[];
+  setClubs: Dispatch<SetStateAction<IClubRequest[]>>;
+  setLeagues: Dispatch<SetStateAction<ILeagueRequest[]>>;
+  setMyLeagueRequests: Dispatch<SetStateAction<IMyRequests>>;
+  setMyClubRequests: Dispatch<SetStateAction<IMyRequests>>;
   setLeagueCount: Dispatch<SetStateAction<number>>;
   setClubCount: Dispatch<SetStateAction<number>>;
   requestCount: number;
@@ -51,22 +51,22 @@ const firAuth = auth();
 const firFunc = functions();
 
 const RequestProvider = (props: any) => {
-  const defaultRequest: MyRequests = {
+  const defaultRequest: IMyRequests = {
     title: '',
     data: [],
   };
-  const [myClubRequests, setMyClubRequests] = useState<MyRequests>(
+  const [myClubRequests, setMyClubRequests] = useState<IMyRequests>(
     defaultRequest,
   );
-  const [myLeagueRequests, setMyLeagueRequests] = useState<MyRequests>(
+  const [myLeagueRequests, setMyLeagueRequests] = useState<IMyRequests>(
     defaultRequest,
   );
-  const [clubs, setClubs] = useState<ClubRequestInt[]>([]);
-  const [leagues, setLeagues] = useState<LeagueRequestInt[]>([]);
+  const [clubs, setClubs] = useState<IClubRequest[]>([]);
+  const [leagues, setLeagues] = useState<ILeagueRequest[]>([]);
   const [leagueCount, setLeagueCount] = useState<number>(0);
   const [clubCount, setClubCount] = useState<number>(0);
 
-  const myRequests: MyRequests[] = [myClubRequests, myLeagueRequests];
+  const myRequests: IMyRequests[] = [myClubRequests, myLeagueRequests];
   const requestCount: number = leagueCount + clubCount;
 
   return (
@@ -89,9 +89,9 @@ const RequestProvider = (props: any) => {
 };
 
 const AppProvider = (props: any) => {
-  const [userData, setUserData] = useState<UserDataInt | null>(null);
+  const [userData, setUserData] = useState<IUser | null>(null);
   const [userLeagues, setUserLeagues] = useState<{
-    [league: string]: LeagueInt;
+    [league: string]: ILeague;
   } | null>(null);
 
   return (

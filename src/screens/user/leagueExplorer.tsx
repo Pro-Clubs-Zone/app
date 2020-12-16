@@ -3,7 +3,7 @@ import {Text, View, ActivityIndicator, FlatList, Button} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeaguesStackType} from './leaguesStack';
 import firestore from '@react-native-firebase/firestore';
-import {LeagueInt} from '../../utils/interface';
+import {ILeague} from '../../utils/interface';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeaguesStackType,
@@ -15,7 +15,7 @@ type Props = {
 };
 
 const db = firestore();
-type Leagues = LeagueInt[] & {key: string}[];
+type Leagues = ILeague[] & {key: string}[];
 
 export default function LeagueExplorer({navigation}: Props) {
   const [data, setData] = useState<Leagues>([]);

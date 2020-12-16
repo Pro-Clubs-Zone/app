@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import {AppContext, AuthContext} from '../../utils/context';
 import LeaguePreview from './leaguePreview';
 import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
-import {LeagueInt} from '../../utils/interface';
+import {ILeague} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -26,7 +26,7 @@ type Props = {
 const db = firestore();
 
 export default function League({route, navigation}: Props) {
-  const [league, setLeague] = useState<LeagueInt>();
+  const [league, setLeague] = useState<ILeague>();
   const [loading, setLoading] = useState<boolean>(true);
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
@@ -38,9 +38,9 @@ export default function League({route, navigation}: Props) {
     console.log('effect on league');
     //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
-    let leagueInfo: LeagueInt;
+    let leagueInfo: ILeague;
     leagueRef.get().then((doc) => {
-      leagueInfo = doc.data() as LeagueInt;
+      leagueInfo = doc.data() as ILeague;
       setLeague(leagueInfo);
       setLoading(false);
     });

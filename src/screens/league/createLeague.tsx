@@ -3,7 +3,7 @@ import {Text, View, Button, TextInput} from 'react-native';
 import SignUp from '../auth/signUp';
 import {AppContext, AuthContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
-import {LeagueInt} from '../../utils/interface';
+import {ILeague} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 
@@ -16,7 +16,7 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-const leagueInfoDefault: LeagueInt = {
+const leagueInfoDefault: ILeague = {
   name: Math.floor(Math.random() * Math.floor(200)),
   description: 'some good description',
   platform: 'Playstation',
@@ -33,7 +33,7 @@ const leagueInfoDefault: LeagueInt = {
 const db = firestore();
 
 export default function CreateLeague() {
-  const [leagueInfo, setLeagueInfo] = useState<LeagueInt>(leagueInfoDefault);
+  const [leagueInfo, setLeagueInfo] = useState<ILeague>(leagueInfoDefault);
   const [loading, setLoading] = useState<boolean>(false);
   const [leagueName, setLeagueName] = useState<string>('');
 

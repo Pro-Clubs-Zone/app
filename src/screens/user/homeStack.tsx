@@ -1,10 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {
-  ClubRequestInt,
-  MyRequests,
-  LeagueRequestInt,
-} from '../../utils/interface';
+import {IClubRequest, IMyRequests, ILeagueRequest} from '../../utils/interface';
 //Screens
 import SignUp from '../auth/signUp';
 import SignIn from '../auth/signIn';
@@ -17,9 +13,9 @@ export type HomeStackType = {
   'Sign In': undefined;
   Requests: [
     {
-      Club: [ClubRequestInt[]];
-      League: [LeagueRequestInt[]];
-      Sent: [MyRequests[]];
+      Club: [IClubRequest[]];
+      League: [ILeagueRequest[]];
+      Sent: [IMyRequests[]];
     },
   ];
 };

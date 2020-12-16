@@ -5,17 +5,13 @@ import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {RouteProp} from '@react-navigation/native';
 
-import {
-  ClubRequestInt,
-  LeagueRequestInt,
-  MyRequests,
-} from '../../utils/interface';
+import {IClubRequest, ILeagueRequest, IMyRequests} from '../../utils/interface';
 import {HomeStackType} from './homeStack';
 
 type RequestTopTabNav = {
-  Club: [ClubRequestInt[]];
-  League: [LeagueRequestInt[]];
-  Sent: [MyRequests[]];
+  Club: [IClubRequest[]];
+  League: [ILeagueRequest[]];
+  Sent: [IMyRequests[]];
 };
 
 type ScreenRouteProp = RouteProp<HomeStackType, 'Requests'>;
@@ -52,9 +48,7 @@ export default function Requests() {
 }
 
 function ClubRequests({route}: Props) {
-  const [data, setData] = useState<ClubRequestInt[]>(() => [
-    ...route.params[0],
-  ]);
+  const [data, setData] = useState<IClubRequest[]>(() => [...route.params[0]]);
   const requestContext = useContext(RequestContext);
   type Props = {
     playerId: string;
@@ -119,7 +113,7 @@ function ClubRequests({route}: Props) {
 }
 
 function LeagueRequests({route}: Props) {
-  const [data, setData] = useState<LeagueRequestInt[]>(() => [
+  const [data, setData] = useState<ILeagueRequest[]>(() => [
     ...route.params[0],
   ]);
   const requestContext = useContext(RequestContext);
@@ -178,7 +172,7 @@ function LeagueRequests({route}: Props) {
 }
 
 function MySentRequests({route}: Props) {
-  const [data, setData] = useState<MyRequests[]>(() => [...route.params[0]]);
+  const [data, setData] = useState<IMyRequests[]>(() => [...route.params[0]]);
 
   const requestContext = useContext(RequestContext);
   const user = useContext(AuthContext);
