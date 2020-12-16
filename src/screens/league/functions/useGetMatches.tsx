@@ -37,10 +37,12 @@ const useGetMatches = (
       .orderBy('id', 'asc')
       .limit(2);
 
-    firstPage.get().then((snapshot) => {
+    const subscriber = firstPage.onSnapshot((snapshot) => {
+      let matches: FixtureList[] = [];
+      let lastVisibleDoc: any = null;
+
       if (!snapshot.empty) {
-        let matches: FixtureList[] = [];
-        const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+        lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
         console.log('first page', published);
 
         snapshot.forEach((doc) => {
@@ -65,10 +67,12 @@ const useGetMatches = (
           };
           matches.push(fixture);
         });
-        setData(matches);
-        setLastVisible(lastVisibleDoc);
       }
+
+      setData(matches);
+      setLastVisible(lastVisibleDoc);
     });
+    return subscriber;
   }, [leagueId]);
 
   const onLoadMore = () => {

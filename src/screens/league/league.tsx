@@ -47,8 +47,6 @@ export default function League({route, navigation}: Props) {
     });
   }, [leagueId]);
 
-  console.log(league);
-
   if (userData?.leagues && userData?.leagues[leagueId]) {
     if (league?.scheduled) {
       return <LeagueScheduled navigation={navigation} route={route} />;

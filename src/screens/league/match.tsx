@@ -4,22 +4,22 @@ import firestore from '@react-native-firebase/firestore';
 import {IMatchNavData} from '../../utils/interface';
 import functions from '@react-native-firebase/functions';
 import {LeaguesStackType} from '../user/leaguesStack';
-// import {StackNavigationProp} from '@react-navigation/stack';
+import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 
-// type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Match'>;
+type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Match'>;
 
 type ScreenRouteProp = RouteProp<LeaguesStackType, 'Match'>;
 
 type Props = {
-  // navigation: ScreenNavigationProp;
+  navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
 const db = firestore();
 const firFunc = functions();
 
-export default function Match({route}: Props) {
+export default function Match({navigation, route}: Props) {
   let matchData: IMatchNavData = route.params.matchInfo;
   console.log(matchData);
 
@@ -65,6 +65,9 @@ export default function Match({route}: Props) {
         } else {
           console.log('first submission');
         }
+      })
+      .then(() => {
+        navigation.goBack();
       });
   };
 
