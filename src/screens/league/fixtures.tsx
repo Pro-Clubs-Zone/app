@@ -43,7 +43,7 @@ export default function Fixtures({route}: Props) {
 function UpcomingFixtures({navigation, route}: Props) {
   const leagueId = route.params.leagueId;
 
-  const getMatches = useGetMatches(leagueId, true, [true, false]);
+  const getMatches = useGetMatches(leagueId, false, [true, false]);
 
   return (
     <View>
@@ -75,7 +75,7 @@ function UpcomingFixtures({navigation, route}: Props) {
 export function PastFixtures({navigation, route}: Props) {
   const leagueId = route.params.leagueId;
 
-  const getMatches = useGetMatches(leagueId, false, [true, false]);
+  const getMatches = useGetMatches(leagueId, true, [true, false]);
 
   return (
     <View>

@@ -42,7 +42,7 @@ export default function CreateLeague() {
 
   const onCreateLeague = () => {
     const batch = db.batch();
-    const leagueRef = db.collection('leagues').doc('italy');
+    const leagueRef = db.collection('leagues').doc();
     const userRef = db.collection('users').doc(uid);
 
     setLoading(true);

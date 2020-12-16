@@ -8,6 +8,7 @@ import {ILeague} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import LeagueScheduled from './league_scheduled';
 
 // TODO: Create Custom Nav Stack https://reactnavigation.org/docs/auth-flow/#how-it-will-work
 
@@ -46,9 +47,11 @@ export default function League({route, navigation}: Props) {
     });
   }, [leagueId]);
 
+  console.log(league);
+
   if (userData?.leagues && userData?.leagues[leagueId]) {
     if (league?.scheduled) {
-      return <League navigation={navigation} route={route} />;
+      return <LeagueScheduled navigation={navigation} route={route} />;
     } else {
       if (league?.adminId === uid) {
         return <LeaguePreSeason navigation={navigation} route={route} />;

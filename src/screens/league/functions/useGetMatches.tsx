@@ -35,7 +35,7 @@ const useGetMatches = (
       .where('published', '==', published)
       .where('conflict', 'in', conflict)
       .orderBy('id', 'asc')
-      .limit(1);
+      .limit(2);
 
     firstPage.get().then((snapshot) => {
       if (!snapshot.empty) {
@@ -56,7 +56,7 @@ const useGetMatches = (
             clubId: clubId,
             manager: manager,
             matchId: matchId,
-            leagueId: league?.name,
+            leagueId: leagueId,
           };
 
           const fixture: FixtureList = {

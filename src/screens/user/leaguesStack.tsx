@@ -26,7 +26,7 @@ type Props = {
 };
 
 export type LeaguesStackType = {
-  'League State Nav': Props;
+  'League Scheduled': Props;
   Leagues: undefined;
   'Create League': undefined;
   League: Props;
@@ -45,10 +45,10 @@ export type LeaguesStackType = {
 export default function LeagueNavigator() {
   return (
     <Stack.Navigator initialRouteName="Leagues">
-      <Stack.Screen name="League State Nav" component={League} />
+      <Stack.Screen name="League Scheduled" component={LeagueScheduled} />
       <Stack.Screen name="Leagues" component={Leagues} />
       <Stack.Screen name="Create League" component={CreateLeague} />
-      <Stack.Screen name="League" component={LeagueScheduled} />
+      <Stack.Screen name="League" component={League} />
       <Stack.Screen name="Clubs" component={Clubs} />
       <Stack.Screen name="League Explorer" component={LeagueExplorer} />
       <Stack.Screen name="League Preview" component={LeaguePreview} />
