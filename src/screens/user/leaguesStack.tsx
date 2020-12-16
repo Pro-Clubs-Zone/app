@@ -1,8 +1,7 @@
 import React from 'react';
 import {MatchData} from '../../utils/interface';
 import {createStackNavigator} from '@react-navigation/stack';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
+
 // Screens
 import CreateLeague from '../league/createLeague';
 import LeagueExplorer from './leagueExplorer';
@@ -10,7 +9,7 @@ import LeaguePreview from '../league/leaguePreview';
 import SignUp from '../auth/signUp';
 import CreateClub from '../league/createClub';
 import League from '../league/league';
-import ScheduledLeague from '../league/scheduledLeague';
+import LeagueScheduled from '../league/league_scheduled';
 import Clubs from '../leagueAdmin/clubs';
 import JoinClub from '../league/joinClub';
 import LeagueStandings from '../league/standings';
@@ -49,7 +48,7 @@ export default function LeagueNavigator() {
       <Stack.Screen name="League State Nav" component={League} />
       <Stack.Screen name="Leagues" component={Leagues} />
       <Stack.Screen name="Create League" component={CreateLeague} />
-      <Stack.Screen name="League" component={ScheduledLeague} />
+      <Stack.Screen name="League" component={LeagueScheduled} />
       <Stack.Screen name="Clubs" component={Clubs} />
       <Stack.Screen name="League Explorer" component={LeagueExplorer} />
       <Stack.Screen name="League Preview" component={LeaguePreview} />

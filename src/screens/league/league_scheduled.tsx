@@ -12,7 +12,7 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-export default function ScheduledLeague({route, navigation}: Props) {
+export default function LeagueScheduled({route, navigation}: Props) {
   const leagueId: string = route.params.leagueId;
   return (
     <View>

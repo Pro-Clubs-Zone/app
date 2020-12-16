@@ -36,7 +36,7 @@ export default function League({route, navigation}: Props) {
 
   useEffect(() => {
     console.log('effect on league');
-
+    //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
     let leagueInfo: LeagueInt;
     leagueRef.get().then((doc) => {
