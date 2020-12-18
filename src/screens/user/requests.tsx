@@ -1,55 +1,29 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
-import {AppContext, AuthContext, RequestContext} from '../../utils/context';
+import {AuthContext, RequestContext} from '../../utils/context';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {RouteProp} from '@react-navigation/native';
-
 import {IClubRequest, ILeagueRequest, IMyRequests} from '../../utils/interface';
-import {HomeStackType} from './homeStack';
-
-type RequestTopTabNav = {
-  Club: [IClubRequest[]];
-  League: [ILeagueRequest[]];
-  Sent: [IMyRequests[]];
-};
-
-type ScreenRouteProp = RouteProp<HomeStackType, 'Requests'>;
-
-type Props = {
-  route: ScreenRouteProp;
-};
 
 const db = firestore();
-const Tab = createMaterialTopTabNavigator<RequestTopTabNav>();
+const Tab = createMaterialTopTabNavigator();
 
 export default function Requests() {
-  const requestsContext = useContext(RequestContext);
-
   return (
     <Tab.Navigator>
-      <Tab.Screen
-        name="Club"
-        component={ClubRequests}
-        initialParams={[requestsContext?.clubs]}
-      />
-      <Tab.Screen
-        name="League"
-        component={LeagueRequests}
-        initialParams={[requestsContext?.leagues]}
-      />
-      <Tab.Screen
-        name="Sent"
-        component={MySentRequests}
-        initialParams={[requestsContext?.myRequests]}
-      />
+      <Tab.Screen name="Club" component={ClubRequests} />
+      <Tab.Screen name="League" component={LeagueRequests} />
+      <Tab.Screen name="Sent" component={MySentRequests} />
     </Tab.Navigator>
   );
 }
 
-function ClubRequests({route}: Props) {
-  const [data, setData] = useState<IClubRequest[]>(() => [...route.params[0]]);
-  const requestContext = useContext(RequestContext);
+function ClubRequests() {
+  const requestsContext = useContext(RequestContext);
+  const requests: IClubRequest[] | undefined = requestsContext?.clubs;
+  console.log(requestsContext);
+
+  const [data, setData] = useState<IClubRequest[] | undefined>(requests);
   type Props = {
     playerId: string;
     clubId: string;
@@ -88,10 +62,10 @@ function ClubRequests({route}: Props) {
       ['roster.' + playerId + '.accepted']: true,
     });
 
-    const currentCount = requestContext?.requestCount;
+    const currentCount = requestsContext?.requestCount;
 
-    requestContext?.setClubs(newData);
-    requestContext?.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
+    requestsContext?.setClubs(newData);
+    requestsContext?.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
   };
 
   return (
@@ -112,11 +86,11 @@ function ClubRequests({route}: Props) {
   );
 }
 
-function LeagueRequests({route}: Props) {
-  const [data, setData] = useState<ILeagueRequest[]>(() => [
-    ...route.params[0],
-  ]);
-  const requestContext = useContext(RequestContext);
+function LeagueRequests() {
+  const requestsContext = useContext(RequestContext);
+  const requests: ILeagueRequest[] | undefined = requestsContext?.myRequests;
+
+  const [data, setData] = useState<ILeagueRequest[] | undefined>(requests);
 
   type Props = {
     clubId: string;
@@ -149,10 +123,10 @@ function LeagueRequests({route}: Props) {
     }
     setData(newData);
 
-    requestContext?.setLeagues(newData);
+    requestsContext?.setLeagues(newData);
 
-    const currentCount = requestContext?.requestCount;
-    requestContext?.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
+    const currentCount = requestsContext?.requestCount;
+    requestsContext?.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
   };
 
   return (
@@ -171,11 +145,12 @@ function LeagueRequests({route}: Props) {
   );
 }
 
-function MySentRequests({route}: Props) {
-  const [data, setData] = useState<IMyRequests[]>(() => [...route.params[0]]);
-
-  const requestContext = useContext(RequestContext);
+function MySentRequests() {
+  const requestsContext = useContext(RequestContext);
   const user = useContext(AuthContext);
+  const requests: IMyRequests[] | undefined = requestsContext?.myRequests;
+
+  const [data, setData] = useState<IMyRequests[] | undefined>(requests);
 
   const uid = user?.uid;
 
@@ -213,7 +188,7 @@ function MySentRequests({route}: Props) {
 
       setData(newData);
 
-      requestContext?.setMyClubRequests(newData[sectionIndex]);
+      requestsContext?.setMyClubRequests(newData[sectionIndex]);
 
       batch.update(clubRef, {
         ['roster.' + uid]: firestore.FieldValue.delete(),
@@ -233,7 +208,7 @@ function MySentRequests({route}: Props) {
       }
 
       setData(newData);
-      requestContext?.setMyLeagueRequests(newData[sectionIndex]);
+      requestsContext?.setMyLeagueRequests(newData[sectionIndex]);
 
       batch.delete(clubRef);
       batch.update(userRef, {

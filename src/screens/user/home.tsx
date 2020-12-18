@@ -7,6 +7,7 @@ import firestore from '@react-native-firebase/firestore';
 import {
   IClub,
   IClubRosterMember,
+  IClubRequest,
   ILeague,
   ILeagueRequest,
   ISentRequest,
@@ -14,9 +15,11 @@ import {
   IPlayerRequest,
   IUser,
   IMatchNavData,
+  IFlatList,
 } from '../../utils/interface';
 import getUserMatches from './functions/getUserMatches';
 import {HomeStackType} from './homeStack';
+import {FlatList} from 'react-native-gesture-handler';
 
 const firAuth = auth();
 const db = firestore();
@@ -60,7 +63,7 @@ export default function Home({navigation}: Props) {
     let myClubRequestData: ISentRequest;
 
     for (const [leagueId, league] of Object.entries(data)) {
-      let clubData: IClubRequest = {
+      let clubData: IFlatList = {
         title: '',
         data: [],
       };
@@ -81,20 +84,21 @@ export default function Home({navigation}: Props) {
               myClubRequests.data = [...myClubRequests.data, myClubRequestData];
             }
             if (player.accepted === false && club.managerId === uid) {
-              clubData.title = club.name + ' / ' + league.name;
               playerData = {
                 ...player,
                 clubId: clubId,
                 leagueId: leagueId,
                 playerId: playerId,
               };
+
+              clubData.title = club.name + ' / ' + league.name;
               clubData.data = [...clubData.data, playerData];
               requestCount++;
             }
           }
         }
         if (clubData.data.length !== 0) {
-          requests.push(clubData);
+          requests.push(clubData as IClubRequest);
         }
       }
     }

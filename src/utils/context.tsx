@@ -55,12 +55,8 @@ const RequestProvider = (props: any) => {
     title: '',
     data: [],
   };
-  const [myClubRequests, setMyClubRequests] = useState<IMyRequests>(
-    defaultRequest,
-  );
-  const [myLeagueRequests, setMyLeagueRequests] = useState<IMyRequests>(
-    defaultRequest,
-  );
+  const [myClubRequests, setMyClubRequests] = useState<IMyRequests>(null);
+  const [myLeagueRequests, setMyLeagueRequests] = useState<IMyRequests>(null);
   const [clubs, setClubs] = useState<IClubRequest[]>([]);
   const [leagues, setLeagues] = useState<ILeagueRequest[]>([]);
   const [leagueCount, setLeagueCount] = useState<number>(0);

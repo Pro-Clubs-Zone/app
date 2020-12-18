@@ -11,13 +11,7 @@ export type HomeStackType = {
   Home: undefined;
   'Sign Up': undefined;
   'Sign In': undefined;
-  Requests: [
-    {
-      Club: [IClubRequest[]];
-      League: [ILeagueRequest[]];
-      Sent: [IMyRequests[]];
-    },
-  ];
+  Requests: undefined;
 };
 
 export default function HomeNavigator() {
