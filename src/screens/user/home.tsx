@@ -12,14 +12,14 @@ import {
   ILeagueRequest,
   ISentRequest,
   IMyRequests,
-  IPlayerRequest,
   IUser,
   IMatchNavData,
   IFlatList,
+  IClubRequestData,
+  IPlayerRequestData,
 } from '../../utils/interface';
 import getUserMatches from './functions/getUserMatches';
 import {HomeStackType} from './homeStack';
-import {FlatList} from 'react-native-gesture-handler';
 
 const firAuth = auth();
 const db = firestore();
@@ -55,15 +55,13 @@ export default function Home({navigation}: Props) {
   const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
     let requests: IClubRequest[] = [];
     let requestCount = 0;
-    let playerData: IPlayerRequest;
     let myClubRequests: IMyRequests = {
       title: '',
       data: [],
     };
-    let myClubRequestData: ISentRequest;
 
     for (const [leagueId, league] of Object.entries(data)) {
-      let clubData: IFlatList = {
+      let clubData: IClubRequest = {
         title: '',
         data: [],
       };
@@ -73,7 +71,8 @@ export default function Home({navigation}: Props) {
           for (const [playerId, player] of Object.entries(roster)) {
             if (playerId === uid && player.accepted === false) {
               myClubRequests.title = 'Club Requests';
-              myClubRequestData = {
+
+              let myClubRequestData: ISentRequest = {
                 accepted: player.accepted,
                 clubId: clubId,
                 leagueId: leagueId,
@@ -84,7 +83,7 @@ export default function Home({navigation}: Props) {
               myClubRequests.data = [...myClubRequests.data, myClubRequestData];
             }
             if (player.accepted === false && club.managerId === uid) {
-              playerData = {
+              let playerData: IPlayerRequestData = {
                 ...player,
                 clubId: clubId,
                 leagueId: leagueId,
@@ -98,18 +97,19 @@ export default function Home({navigation}: Props) {
           }
         }
         if (clubData.data.length !== 0) {
-          requests.push(clubData as IClubRequest);
+          requests.push(clubData);
         }
       }
     }
     requestContext?.setClubCount(requestCount);
     requestContext?.setClubs(requests);
-    requestContext?.setMyClubRequests(myClubRequests);
+    if (myClubRequests.data.length !== 0) {
+      requestContext?.setMyClubRequests(myClubRequests);
+    }
   };
 
   const getLeagueRequests = (data: {[leagueId: string]: ILeague}) => {
     let requests: ILeagueRequest[] = [];
-    let clubData: IClubRequest;
     let myLeagueRequests: IMyRequests = {
       title: '',
       data: [],
@@ -123,11 +123,11 @@ export default function Home({navigation}: Props) {
         data: [],
       };
       if (league.clubs) {
-        let myLeagueRequestData: ISentRequest;
         for (const [clubId, club] of Object.entries(league.clubs)) {
           if (club.managerId === uid && club.accepted === false) {
             myLeagueRequests.title = 'League Requests';
-            myLeagueRequestData = {
+
+            let myLeagueRequestData: ISentRequest = {
               accepted: club.accepted,
               clubId: clubId,
               leagueId: leagueId,
@@ -139,7 +139,8 @@ export default function Home({navigation}: Props) {
           }
           if (club.accepted === false && league.adminId === uid) {
             leagueData.title = league.name;
-            clubData = {
+
+            let clubData: IClubRequestData = {
               ...club,
               leagueId: leagueId,
               clubId: clubId,
@@ -248,9 +249,9 @@ export default function Home({navigation}: Props) {
   const onSignOut = () => {
     firAuth.signOut().then(() => {
       setUid(undefined);
-      requestContext?.setClubCount(0);
-      requestContext?.setLeagueCount(0);
+      requestContext?.resetRequests();
       context?.setUserData(null);
+      context?.setUserLeagues(null);
     });
   };
 

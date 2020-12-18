@@ -16,8 +16,6 @@ import {
   ILeague,
 } from './interface';
 
-//TODO Fix undefined context problem
-
 const AppContext = createContext<{
   userData: IUser | null;
   setUserData: Dispatch<SetStateAction<IUser | null>>;
@@ -36,14 +34,16 @@ const AuthContext = createContext<{uid: string} | undefined>(undefined);
 const RequestContext = createContext<{
   clubs: IClubRequest[];
   leagues: ILeagueRequest[];
-  myRequests: IMyRequests[];
+  myClubRequests: IMyRequests | null;
+  myLeagueRequests: IMyRequests | null;
   setClubs: Dispatch<SetStateAction<IClubRequest[]>>;
   setLeagues: Dispatch<SetStateAction<ILeagueRequest[]>>;
-  setMyLeagueRequests: Dispatch<SetStateAction<IMyRequests>>;
-  setMyClubRequests: Dispatch<SetStateAction<IMyRequests>>;
+  setMyLeagueRequests: Dispatch<SetStateAction<IMyRequests | null>>;
+  setMyClubRequests: Dispatch<SetStateAction<IMyRequests | null>>;
   setLeagueCount: Dispatch<SetStateAction<number>>;
   setClubCount: Dispatch<SetStateAction<number>>;
   requestCount: number;
+  resetRequests: () => void;
 } | null>(null);
 
 const db = firestore();
@@ -51,24 +51,33 @@ const firAuth = auth();
 const firFunc = functions();
 
 const RequestProvider = (props: any) => {
-  const defaultRequest: IMyRequests = {
-    title: '',
-    data: [],
-  };
-  const [myClubRequests, setMyClubRequests] = useState<IMyRequests>(null);
-  const [myLeagueRequests, setMyLeagueRequests] = useState<IMyRequests>(null);
+  const [myClubRequests, setMyClubRequests] = useState<IMyRequests | null>(
+    null,
+  );
+  const [myLeagueRequests, setMyLeagueRequests] = useState<IMyRequests | null>(
+    null,
+  );
   const [clubs, setClubs] = useState<IClubRequest[]>([]);
   const [leagues, setLeagues] = useState<ILeagueRequest[]>([]);
   const [leagueCount, setLeagueCount] = useState<number>(0);
   const [clubCount, setClubCount] = useState<number>(0);
 
-  const myRequests: IMyRequests[] = [myClubRequests, myLeagueRequests];
   const requestCount: number = leagueCount + clubCount;
+
+  const resetRequests = () => {
+    setClubs([]);
+    setLeagues([]);
+    setLeagueCount(0);
+    setClubCount(0);
+    setMyLeagueRequests(null);
+    setMyClubRequests(null);
+  };
 
   return (
     <RequestContext.Provider
       value={{
-        myRequests,
+        myClubRequests,
+        myLeagueRequests,
         clubs,
         leagues,
         setClubs,
@@ -78,6 +87,7 @@ const RequestProvider = (props: any) => {
         setLeagueCount,
         setClubCount,
         requestCount,
+        resetRequests,
       }}>
       {props.children}
     </RequestContext.Provider>

@@ -21,9 +21,8 @@ export default function Requests() {
 function ClubRequests() {
   const requestsContext = useContext(RequestContext);
   const requests: IClubRequest[] | undefined = requestsContext?.clubs;
-  console.log(requestsContext);
-
   const [data, setData] = useState<IClubRequest[] | undefined>(requests);
+
   type Props = {
     playerId: string;
     clubId: string;
@@ -88,7 +87,7 @@ function ClubRequests() {
 
 function LeagueRequests() {
   const requestsContext = useContext(RequestContext);
-  const requests: ILeagueRequest[] | undefined = requestsContext?.myRequests;
+  const requests: ILeagueRequest[] | undefined = requestsContext?.leagues;
 
   const [data, setData] = useState<ILeagueRequest[] | undefined>(requests);
 
@@ -148,7 +147,15 @@ function LeagueRequests() {
 function MySentRequests() {
   const requestsContext = useContext(RequestContext);
   const user = useContext(AuthContext);
-  const requests: IMyRequests[] | undefined = requestsContext?.myRequests;
+  const clubRequests: IMyRequests | null | undefined =
+    requestsContext?.myClubRequests;
+  const leagueRequests: IMyRequests | null | undefined =
+    requestsContext?.myLeagueRequests;
+
+  let requests: IMyRequests[] = [];
+
+  clubRequests && requests.push(clubRequests);
+  leagueRequests && requests.push(leagueRequests);
 
   const [data, setData] = useState<IMyRequests[] | undefined>(requests);
 
@@ -175,7 +182,7 @@ function MySentRequests() {
 
     const newData = [...data];
 
-    if (sectionTitle == 'Club Requests') {
+    if (sectionTitle === 'Club Requests') {
       const openClubRequests = data[sectionIndex].data.filter((club) => {
         return club.clubId !== clubId;
       });

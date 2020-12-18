@@ -45,25 +45,25 @@ export interface ISentRequest {
   accepted: boolean;
   leagueId: string;
   leagueName: string;
-  playerId: string;
+  playerId?: string;
 }
 
 export interface IClubRequest extends IFlatList {
-  data: IPlayerRequest[];
+  data: IPlayerRequestData[];
 }
 
 export interface ILeagueRequest extends IFlatList {
-  data: IClubRequest[];
+  data: IClubRequestData[];
 }
 
-export interface IPlayerRequest extends IClubRosterMember {
+export interface IPlayerRequestData extends IClubRosterMember {
   leagueId: string;
   username: string;
   playerId: string;
   clubId: string;
 }
 
-export interface IClubRequest extends IClub {
+export interface IClubRequestData extends IClub {
   clubId: string;
   leagueId: string;
 }
