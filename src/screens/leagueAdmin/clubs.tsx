@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
@@ -6,6 +6,7 @@ import {IClub} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {AppContext} from '../../utils/context';
 
 type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeaguesStackType, 'Clubs'>;
@@ -29,6 +30,7 @@ export default function Clubs({route}: Props) {
   const [sectionedData, setSectionedData] = useState([]);
 
   const leagueId = route.params.leagueId;
+  const context = useContext(AppContext);
 
   const leagueClubsRef = db
     .collection('leagues')
@@ -66,19 +68,21 @@ export default function Clubs({route}: Props) {
   };
 
   useEffect(() => {
-    leagueClubsRef.get().then((querySnapshot) => {
-      let clubList: ClubData[] = [];
-      let clubInfo: ClubData;
-      querySnapshot.forEach((doc) => {
-        clubInfo = {...(doc.data() as IClub), id: doc.id};
-        clubList.push(clubInfo);
-      });
+    console.log(context);
+    const clubs = context.userLeagues[leagueId].clubs;
+    //  leagueClubsRef.get().then((querySnapshot) => {
+    let clubList: ClubData[] = [];
+    let clubInfo: ClubData;
+    for (const [clubId, club] of Object.entries(clubs)) {
+      clubInfo = {...club, id: clubId};
+      clubList.push(clubInfo);
+    }
 
-      console.log(clubList, 'clublist');
-      setData(clubList);
-      sortClubs(clubList);
-    });
-  }, []);
+    console.log(clubList, 'clublist');
+    setData(clubList);
+    sortClubs(clubList);
+    //  });
+  }, [context]);
 
   const onClubAccept = (clubId: string) => {
     const updatedList: ClubData[] = data.map((club) => {

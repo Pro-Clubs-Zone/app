@@ -15,6 +15,7 @@ import {
   IUser,
   ILeague,
 } from './interface';
+import {LogBox} from 'react-native';
 
 const AppContext = createContext<{
   userData: IUser | null;
@@ -124,6 +125,8 @@ const AuthProvider = (props: any) => {
         persistence: false,
         cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
       });
+      LogBox.ignoreLogs(['Remote debugger is in a background']);
+      LogBox.ignoreLogs(['DevTools failed to load SourceMap:']); // Ignore log notification by message
     }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
