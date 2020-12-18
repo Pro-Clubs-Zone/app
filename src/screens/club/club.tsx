@@ -23,6 +23,7 @@ type Props = {
 };
 
 const db = firestore();
+const batch = db.batch();
 
 export default function Club({navigation, route}: Props) {
   const [data, setData] = useState<PlayerData[]>([]);
@@ -94,9 +95,17 @@ export default function Club({navigation, route}: Props) {
 
     setData(updatedList);
     sortPlayers(updatedList);
-    return clubRef.update({
+
+    const playerRef = db.collection('users').doc(playerId);
+
+    batch.update(clubRef, {
       ['roster.' + playerId + '.accepted']: true,
     });
+    batch.update(playerRef, {
+      ['leagues.' + leagueId + '.accepted']: true,
+    });
+
+    return batch.commit();
   };
 
   const onPlayerDecline = (playerId: string) => {
@@ -109,7 +118,6 @@ export default function Club({navigation, route}: Props) {
     setData(updatedList);
     sortPlayers(updatedList);
     const playerRef = db.collection('users').doc(declinedPlayer.id);
-    const batch = db.batch();
     batch.update(playerRef, {
       [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
     });
