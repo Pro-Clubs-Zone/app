@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {IClub, IClubRosterMember} from '../../utils/interface';
@@ -33,6 +33,22 @@ export default function Club({navigation, route}: Props) {
   const leagueId = route.params.leagueId;
   const clubId = route.params.clubId;
   const context = useContext(AppContext);
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Button
+          title="settings"
+          onPress={() =>
+            navigation.navigate('Club Settings', {
+              leagueId: leagueId,
+              clubId: clubId,
+            })
+          }
+        />
+      ),
+    });
+  }, [navigation]);
 
   const clubRef = db
     .collection('leagues')

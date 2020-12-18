@@ -18,30 +18,37 @@ import Leagues from './leagues';
 import Match from '../league/match';
 import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
 import Club from '../club/club';
+import ClubSettings from '../club/clubSettings';
 
 const Stack = createStackNavigator<LeaguesStackType>();
 
-type Props = {
+type LeagueProps = {
   leagueId: string;
   isAdmin?: boolean;
 };
 
+interface ClubProps extends LeagueProps {
+  clubId: string;
+  manager?: boolean;
+}
+
 export type LeaguesStackType = {
-  'League Scheduled': Props;
+  'League Scheduled': LeagueProps;
   Leagues: undefined;
   'Create League': undefined;
-  League: Props;
-  Clubs: Props;
+  League: LeagueProps;
+  Clubs: LeagueProps;
   'League Explorer': undefined;
-  'League Preview': Props;
-  'League Pre-Season': Props;
+  'League Preview': LeagueProps;
+  'League Pre-Season': LeagueProps;
   'Sign Up': undefined;
-  'Create Club': Props;
-  'Join Club': Props;
-  Standings: Props;
-  Fixtures: Props;
+  'Create Club': LeagueProps;
+  'Join Club': LeagueProps;
+  Standings: LeagueProps;
+  Fixtures: LeagueProps;
   Match: {matchInfo: IMatchNavData};
-  'My Club': Props & {clubId: string; manager: boolean};
+  'My Club': ClubProps;
+  'Club Settings': ClubProps;
 };
 
 export default function LeagueNavigator() {
@@ -62,6 +69,7 @@ export default function LeagueNavigator() {
       <Stack.Screen name="Fixtures" component={Fixtures} />
       <Stack.Screen name="Match" component={Match} />
       <Stack.Screen name="My Club" component={Club} />
+      <Stack.Screen name="Club Settings" component={ClubSettings} />
     </Stack.Navigator>
   );
 }
