@@ -3,9 +3,13 @@ import {Text, View, Button} from 'react-native';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {AppContext} from '../../utils/context';
 
-type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'League'>;
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'League'>;
+type ScreenNavigationProp = StackNavigationProp<
+  LeaguesStackType,
+  'League Scheduled'
+>;
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'League Scheduled'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -14,6 +18,12 @@ type Props = {
 
 export default function LeagueScheduled({route, navigation}: Props) {
   const leagueId: string = route.params.leagueId;
+  const context = useContext(AppContext);
+
+  const userClub = context.userData.leagues[leagueId];
+
+  console.log(userClub);
+
   return (
     <View>
       <Text>League Home</Text>
@@ -30,6 +40,17 @@ export default function LeagueScheduled({route, navigation}: Props) {
         onPress={() =>
           navigation.navigate('Fixtures', {
             leagueId: leagueId,
+          })
+        }
+      />
+
+      <Button
+        title="My Club"
+        onPress={() =>
+          navigation.navigate('My Club', {
+            leagueId: leagueId,
+            clubId: userClub.clubId,
+            manager: userClub.manager,
           })
         }
       />

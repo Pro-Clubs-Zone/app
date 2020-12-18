@@ -70,7 +70,7 @@ export default function Clubs({route}: Props) {
   useEffect(() => {
     console.log(context);
     const clubs = context.userLeagues[leagueId].clubs;
-    //  leagueClubsRef.get().then((querySnapshot) => {
+
     let clubList: ClubData[] = [];
     let clubInfo: ClubData;
     for (const [clubId, club] of Object.entries(clubs)) {
@@ -81,7 +81,6 @@ export default function Clubs({route}: Props) {
     console.log(clubList, 'clublist');
     setData(clubList);
     sortClubs(clubList);
-    //  });
   }, [context]);
 
   const onClubAccept = (clubId: string) => {

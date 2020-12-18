@@ -4,6 +4,7 @@ import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import functions from '@react-native-firebase/functions';
+import {AppContext} from '../../utils/context';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeaguesStackType,
@@ -20,6 +21,9 @@ const firFunc = functions();
 
 export default function LeaguePreSeason({route, navigation}: Props) {
   const leagueId = route.params.leagueId;
+
+  const context = useContext(AppContext);
+  const userClub = context.userData.leagues[leagueId];
 
   const scheduleMatches = async () => {
     const functionRef = firFunc.httpsCallable('scheduleMatches');
@@ -44,15 +48,28 @@ export default function LeaguePreSeason({route, navigation}: Props) {
         }
       />
       <Button title="Invite Clubs" />
-      <Button
-        title="Create My Club"
-        onPress={() =>
-          navigation.navigate('Create Club', {
-            leagueId: route.params.leagueId,
-            isAdmin: true,
-          })
-        }
-      />
+      {userClub.manager ? (
+        <Button
+          title="My Club"
+          onPress={() =>
+            navigation.navigate('My Club', {
+              leagueId: leagueId,
+              clubId: userClub.clubId,
+              manager: userClub.manager,
+            })
+          }
+        />
+      ) : (
+        <Button
+          title="Create My Club"
+          onPress={() =>
+            navigation.navigate('Create Club', {
+              leagueId: route.params.leagueId,
+              isAdmin: true,
+            })
+          }
+        />
+      )}
     </View>
   );
 }
