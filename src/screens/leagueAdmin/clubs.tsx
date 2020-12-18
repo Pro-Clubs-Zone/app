@@ -1,9 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
-import {AppContext} from '../../utils/context';
 
 import firestore from '@react-native-firebase/firestore';
-import {IClub, IClubRequest, ILeagueRequest} from '../../utils/interface';
+import {IClub} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -38,23 +37,20 @@ export default function Clubs({route}: Props) {
 
   const acceptedClubList = {
     title: 'Accepted',
-    data: [],
+    data: [] as ClubData[],
   };
 
   const clubRequestList = {
     title: 'New requests',
-    data: [],
+    data: [] as ClubData[],
   };
 
   const sortClubs = (clubs: ClubData[]) => {
     clubs.forEach((club) => {
       if (club.accepted) {
         acceptedClubList.data.push(club);
-        //      sortedClubs.push(club);
-        //  sortedClubs[1].data.push(club);
       } else {
         clubRequestList.data.push(club);
-        //   sortedClubs[0].data.push(club);
       }
     });
 
@@ -85,13 +81,12 @@ export default function Clubs({route}: Props) {
   }, []);
 
   const onClubAccept = (clubId: string) => {
-    const updatedList: ClubData[] = data;
-    updatedList.map((club) => {
+    const updatedList: ClubData[] = data.map((club) => {
       if (club.id === clubId) {
         club.accepted = true;
       }
+      return club;
     });
-    console.log(updatedList);
 
     setData(updatedList);
     sortClubs(updatedList);
