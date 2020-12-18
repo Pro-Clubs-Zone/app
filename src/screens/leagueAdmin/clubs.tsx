@@ -3,7 +3,7 @@ import {Text, View, Button, SectionList} from 'react-native';
 import {AppContext} from '../../utils/context';
 
 import firestore from '@react-native-firebase/firestore';
-import {IClub} from '../../utils/interface';
+import {IClub, IClubRequest, ILeagueRequest} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -25,43 +25,52 @@ type Props = {
 const db = firestore();
 
 export default function Clubs({route}: Props) {
-  let defaultData: ClubList[] = [
-    {
-      title: 'New requests',
-      data: [],
-    },
-    {
-      title: 'Accepted',
-      data: [],
-    },
-  ];
-
   const [data, setData] = useState<ClubData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sectionedData, setSectionedData] = useState(defaultData);
+  const [sectionedData, setSectionedData] = useState([]);
 
   const leagueId = route.params.leagueId;
 
-  const leagueClubs = db
+  const leagueClubsRef = db
     .collection('leagues')
     .doc(leagueId)
     .collection('clubs');
 
-  const sortClubs = (clubs: ClubData[]) => {
-    let sortedClubs = defaultData;
+  const acceptedClubList = {
+    title: 'Accepted',
+    data: [],
+  };
 
+  const clubRequestList = {
+    title: 'New requests',
+    data: [],
+  };
+
+  const sortClubs = (clubs: ClubData[]) => {
     clubs.forEach((club) => {
       if (club.accepted) {
-        sortedClubs[1].data.push(club);
+        acceptedClubList.data.push(club);
+        //      sortedClubs.push(club);
+        //  sortedClubs[1].data.push(club);
       } else {
-        sortedClubs[0].data.push(club);
+        clubRequestList.data.push(club);
+        //   sortedClubs[0].data.push(club);
       }
     });
+
+    let sortedClubs: ClubList[] = [];
+
+    if (acceptedClubList.data.length !== 0) {
+      sortedClubs.push(acceptedClubList);
+    }
+    if (clubRequestList.data.length !== 0) {
+      sortedClubs.push(clubRequestList);
+    }
     setSectionedData(sortedClubs);
   };
 
   useEffect(() => {
-    leagueClubs.get().then((querySnapshot) => {
+    leagueClubsRef.get().then((querySnapshot) => {
       let clubList: ClubData[] = [];
       let clubInfo: ClubData;
       querySnapshot.forEach((doc) => {
@@ -82,9 +91,11 @@ export default function Clubs({route}: Props) {
         club.accepted = true;
       }
     });
+    console.log(updatedList);
+
     setData(updatedList);
     sortClubs(updatedList);
-    const clubRef = leagueClubs.doc(clubId);
+    const clubRef = leagueClubsRef.doc(clubId);
     return clubRef.update({
       accepted: true,
     });
@@ -97,7 +108,7 @@ export default function Clubs({route}: Props) {
     const updatedList: ClubData[] = data.filter((club) => club.id !== clubId);
     setData(updatedList);
     sortClubs(updatedList);
-    const clubRef = leagueClubs.doc(clubId);
+    const clubRef = leagueClubsRef.doc(clubId);
     const managerRef = db.collection('users').doc(declinedClub?.managerId);
     const batch = db.batch();
     batch.update(managerRef, {

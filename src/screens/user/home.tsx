@@ -14,7 +14,6 @@ import {
   IMyRequests,
   IUser,
   IMatchNavData,
-  IFlatList,
   IClubRequestData,
   IPlayerRequestData,
 } from '../../utils/interface';
@@ -188,17 +187,6 @@ export default function Home({navigation}: Props) {
                 ...userLeagues[leagueId].clubs,
                 [doc.id]: doc.data() as IClub,
               };
-              // if (league.admin === true) {
-              //   userLeagues[leagueId].clubs = {
-              //     ...userLeagues[leagueId].clubs,
-              //     [doc.id]: doc.data() as ClubInt,
-              //   };
-              // } else if (league.clubId === doc.id) {
-              //   userLeagues[leagueId].clubs = {
-              //     ...userLeagues[leagueId].clubs,
-              //     [doc.id]: doc.data() as ClubInt,
-              //   };
-              // }
             });
           });
         });
