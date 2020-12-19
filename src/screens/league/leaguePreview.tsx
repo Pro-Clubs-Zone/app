@@ -5,6 +5,7 @@ import {AuthContext} from '../../utils/context';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeaguesStackType,
@@ -22,11 +23,12 @@ const db = firestore();
 
 export default function LeaguePreview({navigation, route}: Props) {
   const [accepted, setAccepted] = useState<boolean>(false);
-
-  const leagueId = route.params.leagueId;
+  const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
 
+  const leagueId = leagueContext.leagueId;
   const uid = user?.uid;
+  console.log(leagueId);
 
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
