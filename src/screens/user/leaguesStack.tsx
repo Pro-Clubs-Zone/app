@@ -15,10 +15,11 @@ import JoinClub from '../league/joinClub';
 import LeagueStandings from '../league/standings';
 import Fixtures from '../league/fixtures';
 import Leagues from './leagues';
-import Match from '../league/match';
+import Match from '../match/match';
 import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
+import ReportCenter from '../leagueAdmin/reportCenter';
 
 const Stack = createStackNavigator<LeaguesStackType>();
 
@@ -49,6 +50,7 @@ export type LeaguesStackType = {
   Match: {matchInfo: IMatchNavData};
   'My Club': ClubProps;
   'Club Settings': ClubProps;
+  'Report Center': Props;
 };
 
 export default function LeagueNavigator() {
@@ -70,6 +72,7 @@ export default function LeagueNavigator() {
       <Stack.Screen name="Match" component={Match} />
       <Stack.Screen name="My Club" component={Club} />
       <Stack.Screen name="Club Settings" component={ClubSettings} />
+      <Stack.Screen name="Report Center" component={ReportCenter} />
     </Stack.Navigator>
   );
 }

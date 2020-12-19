@@ -12,12 +12,9 @@ import LeagueScheduled from './league_scheduled';
 
 // TODO: Create Custom Nav Stack https://reactnavigation.org/docs/auth-flow/#how-it-will-work
 
-type ScreenNavigationProp = StackNavigationProp<
-  LeaguesStackType,
-  'League State Nav'
->;
+type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'League'>;
 
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'League State Nav'>;
+type ScreenRouteProp = RouteProp<LeaguesStackType, 'League'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

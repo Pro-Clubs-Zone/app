@@ -6,6 +6,7 @@ import functions from '@react-native-firebase/functions';
 import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {TextInput} from 'react-native-gesture-handler';
 
 type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Match'>;
 
@@ -20,22 +21,25 @@ const db = firestore();
 const firFunc = functions();
 
 export default function Match({navigation, route}: Props) {
+  const [homeScore, setHomeScore] = useState<number>();
+  const [awayScore, setAwayScore] = useState<number>();
+
   let matchData: IMatchNavData = route.params.matchInfo;
   console.log(matchData);
 
-  const teamSubmission = {
-    [matchData.clubId]: {
-      [matchData.home]: 2,
-      [matchData.away]: 1,
-    },
-  };
-  const matchRef = db
-    .collection('leagues')
-    .doc(matchData.leagueId)
-    .collection('matches')
-    .doc(matchData.matchId);
-
   const onSubmit = () => {
+    const teamSubmission = {
+      [matchData.clubId]: {
+        [matchData.home]: homeScore,
+        [matchData.away]: awayScore,
+      },
+    };
+    const matchRef = db
+      .collection('leagues')
+      .doc(matchData.leagueId)
+      .collection('matches')
+      .doc(matchData.matchId);
+
     matchRef
       .set(
         {
@@ -62,8 +66,6 @@ export default function Match({navigation, route}: Props) {
             .catch((error) => {
               console.log(error);
             });
-        } else {
-          console.log('first submission');
         }
       })
       .then(() => {
@@ -74,6 +76,22 @@ export default function Match({navigation, route}: Props) {
   return (
     <View>
       <Text>hello from matches</Text>
+      <TextInput
+        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        onChangeText={(score: any) => setHomeScore(score)}
+        value={homeScore}
+        placeholder="Home"
+        autoCorrect={false}
+        keyboardType="number-pad"
+      />
+      <TextInput
+        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+        onChangeText={(score: any) => setAwayScore(score)}
+        value={awayScore}
+        placeholder="Away"
+        autoCorrect={false}
+        keyboardType="number-pad"
+      />
       {matchData.teams?.includes(matchData.clubId) && matchData.manager && (
         <Button title="submit" onPress={onSubmit} />
       )}

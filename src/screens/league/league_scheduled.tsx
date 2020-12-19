@@ -54,6 +54,16 @@ export default function LeagueScheduled({route, navigation}: Props) {
           })
         }
       />
+
+      <Button
+        title="Report Center"
+        onPress={() =>
+          navigation.navigate('Report Center', {
+            leagueId: leagueId,
+            clubId: userClub.clubId,
+          })
+        }
+      />
     </View>
   );
 }

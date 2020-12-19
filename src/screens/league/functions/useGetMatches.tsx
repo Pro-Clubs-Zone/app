@@ -1,5 +1,5 @@
 import {useContext, useEffect, useState} from 'react';
-import {IMatchNavData, IMatch, ILeague} from '../../../utils/interface';
+import {IMatchNavData, IMatch} from '../../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../../utils/context';
 
@@ -20,22 +20,23 @@ const useGetMatches = (
 
   const context = useContext(AppContext);
 
+  const league = context?.userLeagues[leagueId];
+  const userLeague = context?.userData?.leagues[leagueId];
+  const clubId = userLeague?.clubId;
+  const manager = userLeague?.manager;
+
+  const leagueRef = db
+    .collection('leagues')
+    .doc(leagueId)
+    .collection('matches');
+
   useEffect(() => {
-    const league = context?.userLeagues[leagueId];
-    const userLeague = context?.userData?.leagues[leagueId];
-    const clubId = userLeague?.clubId;
-    const manager = userLeague?.manager;
-
-    const leagueRef = db
-      .collection('leagues')
-      .doc(leagueId)
-      .collection('matches');
-
     const firstPage = leagueRef
       .where('published', '==', published)
       .where('conflict', 'in', conflict)
       .orderBy('id', 'asc')
       .limit(2);
+    // TODO: Replace back to get();
 
     const subscriber = firstPage.onSnapshot((snapshot) => {
       let matches: FixtureList[] = [];
@@ -73,14 +74,9 @@ const useGetMatches = (
       setLastVisible(lastVisibleDoc);
     });
     return subscriber;
-  }, [leagueId]);
+  }, [context]);
 
   const onLoadMore = () => {
-    const leagueRef = db
-      .collection('leagues')
-      .doc(leagueId)
-      .collection('matches');
-
     const nextPage = leagueRef
       .where('published', '==', published)
       .orderBy('id', 'asc')
@@ -95,8 +91,8 @@ const useGetMatches = (
         snapshot.forEach((doc) => {
           const matchData = doc.data() as IMatch;
           const matchId = doc.id;
-          const awayTeamName = leagueData?.clubs[matchData.away].name;
-          const homeTeamName = leagueData?.clubs[matchData.home].name;
+          const awayTeamName = league.clubs[matchData.away].name;
+          const homeTeamName = league.clubs[matchData.home].name;
 
           const match: IMatchNavData = {
             ...matchData,

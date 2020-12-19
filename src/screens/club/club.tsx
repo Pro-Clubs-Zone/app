@@ -7,6 +7,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../utils/context';
 
+// TODO: Update context on changes
+
 type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'My Club'>;
 type ScreenRouteProp = RouteProp<LeaguesStackType, 'My Club'>;
 
