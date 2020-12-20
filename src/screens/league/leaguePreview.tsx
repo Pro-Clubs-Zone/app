@@ -2,17 +2,17 @@ import React, {useState, useEffect, useContext} from 'react';
 import {Text, View, ActivityIndicator, Alert, Button} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../utils/context';
-import {LeaguesStackType} from '../user/leaguesStack';
+import {LeagueStackType} from '../league/league';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenNavigationProp = StackNavigationProp<
-  LeaguesStackType,
+  LeagueStackType,
   'League Preview'
 >;
 
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'League Preview'>;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'League Preview'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

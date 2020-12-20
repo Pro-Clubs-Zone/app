@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useLayoutEffect, useContext} from 'react';
 import {Text, View, Button} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext, AuthContext} from '../../utils/context';
@@ -69,7 +69,7 @@ export default function League({navigation, route}: Props) {
   const leagueId = route.params.leagueId;
   const leagueContext = useContext(LeagueContext);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     console.log('effect on league');
     //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
@@ -81,24 +81,55 @@ export default function League({navigation, route}: Props) {
         // leagueContext.setLeague(leagueInfo);
         leagueContext.setLeagueId(leagueId);
         setLeague(leagueInfo);
+        console.log(leagueInfo, 'League info');
       })
       .then(() => {
         setLoading(false);
       });
-  }, [leagueId, leagueContext]);
+  }, [leagueId]);
+
+  if (loading) {
+    return (
+      <View>
+        <Text>LOADING</Text>
+      </View>
+    );
+  }
 
   return (
     <Stack.Navigator headerMode="none">
-      <Stack.Screen name="League Pre-Season" component={LeaguePreSeason} />
-      <Stack.Screen name="Clubs" component={Clubs} />
-      <Stack.Screen name="League Scheduled" component={LeagueScheduled} />
-      <Stack.Screen name="Standings" component={LeagueStandings} />
-      <Stack.Screen name="Fixtures" component={Fixtures} />
-      <Stack.Screen name="League Preview" component={LeaguePreview} />
-      <Stack.Screen name="Match" component={Match} />
-      <Stack.Screen name="My Club" component={Club} />
-      <Stack.Screen name="Club Settings" component={ClubSettings} />
-      <Stack.Screen name="Report Center" component={ReportCenter} />
+      {userData?.leagues && userData?.leagues[leagueId] ? (
+        league?.scheduled ? (
+          <>
+            <Stack.Screen name="League Scheduled" component={LeagueScheduled} />
+            <Stack.Screen name="Standings" component={LeagueStandings} />
+            <Stack.Screen name="Fixtures" component={Fixtures} />
+            <Stack.Screen name="Match" component={Match} />
+            <Stack.Screen name="Report Center" component={ReportCenter} />
+          </>
+        ) : league?.adminId === uid ? (
+          <>
+            <Stack.Screen
+              name="League Pre-Season"
+              component={LeaguePreSeason}
+            />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="League Preview" component={LeaguePreview} />
+          </>
+        )
+      ) : (
+        <>
+          <Stack.Screen name="League Preview" component={LeaguePreview} />
+        </>
+      )}
+
+      <>
+        <Stack.Screen name="Clubs" component={Clubs} />
+        <Stack.Screen name="My Club" component={Club} />
+        <Stack.Screen name="Club Settings" component={ClubSettings} />
+      </>
     </Stack.Navigator>
   );
 
