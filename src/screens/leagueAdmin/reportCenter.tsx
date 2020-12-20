@@ -56,6 +56,9 @@ export default function ReportCenter({navigation, route}: Props) {
             ...matchData,
             homeTeamName: homeTeamName,
             awayTeamName: awayTeamName,
+            matchId: matchId,
+            leagueId: leagueId,
+            leagueName: league.name,
           };
 
           const fixture: FixtureList = {

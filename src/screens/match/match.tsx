@@ -7,6 +7,9 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';
 import {LeagueStackType} from '../league/leagueStack';
+import onSubmitMatch from './functions/onSubmitMatch';
+import MatchConflict from './matchConflict';
+import onConflictResolve from './functions/onConflictResolve';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Match'>;
 
@@ -17,9 +20,6 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-const db = firestore();
-const firFunc = functions();
-
 export default function Match({navigation, route}: Props) {
   const [homeScore, setHomeScore] = useState<number>();
   const [awayScore, setAwayScore] = useState<number>();
@@ -27,51 +27,17 @@ export default function Match({navigation, route}: Props) {
   let matchData: IMatchNavData = route.params.matchInfo;
   console.log(matchData);
 
-  const onSubmit = () => {
-    const teamSubmission = {
-      [matchData.clubId]: {
-        [matchData.home]: homeScore,
-        [matchData.away]: awayScore,
-      },
-    };
-    const matchRef = db
-      .collection('leagues')
-      .doc(matchData.leagueId)
-      .collection('matches')
-      .doc(matchData.matchId);
-
-    matchRef
-      .set(
-        {
-          submissions: teamSubmission,
-        },
-        {merge: true},
-      )
-      .then(() => {
-        if (
-          matchData.submissions &&
-          Object.keys(matchData.submissions).length === 1
-        ) {
-          const controlMatch = firFunc.httpsCallable('matchSubmission');
-          const match: IMatchNavData = {
-            ...matchData,
-            submissions: {...matchData.submissions, ...teamSubmission},
-          };
-          console.log({...match});
-
-          controlMatch({data: match})
-            .then((response) => {
-              console.log('message from cloud', response);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      })
-      .then(() => {
-        navigation.goBack();
-      });
-  };
+  if (matchData.conflict) {
+    return (
+      <>
+        <MatchConflict
+          data={matchData}
+          onSelectHome={() => onConflictResolve(matchData, matchData.home)}
+          onSelectAway={() => onConflictResolve(matchData, matchData.away)}
+        />
+      </>
+    );
+  }
 
   return (
     <View>
@@ -93,7 +59,10 @@ export default function Match({navigation, route}: Props) {
         keyboardType="number-pad"
       />
       {matchData.teams?.includes(matchData.clubId) && matchData.manager && (
-        <Button title="submit" onPress={onSubmit} />
+        <Button
+          title="submit"
+          onPress={() => onSubmitMatch(homeScore, awayScore, matchData)}
+        />
       )}
     </View>
   );
