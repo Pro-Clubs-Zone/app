@@ -7,7 +7,7 @@ import LeagueExplorer from './leagueExplorer';
 import SignUp from '../auth/signUp';
 import JoinClub from '../league/joinClub';
 import Leagues from './leagues';
-import League from '../league/leagueStack';
+import LeagueStack from '../league/leagueStack';
 import {LeagueProvider} from '../../context/leagueContext';
 
 type LeagueProps = {
@@ -30,14 +30,14 @@ export type LeaguesStackType = {
 
 const Stack = createStackNavigator<LeaguesStackType>();
 
-export default function LeagueNavigator() {
+export default function LeaguesStack() {
   return (
     <LeagueProvider>
       <Stack.Navigator initialRouteName="Leagues">
         <Stack.Screen name="Leagues" component={Leagues} />
         <Stack.Screen
           name="League"
-          component={League}
+          component={LeagueStack}
           options={{headerShown: false}}
         />
         <Stack.Screen name="Create League" component={CreateLeague} />

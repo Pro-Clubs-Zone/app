@@ -44,6 +44,9 @@ export type LeagueStackType = {
   'Club Settings': ClubProps;
   'Report Center': LeagueProps;
   'Join Club': LeagueProps;
+  Home: {
+    screen: string;
+  };
 };
 
 const Stack = createStackNavigator<LeagueStackType>();
@@ -59,7 +62,7 @@ type Props = {
 
 const db = firestore();
 
-export default function League({route}: Props) {
+export default function LeagueStack({route}: Props) {
   const [league, setLeague] = useState<ILeague>();
   const [loading, setLoading] = useState<boolean>(true);
   const user = useContext(AuthContext);

@@ -1,10 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react';
-import {Text, View, ActivityIndicator, Alert, Button} from 'react-native';
+import {Text, View, Alert, Button} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../utils/context';
 import {LeagueStackType} from './leagueStack';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
 import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenNavigationProp = StackNavigationProp<
@@ -105,7 +104,11 @@ export default function LeaguePreview({navigation}: Props) {
       <Button
         title="Join League"
         onPress={() =>
-          user ? onCheckUserInLeague() : navigation.navigate('Sign Up')
+          user
+            ? onCheckUserInLeague()
+            : navigation.navigate('Home', {
+                screen: 'Sign Up',
+              })
         }
       />
     </View>

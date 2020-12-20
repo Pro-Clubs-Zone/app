@@ -10,8 +10,8 @@
 
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import HomeNavigator from './src/screens/user/homeStack';
-import LeagueNavigator from './src/screens/user/leaguesStack';
+import HomeStack from './src/screens/user/homeStack';
+import LeaguesStack from './src/screens/user/leaguesStack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AppProvider, AuthProvider, RequestProvider} from './src/utils/context';
 
@@ -24,8 +24,8 @@ const App = () => {
           <RequestProvider>
             <NavigationContainer>
               <Tab.Navigator>
-                <Tab.Screen name="Home" component={HomeNavigator} />
-                <Tab.Screen name="Leagues" component={LeagueNavigator} />
+                <Tab.Screen name="Home" component={HomeStack} />
+                <Tab.Screen name="Leagues" component={LeaguesStack} />
               </Tab.Navigator>
             </NavigationContainer>
           </RequestProvider>

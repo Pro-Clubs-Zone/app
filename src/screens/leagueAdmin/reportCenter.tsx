@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Text, View, Button, FlatList} from 'react-native';
-import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {IMatch, IMatchNavData} from '../../utils/interface';
 import {AppContext} from '../../utils/context';
+import {LeagueStackType} from '../league/leagueStack';
 
 type FixtureList = {
   key: string;
@@ -13,11 +13,11 @@ type FixtureList = {
 };
 
 type ScreenNavigationProp = StackNavigationProp<
-  LeaguesStackType,
+  LeagueStackType,
   'Report Center'
 >;
 
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'Report Center'>;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'Report Center'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

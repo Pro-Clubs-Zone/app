@@ -14,7 +14,7 @@ export type HomeStackType = {
   Requests: undefined;
 };
 
-export default function HomeNavigator() {
+export default function HomeStack() {
   const Stack = createStackNavigator<HomeStackType>();
   return (
     <Stack.Navigator initialRouteName="Home">
