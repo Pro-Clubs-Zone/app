@@ -4,13 +4,12 @@ import firestore from '@react-native-firebase/firestore';
 import {AppContext, AuthContext} from '../../utils/context';
 import {FlatList} from 'react-native-gesture-handler';
 import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
-import {LeaguesStackType} from '../user/leaguesStack';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import {LeagueStackType} from './leagueStack';
 
 // type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Join Club'>;
 
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'Join Club'>;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
 
 type Props = {
   //  navigation: ScreenNavigationProp;

@@ -3,13 +3,13 @@ import {Text, View, Button, SectionList} from 'react-native';
 
 import firestore from '@react-native-firebase/firestore';
 import {IClub} from '../../utils/interface';
-import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../utils/context';
+import {LeagueStackType} from '../league/leagueStack';
 
-type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Clubs'>;
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'Clubs'>;
+type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
 
 type ClubData = IClub & {id: string};
 interface ClubList {

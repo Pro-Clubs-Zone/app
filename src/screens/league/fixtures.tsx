@@ -2,9 +2,9 @@ import React from 'react';
 import {Text, View, FlatList, Button} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import useGetMatches from './functions/useGetMatches';
-import {LeaguesStackType} from '../user/leaguesStack';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {LeagueStackType} from './leagueStack';
 
 type FixturesStack = {
   Upcoming: {leagueId: string};
@@ -13,8 +13,8 @@ type FixturesStack = {
 
 const Tab = createMaterialTopTabNavigator<FixturesStack>();
 
-type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Fixtures'>;
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'Fixtures'>;
+type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Fixtures'>;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'Fixtures'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

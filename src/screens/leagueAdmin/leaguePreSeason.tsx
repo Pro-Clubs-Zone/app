@@ -1,28 +1,26 @@
-import React, {useContext, useState} from 'react';
-import {Text, View, Button, SectionList} from 'react-native';
-import {LeaguesStackType} from '../user/leaguesStack';
+import React, {useContext} from 'react';
+import {Text, View, Button} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../utils/context';
+import {LeagueContext} from '../../context/leagueContext';
+import {LeagueStackType} from '../league/leagueStack';
 
 type ScreenNavigationProp = StackNavigationProp<
-  LeaguesStackType,
+  LeagueStackType,
   'League Pre-Season'
 >;
 
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'League Pre-Season'>;
-
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
 };
 const firFunc = functions();
 
-export default function LeaguePreSeason({route, navigation}: Props) {
-  const leagueId = route.params.leagueId;
-
+export default function LeaguePreSeason({navigation}: Props) {
   const context = useContext(AppContext);
+  const leagueContext = useContext(LeagueContext);
+
+  const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
 
   const scheduleMatches = async () => {
@@ -43,7 +41,7 @@ export default function LeaguePreSeason({route, navigation}: Props) {
         title="Clubs"
         onPress={() =>
           navigation.navigate('Clubs', {
-            leagueId: route.params.leagueId,
+            leagueId: leagueId,
           })
         }
       />

@@ -2,15 +2,15 @@ import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {IClub, IClubRosterMember} from '../../utils/interface';
-import {LeaguesStackType} from '../user/leaguesStack';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../utils/context';
+import {LeagueStackType} from '../league/leagueStack';
 
 // TODO: Update context on changes
 
-type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'My Club'>;
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'My Club'>;
+type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'My Club'>;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'My Club'>;
 
 type PlayerData = IClubRosterMember & {id: string};
 

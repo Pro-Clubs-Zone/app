@@ -1,24 +1,24 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
 import {Text, View, Button, Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {LeaguesStackType} from '../user/leaguesStack';
-import {StackNavigationProp} from '@react-navigation/stack';
+// import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../utils/context';
 import RNRestart from 'react-native-restart';
+import {LeagueStackType} from '../league/leagueStack';
 
-type ScreenNavigationProp = StackNavigationProp<
-  LeaguesStackType,
-  'Club Settings'
->;
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'Club Settings'>;
+// type ScreenNavigationProp = StackNavigationProp<
+//   LeagueStackType,
+//   'Club Settings'
+// >;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'Club Settings'>;
 
 type Props = {
-  navigation: ScreenNavigationProp;
+  //  navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
-export default function ClubSettings({navigation, route}: Props) {
+export default function ClubSettings({route}: Props) {
   const leagueId = route.params.leagueId;
   const clubId = route.params.clubId;
   const db = firestore();

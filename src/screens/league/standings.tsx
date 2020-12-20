@@ -2,12 +2,12 @@ import React, {useContext, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {Text, View, FlatList} from 'react-native';
 import {IClubStanding} from '../../utils/interface';
-import {LeaguesStackType} from '../user/leaguesStack';
 import {RouteProp} from '@react-navigation/native';
+import {LeagueStackType} from './leagueStack';
 // import {StackNavigationProp} from '@react-navigation/stack';
 
 // type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Fixtures'>;
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'Standings'>;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'Standings'>;
 
 const db = firestore();
 

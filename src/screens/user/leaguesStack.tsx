@@ -5,10 +5,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import CreateLeague from '../league/createLeague';
 import LeagueExplorer from './leagueExplorer';
 import SignUp from '../auth/signUp';
-import CreateClub from '../league/createClub';
 import JoinClub from '../league/joinClub';
 import Leagues from './leagues';
-import League from '../league/league';
+import League from '../league/leagueStack';
 import {LeagueProvider} from '../../context/leagueContext';
 
 type LeagueProps = {
@@ -27,8 +26,6 @@ export type LeaguesStackType = {
   'Create League': undefined;
   'League Explorer': undefined;
   'Sign Up': undefined;
-  'Create Club': LeagueProps;
-  'Join Club': LeagueProps;
 };
 
 const Stack = createStackNavigator<LeaguesStackType>();
@@ -38,12 +35,14 @@ export default function LeagueNavigator() {
     <LeagueProvider>
       <Stack.Navigator initialRouteName="Leagues">
         <Stack.Screen name="Leagues" component={Leagues} />
-        <Stack.Screen name="League" component={League} />
+        <Stack.Screen
+          name="League"
+          component={League}
+          options={{headerShown: false}}
+        />
         <Stack.Screen name="Create League" component={CreateLeague} />
         <Stack.Screen name="League Explorer" component={LeagueExplorer} />
         <Stack.Screen name="Sign Up" component={SignUp} />
-        <Stack.Screen name="Create Club" component={CreateClub} />
-        <Stack.Screen name="Join Club" component={JoinClub} />
       </Stack.Navigator>
     </LeagueProvider>
   );

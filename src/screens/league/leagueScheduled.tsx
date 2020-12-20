@@ -1,8 +1,7 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useContext} from 'react';
 import {Text, View, Button} from 'react-native';
-import {LeagueStackType} from '../league/league';
+import {LeagueStackType} from './leagueStack';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../utils/context';
 import {LeagueContext} from '../../context/leagueContext';
 
@@ -10,14 +9,12 @@ type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
   'League Scheduled'
 >;
-type ScreenRouteProp = RouteProp<LeagueStackType, 'League Scheduled'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
 };
 
-export default function LeagueScheduled({route, navigation}: Props) {
+export default function LeagueScheduled({navigation}: Props) {
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
 
@@ -62,7 +59,6 @@ export default function LeagueScheduled({route, navigation}: Props) {
         onPress={() =>
           navigation.navigate('Report Center', {
             leagueId: leagueId,
-            clubId: userClub.clubId,
           })
         }
       />
