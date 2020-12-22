@@ -116,7 +116,6 @@ export default function LeagueStack({route}: Props) {
               name="League Pre-Season"
               component={LeaguePreSeason}
             />
-            <Stack.Screen name="Create Club" component={CreateClub} />
           </>
         ) : (
           <>
@@ -132,6 +131,7 @@ export default function LeagueStack({route}: Props) {
       )}
 
       <>
+        <Stack.Screen name="Create Club" component={CreateClub} />
         <Stack.Screen name="Clubs" component={Clubs} />
         <Stack.Screen name="My Club" component={Club} />
         <Stack.Screen name="Club Settings" component={ClubSettings} />

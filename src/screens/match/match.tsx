@@ -1,8 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {Button, Text, View} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 import {IMatchNavData} from '../../utils/interface';
-import functions from '@react-native-firebase/functions';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';

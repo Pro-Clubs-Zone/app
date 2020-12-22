@@ -62,7 +62,7 @@ export default function LeaguePreSeason({navigation}: Props) {
           title="Create My Club"
           onPress={() =>
             navigation.navigate('Create Club', {
-              leagueId: route.params.leagueId,
+              leagueId: leagueId,
               isAdmin: true,
             })
           }

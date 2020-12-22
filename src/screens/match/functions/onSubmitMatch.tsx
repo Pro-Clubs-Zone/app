@@ -41,7 +41,7 @@ const onSubmitMatch = (
         };
         console.log({...match});
 
-        controlMatch({data: match})
+        controlMatch({match: match})
           .then((response) => {
             console.log('message from cloud', response);
           })
