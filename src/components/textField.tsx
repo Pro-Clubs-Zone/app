@@ -1,0 +1,180 @@
+import {Text, View, TextInput, Pressable, Platform} from 'react-native';
+import React, {useRef, useState} from 'react';
+
+import {Colors, FONTS} from '../utils/designSystem';
+
+// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+
+type Props = React.ComponentProps<typeof TextInput> &
+  React.ComponentProps<typeof Pressable> & {
+    label: string;
+    placeholder: string;
+    error?: boolean;
+    helper?: string;
+    fieldIco?: boolean;
+    maxHeight?: number;
+    customStyles?: {};
+  };
+
+const TextField = (props: Props) => {
+  const [style, setStyle] = useState<any>(styles.fieldNormal);
+  const [height, setHeight] = useState(0);
+
+  const inputRef = useRef(null);
+
+  return (
+    <Pressable
+      onPress={
+        props.onPress
+          ? props.onPress
+          : props.disabled
+          ? null
+          : () => {
+              inputRef.current.focus();
+            }
+      }>
+      <View
+        style={{
+          marginBottom: verticalScale(16),
+        }}>
+        <View
+          style={[
+            style,
+            props.error && styles.fieldError,
+            {
+              height: props.multiline
+                ? Math.max(verticalScale(128), height)
+                : verticalScale(48),
+              backgroundColor: props.disabled
+                ? 'rgba(61, 62, 77, 0.4)'
+                : Colors.Primary,
+              maxHeight: props.maxHeight ? props.maxHeight : null,
+              ...props.customStyles,
+            },
+          ]}>
+          <View
+            style={{
+              flex: 1,
+              position: 'absolute',
+              paddingHorizontal: verticalScale(8),
+              top: verticalScale(2),
+            }}>
+            <Text style={[FONTS.small, styles.fieldLabel]}>{props.label}</Text>
+          </View>
+          <View style={{flex: 1}}>
+            <View
+              pointerEvents={
+                props.onPress
+                  ? Platform.OS === 'ios'
+                    ? 'none'
+                    : 'auto'
+                  : 'auto'
+              }
+              style={{
+                flex: 1,
+                marginTop: verticalScale(24),
+                marginBottom: Platform.OS === 'android' ? verticalScale(4) : 0,
+              }}>
+              <TextInput
+                {...props}
+                ref={inputRef}
+                style={[
+                  FONTS.body,
+                  {
+                    height:
+                      props.multiline && Platform.OS === 'ios'
+                        ? Math.max(verticalScale(128), height)
+                        : null,
+                    padding: 0,
+                    lineHeight: null,
+                    maxHeight: props.maxHeight
+                      ? props.maxHeight - verticalScale(40)
+                      : null,
+                  },
+                ]}
+                placeholderTextColor={Colors.Gray}
+                onFocus={() =>
+                  setStyle([styles.fieldNormal, styles.fieldFocus])
+                }
+                onEndEditing={() => setStyle(styles.fieldNormal)}
+                underlineColorAndroid="transparent"
+                onContentSizeChange={(event) => {
+                  setHeight(
+                    event.nativeEvent.contentSize.height + verticalScale(40),
+                  );
+                }}
+                keyboardAppearance="dark"
+              />
+            </View>
+          </View>
+          {props.fieldIco && !props.disabled && (
+            <View
+              style={{
+                width: verticalScale(32),
+                justifyContent: 'flex-end',
+                alignItems: 'flex-end',
+              }}>
+              {/* <Icon
+                name={props.fieldIco}
+                size={verticalScale(24)}
+                color={Colors.Gray}
+                onPress={props.onPressIco}
+              /> */}
+            </View>
+          )}
+        </View>
+        {props.helper || props.error ? (
+          <View
+            style={{
+              paddingHorizontal: verticalScale(8),
+              height: verticalScale(20),
+              justifyContent: 'flex-end',
+            }}>
+            {props.error ? (
+              <Text
+                style={[
+                  FONTS.small,
+                  {
+                    color: Colors.Red,
+                  },
+                ]}>
+                {props.error}
+              </Text>
+            ) : (
+              <Text style={[FONTS.small, styles.fieldHelper]}>
+                {props.helper}
+              </Text>
+            )}
+          </View>
+        ) : null}
+      </View>
+    </Pressable>
+  );
+};
+
+const styles = ScaledSheet.create({
+  fieldNormal: {
+    backgroundColor: Colors.Primary,
+    height: '48@vs',
+    borderWidth: 1,
+    borderColor: Colors.Secondary,
+    borderRadius: '2@vs',
+    paddingHorizontal: '8@vs',
+    flexDirection: 'row',
+  },
+  fieldFocus: {
+    borderColor: Colors.Accent,
+  },
+  fieldError: {
+    borderColor: Colors.Red,
+  },
+  fieldLabel: {
+    color: Colors.Gray,
+  },
+  fieldHelper: {
+    color: Colors.Gray,
+  },
+});
+
+export default TextField;

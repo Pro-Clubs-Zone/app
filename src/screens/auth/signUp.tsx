@@ -3,7 +3,7 @@ import {Text, View, Button, TextInput, ActivityIndicator} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import CheckBox from '@react-native-community/checkbox';
+import TextField from '../../components/textField';
 
 const db = firestore();
 const firAuth = auth();
@@ -51,25 +51,25 @@ function SignUp({navigation}) {
   return (
     <View>
       {loading && <Loading />}
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+      <TextField
         onChangeText={(text) => setEmail(text)}
         value={email}
         placeholder="email"
         autoCompleteType="email"
         autoCorrect={false}
+        label="email"
       />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+      <TextField
         onChangeText={(text) => setPassword(text)}
         value={password}
         placeholder="password"
         autoCompleteType="password"
+        label="password"
       />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
+      <TextField
         onChangeText={(text) => setUsername(text)}
         value={username}
+        label="username"
         placeholder="username"
       />
       <Button title="Sign Up" onPress={onSignUp} />

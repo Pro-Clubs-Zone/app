@@ -23,15 +23,19 @@ export enum FontSizes {
   XXL = 36,
 }
 
-interface Fonts {
-  [name: string]: {
-    fontSize: number;
-    fontFamily: string;
-    lineHeight: number;
-    color: Colors;
-    backgroundColor: 'transparent';
-    letterSpacing: number;
-  };
+interface FontSettings {
+  fontSize: number;
+  fontFamily: string;
+  lineHeight: number;
+  color: Colors;
+  backgroundColor: 'transparent';
+  letterSpacing?: number;
+}
+
+interface FontStyle {
+  display4: FontSettings;
+  small: FontSettings;
+  body: FontSettings;
 }
 
 type FontFamily = {
@@ -52,7 +56,7 @@ const fontFamilies: FontFamily = {
   }),
 };
 
-export const FONTS: Fonts = {
+export const FONTS: FontStyle = {
   // display1: {
   //   fontSize: verticalScale(FontSizes.XXL),
   //   fontFamily: fontFamilies.display,
@@ -107,13 +111,13 @@ export const FONTS: Fonts = {
   //   fontWeight: "bold",
   //   lineHeight: verticalScale(24)
   // },
-  // body: {
-  //   fontSize: verticalScale(FontSizes[6]),
-  //   fontFamily: fontFamilies.body,
-  //   lineHeight: verticalScale(20),
-  //   color: colors.Light,
-  //   backgroundColor: "transparent"
-  // },
+  body: {
+    fontSize: verticalScale(FontSizes.XS),
+    fontFamily: fontFamilies.body,
+    lineHeight: verticalScale(20),
+    color: Colors.Light,
+    backgroundColor: 'transparent',
+  },
   // bodyBold: {
   //   fontSize: verticalScale(FontSizes[6]),
   //   fontFamily: fontFamilies.body,
@@ -136,13 +140,13 @@ export const FONTS: Fonts = {
   //   color: colors.Gray,
   //   backgroundColor: "transparent"
   // },
-  // small: {
-  //   fontSize: verticalScale(FontSizes[7]),
-  //   fontFamily: fontFamilies.body,
-  //   lineHeight: verticalScale(16),
-  //   color: colors.Light,
-  //   backgroundColor: "transparent"
-  // },
+  small: {
+    fontSize: verticalScale(FontSizes.XXSS),
+    fontFamily: fontFamilies.body,
+    lineHeight: verticalScale(16),
+    color: Colors.Light,
+    backgroundColor: 'transparent',
+  },
   // smallBold: {
   //   fontSize: verticalScale(FontSizes[7]),
   //   fontFamily: fontFamilies.body,
