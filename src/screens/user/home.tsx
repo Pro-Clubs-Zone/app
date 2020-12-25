@@ -19,6 +19,7 @@ import {
 } from '../../utils/interface';
 import getUserMatches from './functions/getUserMatches';
 import {HomeStackType} from './homeStack';
+import {FONTS} from '../../utils/designSystem';
 
 const firAuth = auth();
 const db = firestore();
@@ -253,7 +254,7 @@ export default function Home({navigation}: Props) {
 
   return (
     <View>
-      <Text>Home Screen</Text>
+      <Text style={{...FONTS.display4}}>Home Screen</Text>
       <Text>{context?.userData?.username}</Text>
       <Button
         onPress={() => navigation.navigate('Requests')}
