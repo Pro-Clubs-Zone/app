@@ -33,7 +33,11 @@ interface FontSettings {
 }
 
 interface FontStyles {
+  display1: FontSettings;
+  display2: FontSettings;
+  display3: FontSettings;
   display4: FontSettings;
+  display5: FontSettings;
   small: FontSettings;
   body: FontSettings;
 }
@@ -57,30 +61,30 @@ const fontFamilies: FontFamily = {
 };
 
 export const FONTS: FontStyles = {
-  // display1: {
-  //   fontSize: verticalScale(FontSizes.XXL),
-  //   fontFamily: fontFamilies.display,
-  //   lineHeight: verticalScale(40),
-  //   color: colors.Light,
-  //   backgroundColor: "transparent",
-  //   letterSpacing: verticalScale(0.5)
-  // },
-  // display2: {
-  //   fontSize: verticalScale(FontSizes[2]),
-  //   fontFamily: fontFamilies.display,
-  //   lineHeight: verticalScale(32),
-  //   color: colors.Light,
-  //   backgroundColor: "transparent",
-  //   letterSpacing: verticalScale(0.5)
-  // },
-  // display3: {
-  //   fontSize: verticalScale(FontSizes[3]),
-  //   fontFamily: fontFamilies.display,
-  //   lineHeight: verticalScale(24),
-  //   color: colors.Light,
-  //   backgroundColor: "transparent",
-  //   letterSpacing: verticalScale(0.5)
-  // },
+  display1: {
+    fontSize: verticalScale(FONT_SIZES.XXL),
+    fontFamily: fontFamilies.display,
+    lineHeight: verticalScale(40),
+    color: COLORS.Light,
+    backgroundColor: 'transparent',
+    letterSpacing: verticalScale(0.5),
+  },
+  display2: {
+    fontSize: verticalScale(FONT_SIZES.XL),
+    fontFamily: fontFamilies.display,
+    lineHeight: verticalScale(32),
+    color: COLORS.Light,
+    backgroundColor: 'transparent',
+    letterSpacing: verticalScale(0.5),
+  },
+  display3: {
+    fontSize: verticalScale(FONT_SIZES.L),
+    fontFamily: fontFamilies.display,
+    lineHeight: verticalScale(24),
+    color: COLORS.Light,
+    backgroundColor: 'transparent',
+    letterSpacing: verticalScale(0.5),
+  },
   display4: {
     fontSize: verticalScale(FONT_SIZES.S),
     fontFamily: fontFamilies.display,
@@ -89,24 +93,24 @@ export const FONTS: FontStyles = {
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.5),
   },
-  //   display5: {
-  //     fontSize: verticalScale(FontSizes.XS),
-  //     fontFamily: fontFamilies.display,
-  //     lineHeight: verticalScale(17),
-  //     color: Colors.Light,
-  //     backgroundColor: 'transparent',
-  //     letterSpacing: verticalScale(0.4),
-  //   },
+  display5: {
+    fontSize: verticalScale(FONT_SIZES.XS),
+    fontFamily: fontFamilies.display,
+    lineHeight: verticalScale(17),
+    color: COLORS.Light,
+    backgroundColor: 'transparent',
+    letterSpacing: verticalScale(0.4),
+  },
   // headline: {
-  //   color: colors.Light,
-  //   fontSize: verticalScale(FontSizes[4]),
+  //   color: COLORS.Light,
+  //   fontSize: verticalScale(FONT_SIZES[4]),
   //   fontFamily: fontFamilies.body,
   //   fontWeight: "bold",
   //   lineHeight: verticalScale(24)
   // },
   // title: {
-  //   color: colors.Light,
-  //   fontSize: verticalScale(FontSizes[5]),
+  //   color: COLORS.Light,
+  //   fontSize: verticalScale(FONT_SIZES[5]),
   //   fontFamily: fontFamilies.body,
   //   fontWeight: "bold",
   //   lineHeight: verticalScale(24)
@@ -119,25 +123,25 @@ export const FONTS: FontStyles = {
     backgroundColor: 'transparent',
   },
   // bodyBold: {
-  //   fontSize: verticalScale(FontSizes[6]),
+  //   fontSize: verticalScale(FONT_SIZES[6]),
   //   fontFamily: fontFamilies.body,
   //   fontWeight: "bold",
   //   lineHeight: verticalScale(20),
-  //   color: colors.Light,
+  //   color: COLORS.Light,
   //   backgroundColor: "transparent"
   // },
   // link: {
-  //   fontSize: verticalScale(FontSizes[7]),
+  //   fontSize: verticalScale(FONT_SIZES[7]),
   //   fontFamily: fontFamilies.body,
   //   lineHeight: verticalScale(16),
-  //   color: colors.Accent,
+  //   color: COLORS.Accent,
   //   backgroundColor: "transparent"
   // },
   // caption: {
-  //   fontSize: verticalScale(FontSizes[7]),
+  //   fontSize: verticalScale(FONT_SIZES[7]),
   //   fontFamily: fontFamilies.body,
   //   lineHeight: verticalScale(16),
-  //   color: colors.Gray,
+  //   color: COLORS.Gray,
   //   backgroundColor: "transparent"
   // },
   small: {
@@ -148,23 +152,23 @@ export const FONTS: FontStyles = {
     backgroundColor: 'transparent',
   },
   // smallBold: {
-  //   fontSize: verticalScale(FontSizes[7]),
+  //   fontSize: verticalScale(FONT_SIZES[7]),
   //   fontFamily: fontFamilies.body,
   //   fontWeight: "bold",
   //   lineHeight: verticalScale(16),
-  //   color: colors.Light,
+  //   color: COLORS.Light,
   //   backgroundColor: "transparent"
   // },
   // buttonLabel: {
   //   fontFamily: fontFamilies.body,
-  //   fontSize: verticalScale(FontSizes[7]),
-  //   color: colors.Dark,
+  //   fontSize: verticalScale(FONT_SIZES[7]),
+  //   color: COLORS.Dark,
   //   fontWeight: "bold",
   //   textAlign: "center",
   //   letterSpacing: verticalScale(0.2)
   // },
   // playerBold: {
-  //   color: colors.Dark,
+  //   color: COLORS.Dark,
   //   fontFamily: fontFamilies.playerBold,
   //   textAlign: "center"
   // },

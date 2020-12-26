@@ -1,8 +1,10 @@
 import React from 'react';
-import {Text, View, Button} from 'react-native';
+import {View, Button, ScrollView} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeaguesStackType} from './leaguesStack';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import {COLORS} from '../../utils/designSystem';
+import {CardSmall, CardMedium} from '../../components/cards';
 
 type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Leagues'>;
 
@@ -12,18 +14,27 @@ type Props = {
 
 export default function Leagues({navigation}: Props) {
   return (
-    <View>
-      <Text>Leagues Screen</Text>
-      <Icon name="account-circle-outline" />
-      <Button
-        onPress={() => navigation.navigate('Create League')}
-        title="Create League"
-      />
-      <Button
-        title="League Explorer"
+    <ScrollView
+      contentContainerStyle={{
+        backgroundColor: COLORS.Dark,
+        paddingBottom: verticalScale(16),
+      }}
+      showsVerticalScrollIndicator={false}>
+      <View style={{flexDirection: 'row', flex: 1}}>
+        <CardSmall
+          onPress={() => navigation.navigate('Create League')}
+          title="Create League"
+        />
+        <CardSmall
+          onPress={() => navigation.navigate('Create League')}
+          title={'Join\nLeague'}
+        />
+      </View>
+      <CardMedium
         onPress={() => navigation.navigate('League Explorer')}
+        title="League Explorer"
+        subTitle="Find a league in world"
       />
-      <Button title="Join League" />
-    </View>
+    </ScrollView>
   );
 }

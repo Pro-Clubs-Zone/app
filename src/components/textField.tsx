@@ -1,9 +1,7 @@
 import {Text, View, TextInput, Pressable, Platform} from 'react-native';
 import React, {useRef, useState} from 'react';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS, FONTS} from '../utils/designSystem';
-
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 
 type Props = React.ComponentProps<typeof TextInput> &
@@ -12,9 +10,10 @@ type Props = React.ComponentProps<typeof TextInput> &
     placeholder: string;
     error?: boolean;
     helper?: string;
-    fieldIco?: boolean;
+    fieldIco?: string;
     maxHeight?: number;
     customStyles?: {};
+    onPressIcon: () => void;
   };
 
 const TextField = (props: Props) => {
@@ -115,12 +114,12 @@ const TextField = (props: Props) => {
                 justifyContent: 'flex-end',
                 alignItems: 'flex-end',
               }}>
-              {/* <Icon
+              <Icon
                 name={props.fieldIco}
                 size={verticalScale(24)}
                 color={COLORS.Gray}
-                onPress={props.onPressIco}
-              /> */}
+                onPress={props.onPressIcon}
+              />
             </View>
           )}
         </View>
