@@ -1,14 +1,37 @@
 import React, {useState} from 'react';
-import {Text, View, Button, TextInput, ActivityIndicator} from 'react-native';
-
+import {
+  Text,
+  View,
+  Button,
+  ActivityIndicator,
+  Keyboard,
+  ImageBackground,
+  Image,
+  Linking,
+  Pressable,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {t, Trans} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import TextField from '../../components/textField';
+import {FONTS, APP_COLORS} from '../../utils/designSystem';
+import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import {StackNavigationProp} from '@react-navigation/stack';
+import screenBg from '../../assets/images/login-bg.jpg';
+import {AppNavStack} from '../index';
+
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+};
 
 const db = firestore();
 const firAuth = auth();
 
-function SignUp({navigation}) {
+function SignUp({navigation}: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
@@ -43,33 +66,127 @@ function SignUp({navigation}) {
   };
 
   return (
-    <View>
+    <ImageBackground source={screenBg} style={styles.backgroundImage}>
       {
-        // loading && <Loading />
+        // loading && <LoginSpinner visible={loading} />
       }
-      <TextField
-        onChangeText={(text) => setEmail(text)}
-        value={email}
-        placeholder="email"
-        autoCompleteType="email"
-        autoCorrect={false}
-        label="email"
-      />
-      <TextField
-        onChangeText={(text) => setPassword(text)}
-        value={password}
-        placeholder="password"
-        autoCompleteType="password"
-        label="password"
-      />
-      <TextField
-        onChangeText={(text) => setUsername(text)}
-        value={username}
-        label="username"
-        placeholder="username"
-      />
-      <Button title="Sign Up" onPress={onSignUp} />
-    </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+        <View style={styles.container}>
+          {/* <View style={styles.logoContainer}>
+            <Image
+              source={require('../../assets/images/logo.png')}
+              resizeMode="contain"
+              style={{
+                height: '100%',
+              }}
+            />
+          </View> */}
+          <View style={styles.contentFrame}>
+            <View style={styles.content}>
+              <TextField
+                value={username}
+                placeholder={i18n._(t`PSN or Xbox Username`)}
+                onChangeText={(text) => setUsername(text)}
+                keyboardType="default"
+                autoCorrect={false}
+                autoCapitalize="none"
+                label={i18n._(t`Username`)}
+                //   onBlur={onEmailBlur}
+                //   error={emailError}
+              />
+              <TextField
+                value={email}
+                placeholder={i18n._(t`Enter E-mail`)}
+                onChangeText={(text) => setEmail(text)}
+                keyboardType="email-address"
+                autoCorrect={false}
+                autoCapitalize="none"
+                label={i18n._(t`E-mail`)}
+                //   onBlur={onEmailBlur}
+                //   error={emailError}
+              />
+              <TextField
+                value={password}
+                secureTextEntry={true}
+                placeholder={i18n._(t`Enter Password`)}
+                onChangeText={(text) => setPassword(text)}
+                autoCorrect={false}
+                label={i18n._(t`Password`)}
+                //  fieldIco={visibility}
+                //  onPressIco={changePwdType}
+                // error={
+                //   !props.password &&
+                //   passwordTouched &&
+                //   i18n._(t`Password field cant't be empty`)
+                // }
+              />
+              <Button
+                onPress={onSignUp}
+                title="Sign Up"
+                // disabled={
+                //   !props.email || !emailIsValid(props.email) || !props.password
+                // }
+              />
+              <Pressable
+                onPress={() => {
+                  Linking.openURL('https://proclubs.zone/privacy-policy');
+                }}>
+                <View style={styles.privacyPolicy}>
+                  <Trans>
+                    <Text style={FONTS.small}>
+                      By signing up you agree to our
+                      <Text style={{...FONTS.small, fontWeight: 'bold'}}>
+                        Privacy Policy.
+                      </Text>
+                    </Text>
+                  </Trans>
+                </View>
+              </Pressable>
+              {/* <View
+                style={{
+                  marginTop: verticalScale(24),
+                }}>
+                <View style={styles.sep}>
+                  <View style={styles.sepLine} />
+                  <Text style={[FONTS.display4, styles.sepText]}>
+                    <Trans>OR</Trans>
+                  </Text>
+                  <View style={styles.sepLine} />
+                </View>
+                <View
+                  style={{
+                    marginTop: verticalScale(24),
+                  }}>
+                  <ExternalLogin
+                    onPress={onFbSignupPress.bind(this)}
+                    label={i18n._(
+                      t`Sign up with ${
+                        selectedPlatform == 'PSN' ? 'Facebook' : 'XBOX'
+                      }`,
+                    )}
+                    platform={selectedPlatform}
+                  />
+                </View>
+              </View> */}
+            </View>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+      <Pressable
+        style={{width: '100%'}}
+        onPress={() => navigation.navigate('Sign In')}>
+        <View style={styles.footer}>
+          <Trans>
+            <Text style={FONTS.small}>
+              Already have an account?{' '}
+              <Text style={{...FONTS.small, fontWeight: 'bold'}}>
+                Log in now.
+              </Text>
+            </Text>
+          </Trans>
+        </View>
+      </Pressable>
+    </ImageBackground>
   );
 }
 
@@ -78,5 +195,61 @@ const Loading = () => (
     <ActivityIndicator size="large" />
   </View>
 );
+
+//---------- Stylesheet ----------//
+
+const styles = ScaledSheet.create({
+  backgroundImage: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  container: {
+    paddingHorizontal: '24@vs',
+    marginTop: '56@vs',
+    maxWidth: '640@ms0.1',
+    flex: 1,
+    alignItems: 'center',
+  },
+  contentFrame: {
+    flex: 1,
+    flexDirection: 'row',
+    //  marginTop: "32@vs"
+  },
+  content: {
+    flex: 1,
+  },
+  footer: {
+    height: '64@vs',
+    borderTopWidth: 1,
+    borderTopColor: APP_COLORS.Primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+  },
+  logoContainer: {
+    height: '112@vs',
+    alignItems: 'center',
+  },
+  sepLine: {
+    height: '3@vs',
+    width: '48@vs',
+    backgroundColor: APP_COLORS.Accent,
+  },
+  sep: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  sepText: {
+    color: APP_COLORS.Accent,
+    textAlign: 'center',
+    marginHorizontal: '16@vs',
+  },
+  privacyPolicy: {
+    alignItems: 'center',
+    marginTop: '16@vs',
+  },
+});
 
 export default SignUp;

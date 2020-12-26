@@ -13,7 +13,7 @@ type Props = React.ComponentProps<typeof TextInput> &
     fieldIco?: string;
     maxHeight?: number;
     customStyles?: {};
-    onPressIcon: () => void;
+    onPressIcon?: () => void;
   };
 
 const TextField = (props: Props) => {
