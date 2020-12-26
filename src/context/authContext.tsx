@@ -9,10 +9,10 @@ const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
-const AuthContext = createContext<{uid: string} | undefined>(undefined);
+const AuthContext = createContext<{uid: string}>(null);
 
 const AuthProvider = (props: any) => {
-  const [user, setUser] = useState<{uid: string} | undefined>(undefined);
+  const [user, setUser] = useState<{uid: string} | null>(null);
 
   function onAuthStateChanged(firUser: any): void {
     setUser(firUser);

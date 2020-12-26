@@ -7,8 +7,6 @@ import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
 import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './leagueStack';
 
-// type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Join Club'>;
-
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
 
 type Props = {

@@ -1,12 +1,12 @@
 import React from 'react';
 import {View, Button, ScrollView} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {LeaguesStackType} from './leaguesStack';
+import {AppNavStack} from '../index';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {COLORS} from '../../utils/designSystem';
 import {CardSmall, CardMedium} from '../../components/cards';
 
-type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Leagues'>;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Leagues'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

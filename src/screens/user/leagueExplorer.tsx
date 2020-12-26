@@ -1,14 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import {Text, View, ActivityIndicator, FlatList, Button} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {LeaguesStackType} from './leaguesStack';
+import {AppNavStack} from '../index';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
 
-type ScreenNavigationProp = StackNavigationProp<
-  LeaguesStackType,
-  'League Explorer'
->;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'League Explorer'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

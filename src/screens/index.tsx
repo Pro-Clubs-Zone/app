@@ -36,7 +36,7 @@ export default function AppIndex() {
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
-  const [uid, setUid] = useState<string | undefined>(undefined);
+  const [uid, setUid] = useState<string | undefined | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -44,9 +44,11 @@ export default function AppIndex() {
       console.log('updateUserUid');
       setLoading(false);
     } else {
-      setUid(undefined);
+      setUid(null);
+      if (user?.uid === null) {
+        setLoading(false);
+      }
       console.log('no user', user);
-      setLoading(false);
     }
   }, [user]);
 
@@ -61,7 +63,13 @@ export default function AppIndex() {
   if (uid) {
     return (
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen
+          name="Home"
+          component={HomeTabs}
+          options={{
+            animationTypeForReplace: 'pop',
+          }}
+        />
         <Stack.Screen name="Requests" component={Requests} />
         <Stack.Screen name="Create League" component={CreateLeague} />
         <Stack.Screen name="League Explorer" component={LeagueExplorer} />
@@ -86,13 +94,20 @@ export default function AppIndex() {
                 onPress={() => navigation.navigate('Sign Up')}
               />
             ),
+            animationTypeForReplace: 'pop',
           })}
         />
         <Stack.Screen name="Sign In" component={SignIn} />
         <Stack.Screen name="Requests" component={Requests} />
         <Stack.Screen name="Create League" component={CreateLeague} />
         <Stack.Screen name="League Explorer" component={LeagueExplorer} />
-        <Stack.Screen name="Sign Up" component={SignUp} />
+        <Stack.Screen
+          name="Sign Up"
+          component={SignUp}
+          options={{
+            animationTypeForReplace: 'pop',
+          }}
+        />
         <Stack.Screen
           name="League"
           component={LeagueStack}

@@ -3,13 +3,10 @@ import {Text, View, Button, TextInput} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
-import {LeaguesStackType} from '../user/leaguesStack';
+import {AppNavStack} from '../index';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-type ScreenNavigationProp = StackNavigationProp<
-  LeaguesStackType,
-  'Create League'
->;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
 type Props = {
   navigation: ScreenNavigationProp;

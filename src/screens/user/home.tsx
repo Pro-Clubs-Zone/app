@@ -20,13 +20,13 @@ import {
 } from '../../utils/interface';
 import getUserMatches from './functions/getUserMatches';
 import getLeaguesClubs from './functions/getUserLeagueClubs';
-import {HomeStackType} from './homeStack';
+import {AppNavStack} from '../index';
 import {FONTS} from '../../utils/designSystem';
 
 const firAuth = auth();
 const db = firestore();
 
-type ScreenNavigationProp = StackNavigationProp<HomeStackType, 'Home'>;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -182,7 +182,7 @@ export default function Home({navigation}: Props) {
       });
       return subscriber;
     }
-  }, [uid, user]);
+  }, [user]);
 
   //TODO UI
   // TODO Stats

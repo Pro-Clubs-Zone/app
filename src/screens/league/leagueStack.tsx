@@ -6,7 +6,7 @@ import {AuthContext} from '../../context/authContext';
 import {ILeague, IMatchNavData} from '../../utils/interface';
 import {createStackNavigator} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {LeaguesStackType} from '../user/leaguesStack';
+import {AppNavStack} from '../index';
 import {LeagueContext} from '../../context/leagueContext';
 // Screens
 import LeaguePreview from './leaguePreview';
@@ -52,9 +52,7 @@ export type LeagueStackType = {
 
 const Stack = createStackNavigator<LeagueStackType>();
 
-//type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'League'>;
-
-type ScreenRouteProp = RouteProp<LeaguesStackType, 'League'>;
+type ScreenRouteProp = RouteProp<AppNavStack, 'League'>;
 
 type Props = {
   //navigation: ScreenNavigationProp;

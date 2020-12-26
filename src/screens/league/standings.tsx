@@ -6,7 +6,6 @@ import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './leagueStack';
 // import {StackNavigationProp} from '@react-navigation/stack';
 
-// type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Fixtures'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Standings'>;
 
 const db = firestore();
