@@ -15,6 +15,7 @@ import {AuthProvider} from './src/context/authContext';
 import {RequestProvider} from './src/context/requestContext';
 import {LeagueProvider} from './src/context/leagueContext';
 import AppIndex from './src/screens';
+import {NavTheme} from './src/utils/designSystem';
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
         <AppProvider>
           <RequestProvider>
             <LeagueProvider>
-              <NavigationContainer>
+              <NavigationContainer theme={NavTheme}>
                 <AppIndex />
               </NavigationContainer>
             </LeagueProvider>

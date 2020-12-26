@@ -1,7 +1,7 @@
 import {Text, View, TextInput, Pressable, Platform} from 'react-native';
 import React, {useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS, FONTS} from '../utils/designSystem';
+import {APP_COLORS, FONTS} from '../utils/designSystem';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 
 type Props = React.ComponentProps<typeof TextInput> &
@@ -47,7 +47,7 @@ const TextField = (props: Props) => {
                 : verticalScale(48),
               backgroundColor: props.disabled
                 ? 'rgba(61, 62, 77, 0.4)'
-                : COLORS.Primary,
+                : APP_COLORS.Primary,
               maxHeight: props.maxHeight ? props.maxHeight : null,
               ...props.customStyles,
             },
@@ -92,7 +92,7 @@ const TextField = (props: Props) => {
                       : null,
                   },
                 ]}
-                placeholderTextColor={COLORS.Gray}
+                placeholderTextColor={APP_COLORS.Gray}
                 onFocus={() =>
                   setStyle([styles.fieldNormal, styles.fieldFocus])
                 }
@@ -117,7 +117,7 @@ const TextField = (props: Props) => {
               <Icon
                 name={props.fieldIco}
                 size={verticalScale(24)}
-                color={COLORS.Gray}
+                color={APP_COLORS.Gray}
                 onPress={props.onPressIcon}
               />
             </View>
@@ -135,7 +135,7 @@ const TextField = (props: Props) => {
                 style={[
                   FONTS.small,
                   {
-                    color: COLORS.Red,
+                    color: APP_COLORS.Red,
                   },
                 ]}>
                 {props.error}
@@ -154,25 +154,25 @@ const TextField = (props: Props) => {
 
 const styles = ScaledSheet.create({
   fieldNormal: {
-    backgroundColor: COLORS.Primary,
+    backgroundColor: APP_COLORS.Primary,
     height: '48@vs',
     borderWidth: 1,
-    borderColor: COLORS.Secondary,
+    borderColor: APP_COLORS.Secondary,
     borderRadius: '2@vs',
     paddingHorizontal: '8@vs',
     flexDirection: 'row',
   },
   fieldFocus: {
-    borderColor: COLORS.Accent,
+    borderColor: APP_COLORS.Accent,
   },
   fieldError: {
-    borderColor: COLORS.Red,
+    borderColor: APP_COLORS.Red,
   },
   fieldLabel: {
-    color: COLORS.Gray,
+    color: APP_COLORS.Gray,
   },
   fieldHelper: {
-    color: COLORS.Gray,
+    color: APP_COLORS.Gray,
   },
 });
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Pressable, ImageBackground, View, Text, Dimensions} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
-import {FONTS, COLORS} from '../utils/designSystem';
+import {FONTS, APP_COLORS} from '../utils/designSystem';
 import bgOverlay from '../assets/images/bg-overlay.png';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -68,7 +68,7 @@ export const CardMedium = ({title, subTitle, onPress}: CardProps) => (
 
 const styles = ScaledSheet.create({
   card: {
-    backgroundColor: COLORS.Primary,
+    backgroundColor: APP_COLORS.Primary,
     padding: '16@vs',
     marginTop: '8@vs',
     marginHorizontal: '4@vs',

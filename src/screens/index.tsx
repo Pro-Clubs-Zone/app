@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {FONT_SIZES} from '../utils/designSystem';
+import {FONT_SIZES, APP_COLORS} from '../utils/designSystem';
 
 // Screens
 import Home from './user/home';
@@ -45,9 +45,7 @@ export default function AppIndex() {
       setLoading(false);
     } else {
       setUid(null);
-      if (user?.uid === null) {
-        setLoading(false);
-      }
+      setLoading(false);
       console.log('no user', user);
     }
   }, [user]);
@@ -62,7 +60,11 @@ export default function AppIndex() {
 
   if (uid) {
     return (
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator
+        initialRouteName="Home"
+        screenOptions={{
+          headerBackTitleVisible: false,
+        }}>
         <Stack.Screen
           name="Home"
           component={HomeTabs}
@@ -82,17 +84,29 @@ export default function AppIndex() {
     );
   } else {
     return (
-      <Stack.Navigator initialRouteName="Leagues">
+      <Stack.Navigator
+        initialRouteName="Leagues"
+        screenOptions={{
+          headerBackTitleVisible: false,
+        }}>
         <Stack.Screen
           name="Leagues"
           component={Leagues}
           options={({navigation}) => ({
             headerRight: () => (
-              <Icon
-                name="account"
-                size={FONT_SIZES.M}
-                onPress={() => navigation.navigate('Sign Up')}
-              />
+              <View
+                style={{
+                  width: 48,
+                  alignItems: 'center',
+                  height: '100%',
+                  justifyContent: 'center',
+                }}>
+                <Icon
+                  name="account"
+                  size={FONT_SIZES.M}
+                  onPress={() => navigation.navigate('Sign Up')}
+                />
+              </View>
             ),
             animationTypeForReplace: 'pop',
           })}
@@ -121,9 +135,34 @@ export default function AppIndex() {
 const HomeTabs = () => {
   const Tab = createBottomTabNavigator();
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Leagues" component={Leagues} />
+    <Tab.Navigator
+      tabBarOptions={{
+        style: {
+          backgroundColor: APP_COLORS.Secondary,
+        },
+        activeTintColor: APP_COLORS.Accent,
+        inactiveTintColor: APP_COLORS.Gray,
+        allowFontScaling: true,
+        labelPosition: 'beside-icon',
+      }}>
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <Icon name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Leagues"
+        component={Leagues}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <Icon name="trophy-variant" color={color} size={size} />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };

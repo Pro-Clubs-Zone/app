@@ -1,7 +1,7 @@
 import {Platform} from 'react-native';
 import {verticalScale} from 'react-native-size-matters';
 
-export enum COLORS {
+export enum APP_COLORS {
   Gray = '#9C9C9C',
   Accent = '#FECD51',
   Primary = '#3D3E4D',
@@ -27,7 +27,7 @@ interface FontSettings {
   fontSize: number;
   fontFamily: string;
   lineHeight: number;
-  color: COLORS;
+  color: APP_COLORS;
   backgroundColor: 'transparent';
   letterSpacing?: number;
 }
@@ -65,7 +65,7 @@ export const FONTS: FontStyles = {
     fontSize: verticalScale(FONT_SIZES.XXL),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(40),
-    color: COLORS.Light,
+    color: APP_COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.5),
   },
@@ -73,7 +73,7 @@ export const FONTS: FontStyles = {
     fontSize: verticalScale(FONT_SIZES.XL),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(32),
-    color: COLORS.Light,
+    color: APP_COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.5),
   },
@@ -81,7 +81,7 @@ export const FONTS: FontStyles = {
     fontSize: verticalScale(FONT_SIZES.L),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(24),
-    color: COLORS.Light,
+    color: APP_COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.5),
   },
@@ -89,7 +89,7 @@ export const FONTS: FontStyles = {
     fontSize: verticalScale(FONT_SIZES.S),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(23),
-    color: COLORS.Light,
+    color: APP_COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.5),
   },
@@ -97,7 +97,7 @@ export const FONTS: FontStyles = {
     fontSize: verticalScale(FONT_SIZES.XS),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(17),
-    color: COLORS.Light,
+    color: APP_COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.4),
   },
@@ -119,7 +119,7 @@ export const FONTS: FontStyles = {
     fontSize: verticalScale(FONT_SIZES.XS),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(20),
-    color: COLORS.Light,
+    color: APP_COLORS.Light,
     backgroundColor: 'transparent',
   },
   // bodyBold: {
@@ -148,7 +148,7 @@ export const FONTS: FontStyles = {
     fontSize: verticalScale(FONT_SIZES.XXSS),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(16),
-    color: COLORS.Light,
+    color: APP_COLORS.Light,
     backgroundColor: 'transparent',
   },
   // smallBold: {
@@ -176,4 +176,16 @@ export const FONTS: FontStyles = {
   //   color: "rgba(0,0,0,0.5)",
   //   fontSize: verticalScale(14)
   // }
+};
+
+export const NavTheme = {
+  dark: true,
+  colors: {
+    primary: APP_COLORS.Primary,
+    background: APP_COLORS.Dark,
+    card: APP_COLORS.Accent,
+    text: APP_COLORS.Dark,
+    border: 'transparent',
+    notification: APP_COLORS.Red,
+  },
 };
