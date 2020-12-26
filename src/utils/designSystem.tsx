@@ -1,7 +1,7 @@
 import {Platform} from 'react-native';
 import {verticalScale} from 'react-native-size-matters';
 
-export enum Colors {
+export enum COLORS {
   Gray = '#9C9C9C',
   Accent = '#FECD51',
   Primary = '#3D3E4D',
@@ -12,7 +12,7 @@ export enum Colors {
   Dark = '#292933',
 }
 
-export enum FontSizes {
+export enum FONT_SIZES {
   XXSS = 12,
   XXS = 14,
   XS = 16,
@@ -27,12 +27,12 @@ interface FontSettings {
   fontSize: number;
   fontFamily: string;
   lineHeight: number;
-  color: Colors;
+  color: COLORS;
   backgroundColor: 'transparent';
   letterSpacing?: number;
 }
 
-interface FontStyle {
+interface FontStyles {
   display4: FontSettings;
   small: FontSettings;
   body: FontSettings;
@@ -56,7 +56,7 @@ const fontFamilies: FontFamily = {
   }),
 };
 
-export const FONTS: FontStyle = {
+export const FONTS: FontStyles = {
   // display1: {
   //   fontSize: verticalScale(FontSizes.XXL),
   //   fontFamily: fontFamilies.display,
@@ -82,10 +82,10 @@ export const FONTS: FontStyle = {
   //   letterSpacing: verticalScale(0.5)
   // },
   display4: {
-    fontSize: verticalScale(FontSizes.S),
+    fontSize: verticalScale(FONT_SIZES.S),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(23),
-    color: Colors.Light,
+    color: COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.5),
   },
@@ -112,10 +112,10 @@ export const FONTS: FontStyle = {
   //   lineHeight: verticalScale(24)
   // },
   body: {
-    fontSize: verticalScale(FontSizes.XS),
+    fontSize: verticalScale(FONT_SIZES.XS),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(20),
-    color: Colors.Light,
+    color: COLORS.Light,
     backgroundColor: 'transparent',
   },
   // bodyBold: {
@@ -141,10 +141,10 @@ export const FONTS: FontStyle = {
   //   backgroundColor: "transparent"
   // },
   small: {
-    fontSize: verticalScale(FontSizes.XXSS),
+    fontSize: verticalScale(FONT_SIZES.XXSS),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(16),
-    color: Colors.Light,
+    color: COLORS.Light,
     backgroundColor: 'transparent',
   },
   // smallBold: {
