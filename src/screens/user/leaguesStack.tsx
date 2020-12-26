@@ -5,7 +5,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import CreateLeague from '../league/createLeague';
 import LeagueExplorer from './leagueExplorer';
 import SignUp from '../auth/signUp';
-import JoinClub from '../league/joinClub';
 import Leagues from './leagues';
 import LeagueStack from '../league/leagueStack';
 import {LeagueProvider} from '../../context/leagueContext';

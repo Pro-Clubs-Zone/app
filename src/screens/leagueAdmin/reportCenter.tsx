@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {IMatch, IMatchNavData} from '../../utils/interface';
-import {AppContext} from '../../utils/context';
+import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/leagueStack';
 
 type FixtureList = {

@@ -111,13 +111,6 @@ export interface IUser {
   };
 }
 
-// export interface AppContextInt {
-//   userData: UserDataInt;
-//   userLeagues: {
-//     [league: string]: LeagueInt;
-//   };
-// }
-
 export interface IClubStanding {
   name: string;
   played: number;
@@ -127,4 +120,10 @@ export interface IClubStanding {
   points: number;
   scored: number;
   conceded: number;
+}
+
+export interface UserInfo {
+  email: string;
+  password: string;
+  username: string;
 }

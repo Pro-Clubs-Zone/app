@@ -1,8 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, Button, Alert} from 'react-native';
+import {Text, View, Button, Alert, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {AppContext, AuthContext} from '../../utils/context';
-import {FlatList} from 'react-native-gesture-handler';
+import {AppContext} from '../../context/appContext';
+import {AuthContext} from '../../context/authContext';
 import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
 import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './leagueStack';

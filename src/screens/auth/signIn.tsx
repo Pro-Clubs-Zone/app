@@ -1,6 +1,5 @@
 import React, {useContext, useState} from 'react';
 import {Text, TextInput, View, Button} from 'react-native';
-import {AppContext} from '../../utils/context';
 import auth from '@react-native-firebase/auth';
 
 const firAuth = auth();

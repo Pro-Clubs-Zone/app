@@ -1,6 +1,5 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {IClubRequest, IMyRequests, ILeagueRequest} from '../../utils/interface';
 //Screens
 import SignUp from '../auth/signUp';
 import SignIn from '../auth/signIn';

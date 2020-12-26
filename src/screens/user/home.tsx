@@ -1,6 +1,8 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button} from 'react-native';
-import {AppContext, AuthContext, RequestContext} from '../../utils/context';
+import {AppContext} from '../../context/appContext';
+import {AuthContext} from '../../context/authContext';
+import {RequestContext} from '../../context/requestContext';
 import auth from '@react-native-firebase/auth';
 import {StackNavigationProp} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';

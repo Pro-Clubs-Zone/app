@@ -1,7 +1,7 @@
 import {useContext, useEffect, useState} from 'react';
 import {IMatchNavData, IMatch} from '../../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
-import {AppContext} from '../../../utils/context';
+import {AppContext} from '../../../context/appContext';
 
 type FixtureList = {
   key: string;

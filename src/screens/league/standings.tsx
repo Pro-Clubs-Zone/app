@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {Text, View, FlatList} from 'react-native';
 import {IClubStanding} from '../../utils/interface';

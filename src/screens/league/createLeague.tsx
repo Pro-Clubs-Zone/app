@@ -1,7 +1,6 @@
 import React, {useContext, useState} from 'react';
 import {Text, View, Button, TextInput} from 'react-native';
-import SignUp from '../auth/signUp';
-import {AuthContext} from '../../utils/context';
+import {AuthContext} from '../../context/authContext';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
 import {LeaguesStackType} from '../user/leaguesStack';

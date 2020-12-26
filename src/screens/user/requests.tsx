@@ -1,6 +1,7 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
-import {AuthContext, RequestContext} from '../../utils/context';
+import {AuthContext} from '../../context/authContext';
+import {RequestContext} from '../../context/requestContext';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {IClubRequest, ILeagueRequest, IMyRequests} from '../../utils/interface';

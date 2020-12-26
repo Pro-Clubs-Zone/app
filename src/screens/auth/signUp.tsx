@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {Text, View, Button, TextInput, ActivityIndicator} from 'react-native';
 
 import auth from '@react-native-firebase/auth';

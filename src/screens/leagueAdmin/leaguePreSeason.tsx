@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Text, View, Button} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
-import {AppContext} from '../../utils/context';
+import {AppContext} from '../../context/appContext';
 import {LeagueContext} from '../../context/leagueContext';
 import {LeagueStackType} from '../league/leagueStack';
 

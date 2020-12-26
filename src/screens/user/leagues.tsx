@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {Text, View, Button} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {AppContext} from '../../utils/context';
 import {LeaguesStackType} from './leaguesStack';
 
 type ScreenNavigationProp = StackNavigationProp<LeaguesStackType, 'Leagues'>;
@@ -11,7 +10,6 @@ type Props = {
 };
 
 export default function Leagues({navigation}: Props) {
-  const context = useContext(AppContext);
   return (
     <View>
       <Text>Leagues Screen</Text>

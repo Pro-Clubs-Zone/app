@@ -5,7 +5,7 @@ import firestore from '@react-native-firebase/firestore';
 import {IClub} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {AppContext} from '../../utils/context';
+import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/leagueStack';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;

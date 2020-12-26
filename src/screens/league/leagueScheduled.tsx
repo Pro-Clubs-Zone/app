@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {Text, View, Button} from 'react-native';
 import {LeagueStackType} from './leagueStack';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {AppContext} from '../../utils/context';
+import {AppContext} from '../../context/appContext';
 import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenNavigationProp = StackNavigationProp<

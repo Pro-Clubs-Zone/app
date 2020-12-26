@@ -1,7 +1,8 @@
 import React, {useState, useLayoutEffect, useContext} from 'react';
 import {Text, View} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {AppContext, AuthContext} from '../../utils/context';
+import {AppContext} from '../../context/appContext';
+import {AuthContext} from '../../context/authContext';
 import {ILeague, IMatchNavData} from '../../utils/interface';
 import {createStackNavigator} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';

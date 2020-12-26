@@ -1,9 +1,8 @@
-import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
+import React, {useContext} from 'react';
 import {Text, View, Button, Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-// import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {AppContext} from '../../utils/context';
+import {AppContext} from '../../context/appContext';
 import RNRestart from 'react-native-restart';
 import {LeagueStackType} from '../league/leagueStack';
 

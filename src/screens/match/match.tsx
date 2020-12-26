@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useState} from 'react';
 import {Button, Text, View} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
