@@ -1,16 +1,25 @@
 import {setupI18n} from '@lingui/core';
-import ru from '../locales/ru/messages.js';
-import en from '../locales/en/messages.js';
+import ruTranslation from '../locales/ru/messages.js';
+import enTranslation from '../locales/en/messages.js';
+import {en, ru} from 'make-plural';
 
-// import this constant as get translations from it outside of React
 const i18n = setupI18n({
-  locales: ['en', 'ru'],
+  locale: 'ru',
+  localeData: {
+    ru: {
+      plurals: ru,
+    },
+  },
   messages: {
-    en: en.messages,
-    ru: ru.messages,
+    en: ruTranslation.messages,
+    ru: enTranslation.messages,
   },
 });
-i18n.load('ru', ru.messages);
+
+i18n.load('ru', ruTranslation.messages);
+// i18n.loadLocaleData('ru', {
+//   plurals: ru,
+// });
 i18n.activate('ru');
 
 export default i18n;
