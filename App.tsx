@@ -13,7 +13,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import {AppProvider} from './src/context/appContext';
 import {AuthProvider} from './src/context/authContext';
 import {RequestProvider} from './src/context/requestContext';
-import AppIndex from './src/screens/appIndex';
+import {LeagueProvider} from './src/context/leagueContext';
+import AppIndex from './src/screens';
 
 const App = () => {
   return (
@@ -21,9 +22,11 @@ const App = () => {
       <AuthProvider>
         <AppProvider>
           <RequestProvider>
-            <NavigationContainer>
-              <AppIndex />
-            </NavigationContainer>
+            <LeagueProvider>
+              <NavigationContainer>
+                <AppIndex />
+              </NavigationContainer>
+            </LeagueProvider>
           </RequestProvider>
         </AppProvider>
       </AuthProvider>

@@ -34,23 +34,13 @@ type Props = {
 
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(true);
-  const [uid, setUid] = useState<string | undefined>();
   const [matches, setMatches] = useState<IMatchNavData[]>([]);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const requestContext = useContext(RequestContext);
 
-  useEffect(() => {
-    if (user) {
-      setUid(user.uid);
-      console.log('updateUserUid');
-      setLoading(true);
-    } else {
-      console.log('no user');
-      setLoading(false);
-    }
-  }, [user]);
+  const uid = user?.uid;
 
   const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
     let requests: IClubRequest[] = [];
@@ -198,7 +188,6 @@ export default function Home({navigation}: Props) {
   // TODO Stats
   const onSignOut = () => {
     firAuth.signOut().then(() => {
-      setUid(undefined);
       requestContext?.resetRequests();
       context?.setUserData(null);
       context?.setUserLeagues(null);

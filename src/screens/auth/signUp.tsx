@@ -15,25 +15,19 @@ function SignUp({navigation}) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const onSignUp = () => {
-    setLoading(true);
-
     const createDbEntry = (data: {user: {uid: string}}) => {
-      db.collection('users')
-        .doc(data.user.uid)
-        .set({
-          username: username,
-        })
-        .then(() => {
-          console.log('entry created');
-          setLoading(false);
-        });
+      db.collection('users').doc(data.user.uid).set({
+        username: username,
+      });
     };
+
+    setLoading(true);
 
     firAuth
       .createUserWithEmailAndPassword(email, password)
       .then((data) => {
         console.log('User account created & signed in!', data);
-        createDbEntry(data);
+        return createDbEntry(data);
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -50,7 +44,9 @@ function SignUp({navigation}) {
 
   return (
     <View>
-      {loading && <Loading />}
+      {
+        // loading && <Loading />
+      }
       <TextField
         onChangeText={(text) => setEmail(text)}
         value={email}
