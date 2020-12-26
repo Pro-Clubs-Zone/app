@@ -7,7 +7,6 @@ import auth from '@react-native-firebase/auth';
 import {StackNavigationProp} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
 import {
-  IClub,
   IClubRosterMember,
   IClubRequest,
   ILeague,
@@ -20,6 +19,7 @@ import {
   IPlayerRequestData,
 } from '../../utils/interface';
 import getUserMatches from './functions/getUserMatches';
+import getLeaguesClubs from './functions/getUserLeagueClubs';
 import {HomeStackType} from './homeStack';
 import {FONTS} from '../../utils/designSystem';
 
@@ -40,8 +40,6 @@ export default function Home({navigation}: Props) {
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const requestContext = useContext(RequestContext);
-
-  const leaguesRef = db.collection('leagues');
 
   useEffect(() => {
     if (user) {
@@ -164,43 +162,6 @@ export default function Home({navigation}: Props) {
     }
   };
 
-  const getLeaguesClubs = async (
-    userData: IUser,
-  ): Promise<{
-    userData: IUser;
-    userLeagues: {[league: string]: ILeague};
-  }> => {
-    const leagues = Object.entries(userData.leagues);
-    let userLeagues: {[league: string]: ILeague} = {};
-
-    for (const [leagueId, league] of leagues) {
-      const clubRef = leaguesRef.doc(leagueId).collection('clubs');
-
-      await leaguesRef
-        .doc(leagueId)
-        .get()
-        .then((doc) => {
-          userLeagues = {...userLeagues, [doc.id]: doc.data() as ILeague};
-        })
-        .then(async () => {
-          await clubRef.get().then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              console.log('club', doc.data());
-              userLeagues[leagueId].clubs = {
-                ...userLeagues[leagueId].clubs,
-                [doc.id]: doc.data() as IClub,
-              };
-            });
-          });
-        });
-    }
-
-    return {
-      userLeagues,
-      userData,
-    };
-  };
-
   useEffect(() => {
     if (user) {
       const userRef = db.collection('users').doc(uid);
@@ -208,12 +169,12 @@ export default function Home({navigation}: Props) {
       const subscriber = userRef.onSnapshot((doc) => {
         console.log('call to fir');
         userInfo = doc.data() as IUser;
-        if (userInfo?.leagues) {
+        if (userInfo.leagues) {
           getLeaguesClubs(userInfo)
             .then((data) => {
               const {userData, userLeagues} = data;
-              context?.setUserData(userData);
-              context?.setUserLeagues(userLeagues);
+              context.setUserData(userData);
+              context.setUserLeagues(userLeagues);
               getClubRequests(userLeagues);
               getLeagueRequests(userLeagues);
               getUserMatches(userData, userLeagues).then((matchesData) =>
@@ -225,16 +186,14 @@ export default function Home({navigation}: Props) {
             });
         } else {
           console.log('no leagues');
-
-          context?.setUserData(userInfo);
+          context.setUserData(userInfo);
           setLoading(false);
         }
       });
       return subscriber;
     }
-  }, [uid]);
+  }, [uid, user]);
 
-  //TODO report center
   //TODO UI
   // TODO Stats
   const onSignOut = () => {
