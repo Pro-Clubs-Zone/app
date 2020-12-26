@@ -16,7 +16,7 @@ import i18n from '../../utils/i18n';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import TextField from '../../components/textField';
-import {FONTS, APP_COLORS} from '../../utils/designSystem';
+import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import screenBg from '../../assets/images/login-bg.jpg';
@@ -91,6 +91,8 @@ function SignUp({navigation}: Props) {
                 autoCorrect={false}
                 autoCapitalize="none"
                 label={i18n._(t`Username`)}
+                returnKeyType="next"
+                autoFocus={true}
                 //   onBlur={onEmailBlur}
                 //   error={emailError}
               />
@@ -102,16 +104,18 @@ function SignUp({navigation}: Props) {
                 autoCorrect={false}
                 autoCapitalize="none"
                 label={i18n._(t`E-mail`)}
+                returnKeyType="next"
                 //   onBlur={onEmailBlur}
                 //   error={emailError}
               />
               <TextField
                 value={password}
-                secureTextEntry={true}
+                //  secureTextEntry={true}
                 placeholder={i18n._(t`Enter Password`)}
                 onChangeText={(text) => setPassword(text)}
                 autoCorrect={false}
                 label={i18n._(t`Password`)}
+                textContentType="newPassword"
                 //  fieldIco={visibility}
                 //  onPressIco={changePwdType}
                 // error={
@@ -133,9 +137,9 @@ function SignUp({navigation}: Props) {
                 }}>
                 <View style={styles.privacyPolicy}>
                   <Trans>
-                    <Text style={FONTS.small}>
-                      By signing up you agree to our
-                      <Text style={{...FONTS.small, fontWeight: 'bold'}}>
+                    <Text style={TEXT_STYLES.small}>
+                      By signing up you agree to our{' '}
+                      <Text style={{...TEXT_STYLES.small, fontWeight: 'bold'}}>
                         Privacy Policy.
                       </Text>
                     </Text>
@@ -177,9 +181,9 @@ function SignUp({navigation}: Props) {
         onPress={() => navigation.navigate('Sign In')}>
         <View style={styles.footer}>
           <Trans>
-            <Text style={FONTS.small}>
+            <Text style={TEXT_STYLES.small}>
               Already have an account?{' '}
-              <Text style={{...FONTS.small, fontWeight: 'bold'}}>
+              <Text style={{...TEXT_STYLES.small, fontWeight: 'bold'}}>
                 Log in now.
               </Text>
             </Text>

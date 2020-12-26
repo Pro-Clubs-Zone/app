@@ -1,7 +1,7 @@
 import React from 'react';
 import {Pressable, ImageBackground, View, Text, Dimensions} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
-import {FONTS, APP_COLORS} from '../utils/designSystem';
+import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
 import bgOverlay from '../assets/images/bg-overlay.png';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -26,7 +26,7 @@ export const CardSmall = ({onPress, title}: CardProps) => {
         source={bgOverlay}
         resizeMode="cover">
         <View pointerEvents="none">
-          <Text style={FONTS.display5}>
+          <Text style={TEXT_STYLES.display5}>
             {title.replace('<br>', '\n').toUpperCase()}
           </Text>
         </View>
@@ -48,7 +48,7 @@ export const CardMedium = ({title, subTitle, onPress}: CardProps) => (
       ]}
       source={bgOverlay}>
       <View pointerEvents="none">
-        <Text style={FONTS.display5}>
+        <Text style={TEXT_STYLES.display5}>
           {title.replace('<br>', '\n').toUpperCase()}
         </Text>
         {subTitle && (
@@ -56,7 +56,9 @@ export const CardMedium = ({title, subTitle, onPress}: CardProps) => (
             style={{
               marginTop: verticalScale(8),
             }}>
-            <Text style={FONTS.small}>{subTitle.replace('<br>', '\n')}</Text>
+            <Text style={TEXT_STYLES.small}>
+              {subTitle.replace('<br>', '\n')}
+            </Text>
           </View>
         )}
       </View>

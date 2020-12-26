@@ -20,7 +20,7 @@ import {
 import getUserMatches from './functions/getUserMatches';
 import getLeaguesClubs from './functions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
-import {FONTS} from '../../utils/designSystem';
+import {TEXT_STYLES} from '../../utils/designSystem';
 import {t, plural} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 
@@ -196,7 +196,7 @@ export default function Home({navigation}: Props) {
 
   return (
     <View>
-      <Text style={{...FONTS.display4}}>Home Screen</Text>
+      <Text style={{...TEXT_STYLES.display4}}>Home Screen</Text>
       <Text>{context?.userData?.username}</Text>
       <Button
         onPress={() => navigation.navigate('Requests')}

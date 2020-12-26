@@ -60,7 +60,7 @@ const fontFamilies: FontFamily = {
   }),
 };
 
-export const FONTS: FontStyles = {
+export const TEXT_STYLES: FontStyles = {
   display1: {
     fontSize: verticalScale(FONT_SIZES.XXL),
     fontFamily: fontFamilies.display,

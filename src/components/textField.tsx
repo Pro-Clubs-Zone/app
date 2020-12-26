@@ -1,7 +1,7 @@
 import {Text, View, TextInput, Pressable, Platform} from 'react-native';
 import React, {useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {APP_COLORS, FONTS} from '../utils/designSystem';
+import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 
 type Props = React.ComponentProps<typeof TextInput> &
@@ -59,7 +59,9 @@ const TextField = (props: Props) => {
               paddingHorizontal: verticalScale(8),
               top: verticalScale(2),
             }}>
-            <Text style={[FONTS.small, styles.fieldLabel]}>{props.label}</Text>
+            <Text style={[TEXT_STYLES.small, styles.fieldLabel]}>
+              {props.label}
+            </Text>
           </View>
           <View style={{flex: 1}}>
             <View
@@ -79,7 +81,7 @@ const TextField = (props: Props) => {
                 {...props}
                 ref={inputRef}
                 style={[
-                  FONTS.body,
+                  TEXT_STYLES.body,
                   {
                     height:
                       props.multiline && Platform.OS === 'ios'
@@ -133,7 +135,7 @@ const TextField = (props: Props) => {
             {props.error ? (
               <Text
                 style={[
-                  FONTS.small,
+                  TEXT_STYLES.small,
                   {
                     color: APP_COLORS.Red,
                   },
@@ -141,7 +143,7 @@ const TextField = (props: Props) => {
                 {props.error}
               </Text>
             ) : (
-              <Text style={[FONTS.small, styles.fieldHelper]}>
+              <Text style={[TEXT_STYLES.small, styles.fieldHelper]}>
                 {props.helper}
               </Text>
             )}
