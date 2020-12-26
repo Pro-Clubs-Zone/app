@@ -21,6 +21,8 @@ import getUserMatches from './functions/getUserMatches';
 import getLeaguesClubs from './functions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
 import {FONTS} from '../../utils/designSystem';
+import {t, plural} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 const db = firestore();
 

@@ -5,6 +5,8 @@ import {AppNavStack} from '../index';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
 import {CardSmall, CardMedium} from '../../components/cards';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Leagues'>;
 
@@ -32,7 +34,7 @@ export default function Leagues({navigation}: Props) {
       </View>
       <CardMedium
         onPress={() => navigation.navigate('League Explorer')}
-        title="League Explorer"
+        title={i18n._(t`League Explorer`)}
         subTitle="Find a league in world"
       />
     </ScrollView>

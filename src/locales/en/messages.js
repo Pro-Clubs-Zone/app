@@ -1,0 +1,1 @@
+/*eslint-disable*/module.exports={messages:{"League Explorer":"League Explorer"}};

@@ -16,21 +16,25 @@ import {RequestProvider} from './src/context/requestContext';
 import {LeagueProvider} from './src/context/leagueContext';
 import AppIndex from './src/screens';
 import {NavTheme} from './src/utils/designSystem';
+import {I18nProvider} from '@lingui/react';
+import i18n from './src/utils/i18n';
 
 const App = () => {
   return (
     <>
-      <AuthProvider>
-        <AppProvider>
-          <RequestProvider>
-            <LeagueProvider>
-              <NavigationContainer theme={NavTheme}>
-                <AppIndex />
-              </NavigationContainer>
-            </LeagueProvider>
-          </RequestProvider>
-        </AppProvider>
-      </AuthProvider>
+      <I18nProvider i18n={i18n}>
+        <AuthProvider>
+          <AppProvider>
+            <RequestProvider>
+              <LeagueProvider>
+                <NavigationContainer theme={NavTheme}>
+                  <AppIndex />
+                </NavigationContainer>
+              </LeagueProvider>
+            </RequestProvider>
+          </AppProvider>
+        </AuthProvider>
+      </I18nProvider>
     </>
   );
 };

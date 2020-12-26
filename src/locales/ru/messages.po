@@ -1,0 +1,18 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2020-12-26 21:16+0100\n"
+"Mime-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/screens/user/leagues.tsx:17
+msgid "League Explorer"
+msgstr "Лиги Мира"
