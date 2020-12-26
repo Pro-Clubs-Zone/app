@@ -1,9 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {View, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {FONT_SIZES, APP_COLORS} from '../utils/designSystem';
+import {APP_COLORS} from '../utils/designSystem';
+import {IconButton} from '../components/buttons';
+import auth from '@react-native-firebase/auth';
 
 // Screens
 import Home from './user/home';
@@ -14,7 +17,6 @@ import Requests from './user/requests';
 import CreateLeague from './league/createLeague';
 import LeagueExplorer from './user/leagueExplorer';
 import LeagueStack from './league/leagueStack';
-import {View, Text} from 'react-native';
 
 type LeagueProps = {
   leagueId: string;
@@ -37,6 +39,7 @@ export default function AppIndex() {
   const user = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [uid, setUid] = useState<string | undefined | null>(null);
+  const firAuth = auth();
 
   useEffect(() => {
     if (user) {
@@ -49,6 +52,15 @@ export default function AppIndex() {
       console.log('no user', user);
     }
   }, [user]);
+
+  const onSignOut = () => {
+    firAuth.signOut().then(() => {
+      // requestContext?.resetRequests();
+      // context?.setUserData(null);
+      // context?.setUserLeagues(null);
+      console.log('signed out');
+    });
+  };
 
   if (loading) {
     return (
@@ -70,6 +82,9 @@ export default function AppIndex() {
           component={HomeTabs}
           options={{
             animationTypeForReplace: 'pop',
+            headerRight: () => (
+              <IconButton name="logout-variant" onPress={onSignOut} />
+            ),
           }}
         />
         <Stack.Screen name="Requests" component={Requests} />
@@ -94,19 +109,10 @@ export default function AppIndex() {
           component={Leagues}
           options={({navigation}) => ({
             headerRight: () => (
-              <View
-                style={{
-                  width: 48,
-                  alignItems: 'center',
-                  height: '100%',
-                  justifyContent: 'center',
-                }}>
-                <Icon
-                  name="account"
-                  size={FONT_SIZES.M}
-                  onPress={() => navigation.navigate('Sign Up')}
-                />
-              </View>
+              <IconButton
+                name="account"
+                onPress={() => navigation.navigate('Sign Up')}
+              />
             ),
             animationTypeForReplace: 'pop',
           })}

@@ -3,7 +3,6 @@ import {Text, View, Button} from 'react-native';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
-import auth from '@react-native-firebase/auth';
 import {StackNavigationProp} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
 import {
@@ -23,7 +22,6 @@ import getLeaguesClubs from './functions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
 import {FONTS} from '../../utils/designSystem';
 
-const firAuth = auth();
 const db = firestore();
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
@@ -186,14 +184,6 @@ export default function Home({navigation}: Props) {
 
   //TODO UI
   // TODO Stats
-  const onSignOut = () => {
-    firAuth.signOut().then(() => {
-      requestContext?.resetRequests();
-      context?.setUserData(null);
-      context?.setUserLeagues(null);
-    });
-  };
-
   if (loading) {
     return (
       <View>
@@ -210,11 +200,6 @@ export default function Home({navigation}: Props) {
         onPress={() => navigation.navigate('Requests')}
         title={`Requests ${requestContext?.requestCount}`}
       />
-      <CustomButton
-        onPress={user ? onSignOut : () => navigation.navigate('Sign Up')}
-        title={user ? 'Logout' : 'Sign Up'}
-      />
-      <Button onPress={() => navigation.navigate('Sign In')} title="SignIn" />
       <Button
         onPress={() =>
           navigation.navigate('Leagues', {
@@ -229,14 +214,3 @@ export default function Home({navigation}: Props) {
     </View>
   );
 }
-
-const CustomButton = (props) => {
-  return (
-    <Button
-      onPress={props.onPress}
-      title={props.title}
-      color="#841584"
-      accessibilityLabel="Learn more about this purple button"
-    />
-  );
-};
