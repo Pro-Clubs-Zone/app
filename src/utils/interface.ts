@@ -105,7 +105,7 @@ export interface IUserLeague {
 }
 
 export interface IUser {
-  username: string;
+  username?: string;
   leagues: {
     [league: string]: IUserLeague;
   };

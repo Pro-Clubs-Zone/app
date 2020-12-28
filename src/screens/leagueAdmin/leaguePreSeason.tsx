@@ -23,8 +23,6 @@ export default function LeaguePreSeason({navigation}: Props) {
   const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
 
-  console.log('league admin preseason');
-
   const scheduleMatches = async () => {
     const functionRef = firFunc.httpsCallable('scheduleMatches');
     functionRef({leagueId: leagueId})

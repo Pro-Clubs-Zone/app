@@ -58,6 +58,19 @@ export default function AppIndex() {
     });
   };
 
+  const commonStack = (
+    <>
+      <Stack.Screen name="Requests" component={Requests} />
+      <Stack.Screen name="Create League" component={CreateLeague} />
+      <Stack.Screen name="League Explorer" component={LeagueExplorer} />
+      <Stack.Screen
+        name="League"
+        component={LeagueStack}
+        options={{headerShown: false}}
+      />
+    </>
+  );
+
   if (loading) {
     return <FullScreenLoading visible={true} />;
   }
@@ -79,14 +92,7 @@ export default function AppIndex() {
             ),
           }}
         />
-        <Stack.Screen name="Requests" component={Requests} />
-        <Stack.Screen name="Create League" component={CreateLeague} />
-        <Stack.Screen name="League Explorer" component={LeagueExplorer} />
-        <Stack.Screen
-          name="League"
-          component={LeagueStack}
-          options={{headerShown: false}}
-        />
+        {commonStack}
       </Stack.Navigator>
     );
   } else {
@@ -109,10 +115,6 @@ export default function AppIndex() {
             animationTypeForReplace: 'pop',
           })}
         />
-        <Stack.Screen name="Sign In" component={SignIn} />
-        <Stack.Screen name="Requests" component={Requests} />
-        <Stack.Screen name="Create League" component={CreateLeague} />
-        <Stack.Screen name="League Explorer" component={LeagueExplorer} />
         <Stack.Screen
           name="Sign Up"
           component={SignUp}
@@ -120,11 +122,8 @@ export default function AppIndex() {
             animationTypeForReplace: 'pop',
           }}
         />
-        <Stack.Screen
-          name="League"
-          component={LeagueStack}
-          options={{headerShown: false}}
-        />
+        <Stack.Screen name="Sign In" component={SignIn} />
+        {commonStack}
       </Stack.Navigator>
     );
   }

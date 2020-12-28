@@ -1,13 +1,14 @@
 import React, {useContext, useState} from 'react';
-import {Text, View, Button, TextInput} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-//import {Club, UserLeague} from './interface';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {IClub, IUserLeague} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './league';
+import {FormView, FormContent} from '../../components/templates';
+import {BigButton} from '../../components/buttons';
+import TextField from '../../components/textField';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Create Club'>;
 
@@ -75,15 +76,17 @@ export default function CreateClub({route, navigation}: Props) {
   };
 
   return (
-    <View>
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => setClubName(text)}
-        value={clubName}
-        placeholder="Club Name"
-        autoCorrect={false}
-      />
-      <Button title="Create" onPress={onCreateClub} />
-    </View>
+    <FormView>
+      <FormContent>
+        <TextField
+          onChangeText={(text) => setClubName(text)}
+          value={clubName}
+          placeholder="Club Name"
+          autoCorrect={false}
+          label="Club Name"
+        />
+      </FormContent>
+      <BigButton onPress={onCreateClub} title="Create Club" />
+    </FormView>
   );
 }

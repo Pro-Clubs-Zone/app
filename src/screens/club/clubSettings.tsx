@@ -32,6 +32,8 @@ export default function ClubSettings({route}: Props) {
 
   const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
   const isAdmin = context.userData.leagues[leagueId].admin;
+  //TODO: if admin, do not restart.
+
   const onRemove = async () => {
     Alert.alert(
       'Remove Club',
