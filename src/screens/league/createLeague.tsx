@@ -8,6 +8,7 @@ import TextField from '../../components/textField';
 import {BigButton} from '../../components/buttons';
 import {FormView, FormContent} from '../../components/templates';
 import {AppContext} from '../../context/appContext';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -39,12 +40,13 @@ export default function CreateLeague({navigation}: Props) {
 
   const [leagueInfo, setLeagueInfo] = useState<ILeague>(leagueInfoDefault);
   const [leagueName, setLeagueName] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const onCreateLeague = () => {
     const batch = db.batch();
     const leagueRef = db.collection('leagues').doc();
     const userRef = db.collection('users').doc(uid);
-
+    setLoading(true);
     batch.set(leagueRef, {...leagueInfo, adminId: uid, name: leagueName});
     batch.set(
       userRef,
@@ -69,6 +71,7 @@ export default function CreateLeague({navigation}: Props) {
       context.setUserLeagues({
         [leagueRef.id]: leagueInfo,
       });
+      setLoading(false);
       navigation.navigate('League', {
         leagueId: leagueRef.id,
         isAdmin: true,
@@ -78,6 +81,7 @@ export default function CreateLeague({navigation}: Props) {
 
   return (
     <FormView>
+      <FullScreenLoading visible={loading} />
       <FormContent>
         <TextField
           onChangeText={(text) => setLeagueName(text)}

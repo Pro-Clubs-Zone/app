@@ -6,6 +6,7 @@ import {AuthContext} from '../../context/authContext';
 import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
 import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './league';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
 
@@ -43,7 +44,7 @@ export default function JoinClub({route}: Props) {
       });
   }, []);
 
-  const onSendRequestConfirm = (clubId: string) => {
+  const onSendRequestConfirm = async (clubId: string) => {
     const clubRef = leagueClubs.doc(clubId);
     const userInfo: {[leagueId: string]: IUserLeague} = {
       [leagueId]: {
@@ -86,7 +87,8 @@ export default function JoinClub({route}: Props) {
         {
           text: 'Send Request',
           onPress: () => {
-            onSendRequestConfirm(clubId);
+            setLoading(true);
+            onSendRequestConfirm(clubId).then(() => setLoading(false));
           },
         },
         {
@@ -100,12 +102,15 @@ export default function JoinClub({route}: Props) {
   };
 
   return (
-    <FlatList
-      data={data}
-      renderItem={({item}: any) => (
-        <Club name={item.name} onPress={() => onSendRequest(item.key)} />
-      )}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <FlatList
+        data={data}
+        renderItem={({item}: any) => (
+          <Club name={item.name} onPress={() => onSendRequest(item.key)} />
+        )}
+      />
+    </>
   );
 }
 

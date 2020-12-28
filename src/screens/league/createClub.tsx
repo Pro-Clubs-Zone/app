@@ -9,6 +9,7 @@ import {LeagueStackType} from './league';
 import {FormView, FormContent} from '../../components/templates';
 import {BigButton} from '../../components/buttons';
 import TextField from '../../components/textField';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Create Club'>;
 
@@ -77,6 +78,7 @@ export default function CreateClub({route, navigation}: Props) {
 
   return (
     <FormView>
+      <FullScreenLoading visible={loading} />
       <FormContent>
         <TextField
           onChangeText={(text) => setClubName(text)}

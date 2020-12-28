@@ -19,16 +19,15 @@ const db = firestore();
 
 export default function LeaguePreview({navigation}: Props) {
   const [accepted, setAccepted] = useState<boolean>(false);
+
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
 
   const leagueId = leagueContext.leagueId;
   const uid = user?.uid;
-  console.log(leagueContext);
 
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
-  //  const userRef = db.collection('users').doc(uid);
 
   //TODO: check user from context
 

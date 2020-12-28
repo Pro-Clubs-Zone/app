@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {ScrollView} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
@@ -11,6 +11,7 @@ import {
   CardSmallContainer,
 } from '../../components/cards';
 import {verticalScale} from 'react-native-size-matters';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -23,17 +24,22 @@ type Props = {
 const firFunc = functions();
 
 export default function LeaguePreSeason({navigation}: Props) {
+  const [loading, setLoading] = useState<boolean>(false);
+
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
+  const scheduled = leagueContext.league.scheduled;
   const userClub = context.userData.leagues[leagueId];
 
   const scheduleMatches = async () => {
+    setLoading(true);
     const functionRef = firFunc.httpsCallable('scheduleMatches');
     functionRef({leagueId: leagueId})
       .then((response) => {
         console.log('message from cloud', response);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -46,6 +52,7 @@ export default function LeaguePreSeason({navigation}: Props) {
         paddingBottom: verticalScale(16),
       }}
       showsVerticalScrollIndicator={false}>
+      <FullScreenLoading visible={loading} />
       {userClub.manager ? (
         <CardMedium
           onPress={() =>
@@ -84,7 +91,9 @@ export default function LeaguePreSeason({navigation}: Props) {
           onPress={() => console.log('nothing yet')}
         />
       </CardSmallContainer>
-      <CardMedium onPress={scheduleMatches} title="Schedule Matches" />
+      {scheduled && (
+        <CardMedium onPress={scheduleMatches} title="Schedule Matches" />
+      )}
     </ScrollView>
   );
 }
