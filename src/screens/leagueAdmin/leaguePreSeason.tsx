@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {Text, ScrollView, Button} from 'react-native';
+import {ScrollView} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
@@ -10,7 +10,7 @@ import {
   CardSmall,
   CardSmallContainer,
 } from '../../components/cards';
-import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import {verticalScale} from 'react-native-size-matters';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -79,7 +79,10 @@ export default function LeaguePreSeason({navigation}: Props) {
             })
           }
         />
-        <CardSmall title={'Invite\nClubs'} />
+        <CardSmall
+          title={'Invite\nClubs'}
+          onPress={() => console.log('nothing yet')}
+        />
       </CardSmallContainer>
       <CardMedium onPress={scheduleMatches} title="Schedule Matches" />
     </ScrollView>

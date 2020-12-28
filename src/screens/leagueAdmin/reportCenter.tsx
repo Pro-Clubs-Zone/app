@@ -72,7 +72,8 @@ export default function ReportCenter({navigation, route}: Props) {
       .then(() => {
         setData(matches);
       });
-  });
+  }, [league, leagueId]);
+
   return (
     <View>
       <Text>Report Center</Text>

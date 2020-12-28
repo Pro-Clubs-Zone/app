@@ -149,6 +149,7 @@ export default function LeagueStack({route}: Props) {
             headerBackTitleVisible: false,
           }}>
           <Stack.Screen name="League Preview" component={LeaguePreview} />
+          <Stack.Screen name="Create Club" component={CreateClub} />
           <Stack.Screen name="Join Club" component={JoinClub} />
         </Stack.Navigator>
       );

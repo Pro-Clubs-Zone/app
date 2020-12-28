@@ -12,7 +12,7 @@ type CardProps = {
   subTitle?: string;
 };
 
-export const CardSmallContainer = ({children}) => (
+export const CardSmallContainer = ({children}: {children: JSX.Element[]}) => (
   <View style={{flexDirection: 'row', flex: 1}}>{children}</View>
 );
 
