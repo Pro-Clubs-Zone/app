@@ -1,10 +1,16 @@
 import React, {useContext} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, ScrollView, Button} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
 import {LeagueContext} from '../../context/leagueContext';
 import {LeagueStackType} from '../league/league';
+import {
+  CardMedium,
+  CardSmall,
+  CardSmallContainer,
+} from '../../components/cards';
+import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -35,20 +41,13 @@ export default function LeaguePreSeason({navigation}: Props) {
   };
 
   return (
-    <View>
-      <Button onPress={scheduleMatches} title="Schedule Matches" />
-      <Button
-        title="Clubs"
-        onPress={() =>
-          navigation.navigate('Clubs', {
-            leagueId: leagueId,
-          })
-        }
-      />
-      <Button title="Invite Clubs" />
+    <ScrollView
+      contentContainerStyle={{
+        paddingBottom: verticalScale(16),
+      }}
+      showsVerticalScrollIndicator={false}>
       {userClub.manager ? (
-        <Button
-          title="My Club"
+        <CardMedium
           onPress={() =>
             navigation.navigate('My Club', {
               leagueId: leagueId,
@@ -56,18 +55,33 @@ export default function LeaguePreSeason({navigation}: Props) {
               manager: userClub.manager,
             })
           }
+          title="My Club"
+          subTitle="fdf"
         />
       ) : (
-        <Button
-          title="Create My Club"
+        <CardMedium
           onPress={() =>
             navigation.navigate('Create Club', {
               leagueId: leagueId,
               isAdmin: true,
             })
           }
+          title="Create My Club"
+          subTitle="fdf"
         />
       )}
-    </View>
+      <CardSmallContainer>
+        <CardSmall
+          title={'League\nClubs'}
+          onPress={() =>
+            navigation.navigate('Clubs', {
+              leagueId: leagueId,
+            })
+          }
+        />
+        <CardSmall title={'Invite\nClubs'} />
+      </CardSmallContainer>
+      <CardMedium onPress={scheduleMatches} title="Schedule Matches" />
+    </ScrollView>
   );
 }

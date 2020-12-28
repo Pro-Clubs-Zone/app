@@ -84,6 +84,7 @@ export default function LeagueStack({route}: Props) {
         leagueInfo = doc.data() as ILeague;
         // leagueContext.setLeague(leagueInfo);
         leagueContext.setLeagueId(leagueId);
+        leagueContext.setLeague(leagueInfo);
         setLeague(leagueInfo);
         console.log(leagueInfo, 'League info');
       })

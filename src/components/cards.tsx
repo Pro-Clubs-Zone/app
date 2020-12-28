@@ -12,6 +12,10 @@ type CardProps = {
   subTitle?: string;
 };
 
+export const CardSmallContainer = ({children}) => (
+  <View style={{flexDirection: 'row', flex: 1}}>{children}</View>
+);
+
 export const CardSmall = ({onPress, title}: CardProps) => {
   return (
     <Pressable onPress={onPress} style={{flex: 0.5}}>

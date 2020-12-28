@@ -24,11 +24,13 @@ export default function LeaguePreview({navigation}: Props) {
 
   const leagueId = leagueContext.leagueId;
   const uid = user?.uid;
-  console.log(leagueId);
+  console.log(leagueContext);
 
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
   //  const userRef = db.collection('users').doc(uid);
+
+  //TODO: check user from context
 
   const onCheckUserInLeague = () => {
     let playerAccepted: boolean;
