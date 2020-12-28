@@ -21,6 +21,7 @@ import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
+import {BigButtonOutlined} from '../../components/buttons';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
@@ -92,7 +93,6 @@ function SignUp({navigation}: Props) {
                 autoCapitalize="none"
                 label={i18n._(t`Username`)}
                 returnKeyType="next"
-                autoFocus={true}
                 //   onBlur={onEmailBlur}
                 //   error={emailError}
               />
@@ -115,7 +115,7 @@ function SignUp({navigation}: Props) {
                 onChangeText={(text) => setPassword(text)}
                 autoCorrect={false}
                 label={i18n._(t`Password`)}
-                textContentType="newPassword"
+                // textContentType="newPassword"
                 //  fieldIco={visibility}
                 //  onPressIco={changePwdType}
                 // error={
@@ -124,7 +124,7 @@ function SignUp({navigation}: Props) {
                 //   i18n._(t`Password field cant't be empty`)
                 // }
               />
-              <Button
+              <BigButtonOutlined
                 onPress={onSignUp}
                 title="Sign Up"
                 // disabled={

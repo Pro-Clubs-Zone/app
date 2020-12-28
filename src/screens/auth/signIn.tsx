@@ -20,6 +20,7 @@ import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
+import {BigButtonOutlined} from '../../components/buttons';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
@@ -64,7 +65,6 @@ export default function SignIn({navigation}: Props) {
                 autoCapitalize="none"
                 label={i18n._(t`E-mail`)}
                 returnKeyType="next"
-                autoFocus={true}
                 // onBlur={onEmailBlur}
                 // error={emailError}
               />
@@ -86,7 +86,7 @@ export default function SignIn({navigation}: Props) {
                 //   i18n._(t`Password field cant't be empty`)
                 // }
               />
-              <Button
+              <BigButtonOutlined
                 onPress={onSignIn}
                 title={i18n._(t`Log in`)}
                 // disabled={
@@ -143,8 +143,10 @@ export default function SignIn({navigation}: Props) {
         <View style={styles.footer}>
           <Trans>
             <Text style={TEXT_STYLES.small}>
-              Don’t have an account?
-              <Text style={TEXT_STYLES.small}> Sign up now.</Text>
+              Don’t have an account?{' '}
+              <Text style={{...TEXT_STYLES.small, fontWeight: 'bold'}}>
+                Sign up now.
+              </Text>
             </Text>
           </Trans>
         </View>
@@ -159,28 +161,6 @@ export default function SignIn({navigation}: Props) {
       )} */}
     </ImageBackground>
   );
-
-  // return (
-  //   <View>
-  //     <TextInput
-  //       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-  //       onChangeText={(text) => setEmail(text)}
-  //       value={email}
-  //       placeholder="email"
-  //       autoCompleteType="email"
-  //       autoCorrect={false}
-  //       autoCapitalize="none"
-  //     />
-  //     <TextInput
-  //       style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-  //       onChangeText={(text) => setPassword(text)}
-  //       value={password}
-  //       placeholder="password"
-  //       autoCompleteType="password"
-  //     />
-  //     <Button title="Sign In" onPress={onSignIn} />
-  //   </View>
-  // );
 }
 
 //---------- Stylesheet ----------//

@@ -17,6 +17,7 @@ import Requests from './user/requests';
 import CreateLeague from './league/createLeague';
 import LeagueExplorer from './user/leagueExplorer';
 import LeagueStack from './league/leagueStack';
+import FullScreenLoading from '../components/loading';
 
 type LeagueProps = {
   leagueId: string;
@@ -42,14 +43,9 @@ export default function AppIndex() {
   const firAuth = auth();
 
   useEffect(() => {
-    if (user) {
+    if (user.authInit) {
       setUid(user.uid);
-      console.log('updateUserUid');
       setLoading(false);
-    } else {
-      setUid(null);
-      setLoading(false);
-      console.log('no user', user);
     }
   }, [user]);
 
@@ -63,11 +59,7 @@ export default function AppIndex() {
   };
 
   if (loading) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+    return <FullScreenLoading />;
   }
 
   if (uid) {

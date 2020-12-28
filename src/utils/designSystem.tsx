@@ -1,5 +1,5 @@
-import {Platform} from 'react-native';
-import {verticalScale} from 'react-native-size-matters';
+import {Platform, TextStyle} from 'react-native';
+import {moderateVerticalScale, verticalScale} from 'react-native-size-matters';
 
 export enum APP_COLORS {
   Gray = '#9C9C9C',
@@ -23,12 +23,12 @@ export enum FONT_SIZES {
   XXL = 36,
 }
 
-interface FontSettings {
+interface FontSettings extends TextStyle {
   fontSize: number;
   fontFamily: string;
   lineHeight: number;
   color: APP_COLORS;
-  backgroundColor: 'transparent';
+  backgroundColor?: 'transparent';
   letterSpacing?: number;
 }
 
@@ -40,6 +40,8 @@ interface FontStyles {
   display5: FontSettings;
   small: FontSettings;
   body: FontSettings;
+  buttonLabel: FontSettings;
+  title: FontSettings;
 }
 
 type FontFamily = {
@@ -62,7 +64,7 @@ const fontFamilies: FontFamily = {
 
 export const TEXT_STYLES: FontStyles = {
   display1: {
-    fontSize: verticalScale(FONT_SIZES.XXL),
+    fontSize: moderateVerticalScale(FONT_SIZES.XXL, 0.4),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(40),
     color: APP_COLORS.Light,
@@ -70,7 +72,7 @@ export const TEXT_STYLES: FontStyles = {
     letterSpacing: verticalScale(0.5),
   },
   display2: {
-    fontSize: verticalScale(FONT_SIZES.XL),
+    fontSize: moderateVerticalScale(FONT_SIZES.XL, 0.4),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(32),
     color: APP_COLORS.Light,
@@ -78,7 +80,7 @@ export const TEXT_STYLES: FontStyles = {
     letterSpacing: verticalScale(0.5),
   },
   display3: {
-    fontSize: verticalScale(FONT_SIZES.L),
+    fontSize: moderateVerticalScale(FONT_SIZES.L, 0.4),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(24),
     color: APP_COLORS.Light,
@@ -86,7 +88,7 @@ export const TEXT_STYLES: FontStyles = {
     letterSpacing: verticalScale(0.5),
   },
   display4: {
-    fontSize: verticalScale(FONT_SIZES.S),
+    fontSize: moderateVerticalScale(FONT_SIZES.S, 0.5),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(23),
     color: APP_COLORS.Light,
@@ -94,7 +96,7 @@ export const TEXT_STYLES: FontStyles = {
     letterSpacing: verticalScale(0.5),
   },
   display5: {
-    fontSize: verticalScale(FONT_SIZES.XS),
+    fontSize: moderateVerticalScale(FONT_SIZES.XS, 0.6),
     fontFamily: fontFamilies.display,
     lineHeight: verticalScale(17),
     color: APP_COLORS.Light,
@@ -108,15 +110,15 @@ export const TEXT_STYLES: FontStyles = {
   //   fontWeight: "bold",
   //   lineHeight: verticalScale(24)
   // },
-  // title: {
-  //   color: COLORS.Light,
-  //   fontSize: verticalScale(FONT_SIZES[5]),
-  //   fontFamily: fontFamilies.body,
-  //   fontWeight: "bold",
-  //   lineHeight: verticalScale(24)
-  // },
+  title: {
+    color: APP_COLORS.Light,
+    fontSize: moderateVerticalScale(FONT_SIZES.S, 0.4),
+    fontFamily: fontFamilies.body,
+    fontWeight: 'bold',
+    lineHeight: verticalScale(24),
+  },
   body: {
-    fontSize: verticalScale(FONT_SIZES.XS),
+    fontSize: moderateVerticalScale(FONT_SIZES.XS, 0.5),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(20),
     color: APP_COLORS.Light,
@@ -145,7 +147,7 @@ export const TEXT_STYLES: FontStyles = {
   //   backgroundColor: "transparent"
   // },
   small: {
-    fontSize: verticalScale(FONT_SIZES.XXSS),
+    fontSize: moderateVerticalScale(FONT_SIZES.XXS, 0.5),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(16),
     color: APP_COLORS.Light,
@@ -159,14 +161,15 @@ export const TEXT_STYLES: FontStyles = {
   //   color: COLORS.Light,
   //   backgroundColor: "transparent"
   // },
-  // buttonLabel: {
-  //   fontFamily: fontFamilies.body,
-  //   fontSize: verticalScale(FONT_SIZES[7]),
-  //   color: COLORS.Dark,
-  //   fontWeight: "bold",
-  //   textAlign: "center",
-  //   letterSpacing: verticalScale(0.2)
-  // },
+  buttonLabel: {
+    fontFamily: fontFamilies.body,
+    fontSize: moderateVerticalScale(FONT_SIZES.XS, 0.2),
+    color: APP_COLORS.Dark,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    letterSpacing: verticalScale(0.5),
+    lineHeight: verticalScale(16),
+  },
   // playerBold: {
   //   color: COLORS.Dark,
   //   fontFamily: fontFamilies.playerBold,

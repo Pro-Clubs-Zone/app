@@ -1,4 +1,9 @@
-import React, {useEffect, useState, createContext} from 'react';
+import React, {
+  useEffect,
+  useState,
+  createContext,
+  useLayoutEffect,
+} from 'react';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -9,14 +14,12 @@ const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
-const AuthContext = createContext<{uid: string}>(null);
+const AuthContext = createContext(null);
 
 const AuthProvider = (props: any) => {
-  const [user, setUser] = useState<{uid: string} | null>(null);
+  const [uid, setUid] = useState<{uid: string} | null>(null);
+  const [authInit, setAuthInit] = useState<boolean>(false);
 
-  function onAuthStateChanged(firUser: any): void {
-    setUser(firUser);
-  }
   useEffect(() => {
     if (__DEV__) {
       firFunc.useFunctionsEmulator('http://localhost:5001');
@@ -30,13 +33,46 @@ const AuthProvider = (props: any) => {
       LogBox.ignoreLogs(['Remote debugger is in a background']);
       LogBox.ignoreLogs(['DevTools failed to load SourceMap:']); // Ignore log notification by message
     }
+    function onAuthStateChanged(firUser: any): void {
+      console.log(firUser, 'firUser');
+
+      const initWithUser = !authInit && firUser !== null;
+      const initWithOutUser = !authInit && firUser === null;
+      const signIn = authInit && firUser !== null && uid === null;
+      const signOut = authInit && firUser === null && uid !== null;
+
+      if (initWithUser) {
+        console.log('write uid');
+
+        setUid(firUser.uid);
+        setAuthInit(true);
+      }
+
+      if (initWithOutUser) {
+        console.log('no user');
+        setAuthInit(true);
+      }
+
+      if (signIn) {
+        console.log('logged in');
+        setUid(firUser.uid);
+      }
+
+      if (signOut) {
+        console.log('logged out');
+        setUid(null);
+        setAuthInit(false);
+      }
+    }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
     //FIXME:  double call;
-  }, []);
+  }, [authInit, uid]);
 
   return (
-    <AuthContext.Provider value={user}>{props.children}</AuthContext.Provider>
+    <AuthContext.Provider value={{uid, authInit}}>
+      {props.children}
+    </AuthContext.Provider>
   );
 };
 
