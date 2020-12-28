@@ -4,6 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'League Explorer'>;
 
@@ -26,28 +27,28 @@ export default function LeagueExplorer({navigation}: Props) {
         retrievedLeagues.push({...doc.data(), key: doc.id});
       });
       setData(retrievedLeagues);
-      setLoading(false);
     });
+
+    setLoading(false);
     return subscriber;
   }, []);
 
-  if (loading) {
-    return <ActivityIndicator />;
-  }
-
   return (
-    <FlatList
-      data={data}
-      renderItem={({item}: any) => (
-        <Button
-          title={item.name.toString()}
-          onPress={() =>
-            navigation.navigate('League', {
-              leagueId: item.key,
-            })
-          }
-        />
-      )}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <FlatList
+        data={data}
+        renderItem={({item}: any) => (
+          <Button
+            title={item.name.toString()}
+            onPress={() =>
+              navigation.navigate('League', {
+                leagueId: item.key,
+              })
+            }
+          />
+        )}
+      />
+    </>
   );
 }

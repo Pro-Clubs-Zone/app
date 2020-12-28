@@ -4,7 +4,7 @@ import {IMatchNavData} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {TextInput} from 'react-native-gesture-handler';
-import {LeagueStackType} from '../league/leagueStack';
+import {LeagueStackType} from '../league/league';
 import onSubmitMatch from './functions/onSubmitMatch';
 import MatchConflict from './matchConflict';
 import onConflictResolve from './functions/onConflictResolve';

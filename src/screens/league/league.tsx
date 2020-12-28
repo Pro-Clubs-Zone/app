@@ -21,6 +21,7 @@ import Fixtures from './fixtures';
 import Clubs from '../leagueAdmin/clubs';
 import CreateClub from './createClub';
 import JoinClub from './joinClub';
+import FullScreenLoading from '../../components/loading';
 
 type LeagueProps = {
   leagueId: string;
@@ -72,7 +73,7 @@ export default function LeagueStack({route}: Props) {
   const leagueContext = useContext(LeagueContext);
 
   useLayoutEffect(() => {
-    console.log('effect on league');
+    console.log('effect on league', route);
     //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
     let leagueInfo: ILeague;
@@ -93,7 +94,7 @@ export default function LeagueStack({route}: Props) {
   if (loading) {
     return (
       <View>
-        <Text>LOADING</Text>
+        <FullScreenLoading visible={true} />
       </View>
     );
   }

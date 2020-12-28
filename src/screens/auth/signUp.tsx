@@ -2,11 +2,9 @@ import React, {useState} from 'react';
 import {
   Text,
   View,
-  Button,
   ActivityIndicator,
   Keyboard,
   ImageBackground,
-  Image,
   Linking,
   Pressable,
   TouchableWithoutFeedback,
@@ -17,11 +15,12 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
-import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import {ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
@@ -39,18 +38,19 @@ function SignUp({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const onSignUp = () => {
+    setLoading(true);
+
     const createDbEntry = (data: {user: {uid: string}}) => {
       db.collection('users').doc(data.user.uid).set({
         username: username,
       });
     };
 
-    setLoading(true);
-
     firAuth
       .createUserWithEmailAndPassword(email, password)
       .then((data) => {
         console.log('User account created & signed in!', data);
+        setLoading(false);
         return createDbEntry(data);
       })
       .catch((error) => {
@@ -61,16 +61,15 @@ function SignUp({navigation}: Props) {
         if (error.code === 'auth/invalid-email') {
           console.log('That email address is invalid!');
         }
-
+        setLoading(false);
         console.error(error);
       });
   };
 
   return (
     <ImageBackground source={screenBg} style={styles.backgroundImage}>
-      {
-        // loading && <LoginSpinner visible={loading} />
-      }
+      <FullScreenLoading visible={loading} />
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
           {/* <View style={styles.logoContainer}>

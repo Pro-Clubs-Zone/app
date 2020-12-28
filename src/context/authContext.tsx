@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  useLayoutEffect,
-} from 'react';
+import React, {useEffect, useState, createContext} from 'react';
 
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -14,10 +9,13 @@ const db = firestore();
 const firAuth = auth();
 const firFunc = functions();
 
-const AuthContext = createContext(null);
+const AuthContext = createContext<{
+  uid: string;
+  authInit: boolean;
+}>(null);
 
 const AuthProvider = (props: any) => {
-  const [uid, setUid] = useState<{uid: string} | null>(null);
+  const [uid, setUid] = useState<string | null>(null);
   const [authInit, setAuthInit] = useState<boolean>(false);
 
   useEffect(() => {
@@ -34,8 +32,6 @@ const AuthProvider = (props: any) => {
       LogBox.ignoreLogs(['DevTools failed to load SourceMap:']); // Ignore log notification by message
     }
     function onAuthStateChanged(firUser: any): void {
-      console.log(firUser, 'firUser');
-
       const initWithUser = !authInit && firUser !== null;
       const initWithOutUser = !authInit && firUser === null;
       const signIn = authInit && firUser !== null && uid === null;
@@ -66,7 +62,6 @@ const AuthProvider = (props: any) => {
     }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-    //FIXME:  double call;
   }, [authInit, uid]);
 
   return (

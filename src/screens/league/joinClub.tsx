@@ -5,7 +5,7 @@ import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
 import {RouteProp} from '@react-navigation/native';
-import {LeagueStackType} from './leagueStack';
+import {LeagueStackType} from './league';
 
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
 

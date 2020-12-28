@@ -2,11 +2,8 @@ import React, {useState} from 'react';
 import {
   Text,
   View,
-  Button,
-  ActivityIndicator,
   Keyboard,
   ImageBackground,
-  Image,
   Linking,
   Pressable,
   TouchableWithoutFeedback,
@@ -16,11 +13,12 @@ import i18n from '../../utils/i18n';
 import auth from '@react-native-firebase/auth';
 import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
-import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import {ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
@@ -33,16 +31,23 @@ const firAuth = auth();
 export default function SignIn({navigation}: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   function onSignIn() {
-    firAuth.signInWithEmailAndPassword(email, password);
+    setLoading(true);
+    firAuth.signInWithEmailAndPassword(email, password).then(() => {
+      setLoading(false);
+    });
   }
+
+  // if (loading) {
+  //   return <FullScreenLoading />;
+  // }
 
   return (
     <ImageBackground source={screenBg} style={styles.backgroundImage}>
-      {
-        // loading && <LoginSpinner visible={loading} />
-      }
+      <FullScreenLoading visible={loading} />
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
           {/* <View style={styles.logoContainer}>

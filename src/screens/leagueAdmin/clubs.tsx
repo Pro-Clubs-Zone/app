@@ -6,7 +6,7 @@ import {IClub} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
-import {LeagueStackType} from '../league/leagueStack';
+import {LeagueStackType} from '../league/league';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;

@@ -5,7 +5,7 @@ import {IClubRosterMember} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
-import {LeagueStackType} from '../league/leagueStack';
+import {LeagueStackType} from '../league/league';
 
 // TODO: Update context on changes
 

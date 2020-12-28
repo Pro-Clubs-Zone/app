@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {View, Text} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -16,7 +15,7 @@ import SignIn from './auth/signIn';
 import Requests from './user/requests';
 import CreateLeague from './league/createLeague';
 import LeagueExplorer from './user/leagueExplorer';
-import LeagueStack from './league/leagueStack';
+import LeagueStack from './league/league';
 import FullScreenLoading from '../components/loading';
 
 type LeagueProps = {
@@ -40,6 +39,7 @@ export default function AppIndex() {
   const user = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [uid, setUid] = useState<string | undefined | null>(null);
+
   const firAuth = auth();
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function AppIndex() {
   };
 
   if (loading) {
-    return <FullScreenLoading />;
+    return <FullScreenLoading visible={true} />;
   }
 
   if (uid) {

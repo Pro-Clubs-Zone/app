@@ -4,7 +4,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
 import {LeagueContext} from '../../context/leagueContext';
-import {LeagueStackType} from '../league/leagueStack';
+import {LeagueStackType} from '../league/league';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -22,6 +22,8 @@ export default function LeaguePreSeason({navigation}: Props) {
 
   const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
+
+  console.log('league admin preseason');
 
   const scheduleMatches = async () => {
     const functionRef = firFunc.httpsCallable('scheduleMatches');

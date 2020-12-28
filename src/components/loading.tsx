@@ -1,13 +1,13 @@
 import React from 'react';
-import {ActivityIndicator, View, Text, Modal} from 'react-native';
+import {ActivityIndicator, View, Text, Modal, ModalProps} from 'react-native';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import {ScaledSheet} from 'react-native-size-matters';
 import {t} from '@lingui/macro';
 import i18n from '../utils/i18n';
 
-export default function FullScreenLoading(props) {
+export default function FullScreenLoading(props: ModalProps) {
   return (
-    <Modal transparent={false} presentationStyle="fullScreen" {...props}>
+    <Modal presentationStyle="fullScreen" {...props}>
       <View style={styles.container}>
         <ActivityIndicator size="large" color={APP_COLORS.Accent} />
         <Text style={[TEXT_STYLES.title, styles.text]}>

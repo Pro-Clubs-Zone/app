@@ -23,6 +23,7 @@ import {AppNavStack} from '../index';
 import {TEXT_STYLES} from '../../utils/designSystem';
 import {t, plural} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import FullScreenLoading from '../../components/loading';
 
 const db = firestore();
 
@@ -186,16 +187,10 @@ export default function Home({navigation}: Props) {
 
   //TODO UI
   // TODO Stats
-  if (loading) {
-    return (
-      <View>
-        <Text>LOADING....</Text>
-      </View>
-    );
-  }
 
   return (
     <View>
+      <FullScreenLoading visible={loading} />
       <Text style={{...TEXT_STYLES.display4}}>Home Screen</Text>
       <Text>{context?.userData?.username}</Text>
       <Button

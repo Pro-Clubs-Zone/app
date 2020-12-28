@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
 import RNRestart from 'react-native-restart';
-import {LeagueStackType} from '../league/leagueStack';
+import {LeagueStackType} from '../league/league';
 
 // type ScreenNavigationProp = StackNavigationProp<
 //   LeagueStackType,

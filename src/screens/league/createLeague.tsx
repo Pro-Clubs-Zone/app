@@ -1,10 +1,14 @@
 import React, {useContext, useState} from 'react';
-import {Text, View, Button, TextInput} from 'react-native';
+import {Text, View} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
 import {AppNavStack} from '../index';
 import {StackNavigationProp} from '@react-navigation/stack';
+import FullScreenLoading from '../../components/loading';
+import TextField from '../../components/textField';
+import {BigButton} from '../../components/buttons';
+import {FormView, FormContent} from '../../components/templates';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -28,9 +32,9 @@ const leagueInfoDefault: ILeague = {
 
 const db = firestore();
 
-export default function CreateLeague() {
+export default function CreateLeague({navigation}: Props) {
   const [leagueInfo, setLeagueInfo] = useState<ILeague>(leagueInfoDefault);
-  const [loading, setLoading] = useState<boolean>(false);
+  // const [loading, setLoading] = useState<boolean>(false);
   const [leagueName, setLeagueName] = useState<string>('');
 
   const user = useContext(AuthContext);
@@ -41,7 +45,7 @@ export default function CreateLeague() {
     const leagueRef = db.collection('leagues').doc();
     const userRef = db.collection('users').doc(uid);
 
-    setLoading(true);
+    // setLoading(true);
     batch.set(leagueRef, {...leagueInfo, adminId: uid, name: leagueName});
     batch.set(
       userRef,
@@ -55,21 +59,26 @@ export default function CreateLeague() {
       {merge: true},
     );
     batch.commit().then(() => {
-      setLoading(false);
+      //    setLoading(false);
+      navigation.navigate('League', {
+        leagueId: leagueRef.id,
+        isAdmin: true,
+      });
     });
   };
 
   return (
-    <View>
-      <Text>Create new League</Text>
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(text) => setLeagueName(text)}
-        value={leagueName}
-        placeholder="League Name"
-        autoCorrect={true}
-      />
-      <Button onPress={onCreateLeague} title="Create League" />
-    </View>
+    <FormView>
+      <FormContent>
+        <TextField
+          onChangeText={(text) => setLeagueName(text)}
+          value={leagueName}
+          placeholder="League Name"
+          autoCorrect={true}
+          label="League Name"
+        />
+      </FormContent>
+      <BigButton onPress={onCreateLeague} title="Create League" />
+    </FormView>
   );
 }

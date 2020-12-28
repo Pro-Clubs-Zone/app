@@ -10,6 +10,32 @@ type ButtonProps = {
   disabled?: boolean;
 };
 
+//---------- Big Button ----------//
+
+export const BigButton = ({title, onPress, disabled}: ButtonProps) => (
+  <Pressable onPress={onPress} disabled={disabled}>
+    <View
+      style={[
+        styles.bigButton,
+        {
+          backgroundColor: disabled ? APP_COLORS.Gray : APP_COLORS.Accent,
+        },
+      ]}>
+      <Text
+        style={[
+          TEXT_STYLES.buttonLabel,
+          {
+            fontSize: verticalScale(14),
+            lineHeight: verticalScale(14),
+            color: disabled ? 'rgba(0, 0, 0, 0.4)' : APP_COLORS.Dark,
+          },
+        ]}>
+        {title.toUpperCase()}
+      </Text>
+    </View>
+  </Pressable>
+);
+
 //---------- Big Alt Button ----------//
 
 export const BigButtonOutlined = ({

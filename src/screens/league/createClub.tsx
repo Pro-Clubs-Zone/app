@@ -7,7 +7,7 @@ import {AuthContext} from '../../context/authContext';
 import {IClub, IUserLeague} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {LeagueStackType} from './leagueStack';
+import {LeagueStackType} from './league';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Create Club'>;
 

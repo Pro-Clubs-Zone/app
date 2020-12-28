@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {Text, View, Button} from 'react-native';
-import {LeagueStackType} from './leagueStack';
+import {LeagueStackType} from './league';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppContext} from '../../context/appContext';
 import {LeagueContext} from '../../context/leagueContext';

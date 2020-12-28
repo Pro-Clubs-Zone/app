@@ -4,7 +4,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import useGetMatches from './functions/useGetMatches';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {LeagueStackType} from './leagueStack';
+import {LeagueStackType} from './league';
 
 type FixturesStack = {
   Upcoming: {leagueId: string};
