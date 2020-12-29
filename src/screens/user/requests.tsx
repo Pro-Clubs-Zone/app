@@ -5,6 +5,8 @@ import {RequestContext} from '../../context/requestContext';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {IClubRequest, ILeagueRequest, IMyRequests} from '../../utils/interface';
+import {ListHeading, ListSeparator, OneLine} from '../../components/listItems';
+import EmptyState from '../../components/emptyState';
 
 const db = firestore();
 const Tab = createMaterialTopTabNavigator();
@@ -21,8 +23,8 @@ export default function Requests() {
 
 function ClubRequests() {
   const requestsContext = useContext(RequestContext);
-  const requests: IClubRequest[] | undefined = requestsContext?.clubs;
-  const [data, setData] = useState<IClubRequest[] | undefined>(requests);
+  const requests: IClubRequest[] = requestsContext.clubs;
+  const [data, setData] = useState<IClubRequest[]>(requests);
 
   type Props = {
     playerId: string;
@@ -69,20 +71,26 @@ function ClubRequests() {
   };
 
   return (
-    <View>
-      <SectionList
-        sections={data}
-        keyExtractor={(item) => item.username}
-        renderItem={({item, section}) => (
-          <Item
-            title={item.username}
-            onPress={() => onAcceptPlayer(item, section.title)}
-            button="accept"
-          />
-        )}
-        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
-      />
-    </View>
+    <SectionList
+      sections={data}
+      stickySectionHeadersEnabled={true}
+      keyExtractor={(item) => item.playerId}
+      renderItem={({item, section}) => (
+        <OneLine
+          title={item.username}
+          onPress={() => onAcceptPlayer(item, section.title)}
+        />
+      )}
+      ItemSeparatorComponent={() => <ListSeparator />}
+      renderSectionHeader={({section: {title}}) => <ListHeading col1={title} />}
+      ListEmptyComponent={() => (
+        <EmptyState title="No Public Leagues" body="Check out later" />
+      )}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: data.length === 0 ? 'center' : null,
+      }}
+    />
   );
 }
 
@@ -132,15 +140,23 @@ function LeagueRequests() {
   return (
     <SectionList
       sections={data}
+      stickySectionHeadersEnabled={true}
       keyExtractor={(item) => item.clubId}
       renderItem={({item, section}) => (
-        <Item
+        <OneLine
           title={item.name}
           onPress={() => onAcceptClub(item, section.title)}
-          button="accept"
         />
       )}
-      renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+      ItemSeparatorComponent={() => <ListSeparator />}
+      renderSectionHeader={({section: {title}}) => <ListHeading col1={title} />}
+      ListEmptyComponent={() => (
+        <EmptyState title="No Public Leagues" body="Check out later" />
+      )}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: data.length === 0 ? 'center' : null,
+      }}
     />
   );
 }
@@ -227,22 +243,28 @@ function MySentRequests() {
   };
 
   return (
-    <View>
-      <SectionList
-        sections={data}
-        keyExtractor={(item) => item.clubId}
-        renderItem={({item, section}) => (
-          <Item
-            title={item.clubName}
-            button="cancel"
-            onPress={() => onCancelRequest(item, section.title)}
-          />
-        )}
-        renderSectionHeader={({section: {title, key}}) => (
-          <Text key={key}>{title}</Text>
-        )}
-      />
-    </View>
+    <SectionList
+      sections={data}
+      stickySectionHeadersEnabled={true}
+      keyExtractor={(item) => item.clubId}
+      renderItem={({item, section}) => (
+        <OneLine
+          title={item.clubName}
+          onPress={() => onCancelRequest(item, section.title)}
+        />
+      )}
+      ItemSeparatorComponent={() => <ListSeparator />}
+      renderSectionHeader={({section: {title, key}}) => (
+        <ListHeading key={key} col1={title} />
+      )}
+      ListEmptyComponent={() => (
+        <EmptyState title="No Public Leagues" body="Check out later" />
+      )}
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: data.length === 0 ? 'center' : null,
+      }}
+    />
   );
 }
 
