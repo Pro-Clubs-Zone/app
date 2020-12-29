@@ -1,10 +1,11 @@
 import React, {useState, useContext} from 'react';
 import {Text, View, Alert, Button} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../context/authContext';
 import {LeagueStackType} from './league';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueContext} from '../../context/leagueContext';
+import {AppContext} from '../../context/appContext';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -15,44 +16,52 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-const db = firestore();
-
 export default function LeaguePreview({navigation}: Props) {
   const [accepted, setAccepted] = useState<boolean>(false);
 
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
+  const context = useContext(AppContext);
+  const {showActionSheetWithOptions} = useActionSheet();
 
   const leagueId = leagueContext.leagueId;
-  const uid = user?.uid;
-
-  const leagueRef = db.collection('leagues').doc(leagueId);
-  const leagueClubs = leagueRef.collection('clubs');
-
-  //TODO: check user from context
 
   const onCheckUserInLeague = () => {
-    let playerAccepted: boolean;
-    leagueClubs
-      .where(`roster.${uid}.accepted`, 'in', [true, false])
-      .get()
-      .then((querySnapshot) => {
-        if (querySnapshot.empty) {
-          console.log('not in league');
+    const userLeague = context.userData.leagues?.[leagueId];
 
-          return showUserTypeSelection();
-        } else {
-          querySnapshot.forEach((doc) => {
-            playerAccepted = doc.data().roster[uid].accepted;
-            setAccepted(playerAccepted);
-            userInLeague();
-            console.log(playerAccepted, 'player accepted?');
-          });
+    console.log(userLeague, 'userdata');
+    if (userLeague) {
+      setAccepted(userLeague.accepted);
+      return userInLeague();
+    } else {
+      return showUserTypeSelection();
+    }
+  };
+
+  const showUserTypeSelection = () => {
+    const options = ['Manager', 'Player', 'Cancel'];
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            navigation.navigate('Create Club', {
+              leagueId,
+            });
+            break;
+          case 1:
+            navigation.navigate('Join Club', {
+              leagueId,
+            });
+            break;
         }
-      })
-      .catch(function (error) {
-        console.log('Error getting documents: ', error);
-      });
+      },
+    );
   };
 
   const userInLeague = () => {
@@ -60,35 +69,6 @@ export default function LeaguePreview({navigation}: Props) {
       'Join League',
       accepted ? 'League not started' : 'Request already sent',
       [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
-  const showUserTypeSelection = () => {
-    Alert.alert(
-      'Join League',
-      'Join the league as manager or player?',
-      [
-        {
-          text: 'Manager',
-          onPress: () =>
-            navigation.navigate('Create Club', {
-              leagueId: leagueId,
-            }),
-        },
-        {
-          text: 'Player',
-          onPress: () =>
-            navigation.navigate('Join Club', {
-              leagueId: leagueId,
-            }),
-        },
         {
           text: 'Cancel',
           onPress: () => console.log('Cancel Pressed'),
