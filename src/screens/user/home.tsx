@@ -161,26 +161,23 @@ export default function Home({navigation}: Props) {
         console.log('call to fir');
         userInfo = doc.data() as IUser;
         if (userInfo.leagues) {
-          getLeaguesClubs(userInfo)
-            .then((data) => {
-              const {userData, userLeagues} = data;
-              context.setUserData(userData);
-              context.setUserLeagues(userLeagues);
-              getClubRequests(userLeagues);
-              getLeagueRequests(userLeagues);
-              getUserMatches(userData, userLeagues).then((matchesData) =>
-                setMatches(matchesData),
-              );
-            })
-            .then(() => {
-              setLoading(false);
-            });
+          getLeaguesClubs(userInfo).then(async (data) => {
+            const {userData, userLeagues} = data;
+            context.setUserData(userData);
+            context.setUserLeagues(userLeagues);
+            getClubRequests(userLeagues);
+            getLeagueRequests(userLeagues);
+            getUserMatches(userData, userLeagues).then((matchesData) =>
+              setMatches(matchesData),
+            );
+          });
         } else {
           console.log('no leagues');
           context.setUserData(userInfo);
-          setLoading(false);
         }
       });
+
+      setLoading(false);
       return subscriber;
     }
   }, [user]);
@@ -189,7 +186,7 @@ export default function Home({navigation}: Props) {
   // TODO Stats
 
   return (
-    <View>
+    <>
       <FullScreenLoading visible={loading} />
       <Text style={{...TEXT_STYLES.display4}}>Home Screen</Text>
       <Text>{context?.userData?.username}</Text>
@@ -208,6 +205,6 @@ export default function Home({navigation}: Props) {
         }
         title="Match Screen"
       />
-    </View>
+    </>
   );
 }

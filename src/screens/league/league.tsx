@@ -2,7 +2,7 @@ import React, {useState, useLayoutEffect, useContext} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
-import {ILeague, IMatchNavData} from '../../utils/interface';
+import {ILeague, ILeagueProps, IMatchNavData} from '../../utils/interface';
 import {createStackNavigator} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppNavStack} from '../index';
@@ -23,27 +23,23 @@ import CreateClub from './createClub';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
 
-type LeagueProps = {
-  leagueId: string;
-  isAdmin?: boolean;
-};
-interface ClubProps extends LeagueProps {
+interface ClubProps extends ILeagueProps {
   clubId: string;
   manager?: boolean;
 }
 export type LeagueStackType = {
-  'League Scheduled': LeagueProps;
-  Clubs: LeagueProps;
-  'League Preview': LeagueProps;
-  'League Pre-Season': LeagueProps;
-  'Create Club': LeagueProps;
-  Standings: LeagueProps;
-  Fixtures: LeagueProps;
+  'League Scheduled': ILeagueProps;
+  Clubs: ILeagueProps;
+  'League Preview': ILeagueProps;
+  'League Pre-Season': ILeagueProps;
+  'Create Club': ILeagueProps;
+  Standings: ILeagueProps;
+  Fixtures: ILeagueProps;
   Match: {matchInfo: IMatchNavData};
   'My Club': ClubProps;
   'Club Settings': ClubProps;
-  'Report Center': LeagueProps;
-  'Join Club': LeagueProps;
+  'Report Center': ILeagueProps;
+  'Join Club': ILeagueProps;
   Home: {
     screen: string;
   };
@@ -67,6 +63,7 @@ export default function LeagueStack({route}: Props) {
   const userData = context?.userData;
   const uid = user?.uid;
   const leagueId = route.params.leagueId;
+  const newLeague = route.params.newLeague;
   const leagueContext = useContext(LeagueContext);
 
   const userInLeague = userData.leagues && userData.leagues[leagueId];
@@ -138,7 +135,11 @@ export default function LeagueStack({route}: Props) {
           screenOptions={{
             headerBackTitleVisible: false,
           }}>
-          <Stack.Screen name="League Pre-Season" component={LeaguePreSeason} />
+          <Stack.Screen
+            name="League Pre-Season"
+            component={LeaguePreSeason}
+            initialParams={{newLeague: newLeague}}
+          />
           {commonStack}
         </Stack.Navigator>
       );

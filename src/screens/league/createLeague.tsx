@@ -75,6 +75,7 @@ export default function CreateLeague({navigation}: Props) {
       navigation.navigate('League', {
         leagueId: leagueRef.id,
         isAdmin: true,
+        newLeague: true,
       });
     });
   };

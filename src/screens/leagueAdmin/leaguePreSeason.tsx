@@ -1,6 +1,6 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useLayoutEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
 import {LeagueContext} from '../../context/leagueContext';
@@ -12,18 +12,22 @@ import {
 } from '../../components/cards';
 import {verticalScale} from 'react-native-size-matters';
 import FullScreenLoading from '../../components/loading';
+import {RouteProp} from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
   'League Pre-Season'
 >;
+type ScreenRouteProp = RouteProp<LeagueStackType, 'League Pre-Season'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 const firFunc = functions();
 
-export default function LeaguePreSeason({navigation}: Props) {
+export default function LeaguePreSeason({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const context = useContext(AppContext);
@@ -32,6 +36,22 @@ export default function LeaguePreSeason({navigation}: Props) {
   const leagueId = leagueContext.leagueId;
   const scheduled = leagueContext.league.scheduled;
   const userClub = context.userData.leagues[leagueId];
+  const newLeague = route.params.newLeague;
+
+  useLayoutEffect(() => {
+    if (newLeague) {
+      const popAction = StackActions.pop(2);
+
+      navigation.setOptions({
+        headerLeft: () => (
+          <HeaderBackButton
+            onPress={() => navigation.dispatch(popAction)}
+            labelVisible={false}
+          />
+        ),
+      });
+    }
+  }, [navigation, newLeague]);
 
   const scheduleMatches = async () => {
     setLoading(true);

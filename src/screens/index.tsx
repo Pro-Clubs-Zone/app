@@ -17,11 +17,7 @@ import CreateLeague from './league/createLeague';
 import LeagueExplorer from './user/leagueExplorer';
 import LeagueStack from './league/league';
 import FullScreenLoading from '../components/loading';
-
-type LeagueProps = {
-  leagueId: string;
-  isAdmin?: boolean;
-};
+import {ILeagueProps} from '../utils/interface';
 
 export type AppNavStack = {
   Home: undefined;
@@ -31,7 +27,7 @@ export type AppNavStack = {
   'Create League': undefined;
   'League Explorer': undefined;
   Leagues: undefined;
-  League: LeagueProps;
+  League: ILeagueProps;
 };
 
 export default function AppIndex() {
