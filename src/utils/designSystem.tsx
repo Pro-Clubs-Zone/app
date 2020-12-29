@@ -42,6 +42,7 @@ interface FontStyles {
   body: FontSettings;
   buttonLabel: FontSettings;
   title: FontSettings;
+  caption: FontSettings;
 }
 
 type FontFamily = {
@@ -124,14 +125,6 @@ export const TEXT_STYLES: FontStyles = {
     color: APP_COLORS.Light,
     backgroundColor: 'transparent',
   },
-  // bodyBold: {
-  //   fontSize: verticalScale(FONT_SIZES[6]),
-  //   fontFamily: fontFamilies.body,
-  //   fontWeight: "bold",
-  //   lineHeight: verticalScale(20),
-  //   color: COLORS.Light,
-  //   backgroundColor: "transparent"
-  // },
   // link: {
   //   fontSize: verticalScale(FONT_SIZES[7]),
   //   fontFamily: fontFamilies.body,
@@ -139,13 +132,13 @@ export const TEXT_STYLES: FontStyles = {
   //   color: COLORS.Accent,
   //   backgroundColor: "transparent"
   // },
-  // caption: {
-  //   fontSize: verticalScale(FONT_SIZES[7]),
-  //   fontFamily: fontFamilies.body,
-  //   lineHeight: verticalScale(16),
-  //   color: COLORS.Gray,
-  //   backgroundColor: "transparent"
-  // },
+  caption: {
+    fontSize: verticalScale(FONT_SIZES.XXSS),
+    fontFamily: fontFamilies.body,
+    lineHeight: verticalScale(16),
+    color: APP_COLORS.Gray,
+    backgroundColor: 'transparent',
+  },
   small: {
     fontSize: moderateVerticalScale(FONT_SIZES.XXS, 0.5),
     fontFamily: fontFamilies.body,

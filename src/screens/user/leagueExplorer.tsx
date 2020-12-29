@@ -1,10 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, ActivityIndicator, FlatList, Button} from 'react-native';
+import {FlatList} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
 import FullScreenLoading from '../../components/loading';
+import {ListHeading, OneLine, ListSeparator} from '../../components/listItems';
+import {verticalScale} from 'react-native-size-matters';
+import EmptyState from '../../components/emptyState';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'League Explorer'>;
 
@@ -13,7 +16,8 @@ type Props = {
 };
 
 const db = firestore();
-type Leagues = ILeague[] & {key: string}[];
+type LeagueListItem = ILeague & {key: string};
+type Leagues = LeagueListItem[];
 
 export default function LeagueExplorer({navigation}: Props) {
   const [data, setData] = useState<Leagues>([]);
@@ -24,12 +28,13 @@ export default function LeagueExplorer({navigation}: Props) {
     const subscriber = leagueCollection.onSnapshot((querySnapshot) => {
       let retrievedLeagues: Leagues = [];
       querySnapshot.forEach((doc) => {
-        retrievedLeagues.push({...doc.data(), key: doc.id});
+        const leagueData = doc.data() as ILeague;
+        retrievedLeagues.push({...leagueData, key: doc.id});
       });
       setData(retrievedLeagues);
+      setLoading(false);
     });
 
-    setLoading(false);
     return subscriber;
   }, []);
 
@@ -38,9 +43,15 @@ export default function LeagueExplorer({navigation}: Props) {
       <FullScreenLoading visible={loading} />
       <FlatList
         data={data}
-        renderItem={({item}: any) => (
-          <Button
-            title={item.name.toString()}
+        renderItem={({item}) => (
+          <OneLine
+            title={item.name}
+            icon={
+              item.platform === 'playstation'
+                ? 'sony-playstation'
+                : 'microsoft-xbox'
+            }
+            key1={item.teamNum.toString()}
             onPress={() =>
               navigation.navigate('League', {
                 leagueId: item.key,
@@ -48,6 +59,22 @@ export default function LeagueExplorer({navigation}: Props) {
             }
           />
         )}
+        ListHeaderComponent={() =>
+          data.length !== 0 && <ListHeading col1="League" col4="Teams" />
+        }
+        ItemSeparatorComponent={() => <ListSeparator />}
+        ListEmptyComponent={() => (
+          <EmptyState title="No Public Leagues" body="Check out later" />
+        )}
+        getItemLayout={(data, index) => ({
+          length: verticalScale(56),
+          offset: verticalScale(57) * index,
+          index,
+        })}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: data.length === 0 ? 'center' : null,
+        }}
       />
     </>
   );
