@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {Text, View, Button, SectionList} from 'react-native';
+import {SectionList} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
 import firestore from '@react-native-firebase/firestore';
@@ -7,6 +7,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import {IClubRequest, ILeagueRequest, IMyRequests} from '../../utils/interface';
 import {ListHeading, ListSeparator, OneLine} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 const db = firestore();
 const Tab = createMaterialTopTabNavigator();
@@ -23,7 +24,9 @@ export default function Requests() {
 
 function ClubRequests() {
   const requestsContext = useContext(RequestContext);
+  const {showActionSheetWithOptions} = useActionSheet();
   const requests: IClubRequest[] = requestsContext.clubs;
+
   const [data, setData] = useState<IClubRequest[]>(requests);
 
   type Props = {
@@ -70,6 +73,30 @@ function ClubRequests() {
     requestsContext?.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
   };
 
+  const onOpenActionSheet = (item: Props, title: string) => {
+    const options = ['Accept', 'Decline', 'Cancel'];
+    const destructiveButtonIndex = 1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            onAcceptPlayer(item, title);
+            break;
+          case 1:
+            console.log('decline player');
+            break;
+        }
+      },
+    );
+  };
+
   return (
     <SectionList
       sections={data}
@@ -78,7 +105,7 @@ function ClubRequests() {
       renderItem={({item, section}) => (
         <OneLine
           title={item.username}
-          onPress={() => onAcceptPlayer(item, section.title)}
+          onPress={() => onOpenActionSheet(item, section.title)}
         />
       )}
       ItemSeparatorComponent={() => <ListSeparator />}
@@ -96,6 +123,7 @@ function ClubRequests() {
 
 function LeagueRequests() {
   const requestsContext = useContext(RequestContext);
+  const {showActionSheetWithOptions} = useActionSheet();
   const requests: ILeagueRequest[] | undefined = requestsContext?.leagues;
 
   const [data, setData] = useState<ILeagueRequest[] | undefined>(requests);
@@ -137,6 +165,30 @@ function LeagueRequests() {
     requestsContext?.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
   };
 
+  const onOpenActionSheet = (item: Props, title: string) => {
+    const options = ['Accept', 'Decline', 'Cancel'];
+    const destructiveButtonIndex = 1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            onAcceptClub(item, title);
+            break;
+          case 1:
+            console.log('decline club');
+            break;
+        }
+      },
+    );
+  };
+
   return (
     <SectionList
       sections={data}
@@ -145,7 +197,7 @@ function LeagueRequests() {
       renderItem={({item, section}) => (
         <OneLine
           title={item.name}
-          onPress={() => onAcceptClub(item, section.title)}
+          onPress={() => onOpenActionSheet(item, section.title)}
         />
       )}
       ItemSeparatorComponent={() => <ListSeparator />}
@@ -164,10 +216,10 @@ function LeagueRequests() {
 function MySentRequests() {
   const requestsContext = useContext(RequestContext);
   const user = useContext(AuthContext);
-  const clubRequests: IMyRequests | null | undefined =
-    requestsContext?.myClubRequests;
-  const leagueRequests: IMyRequests | null | undefined =
-    requestsContext?.myLeagueRequests;
+  const {showActionSheetWithOptions} = useActionSheet();
+
+  const clubRequests: IMyRequests = requestsContext.myClubRequests;
+  const leagueRequests: IMyRequests = requestsContext.myLeagueRequests;
 
   let requests: IMyRequests[] = [];
 
@@ -242,6 +294,30 @@ function MySentRequests() {
     batch.commit();
   };
 
+  const onOpenActionSheet = (item: Props, title: string) => {
+    const options = ['Accept', 'Decline', 'Cancel'];
+    const destructiveButtonIndex = 1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            onCancelRequest(item, title);
+            break;
+          case 1:
+            console.log('decline club');
+            break;
+        }
+      },
+    );
+  };
+
   return (
     <SectionList
       sections={data}
@@ -250,7 +326,7 @@ function MySentRequests() {
       renderItem={({item, section}) => (
         <OneLine
           title={item.clubName}
-          onPress={() => onCancelRequest(item, section.title)}
+          onPress={() => onOpenActionSheet(item, section.title)}
         />
       )}
       ItemSeparatorComponent={() => <ListSeparator />}
@@ -267,10 +343,3 @@ function MySentRequests() {
     />
   );
 }
-
-const Item = ({title, button, onPress}) => (
-  <View>
-    <Text>{title}</Text>
-    <Button title={button} onPress={onPress} />
-  </View>
-);

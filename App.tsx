@@ -18,6 +18,7 @@ import AppIndex from './src/screens';
 import {NavTheme} from './src/utils/designSystem';
 import {I18nProvider} from '@lingui/react';
 import i18n from './src/utils/i18n';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 
 const App = () => {
   return (
@@ -28,7 +29,9 @@ const App = () => {
             <RequestProvider>
               <LeagueProvider>
                 <NavigationContainer theme={NavTheme}>
-                  <AppIndex />
+                  <ActionSheetProvider>
+                    <AppIndex />
+                  </ActionSheetProvider>
                 </NavigationContainer>
               </LeagueProvider>
             </RequestProvider>
