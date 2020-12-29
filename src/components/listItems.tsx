@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 
-type ListItemProps = {
+interface OneLineProps {
   title: string;
   key1?: string;
   key2?: string;
@@ -17,7 +17,16 @@ type ListItemProps = {
   keyColor?: APP_COLORS;
   highlighted?: boolean;
   large?: boolean;
-};
+}
+
+interface TwoLineProps extends OneLineProps {
+  value?: string;
+  sub: string;
+  iconCustomColor?: string;
+  iconCustom?: string;
+  disabled?: boolean;
+  icon?: boolean;
+}
 
 type ListHeadingProps = {
   [col: string]: string;
@@ -99,7 +108,7 @@ export const OneLine = ({
   keyColor,
   highlighted,
   large,
-}: ListItemProps) => (
+}: OneLineProps) => (
   <Pressable onPress={onPress}>
     <View
       style={[
@@ -198,6 +207,133 @@ export const OneLine = ({
           </View>
         ) */}
       </View>
+    </View>
+  </Pressable>
+);
+
+//---------- Two Line List Item ----------//
+
+export const TwoLine = (props: TwoLineProps) => (
+  <Pressable onPress={props.onPress} disabled={props.disabled}>
+    <View style={styles.listBg}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flex: 1,
+        }}>
+        {/*
+          (props.flag || props.flagSource) && (
+            <CountryFlag
+              country={props.flag}
+              flagSource={props.flagSource}
+              ripple={false}
+              containerSize={verticalScale(40)}
+              containerStyle={{
+                marginRight: verticalScale(24)
+              }}
+            />
+            )*/}
+        {/* props.img && (
+            <View
+              style={{
+                width: verticalScale(36),
+                marginRight: verticalScale(16)
+              }}
+            >
+              <Image
+                source={props.img}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            </View>
+            ) */}
+        <View
+          style={{
+            justifyContent: 'center',
+            flex: 1,
+          }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}>
+            <Text
+              style={[
+                TEXT_STYLES.body,
+                {
+                  color: props.highlighted
+                    ? APP_COLORS.Accent
+                    : props.disabled
+                    ? APP_COLORS.Gray
+                    : APP_COLORS.Light,
+                  fontWeight: 'bold',
+                },
+              ]}>
+              {props.title}
+            </Text>
+            {/* props.time && (
+                <View
+                  style={
+                    {
+                      //   marginLeft: verticalScale(16),
+                    }
+                  }
+                >
+                  <Text
+                    style={[
+                      TEXT_STYLES.caption,
+                      {
+                        textAlign: "right"
+                        //     flex: 1
+                      }
+                    ]}
+                  >
+                    {props.time}
+                  </Text>
+                </View>
+              )
+                */}
+          </View>
+          <Text
+            numberOfLines={1}
+            style={[
+              TEXT_STYLES.caption,
+              {
+                color: props.highlighted ? APP_COLORS.Accent : APP_COLORS.Gray,
+              },
+            ]}>
+            {props.sub}
+          </Text>
+        </View>
+      </View>
+      <View
+        style={{
+          justifyContent: 'flex-end',
+        }}>
+        <Text
+          style={[
+            TEXT_STYLES.body,
+            {
+              textAlign: 'right',
+              fontWeight: 'bold',
+              color: APP_COLORS.Accent,
+            },
+          ]}>
+          {props.value}
+        </Text>
+      </View>
+      {props.icon || props.iconCustom ? (
+        <View style={styles.twoLineIcon}>
+          <Icon
+            name={props.iconCustom ? props.iconCustom : 'chevron-right'}
+            size={verticalScale(24)}
+            color={
+              props.iconCustomColor ? props.iconCustomColor : APP_COLORS.Light
+            }
+          />
+        </View>
+      ) : null}
     </View>
   </Pressable>
 );

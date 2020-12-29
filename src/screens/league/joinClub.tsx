@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, Button, Alert, FlatList} from 'react-native';
+import {Alert, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
@@ -7,19 +7,24 @@ import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
 import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './league';
 import FullScreenLoading from '../../components/loading';
+import {ListHeading, TwoLine, ListSeparator} from '../../components/listItems';
+import {verticalScale} from 'react-native-size-matters';
+import EmptyState from '../../components/emptyState';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
+type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Join Club'>;
 
 type Props = {
-  //  navigation: ScreenNavigationProp;
+  navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
 const db = firestore();
-type ClubData = IClub & {key: string};
+type ClubListItem = IClub & {key: string};
 
-export default function JoinClub({route}: Props) {
-  const [data, setData] = useState<ClubData[]>([]);
+export default function JoinClub({route, navigation}: Props) {
+  const [data, setData] = useState<ClubListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   const context = useContext(AppContext);
@@ -31,7 +36,7 @@ export default function JoinClub({route}: Props) {
   const leagueClubs = leagueRef.collection('clubs');
 
   useEffect(() => {
-    let retrievedClubs: ClubData[] = [];
+    let retrievedClubs: ClubListItem[] = [];
     leagueClubs
       .where('accepted', '==', true)
       .get()
@@ -40,6 +45,8 @@ export default function JoinClub({route}: Props) {
           retrievedClubs.push({...(doc.data() as IClub), key: doc.id});
         });
         setData(retrievedClubs);
+      })
+      .then(() => {
         setLoading(false);
       });
   }, []);
@@ -88,12 +95,15 @@ export default function JoinClub({route}: Props) {
           text: 'Send Request',
           onPress: () => {
             setLoading(true);
-            onSendRequestConfirm(clubId).then(() => setLoading(false));
+            onSendRequestConfirm(clubId)
+              .then(() => setLoading(false))
+              .then(() => {
+                navigation.goBack();
+              });
           },
         },
         {
           text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
           style: 'cancel',
         },
       ],
@@ -106,19 +116,31 @@ export default function JoinClub({route}: Props) {
       <FullScreenLoading visible={loading} />
       <FlatList
         data={data}
-        renderItem={({item}: any) => (
-          <Club name={item.name} onPress={() => onSendRequest(item.key)} />
+        renderItem={({item}) => (
+          <TwoLine
+            title={item.name}
+            sub={item.managerId}
+            onPress={() => onSendRequest(item.key)}
+            icon
+          />
         )}
+        ListHeaderComponent={() =>
+          data.length !== 0 && <ListHeading col1="Clubs" />
+        }
+        ItemSeparatorComponent={() => <ListSeparator />}
+        ListEmptyComponent={() => (
+          <EmptyState title="No Public Leagues" body="Check out later" />
+        )}
+        getItemLayout={(data, index) => ({
+          length: verticalScale(56),
+          offset: verticalScale(57) * index,
+          index,
+        })}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: data.length === 0 ? 'center' : null,
+        }}
       />
     </>
   );
 }
-
-const Club = (props) => {
-  return (
-    <View>
-      <Text>{props.name}</Text>
-      <Button title="Send Request" onPress={props.onPress} />
-    </View>
-  );
-};

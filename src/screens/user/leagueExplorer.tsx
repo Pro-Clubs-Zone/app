@@ -17,16 +17,15 @@ type Props = {
 
 const db = firestore();
 type LeagueListItem = ILeague & {key: string};
-type Leagues = LeagueListItem[];
 
 export default function LeagueExplorer({navigation}: Props) {
-  const [data, setData] = useState<Leagues>([]);
+  const [data, setData] = useState<LeagueListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const leagueCollection = db.collection('leagues');
     const subscriber = leagueCollection.onSnapshot((querySnapshot) => {
-      let retrievedLeagues: Leagues = [];
+      let retrievedLeagues: LeagueListItem[] = [];
       querySnapshot.forEach((doc) => {
         const leagueData = doc.data() as ILeague;
         retrievedLeagues.push({...leagueData, key: doc.id});

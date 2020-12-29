@@ -91,6 +91,7 @@ export interface IClub {
   name: string;
   managerId: string;
   accepted: boolean;
+  managerUsername: string;
   roster: {
     [uid: string]: IClubRosterMember;
   };

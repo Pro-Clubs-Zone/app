@@ -32,6 +32,7 @@ export default function CreateClub({route, navigation}: Props) {
   const leagueId = route.params.leagueId;
   const uid = user?.uid;
   const isAdmin = route.params.isAdmin;
+  const username = context.userData.username;
 
   const onCreateClub = () => {
     const userRef = db.collection('users').doc(uid);
@@ -44,11 +45,12 @@ export default function CreateClub({route, navigation}: Props) {
     const clubInfo: IClub = {
       name: clubName,
       managerId: uid,
+      managerUsername: username,
       accepted: isAdmin ? true : false,
       roster: {
         [uid]: {
           accepted: true,
-          username: context?.userData?.username,
+          username: username,
         },
       },
       created: firestore.Timestamp.now(),
