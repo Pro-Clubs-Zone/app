@@ -40,11 +40,25 @@ export default function CreateLeague({navigation}: Props) {
     created: firestore.Timestamp.now(),
   };
 
-  const [leagueInfo, setLeagueInfo] = useState<ILeague>(leagueInfoDefault);
+  type PickerProps = {
+    platform: boolean;
+    teamNum: boolean;
+    matchNum: boolean;
+  };
+
+  const [data, setData] = useState<ILeague>(leagueInfoDefault);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasLeague, setHasLeague] = useState<boolean>(false);
-  const [tempPlatform, setTempPlatform] = useState<'ps' | 'xb'>('ps');
-  const [showPicker, setShowPicker] = useState<boolean>(false);
+  const [tempData, setTempData] = useState<Partial<ILeague>>({
+    platform: data.platform,
+    teamNum: data.teamNum,
+    matchNum: data.matchNum,
+  });
+  const [showPicker, setShowPicker] = useState<PickerProps>({
+    platform: false,
+    teamNum: false,
+    matchNum: false,
+  });
 
   useEffect(() => {
     if (userLeagues) {
@@ -75,7 +89,7 @@ export default function CreateLeague({navigation}: Props) {
     const leagueRef = db.collection('leagues').doc();
     const userRef = db.collection('users').doc(uid);
     setLoading(true);
-    batch.set(leagueRef, leagueInfo);
+    batch.set(leagueRef, data);
     batch.set(
       userRef,
       {
@@ -97,7 +111,7 @@ export default function CreateLeague({navigation}: Props) {
         },
       });
       context.setUserLeagues({
-        [leagueRef.id]: leagueInfo,
+        [leagueRef.id]: data,
       });
       setLoading(false);
       navigation.navigate('League', {
@@ -113,33 +127,67 @@ export default function CreateLeague({navigation}: Props) {
       <FullScreenLoading visible={loading} />
       <FormContent>
         <PickerContainer
-          selectedValue={tempPlatform}
-          onValueChange={(itemValue) => setTempPlatform(itemValue)}
-          visible={showPicker}
+          selectedValue={tempData.platform}
+          onValueChange={(itemValue) =>
+            setTempData({...tempData, platform: itemValue})
+          }
+          visible={showPicker.platform}
           onCancel={() => {
-            setTempPlatform(leagueInfo.platform);
-            setShowPicker(false);
+            setTempData({...tempData, platform: data.platform});
+            setShowPicker({...showPicker, platform: false});
           }}
           onApply={() => {
-            setLeagueInfo({...leagueInfo, platform: tempPlatform});
-            setShowPicker(false);
+            setData({...data, platform: tempData.platform});
+            setShowPicker({...showPicker, platform: false});
           }}>
           <PickerItem label="Playstation" value="ps" color={APP_COLORS.Light} />
           <PickerItem label="Xbox" value="xb" color={APP_COLORS.Light} />
         </PickerContainer>
+        <PickerContainer
+          selectedValue={tempData.teamNum}
+          onValueChange={(itemValue) =>
+            setTempData({...tempData, teamNum: itemValue})
+          }
+          visible={showPicker.teamNum}
+          onCancel={() => {
+            setTempData({...tempData, teamNum: data.teamNum});
+            setShowPicker({...showPicker, teamNum: false});
+          }}
+          onApply={() => {
+            setData({...data, teamNum: tempData.teamNum});
+            setShowPicker({...showPicker, teamNum: false});
+          }}>
+          <PickerItem label="4 Teams" value={4} color={APP_COLORS.Light} />
+          <PickerItem label="8 Teams" value={8} color={APP_COLORS.Light} />
+        </PickerContainer>
+        <PickerContainer
+          selectedValue={tempData.matchNum}
+          onValueChange={(itemValue) =>
+            setTempData({...tempData, matchNum: itemValue})
+          }
+          visible={showPicker.matchNum}
+          onCancel={() => {
+            setTempData({...tempData, matchNum: data.matchNum});
+            setShowPicker({...showPicker, matchNum: false});
+          }}
+          onApply={() => {
+            setData({...data, matchNum: tempData.matchNum});
+            setShowPicker({...showPicker, matchNum: false});
+          }}>
+          <PickerItem label="1 Match" value={1} color={APP_COLORS.Light} />
+          <PickerItem label="2 Matches" value={2} color={APP_COLORS.Light} />
+        </PickerContainer>
         <TextField
-          onChangeText={(text) => setLeagueInfo({...leagueInfo, name: text})}
-          value={leagueInfo.name}
+          onChangeText={(text) => setData({...data, name: text})}
+          value={data.name}
           placeholder="League Name"
-          autoCorrect={true}
           label="League Name"
         />
         <TextField
-          value={leagueInfo.platform === 'ps' ? 'Playstation' : 'Xbox'}
+          value={data.platform === 'ps' ? 'Playstation' : 'Xbox'}
           placeholder="Select Platform"
-          autoCorrect={true}
           label="Platform"
-          onPress={() => setShowPicker(true)}
+          onPress={() => setShowPicker({...showPicker, platform: true})}
           fieldIco="chevron-down"
         />
         <View
@@ -151,15 +199,35 @@ export default function CreateLeague({navigation}: Props) {
               flex: 1,
               marginRight: 24,
             }}>
-            <TextField placeholder="Teams" label="Platform" />
+            <TextField
+              placeholder="Teams"
+              label="Teams"
+              value={`${data.teamNum} Teams`}
+              onPress={() => setShowPicker({...showPicker, teamNum: true})}
+              fieldIco="chevron-down"
+            />
           </View>
           <View
             style={{
               flex: 1,
             }}>
-            <TextField placeholder="FF" label="Platform" />
+            <TextField
+              value={`${data.matchNum} Matches`}
+              placeholder="Matches"
+              label="Matches"
+              onPress={() => setShowPicker({...showPicker, matchNum: true})}
+              fieldIco="chevron-down"
+            />
           </View>
         </View>
+        <TextField
+          value={data.description}
+          placeholder="Description"
+          label="Description"
+          multiline={true}
+          onChangeText={(text) => setData({...data, description: text})}
+          autoCapitalize="sentences"
+        />
       </FormContent>
       <BigButton
         onPress={hasLeague ? showLimitAlert : onCreateLeague}
