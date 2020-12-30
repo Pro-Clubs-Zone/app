@@ -10,6 +10,9 @@ import {FormView, FormContent} from '../../components/templates';
 import {AppContext} from '../../context/appContext';
 import FullScreenLoading from '../../components/loading';
 import {Alert} from 'react-native';
+import {Picker} from '@react-native-picker/picker';
+import PickerContainer from '../../components/pickerContainer';
+import {APP_COLORS} from '../../utils/designSystem';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -42,6 +45,11 @@ export default function CreateLeague({navigation}: Props) {
   const [leagueName, setLeagueName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [hasLeague, setHasLeague] = useState<boolean>(false);
+  const [tempPlatform, setTempPlatform] = useState<
+    'ps' | 'xb' | React.ReactText
+  >('ps');
+  const [platform, setPlatform] = useState<'ps' | 'xb' | React.ReactText>('ps');
+  const [showPicker, setShowPicker] = useState<boolean>(false);
 
   useEffect(() => {
     if (userLeagues) {
@@ -109,12 +117,41 @@ export default function CreateLeague({navigation}: Props) {
     <FormView>
       <FullScreenLoading visible={loading} />
       <FormContent>
+        <PickerContainer
+          visible={showPicker}
+          onCancel={() => {
+            setTempPlatform(platform);
+            setShowPicker(false);
+          }}
+          onApply={() => {
+            setPlatform(tempPlatform);
+            setShowPicker(false);
+          }}>
+          <Picker
+            selectedValue={tempPlatform}
+            onValueChange={(itemValue) => setTempPlatform(itemValue)}>
+            <Picker.Item
+              label="Playstation"
+              value="ps"
+              color={APP_COLORS.Light}
+            />
+            <Picker.Item label="Xbox" value="xb" color={APP_COLORS.Light} />
+          </Picker>
+        </PickerContainer>
         <TextField
           onChangeText={(text) => setLeagueName(text)}
           value={leagueName}
           placeholder="League Name"
           autoCorrect={true}
           label="League Name"
+        />
+        <TextField
+          value={platform === 'ps' ? 'Playstation' : 'Xbox'}
+          placeholder="Select Platform"
+          autoCorrect={true}
+          label="Platform"
+          onPress={() => setShowPicker(true)}
+          fieldIco="chevron-down"
         />
       </FormContent>
       <BigButton

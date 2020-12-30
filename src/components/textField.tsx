@@ -113,7 +113,7 @@ const TextField = (props: Props) => {
             <View
               style={{
                 width: verticalScale(32),
-                justifyContent: 'flex-end',
+                justifyContent: 'center',
                 alignItems: 'flex-end',
               }}>
               <Icon

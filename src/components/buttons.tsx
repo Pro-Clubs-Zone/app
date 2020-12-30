@@ -49,8 +49,6 @@ export const BigButton = ({title, onPress, disabled}: ButtonProps) => (
         style={[
           TEXT_STYLES.buttonLabel,
           {
-            fontSize: verticalScale(14),
-            lineHeight: verticalScale(14),
             color: disabled ? 'rgba(0, 0, 0, 0.4)' : APP_COLORS.Dark,
           },
         ]}>
@@ -110,6 +108,40 @@ export const IconButton = ({
     />
   </View>
 );
+
+//---------- Minimal Button ----------//
+
+const MinButton = ({
+  onPress,
+  title,
+  secondary,
+  disabled,
+}: ButtonProps & {secondary?: boolean}) => (
+  <Pressable onPress={onPress} disabled={!!disabled}>
+    <View
+      style={[
+        styles.buttonBg,
+        styles.noShadow,
+        {
+          backgroundColor: 'transparent',
+          paddingHorizontal: verticalScale(8),
+        },
+      ]}>
+      <Text
+        style={[
+          TEXT_STYLES.buttonLabel,
+          {
+            color:
+              !secondary && !disabled ? APP_COLORS.Accent : APP_COLORS.Gray,
+          },
+        ]}>
+        {title.toUpperCase()}
+      </Text>
+    </View>
+  </Pressable>
+);
+
+export {MinButton};
 
 //---------- Stylesheet ----------//
 
