@@ -62,7 +62,7 @@ export default function LeagueScheduled({navigation}: Props) {
         />
       </CardSmallContainer>
       <CardMedium
-        title="My Club"
+        title={userClub.clubName}
         onPress={() =>
           navigation.navigate('My Club', {
             leagueId: leagueId,

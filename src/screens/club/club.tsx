@@ -1,11 +1,14 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
-import {Text, View, Button, SectionList} from 'react-native';
+import {Button, SectionList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {IClubRosterMember} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/league';
+import {ListHeading, OneLine, ListSeparator} from '../../components/listItems';
+import FullScreenLoading from '../../components/loading';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 // TODO: Update context on changes
 
@@ -16,7 +19,7 @@ type PlayerData = IClubRosterMember & {id: string};
 
 interface PlayerList {
   title: string;
-  data: IClubRosterMember[];
+  data: PlayerData[];
 }
 
 type Props = {
@@ -30,11 +33,12 @@ const batch = db.batch();
 export default function Club({navigation, route}: Props) {
   const [data, setData] = useState<PlayerData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sectionedData, setSectionedData] = useState([]);
+  const [sectionedData, setSectionedData] = useState<PlayerList[]>([]);
 
   const leagueId = route.params.leagueId;
   const clubId = route.params.clubId;
   const context = useContext(AppContext);
+  const {showActionSheetWithOptions} = useActionSheet();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -90,7 +94,9 @@ export default function Club({navigation, route}: Props) {
 
   useEffect(() => {
     const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-
+    console.log('====================================');
+    console.log(context.userLeagues);
+    console.log('====================================');
     let playerList: PlayerData[] = [];
     let playerInfo: PlayerData;
     for (const [playerId, player] of Object.entries(clubRoster)) {
@@ -101,9 +107,12 @@ export default function Club({navigation, route}: Props) {
     console.log(playerList, 'playerList');
     setData(playerList);
     sortPlayers(playerList);
-  }, [context]);
+    setLoading(false);
+  }, []);
 
-  const onPlayerAccept = (playerId: string) => {
+  const onPlayerAccept = async (playerId: string) => {
+    setLoading(true);
+
     const updatedList: PlayerData[] = data.map((player) => {
       if (player.id === playerId) {
         player.accepted = true;
@@ -123,10 +132,19 @@ export default function Club({navigation, route}: Props) {
       ['leagues.' + leagueId + '.accepted']: true,
     });
 
-    return batch.commit();
+    // const currentLeagueData = context.userLeagues[leagueId];
+    // const currentClubData = currentLeagueData.clubs[clubId];
+    // const currentClubRosterData = currentClubData.roster;
+
+    // context.setUserLeagues({
+    //   ...currentLeagueData,
+
+    // });
+    return batch.commit().then(() => setLoading(false));
   };
 
-  const onPlayerDecline = (playerId: string) => {
+  const onPlayerDecline = async (playerId: string) => {
+    setLoading(true);
     const declinedPlayer: PlayerData | undefined = data.find(
       (player) => player.id === playerId,
     );
@@ -142,33 +160,50 @@ export default function Club({navigation, route}: Props) {
     batch.update(clubRef, {
       ['roster.' + playerId]: firestore.FieldValue.delete(),
     });
-    return batch.commit();
+    return batch.commit().then(() => setLoading(false));
+  };
+
+  const onOpenActionSheet = (playerId: string) => {
+    const options = ['Accept', 'Decline', 'Cancel'];
+    const destructiveButtonIndex = 1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            onPlayerAccept(playerId);
+            break;
+          case 1:
+            onPlayerDecline(playerId);
+            break;
+        }
+      },
+    );
   };
 
   return (
-    <View>
+    <>
+      <FullScreenLoading visible={loading} />
       <SectionList
         sections={sectionedData}
         keyExtractor={(item) => item.id}
         renderItem={({item}) => (
-          <Players
-            username={item.username}
-            onAccept={() => onPlayerAccept(item.id)}
-            onDecline={() => onPlayerDecline(item.id)}
+          <OneLine
+            title={item.username}
+            onPress={() => onOpenActionSheet(item.id)}
           />
         )}
-        renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+        ItemSeparatorComponent={() => <ListSeparator />}
+        renderSectionHeader={({section: {title}}) => (
+          <ListHeading col1={title} />
+        )}
       />
-    </View>
+    </>
   );
 }
-
-const Players = (props) => {
-  return (
-    <View>
-      <Text>{props.username}</Text>
-      <Button title="acp" onPress={props.onAccept} />
-      <Button title="decline" onPress={props.onDecline} />
-    </View>
-  );
-};

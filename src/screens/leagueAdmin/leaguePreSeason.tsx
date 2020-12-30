@@ -37,6 +37,10 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const scheduled = leagueContext.league.scheduled;
   const userClub = context.userData.leagues[leagueId];
   const newLeague = route.params.newLeague;
+  const clubRoster =
+    context.userLeagues[leagueId].clubs[userClub.clubId].roster;
+
+  const clubRosterLength: number = Object.values(clubRoster).length;
 
   useLayoutEffect(() => {
     if (newLeague) {
@@ -51,7 +55,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         ),
       });
     }
-  }, [navigation, newLeague]);
+  }, [navigation, newLeague, clubRoster]);
 
   const scheduleMatches = async () => {
     setLoading(true);
@@ -82,8 +86,12 @@ export default function LeaguePreSeason({navigation, route}: Props) {
               manager: userClub.manager,
             })
           }
-          title="My Club"
-          subTitle="fdf"
+          title={userClub.clubName}
+          subTitle={
+            clubRosterLength > 1
+              ? clubRosterLength + ' Players'
+              : 'No members except you'
+          }
         />
       ) : (
         <CardMedium

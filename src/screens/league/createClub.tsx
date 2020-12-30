@@ -58,6 +58,7 @@ export default function CreateClub({route, navigation}: Props) {
     const userInfo: IUserLeague = {
       clubId: clubRef.id,
       manager: true,
+      clubName: clubName,
     };
 
     setLoading(true);

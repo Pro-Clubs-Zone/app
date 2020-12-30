@@ -109,6 +109,7 @@ export interface IUserLeague {
   manager: boolean;
   admin?: boolean;
   accepted?: boolean;
+  clubName: string;
 }
 
 export interface IUser {
