@@ -1,21 +1,23 @@
 import React from 'react';
-import {Modal, ModalProps, View, TouchableWithoutFeedback} from 'react-native';
+import {Modal, View, TouchableWithoutFeedback} from 'react-native';
 import {MinButton} from './buttons';
 import {ScaledSheet} from 'react-native-size-matters';
 import {APP_COLORS} from '../utils/designSystem';
+import {Picker} from '@react-native-picker/picker';
 
-const PickerContainer = (
-  props: ModalProps & {
-    children: JSX.Element;
-    onApply: () => void;
-    onCancel: () => void;
-  },
-) => (
+const PickerContainer = (props: {
+  children: JSX.Element[];
+  onApply: () => void;
+  onCancel: () => void;
+  visible: boolean;
+  selectedValue: any;
+  onValueChange: any;
+}) => (
   <Modal
     presentationStyle="overFullScreen"
     transparent={true}
     animationType="fade"
-    {...props}>
+    visible={props.visible}>
     <View style={styles.container}>
       <TouchableWithoutFeedback onPress={props.onCancel}>
         <View
@@ -29,10 +31,18 @@ const PickerContainer = (
           <MinButton title="Cancel" onPress={props.onCancel} secondary />
           <MinButton title="Apply" onPress={props.onApply} />
         </View>
-        {props.children}
+        <Picker
+          selectedValue={props.selectedValue}
+          onValueChange={props.onValueChange}>
+          {props.children}
+        </Picker>
       </View>
     </View>
   </Modal>
+);
+
+export const PickerItem = (props) => (
+  <Picker.Item color={APP_COLORS.Light} {...props} />
 );
 
 const styles = ScaledSheet.create({

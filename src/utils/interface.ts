@@ -75,9 +75,9 @@ export interface IClubRequestData extends IClub {
 }
 
 export interface ILeague {
-  name: any;
+  name: string;
   description: string;
-  platform: string;
+  platform: 'ps' | 'xb';
   teamNum: number;
   matchNum: number;
   adminId: string;
