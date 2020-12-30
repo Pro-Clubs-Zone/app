@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
-
 import firestore from '@react-native-firebase/firestore';
 import {IClub} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -68,19 +67,20 @@ export default function Clubs({route}: Props) {
   };
 
   useEffect(() => {
-    console.log(context);
     const clubs = context.userLeagues[leagueId].clubs;
 
     let clubList: ClubData[] = [];
     let clubInfo: ClubData;
-    for (const [clubId, club] of Object.entries(clubs)) {
-      clubInfo = {...club, id: clubId};
-      clubList.push(clubInfo);
-    }
+    if (clubs) {
+      for (const [clubId, club] of Object.entries(clubs)) {
+        clubInfo = {...club, id: clubId};
+        clubList.push(clubInfo);
+      }
 
-    console.log(clubList, 'clublist');
-    setData(clubList);
-    sortClubs(clubList);
+      console.log(clubList, 'clublist');
+      setData(clubList);
+      sortClubs(clubList);
+    }
   }, [context]);
 
   const onClubAccept = (clubId: string) => {

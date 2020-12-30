@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from '../../context/authContext';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
@@ -9,14 +9,13 @@ import {BigButton} from '../../components/buttons';
 import {FormView, FormContent} from '../../components/templates';
 import {AppContext} from '../../context/appContext';
 import FullScreenLoading from '../../components/loading';
+import {Alert} from 'react-native';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
 };
-
-//TODO: ask if to create a club
 
 const db = firestore();
 
@@ -25,6 +24,7 @@ export default function CreateLeague({navigation}: Props) {
   const context = useContext(AppContext);
 
   const uid = user.uid;
+  const userLeagues = context.userData?.leagues;
 
   const leagueInfoDefault: ILeague = {
     name: Math.floor(Math.random() * Math.floor(200)),
@@ -41,6 +41,31 @@ export default function CreateLeague({navigation}: Props) {
   const [leagueInfo, setLeagueInfo] = useState<ILeague>(leagueInfoDefault);
   const [leagueName, setLeagueName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [hasLeague, setHasLeague] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (userLeagues) {
+      for (const league of Object.values(userLeagues)) {
+        if (league.admin) {
+          return setHasLeague(true);
+        }
+      }
+    }
+  }, [userLeagues]);
+
+  const showLimitAlert = () => {
+    Alert.alert(
+      'League Limit Reached',
+      'You cannot create more than one league',
+      [
+        {
+          text: 'Close',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   const onCreateLeague = () => {
     const batch = db.batch();
@@ -92,7 +117,10 @@ export default function CreateLeague({navigation}: Props) {
           label="League Name"
         />
       </FormContent>
-      <BigButton onPress={onCreateLeague} title="Create League" />
+      <BigButton
+        onPress={hasLeague ? showLimitAlert : onCreateLeague}
+        title="Create League"
+      />
     </FormView>
   );
 }
