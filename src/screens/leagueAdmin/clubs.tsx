@@ -1,20 +1,22 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, Button, SectionList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {IClub} from '../../utils/interface';
+import {IClubRequestData, ILeagueRequest} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/league';
+import {
+  ListHeading,
+  OneLine,
+  ListSeparator,
+  TwoLine,
+} from '../../components/listItems';
+import FullScreenLoading from '../../components/loading';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
-
-type ClubData = IClub & {id: string};
-interface ClubList {
-  title: string;
-  data: ClubData[];
-}
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -24,29 +26,30 @@ type Props = {
 const db = firestore();
 
 export default function Clubs({route}: Props) {
-  const [data, setData] = useState<ClubData[]>([]);
+  const [data, setData] = useState<IClubRequestData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sectionedData, setSectionedData] = useState([]);
+  const [sectionedData, setSectionedData] = useState<ILeagueRequest[]>([]);
 
   const leagueId = route.params.leagueId;
   const context = useContext(AppContext);
+  const {showActionSheetWithOptions} = useActionSheet();
 
   const leagueClubsRef = db
     .collection('leagues')
     .doc(leagueId)
     .collection('clubs');
 
-  const acceptedClubList = {
+  const acceptedClubList: ILeagueRequest = {
     title: 'Accepted',
-    data: [] as ClubData[],
+    data: [],
   };
 
-  const clubRequestList = {
+  const clubRequestList: ILeagueRequest = {
     title: 'New requests',
-    data: [] as ClubData[],
+    data: [],
   };
 
-  const sortClubs = (clubs: ClubData[]) => {
+  const sortClubs = (clubs: IClubRequestData[]) => {
     clubs.forEach((club) => {
       if (club.accepted) {
         acceptedClubList.data.push(club);
@@ -55,7 +58,7 @@ export default function Clubs({route}: Props) {
       }
     });
 
-    let sortedClubs: ClubList[] = [];
+    let sortedClubs: ILeagueRequest[] = [];
 
     if (acceptedClubList.data.length !== 0) {
       sortedClubs.push(acceptedClubList);
@@ -69,8 +72,8 @@ export default function Clubs({route}: Props) {
   useEffect(() => {
     const clubs = context.userLeagues[leagueId].clubs;
 
-    let clubList: ClubData[] = [];
-    let clubInfo: ClubData;
+    let clubList: IClubRequestData[] = [];
+    let clubInfo: IClubRequestData;
     if (clubs) {
       for (const [clubId, club] of Object.entries(clubs)) {
         clubInfo = {...club, id: clubId};
@@ -84,7 +87,7 @@ export default function Clubs({route}: Props) {
   }, [context]);
 
   const onClubAccept = (clubId: string) => {
-    const updatedList: ClubData[] = data.map((club) => {
+    const updatedList: IClubRequestData[] = data.map((club) => {
       if (club.id === clubId) {
         club.accepted = true;
       }
@@ -116,28 +119,43 @@ export default function Clubs({route}: Props) {
     return batch.commit();
   };
 
+  const onOpenActionSheet = (club: IClubRequestData) => {
+    const options = ['Accept', 'Decline', 'Cancel'];
+    const destructiveButtonIndex = 1;
+    const cancelButtonIndex = 2;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        destructiveButtonIndex,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            //  onAcceptPlayer(player);
+            break;
+          case 1:
+            // onDeclinePlayer(player);
+            break;
+        }
+      },
+    );
+  };
+
   return (
     <SectionList
       sections={sectionedData}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.clubId}
       renderItem={({item}) => (
-        <Club
-          name={item.name}
-          onAccept={() => onClubAccept(item.id)}
-          onDecline={() => onClubDecline(item.id)}
+        <TwoLine
+          title={item.name}
+          sub={item.managerUsername}
+          onPress={() => onOpenActionSheet(item)}
         />
       )}
-      renderSectionHeader={({section: {title}}) => <Text>{title}</Text>}
+      ItemSeparatorComponent={() => <ListSeparator />}
+      renderSectionHeader={({section: {title}}) => <ListHeading col1={title} />}
     />
   );
 }
-
-const Club = (props) => {
-  return (
-    <View>
-      <Text>{props.name}</Text>
-      <Button title="acp" onPress={props.onAccept} />
-      <Button title="decline" onPress={props.onDecline} />
-    </View>
-  );
-};

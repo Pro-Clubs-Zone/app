@@ -109,9 +109,9 @@ function ClubRequests() {
 function LeagueRequests() {
   const requestsContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
-  const requests: ILeagueRequest[] | undefined = requestsContext?.leagues;
+  const requests: ILeagueRequest[] = requestsContext.leagues;
 
-  const [data, setData] = useState<ILeagueRequest[] | undefined>(requests);
+  const [data, setData] = useState<ILeagueRequest[]>(requests);
 
   type Props = {
     clubId: string;
@@ -220,7 +220,10 @@ function MySentRequests() {
     leagueId: string;
   };
 
-  const onCancelRequest = ({clubId, leagueId}: Props, sectionTitle: string) => {
+  const onCancelRequest = async (
+    {clubId, leagueId}: Props,
+    sectionTitle: string,
+  ) => {
     const clubRef = db
       .collection('leagues')
       .doc(leagueId)
@@ -276,7 +279,7 @@ function MySentRequests() {
         ['leagues.' + leagueId]: firestore.FieldValue.delete(),
       });
     }
-    batch.commit();
+    await batch.commit();
   };
 
   const onOpenActionSheet = (item: Props, title: string) => {

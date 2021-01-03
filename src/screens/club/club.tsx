@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
-import {Button, SectionList} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import {SectionList} from 'react-native';
 import {IClubRequest, IPlayerRequestData} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -11,8 +10,7 @@ import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import handlePlayerRequest from './actions/handlePlayerRequest';
 import {RequestContext} from '../../context/requestContext';
-
-// TODO: Update context on changes
+import {IconButton} from '../../components/buttons';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'My Club'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'My Club'>;
@@ -21,8 +19,6 @@ type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
-
-const db = firestore();
 
 export default function Club({navigation, route}: Props) {
   const [data, setData] = useState<IPlayerRequestData[]>([]);
@@ -43,8 +39,8 @@ export default function Club({navigation, route}: Props) {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button
-          title="settings"
+        <IconButton
+          name="cog"
           onPress={() =>
             navigation.navigate('Club Settings', {
               leagueId: leagueId,
