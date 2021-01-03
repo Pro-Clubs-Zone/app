@@ -21,7 +21,7 @@ type Props = {
 };
 
 const db = firestore();
-type ClubListItem = IClub & {key: string};
+type ClubListItem = IClub & {clubId: string};
 
 export default function JoinClub({route, navigation}: Props) {
   const [data, setData] = useState<ClubListItem[]>([]);
@@ -42,7 +42,7 @@ export default function JoinClub({route, navigation}: Props) {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          retrievedClubs.push({...(doc.data() as IClub), key: doc.id});
+          retrievedClubs.push({...(doc.data() as IClub), clubId: doc.id});
         });
         setData(retrievedClubs);
       })
@@ -51,13 +51,16 @@ export default function JoinClub({route, navigation}: Props) {
       });
   }, []);
 
-  const onSendRequestConfirm = async (clubId: string) => {
-    const clubRef = leagueClubs.doc(clubId);
+  const onSendRequestConfirm = async (club: ClubListItem) => {
+    setLoading(true);
+    const batch = db.batch();
+    const clubRef = leagueClubs.doc(club.clubId);
     const userInfo: {[leagueId: string]: IUserLeague} = {
       [leagueId]: {
-        clubId: clubId,
+        clubId: club.clubId,
         accepted: false,
         manager: false,
+        clubName: club.name,
       },
     };
     const rosterMember: {[uid: string]: IClubRosterMember} = {
@@ -66,7 +69,6 @@ export default function JoinClub({route, navigation}: Props) {
         username: context?.userData?.username,
       },
     };
-    const batch = db.batch();
 
     batch.set(
       clubRef,
@@ -82,10 +84,11 @@ export default function JoinClub({route, navigation}: Props) {
       },
       {merge: true},
     );
-    return batch.commit();
+    await batch.commit();
+    return setLoading(false);
   };
 
-  const onSendRequest = (clubId: string) => {
+  const onSendRequest = (club: ClubListItem) => {
     console.log('onsendrequest');
     Alert.alert(
       'Join Club',
@@ -94,12 +97,9 @@ export default function JoinClub({route, navigation}: Props) {
         {
           text: 'Send Request',
           onPress: () => {
-            setLoading(true);
-            onSendRequestConfirm(clubId)
-              .then(() => setLoading(false))
-              .then(() => {
-                navigation.goBack();
-              });
+            onSendRequestConfirm(club).then(() => {
+              navigation.goBack();
+            });
           },
         },
         {
@@ -116,11 +116,12 @@ export default function JoinClub({route, navigation}: Props) {
       <FullScreenLoading visible={loading} />
       <FlatList
         data={data}
+        keyExtractor={(item) => item.clubId}
         renderItem={({item}) => (
           <TwoLine
             title={item.name}
             sub={item.managerId}
-            onPress={() => onSendRequest(item.key)}
+            onPress={() => onSendRequest(item)}
             icon
           />
         )}

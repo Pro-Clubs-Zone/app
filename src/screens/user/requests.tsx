@@ -30,26 +30,29 @@ export default function Requests() {
 }
 
 function ClubRequests() {
-  const requestsContext = useContext(RequestContext);
+  const requestContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
-  const requests: IClubRequest[] = requestsContext.clubs;
+  const requests: IClubRequest[] = requestContext.clubs;
   const context = useContext(AppContext);
 
   const [data, setData] = useState<IClubRequest[]>(() => requests);
 
-  const acceptPlayer = (item: IPlayerRequestData, sectionTitle: string) => {
-    onAcceptPlayer(data, item, sectionTitle)
+  const acceptPlayer = (
+    selectedPlayer: IPlayerRequestData,
+    sectionTitle: string,
+  ) => {
+    onAcceptPlayer(data, selectedPlayer, sectionTitle)
       .then((newData) => {
         setData(newData);
-        requestsContext.setClubs(newData);
-        const currentCount = requestsContext.requestCount;
-        requestsContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
+        requestContext.setClubs(newData);
+        const currentCount = requestContext.requestCount;
+        requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
       })
       .then(() => {
         const currentLeagueData = {...context.userLeagues};
-        currentLeagueData[item.leagueId].clubs[item.clubId].roster[
-          item.playerId
-        ].accepted = true;
+        currentLeagueData[selectedPlayer.leagueId].clubs[
+          selectedPlayer.clubId
+        ].roster[selectedPlayer.playerId].accepted = true;
         context.setUserLeagues(currentLeagueData);
       });
   };

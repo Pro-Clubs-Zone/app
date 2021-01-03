@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
 import {Button, SectionList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import {IClubRosterMember} from '../../utils/interface';
+import {IClubRequest, IPlayerRequestData} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
@@ -9,18 +9,13 @@ import {LeagueStackType} from '../league/league';
 import {ListHeading, OneLine, ListSeparator} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import onAcceptPlayer from './actions/onAcceptPlayer';
+import {RequestContext} from '../../context/requestContext';
 
 // TODO: Update context on changes
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'My Club'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'My Club'>;
-
-type PlayerData = IClubRosterMember & {id: string};
-
-interface PlayerList {
-  title: string;
-  data: PlayerData[];
-}
 
 type Props = {
   navigation: ScreenNavigationProp;
@@ -31,13 +26,14 @@ const db = firestore();
 const batch = db.batch();
 
 export default function Club({navigation, route}: Props) {
-  const [data, setData] = useState<PlayerData[]>([]);
+  const [data, setData] = useState<IPlayerRequestData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sectionedData, setSectionedData] = useState<PlayerList[]>([]);
+  const [sectionedData, setSectionedData] = useState<IClubRequest[]>([]);
 
   const leagueId = route.params.leagueId;
   const clubId = route.params.clubId;
   const context = useContext(AppContext);
+  const requestContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
   useLayoutEffect(() => {
@@ -62,26 +58,26 @@ export default function Club({navigation, route}: Props) {
     .collection('clubs')
     .doc(clubId);
 
-  const roster = {
+  const roster: IClubRequest = {
     title: 'Roster',
-    data: [] as PlayerData[],
+    data: [],
   };
 
-  const playerRequests = {
+  const playerRequests: IClubRequest = {
     title: 'New requests',
-    data: [] as PlayerData[],
+    data: [],
   };
 
-  const sortPlayers = (clubs: PlayerData[]) => {
-    clubs.forEach((club) => {
-      if (club.accepted) {
-        roster.data.push(club);
+  const sortPlayers = (players: IPlayerRequestData[]) => {
+    players.forEach((player) => {
+      if (player.accepted) {
+        roster.data.push(player);
       } else {
-        playerRequests.data.push(club);
+        playerRequests.data.push(player);
       }
     });
 
-    let sortedPlayers: PlayerList[] = [];
+    let sortedPlayers: IClubRequest[] = [];
 
     if (roster.data.length !== 0) {
       sortedPlayers.push(roster);
@@ -94,13 +90,15 @@ export default function Club({navigation, route}: Props) {
 
   useEffect(() => {
     const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    console.log('====================================');
-    console.log(context.userLeagues);
-    console.log('====================================');
-    let playerList: PlayerData[] = [];
-    let playerInfo: PlayerData;
+    let playerList: IPlayerRequestData[] = [];
+    let playerInfo: IPlayerRequestData;
     for (const [playerId, player] of Object.entries(clubRoster)) {
-      playerInfo = {...player, id: playerId};
+      playerInfo = {
+        ...player,
+        playerId: playerId,
+        clubId: clubId,
+        leagueId: leagueId,
+      };
       playerList.push(playerInfo);
     }
 
@@ -110,37 +108,38 @@ export default function Club({navigation, route}: Props) {
     setLoading(false);
   }, []);
 
-  const onPlayerAccept = async (playerId: string) => {
+  const acceptPlayer = async (selectedPlayer: IPlayerRequestData) => {
     setLoading(true);
+    const club = context.userData.leagues[leagueId];
+    const requests = requestContext.clubs;
+    const requestSectionTitle =
+      club.clubName + ' / ' + context.userLeagues[leagueId].name;
 
-    const updatedList: PlayerData[] = data.map((player) => {
-      if (player.id === playerId) {
+    const updatedList: IPlayerRequestData[] = data.map((player) => {
+      if (player.playerId === selectedPlayer.playerId) {
         player.accepted = true;
       }
       return player;
     });
 
-    setData(updatedList);
-    sortPlayers(updatedList);
-
-    const playerRef = db.collection('users').doc(playerId);
-
-    batch.update(clubRef, {
-      ['roster.' + playerId + '.accepted']: true,
-    });
-    batch.update(playerRef, {
-      ['leagues.' + leagueId + '.accepted']: true,
-    });
-
-    // const currentLeagueData = context.userLeagues[leagueId];
-    // const currentClubData = currentLeagueData.clubs[clubId];
-    // const currentClubRosterData = currentClubData.roster;
-
-    // context.setUserLeagues({
-    //   ...currentLeagueData,
-
-    // });
-    return batch.commit().then(() => setLoading(false));
+    onAcceptPlayer(requests, selectedPlayer, requestSectionTitle)
+      .then((newData) => {
+        requestContext.setClubs(newData);
+        const currentCount = requestContext.requestCount;
+        requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
+      })
+      .then(() => {
+        const currentLeagueData = {...context.userLeagues};
+        currentLeagueData[selectedPlayer.leagueId].clubs[
+          selectedPlayer.clubId
+        ].roster[selectedPlayer.playerId].accepted = true;
+        context.setUserLeagues(currentLeagueData);
+      })
+      .then(() => {
+        setData(updatedList);
+        sortPlayers(updatedList);
+        setLoading(false);
+      });
   };
 
   const onPlayerDecline = async (playerId: string) => {
@@ -163,7 +162,7 @@ export default function Club({navigation, route}: Props) {
     return batch.commit().then(() => setLoading(false));
   };
 
-  const onOpenActionSheet = (playerId: string) => {
+  const onOpenActionSheet = (player: IPlayerRequestData) => {
     const options = ['Accept', 'Decline', 'Cancel'];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
@@ -177,7 +176,7 @@ export default function Club({navigation, route}: Props) {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            onPlayerAccept(playerId);
+            acceptPlayer(player);
             break;
           case 1:
             onPlayerDecline(playerId);
@@ -192,11 +191,11 @@ export default function Club({navigation, route}: Props) {
       <FullScreenLoading visible={loading} />
       <SectionList
         sections={sectionedData}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.playerId}
         renderItem={({item}) => (
           <OneLine
             title={item.username}
-            onPress={() => onOpenActionSheet(item.id)}
+            onPress={() => onOpenActionSheet(item)}
           />
         )}
         ItemSeparatorComponent={() => <ListSeparator />}
