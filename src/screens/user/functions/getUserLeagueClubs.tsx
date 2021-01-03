@@ -26,7 +26,6 @@ const getLeaguesClubs = async (
       .then(async () => {
         await clubRef.get().then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-            console.log('club', doc.data());
             userLeagues[leagueId].clubs = {
               ...userLeagues[leagueId].clubs,
               [doc.id]: doc.data() as IClub,

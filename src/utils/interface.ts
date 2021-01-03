@@ -64,7 +64,6 @@ export interface ILeagueRequest extends IFlatList {
 
 export interface IPlayerRequestData extends IClubRosterMember {
   leagueId: string;
-  username: string;
   playerId: string;
   clubId: string;
 }

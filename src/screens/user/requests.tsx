@@ -4,10 +4,17 @@ import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {IClubRequest, ILeagueRequest, IMyRequests} from '../../utils/interface';
+import {
+  IClubRequest,
+  ILeagueRequest,
+  IMyRequests,
+  IPlayerRequestData,
+} from '../../utils/interface';
 import {ListHeading, ListSeparator, OneLine} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import onAcceptPlayer from '../club/actions/onAcceptPlayer';
+import {AppContext} from '../../context/appContext';
 
 const db = firestore();
 const Tab = createMaterialTopTabNavigator();
@@ -26,54 +33,28 @@ function ClubRequests() {
   const requestsContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
   const requests: IClubRequest[] = requestsContext.clubs;
+  const context = useContext(AppContext);
 
-  const [data, setData] = useState<IClubRequest[]>(requests);
+  const [data, setData] = useState<IClubRequest[]>(() => requests);
 
-  type Props = {
-    playerId: string;
-    clubId: string;
-    leagueId: string;
+  const acceptPlayer = (item: IPlayerRequestData, sectionTitle: string) => {
+    onAcceptPlayer(data, item, sectionTitle)
+      .then((newData) => {
+        setData(newData);
+        requestsContext.setClubs(newData);
+        const currentCount = requestsContext.requestCount;
+        requestsContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
+      })
+      .then(() => {
+        const currentLeagueData = {...context.userLeagues};
+        currentLeagueData[item.leagueId].clubs[item.clubId].roster[
+          item.playerId
+        ].accepted = true;
+        context.setUserLeagues(currentLeagueData);
+      });
   };
 
-  const onAcceptPlayer = (
-    {playerId, clubId, leagueId}: Props,
-    sectionTitle: string,
-  ) => {
-    const sectionIndex = data.findIndex(
-      (section) => section.title === sectionTitle,
-    );
-
-    const unacceptedPlayers = data[sectionIndex].data.filter((player) => {
-      return player.playerId !== playerId;
-    });
-
-    const newData = [...data];
-    newData[sectionIndex].data = unacceptedPlayers;
-
-    if (unacceptedPlayers.length === 0) {
-      newData.splice(sectionIndex, 1);
-    }
-    setData(newData);
-
-    console.log(unacceptedPlayers);
-
-    const clubRef = db
-      .collection('leagues')
-      .doc(leagueId)
-      .collection('clubs')
-      .doc(`${clubId}`);
-
-    clubRef.update({
-      ['roster.' + playerId + '.accepted']: true,
-    });
-
-    const currentCount = requestsContext?.requestCount;
-
-    requestsContext?.setClubs(newData);
-    requestsContext?.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
-  };
-
-  const onOpenActionSheet = (item: Props, title: string) => {
+  const onOpenActionSheet = (item: IPlayerRequestData, title: string) => {
     const options = ['Accept', 'Decline', 'Cancel'];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
@@ -87,7 +68,7 @@ function ClubRequests() {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            onAcceptPlayer(item, title);
+            acceptPlayer(item, title);
             break;
           case 1:
             console.log('decline player');

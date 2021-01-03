@@ -50,8 +50,10 @@ function SignUp({navigation}: Props) {
       .createUserWithEmailAndPassword(email, password)
       .then((data) => {
         console.log('User account created & signed in!', data);
-        setLoading(false);
         return createDbEntry(data);
+      })
+      .then(() => {
+        setLoading(false);
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {

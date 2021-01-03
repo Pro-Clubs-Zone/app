@@ -1,4 +1,4 @@
-import React, {useContext, useLayoutEffect, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
@@ -29,6 +29,7 @@ const firFunc = functions();
 
 export default function LeaguePreSeason({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
+  const [clubRosterLength, setClubRosterLength] = useState(1);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
@@ -37,10 +38,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const scheduled = leagueContext.league.scheduled;
   const userClub = context.userData.leagues[leagueId];
   const newLeague = route.params.newLeague;
-  const clubRoster =
-    context.userLeagues[leagueId].clubs[userClub.clubId].roster;
-
-  const clubRosterLength: number = Object.values(clubRoster).length;
 
   useLayoutEffect(() => {
     if (newLeague) {
@@ -55,7 +52,15 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         ),
       });
     }
-  }, [navigation, newLeague, clubRoster]);
+  }, [navigation, newLeague]);
+
+  useEffect(() => {
+    if (userClub.clubId && context.userLeagues[leagueId].clubs) {
+      const clubRoster =
+        context.userLeagues[leagueId].clubs[userClub.clubId].roster;
+      setClubRosterLength(Object.values(clubRoster).length);
+    }
+  }, [context]);
 
   const scheduleMatches = async () => {
     setLoading(true);

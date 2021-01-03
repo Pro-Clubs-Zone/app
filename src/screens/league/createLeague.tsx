@@ -60,15 +60,15 @@ export default function CreateLeague({navigation}: Props) {
     matchNum: false,
   });
 
-  useEffect(() => {
-    if (userLeagues) {
-      for (const league of Object.values(userLeagues)) {
-        if (league.admin) {
-          return setHasLeague(true);
-        }
-      }
-    }
-  }, [userLeagues]);
+  // useEffect(() => {
+  //   if (userLeagues) {
+  //     for (const league of Object.values(userLeagues)) {
+  //       if (league.admin) {
+  //         return setHasLeague(true);
+  //       }
+  //     }
+  //   }
+  // }, [userLeagues]);
 
   const showLimitAlert = () => {
     Alert.alert(

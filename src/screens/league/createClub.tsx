@@ -34,7 +34,9 @@ export default function CreateClub({route, navigation}: Props) {
   const isAdmin = route.params.isAdmin;
   const username = context.userData.username;
 
-  const onCreateClub = () => {
+  const onCreateClub = async () => {
+    setLoading(true);
+    const batch = db.batch();
     const userRef = db.collection('users').doc(uid);
     const clubRef = db
       .collection('leagues')
@@ -61,8 +63,6 @@ export default function CreateClub({route, navigation}: Props) {
       clubName: clubName,
     };
 
-    setLoading(true);
-    const batch = db.batch();
     batch.set(clubRef, clubInfo);
     batch.set(
       userRef,
@@ -73,7 +73,7 @@ export default function CreateClub({route, navigation}: Props) {
       },
       {merge: true},
     );
-    batch.commit().then(() => {
+    await batch.commit().then(() => {
       setLoading(false);
       navigation.goBack();
     });

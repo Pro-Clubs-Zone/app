@@ -160,24 +160,28 @@ export default function Home({navigation}: Props) {
       const subscriber = userRef.onSnapshot((doc) => {
         console.log('call to fir');
         userInfo = doc.data() as IUser;
+
         if (userInfo.leagues) {
           getLeaguesClubs(userInfo).then(async (data) => {
             const {userData, userLeagues} = data;
             context.setUserData(userData);
             context.setUserLeagues(userLeagues);
-            getClubRequests(userLeagues);
-            getLeagueRequests(userLeagues);
-            getUserMatches(userData, userLeagues).then((matchesData) =>
-              setMatches(matchesData),
-            );
+            getUserMatches(userData, userLeagues)
+              .then((matchesData) => setMatches(matchesData))
+              .then(() => {
+                getClubRequests(userLeagues);
+                getLeagueRequests(userLeagues);
+              })
+              .then(() => {
+                setLoading(false);
+              });
           });
         } else {
           console.log('no leagues');
           context.setUserData(userInfo);
+          setLoading(false);
         }
       });
-
-      setLoading(false);
       return subscriber;
     }
   }, [user]);
