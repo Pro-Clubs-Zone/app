@@ -1,15 +1,15 @@
 import firestore from '@react-native-firebase/firestore';
 import {IClubRequestData, ILeagueRequest} from '../../../utils/interface';
 
-const db = firestore();
-const batch = db.batch();
-
 const handleLeagueRequest = async (
   data: ILeagueRequest[],
   {clubId, leagueId, managerId}: IClubRequestData,
   sectionTitle: string,
   acceptRequest: boolean,
 ) => {
+  const db = firestore();
+  const batch = db.batch();
+
   const leagueClubsRef = db
     .collection('leagues')
     .doc(leagueId)
@@ -39,6 +39,11 @@ const handleLeagueRequest = async (
     batch.update(managerRef, {
       ['leagues.' + leagueId + '.accepted']: true,
     });
+  } else {
+    batch.update(managerRef, {
+      [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
+    });
+    batch.delete(clubRef);
   }
 
   await batch.commit();

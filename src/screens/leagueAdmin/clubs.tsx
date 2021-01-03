@@ -1,6 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, Button, SectionList} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import {SectionList} from 'react-native';
 import {IClubRequestData, ILeagueRequest} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -20,8 +19,6 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-const db = firestore();
-
 export default function Clubs({route}: Props) {
   const [data, setData] = useState<IClubRequestData[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,11 +30,6 @@ export default function Clubs({route}: Props) {
   const {showActionSheetWithOptions} = useActionSheet();
 
   const requests: ILeagueRequest[] = requestContext.leagues;
-
-  const leagueClubsRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('clubs');
 
   const acceptedClubList: ILeagueRequest = {
     title: 'Accepted',
@@ -91,20 +83,15 @@ export default function Clubs({route}: Props) {
     }
   }, [context]);
 
-  const onClubAccept = (selectedClub: IClubRequestData) => {
-    setLoading(true);
-    const updatedList: IClubRequestData[] = data.map((club) => {
-      if (club.clubId === selectedClub.clubId) {
-        club.accepted = true;
-      }
-      return club;
-    });
-
-    handleLeagueRequest(
+  const onHandleLeagueRequest = async (
+    selectedClub: IClubRequestData,
+    acceptRequest: boolean,
+  ) => {
+    await handleLeagueRequest(
       requests,
       selectedClub,
       context.userLeagues[leagueId].name,
-      true,
+      acceptRequest,
     )
       .then((newData) => {
         requestContext.setLeagues(newData);
@@ -114,27 +101,49 @@ export default function Clubs({route}: Props) {
         );
       })
       .then(() => {
-        setData(updatedList);
-        sortClubs(updatedList);
-        setLoading(false);
+        const currentLeagueData = {...context.userLeagues};
+        if (acceptRequest) {
+          currentLeagueData[selectedClub.leagueId].clubs[
+            selectedClub.clubId
+          ].accepted = true;
+        } else {
+          delete currentLeagueData[selectedClub.leagueId].clubs[
+            selectedClub.clubId
+          ];
+        }
+        context.setUserLeagues(currentLeagueData);
       });
   };
 
-  const onClubDecline = (clubId: string) => {
-    const declinedClub: ClubData | undefined = data.find(
-      (club) => club.id === clubId,
-    );
-    const updatedList: ClubData[] = data.filter((club) => club.id !== clubId);
-    setData(updatedList);
-    sortClubs(updatedList);
-    const clubRef = leagueClubsRef.doc(clubId);
-    const managerRef = db.collection('users').doc(declinedClub?.managerId);
-    const batch = db.batch();
-    batch.update(managerRef, {
-      [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
+  const onAcceptClub = async (selectedClub: IClubRequestData) => {
+    setLoading(true);
+    const updatedList: IClubRequestData[] = data.map((club) => {
+      if (club.clubId === selectedClub.clubId) {
+        club.accepted = true;
+      }
+      return club;
     });
-    batch.delete(clubRef);
-    return batch.commit();
+    await onHandleLeagueRequest(selectedClub, true).then(() => {
+      setData(updatedList);
+      sortClubs(updatedList);
+      setLoading(false);
+    });
+  };
+
+  const onDeclineClub = async (selectedClub: IClubRequestData) => {
+    // const declinedClub: IClubRequestData = data.find(
+    //   (club) => club.clubId === selectedClub.clubId,
+    // );
+    setLoading(true);
+
+    const updatedList: IClubRequestData[] = data.filter(
+      (club) => club.clubId !== selectedClub.clubId,
+    );
+    await onHandleLeagueRequest(selectedClub, false).then(() => {
+      setData(updatedList);
+      sortClubs(updatedList);
+      setLoading(false);
+    });
   };
 
   const onOpenActionSheet = (club: IClubRequestData) => {
@@ -151,10 +160,10 @@ export default function Clubs({route}: Props) {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            onClubAccept(club);
+            onAcceptClub(club);
             break;
           case 1:
-            // onDeclinePlayer(player);
+            onDeclineClub(club);
             break;
         }
       },
@@ -162,18 +171,23 @@ export default function Clubs({route}: Props) {
   };
 
   return (
-    <SectionList
-      sections={sectionedData}
-      keyExtractor={(item) => item.clubId}
-      renderItem={({item}) => (
-        <TwoLine
-          title={item.name}
-          sub={item.managerUsername}
-          onPress={() => onOpenActionSheet(item)}
-        />
-      )}
-      ItemSeparatorComponent={() => <ListSeparator />}
-      renderSectionHeader={({section: {title}}) => <ListHeading col1={title} />}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <SectionList
+        sections={sectionedData}
+        keyExtractor={(item) => item.clubId}
+        renderItem={({item}) => (
+          <TwoLine
+            title={item.name}
+            sub={item.managerUsername}
+            onPress={() => onOpenActionSheet(item)}
+          />
+        )}
+        ItemSeparatorComponent={() => <ListSeparator />}
+        renderSectionHeader={({section: {title}}) => (
+          <ListHeading col1={title} />
+        )}
+      />
+    </>
   );
 }

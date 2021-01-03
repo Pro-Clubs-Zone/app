@@ -119,9 +119,16 @@ export default function Club({navigation, route}: Props) {
       })
       .then(() => {
         const currentLeagueData = {...context.userLeagues};
-        currentLeagueData[selectedPlayer.leagueId].clubs[
-          selectedPlayer.clubId
-        ].roster[selectedPlayer.playerId].accepted = true;
+        if (acceptRequest) {
+          currentLeagueData[selectedPlayer.leagueId].clubs[
+            selectedPlayer.clubId
+          ].roster[selectedPlayer.playerId].accepted = true;
+        } else {
+          delete currentLeagueData[selectedPlayer.leagueId].clubs[
+            selectedPlayer.clubId
+          ].roster[selectedPlayer.playerId];
+        }
+
         context.setUserLeagues(currentLeagueData);
       });
   };

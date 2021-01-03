@@ -1,15 +1,15 @@
 import firestore from '@react-native-firebase/firestore';
 import {IClubRequest, IPlayerRequestData} from '../../../utils/interface';
 
-const db = firestore();
-const batch = db.batch();
-
 const handleClubRequest = async (
   data: IClubRequest[],
   {playerId, clubId, leagueId}: IPlayerRequestData,
   sectionTitle: string,
   acceptRequest: boolean,
 ) => {
+  const db = firestore();
+  const batch = db.batch();
+
   const playerRef = db.collection('users').doc(playerId);
   const clubRef = db
     .collection('leagues')

@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {SectionList} from 'react-native';
+import {SectionList, Alert} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
 import firestore from '@react-native-firebase/firestore';
@@ -10,6 +10,7 @@ import {
   ILeagueRequest,
   IMyRequests,
   IPlayerRequestData,
+  ISentRequest,
 } from '../../utils/interface';
 import {ListHeading, ListSeparator, OneLine} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
@@ -17,8 +18,8 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import handleClubRequest from '../club/actions/handleClubRequest';
 import {AppContext} from '../../context/appContext';
 import handleLeagueRequest from '../club/actions/handleLeagueRequest';
+import FullScreenLoading from '../../components/loading';
 
-const db = firestore();
 const Tab = createMaterialTopTabNavigator();
 
 export default function Requests() {
@@ -38,7 +39,7 @@ function ClubRequests() {
   const context = useContext(AppContext);
 
   const [data, setData] = useState<IClubRequest[]>(() => requests);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const onHandlePlayerRequest = async (
     selectedPlayer: IPlayerRequestData,
@@ -56,9 +57,15 @@ function ClubRequests() {
       })
       .then(() => {
         const currentLeagueData = {...context.userLeagues};
-        currentLeagueData[selectedPlayer.leagueId].clubs[
-          selectedPlayer.clubId
-        ].roster[selectedPlayer.playerId].accepted = true;
+        if (acceptRequest) {
+          currentLeagueData[selectedPlayer.leagueId].clubs[
+            selectedPlayer.clubId
+          ].roster[selectedPlayer.playerId].accepted = true;
+        } else {
+          delete currentLeagueData[selectedPlayer.leagueId].clubs[
+            selectedPlayer.clubId
+          ].roster[selectedPlayer.playerId];
+        }
         context.setUserLeagues(currentLeagueData);
         setLoading(false);
       });
@@ -89,36 +96,42 @@ function ClubRequests() {
   };
 
   return (
-    <SectionList
-      sections={data}
-      stickySectionHeadersEnabled={true}
-      keyExtractor={(item) => item.playerId}
-      renderItem={({item, section}) => (
-        <OneLine
-          title={item.username}
-          onPress={() => onOpenActionSheet(item, section.title)}
-        />
-      )}
-      ItemSeparatorComponent={() => <ListSeparator />}
-      renderSectionHeader={({section: {title}}) => <ListHeading col1={title} />}
-      ListEmptyComponent={() => (
-        <EmptyState title="No Public Leagues" body="Check out later" />
-      )}
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: data.length === 0 ? 'center' : null,
-      }}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <SectionList
+        sections={data}
+        stickySectionHeadersEnabled={true}
+        keyExtractor={(item) => item.playerId}
+        renderItem={({item, section}) => (
+          <OneLine
+            title={item.username}
+            onPress={() => onOpenActionSheet(item, section.title)}
+          />
+        )}
+        ItemSeparatorComponent={() => <ListSeparator />}
+        renderSectionHeader={({section: {title}}) => (
+          <ListHeading col1={title} />
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState title="No Public Leagues" body="Check out later" />
+        )}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: data.length === 0 ? 'center' : null,
+        }}
+      />
+    </>
   );
 }
 
 function LeagueRequests() {
+  const context = useContext(AppContext);
   const requestContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
   const requests: ILeagueRequest[] = requestContext.leagues;
 
   const [data, setData] = useState<ILeagueRequest[]>(requests);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const onHandleLeagueRequest = async (
     selectedClub: IClubRequestData,
@@ -127,18 +140,29 @@ function LeagueRequests() {
   ) => {
     setLoading(true);
 
-    await handleLeagueRequest(
-      data,
-      selectedClub,
-      sectionTitle,
-      acceptRequest,
-    ).then((newData) => {
-      setData(newData);
-      requestContext.setLeagues(newData);
-      const currentCount = requestContext.requestCount;
-      requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
-      setLoading(false);
-    });
+    await handleLeagueRequest(data, selectedClub, sectionTitle, acceptRequest)
+      .then((newData) => {
+        requestContext.setLeagues(newData);
+        const currentCount = requestContext.requestCount;
+        requestContext.setLeagueCount(
+          currentCount === 1 ? 0 : currentCount - 1,
+        );
+        setData(newData);
+      })
+      .then(() => {
+        const currentLeagueData = {...context.userLeagues};
+        if (acceptRequest) {
+          currentLeagueData[selectedClub.leagueId].clubs[
+            selectedClub.clubId
+          ].accepted = true;
+        } else {
+          delete currentLeagueData[selectedClub.leagueId].clubs[
+            selectedClub.clubId
+          ];
+        }
+        context.setUserLeagues(currentLeagueData);
+        setLoading(false);
+      });
   };
 
   const onOpenActionSheet = (item: IClubRequestData, title: string) => {
@@ -166,33 +190,39 @@ function LeagueRequests() {
   };
 
   return (
-    <SectionList
-      sections={data}
-      stickySectionHeadersEnabled={true}
-      keyExtractor={(item) => item.clubId}
-      renderItem={({item, section}) => (
-        <OneLine
-          title={item.name}
-          onPress={() => onOpenActionSheet(item, section.title)}
-        />
-      )}
-      ItemSeparatorComponent={() => <ListSeparator />}
-      renderSectionHeader={({section: {title}}) => <ListHeading col1={title} />}
-      ListEmptyComponent={() => (
-        <EmptyState title="No Public Leagues" body="Check out later" />
-      )}
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: data.length === 0 ? 'center' : null,
-      }}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <SectionList
+        sections={data}
+        stickySectionHeadersEnabled={true}
+        keyExtractor={(item) => item.clubId}
+        renderItem={({item, section}) => (
+          <OneLine
+            title={item.name}
+            onPress={() => onOpenActionSheet(item, section.title)}
+          />
+        )}
+        ItemSeparatorComponent={() => <ListSeparator />}
+        renderSectionHeader={({section: {title}}) => (
+          <ListHeading col1={title} />
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState title="No Public Leagues" body="Check out later" />
+        )}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: data.length === 0 ? 'center' : null,
+        }}
+      />
+    </>
   );
 }
 
 function MySentRequests() {
+  const db = firestore();
+  const batch = db.batch();
   const requestContext = useContext(RequestContext);
   const user = useContext(AuthContext);
-  const {showActionSheetWithOptions} = useActionSheet();
 
   const clubRequests: IMyRequests = requestContext.myClubRequests;
   const leagueRequests: IMyRequests = requestContext.myLeagueRequests;
@@ -202,27 +232,21 @@ function MySentRequests() {
   clubRequests && requests.push(clubRequests);
   leagueRequests && requests.push(leagueRequests);
 
-  const [data, setData] = useState<IMyRequests[] | undefined>(requests);
+  const [data, setData] = useState<IMyRequests[]>(requests);
 
   const uid = user?.uid;
 
-  type Props = {
-    clubId: string;
-    leagueId: string;
-  };
-
-  const onCancelRequest = async (
-    {clubId, leagueId}: Props,
+  const onCancelRequestConfirm = async (
+    myRequest: ISentRequest,
     sectionTitle: string,
   ) => {
     const clubRef = db
       .collection('leagues')
-      .doc(leagueId)
+      .doc(myRequest.leagueId)
       .collection('clubs')
-      .doc(clubId);
+      .doc(myRequest.clubId);
 
     const userRef = db.collection('users').doc(uid);
-    const batch = db.batch();
 
     const sectionIndex = data.findIndex(
       (section) => section.title === sectionTitle,
@@ -232,7 +256,7 @@ function MySentRequests() {
 
     if (sectionTitle === 'Club Requests') {
       const openClubRequests = data[sectionIndex].data.filter((club) => {
-        return club.clubId !== clubId;
+        return club.clubId !== myRequest.clubId;
       });
 
       newData[sectionIndex].data = openClubRequests;
@@ -249,11 +273,11 @@ function MySentRequests() {
         ['roster.' + uid]: firestore.FieldValue.delete(),
       });
       batch.update(userRef, {
-        ['leagues.' + leagueId]: firestore.FieldValue.delete(),
+        ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
       });
     } else {
       const openLeagueRequests = data[sectionIndex].data.filter((league) => {
-        return league.leagueId !== leagueId;
+        return league.leagueId !== myRequest.leagueId;
       });
 
       newData[sectionIndex].data = openLeagueRequests;
@@ -267,33 +291,29 @@ function MySentRequests() {
 
       batch.delete(clubRef);
       batch.update(userRef, {
-        ['leagues.' + leagueId]: firestore.FieldValue.delete(),
+        ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
       });
     }
     await batch.commit();
   };
 
-  const onOpenActionSheet = (item: Props, title: string) => {
-    const options = ['Accept', 'Decline', 'Cancel'];
-    const destructiveButtonIndex = 1;
-    const cancelButtonIndex = 2;
-
-    showActionSheetWithOptions(
-      {
-        options,
-        destructiveButtonIndex,
-        cancelButtonIndex,
-      },
-      (buttonIndex) => {
-        switch (buttonIndex) {
-          case 0:
-            onCancelRequest(item, title);
-            break;
-          case 1:
-            console.log('decline club');
-            break;
-        }
-      },
+  const onCancelRequest = (item: ISentRequest, title: string) => {
+    Alert.alert(
+      'Cancel Request',
+      'Are you sure you want to cancel your sent request?',
+      [
+        {
+          text: 'Remove',
+          onPress: () => {
+            onCancelRequestConfirm(item, title);
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
     );
   };
 
@@ -305,7 +325,7 @@ function MySentRequests() {
       renderItem={({item, section}) => (
         <OneLine
           title={item.clubName}
-          onPress={() => onOpenActionSheet(item, section.title)}
+          onPress={() => onCancelRequest(item, section.title)}
         />
       )}
       ItemSeparatorComponent={() => <ListSeparator />}
