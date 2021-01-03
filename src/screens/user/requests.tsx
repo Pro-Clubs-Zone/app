@@ -13,7 +13,7 @@ import {
 import {ListHeading, ListSeparator, OneLine} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import onAcceptPlayer from '../club/actions/onAcceptPlayer';
+import handlePlayerRequest from '../club/actions/handlePlayerRequest';
 import {AppContext} from '../../context/appContext';
 
 const db = firestore();
@@ -37,11 +37,12 @@ function ClubRequests() {
 
   const [data, setData] = useState<IClubRequest[]>(() => requests);
 
-  const acceptPlayer = (
+  const onHandlePlayerRequest = async (
     selectedPlayer: IPlayerRequestData,
+    acceptRequest: boolean,
     sectionTitle: string,
   ) => {
-    onAcceptPlayer(data, selectedPlayer, sectionTitle)
+    await handlePlayerRequest(data, selectedPlayer, sectionTitle, acceptRequest)
       .then((newData) => {
         setData(newData);
         requestContext.setClubs(newData);
@@ -71,10 +72,10 @@ function ClubRequests() {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            acceptPlayer(item, title);
+            onHandlePlayerRequest(item, true, title);
             break;
           case 1:
-            console.log('decline player');
+            onHandlePlayerRequest(item, false, title);
             break;
         }
       },

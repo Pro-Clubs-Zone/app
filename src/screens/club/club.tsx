@@ -9,7 +9,7 @@ import {LeagueStackType} from '../league/league';
 import {ListHeading, OneLine, ListSeparator} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import onAcceptPlayer from './actions/onAcceptPlayer';
+import handlePlayerRequest from './actions/handlePlayerRequest';
 import {RequestContext} from '../../context/requestContext';
 
 // TODO: Update context on changes
@@ -23,7 +23,6 @@ type Props = {
 };
 
 const db = firestore();
-const batch = db.batch();
 
 export default function Club({navigation, route}: Props) {
   const [data, setData] = useState<IPlayerRequestData[]>([]);
@@ -35,6 +34,11 @@ export default function Club({navigation, route}: Props) {
   const context = useContext(AppContext);
   const requestContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
+
+  const club = context.userData.leagues[leagueId];
+  const requests = requestContext.clubs;
+  const requestSectionTitle =
+    club.clubName + ' / ' + context.userLeagues[leagueId].name;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -51,12 +55,6 @@ export default function Club({navigation, route}: Props) {
       ),
     });
   }, [navigation]);
-
-  const clubRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('clubs')
-    .doc(clubId);
 
   const roster: IClubRequest = {
     title: 'Roster',
@@ -108,21 +106,16 @@ export default function Club({navigation, route}: Props) {
     setLoading(false);
   }, []);
 
-  const acceptPlayer = async (selectedPlayer: IPlayerRequestData) => {
-    setLoading(true);
-    const club = context.userData.leagues[leagueId];
-    const requests = requestContext.clubs;
-    const requestSectionTitle =
-      club.clubName + ' / ' + context.userLeagues[leagueId].name;
-
-    const updatedList: IPlayerRequestData[] = data.map((player) => {
-      if (player.playerId === selectedPlayer.playerId) {
-        player.accepted = true;
-      }
-      return player;
-    });
-
-    onAcceptPlayer(requests, selectedPlayer, requestSectionTitle)
+  const onHandlePlayerRequest = async (
+    selectedPlayer: IPlayerRequestData,
+    acceptRequest: boolean,
+  ) => {
+    await handlePlayerRequest(
+      requests,
+      selectedPlayer,
+      requestSectionTitle,
+      acceptRequest,
+    )
       .then((newData) => {
         requestContext.setClubs(newData);
         const currentCount = requestContext.requestCount;
@@ -134,32 +127,38 @@ export default function Club({navigation, route}: Props) {
           selectedPlayer.clubId
         ].roster[selectedPlayer.playerId].accepted = true;
         context.setUserLeagues(currentLeagueData);
-      })
-      .then(() => {
-        setData(updatedList);
-        sortPlayers(updatedList);
-        setLoading(false);
       });
   };
 
-  const onPlayerDecline = async (playerId: string) => {
+  const onAcceptPlayer = async (selectedPlayer: IPlayerRequestData) => {
     setLoading(true);
-    const declinedPlayer: PlayerData | undefined = data.find(
-      (player) => player.id === playerId,
-    );
-    const updatedList: PlayerData[] = data.filter(
-      (player) => player.id !== playerId,
-    );
-    setData(updatedList);
-    sortPlayers(updatedList);
-    const playerRef = db.collection('users').doc(declinedPlayer.id);
-    batch.update(playerRef, {
-      [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
+
+    const updatedList: IPlayerRequestData[] = data.map((player) => {
+      if (player.playerId === selectedPlayer.playerId) {
+        player.accepted = true;
+      }
+      return player;
     });
-    batch.update(clubRef, {
-      ['roster.' + playerId]: firestore.FieldValue.delete(),
+
+    onHandlePlayerRequest(selectedPlayer, true).then(() => {
+      setData(updatedList);
+      sortPlayers(updatedList);
+      setLoading(false);
     });
-    return batch.commit().then(() => setLoading(false));
+  };
+
+  const onDeclinePlayer = async (selectedPlayer: IPlayerRequestData) => {
+    setLoading(true);
+
+    const updatedList: IPlayerRequestData[] = data.filter(
+      (player) => player.playerId !== selectedPlayer.playerId,
+    );
+
+    onHandlePlayerRequest(selectedPlayer, false).then(() => {
+      setData(updatedList);
+      sortPlayers(updatedList);
+      setLoading(false);
+    });
   };
 
   const onOpenActionSheet = (player: IPlayerRequestData) => {
@@ -176,10 +175,10 @@ export default function Club({navigation, route}: Props) {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            acceptPlayer(player);
+            onAcceptPlayer(player);
             break;
           case 1:
-            onPlayerDecline(playerId);
+            onDeclinePlayer(player);
             break;
         }
       },

@@ -1,22 +1,21 @@
 import firestore from '@react-native-firebase/firestore';
 import {IClubRequest, IPlayerRequestData} from '../../../utils/interface';
 
-const onAcceptPlayer = async (
+const db = firestore();
+const batch = db.batch();
+
+const handlePlayerRequest = async (
   data: IClubRequest[],
   {playerId, clubId, leagueId}: IPlayerRequestData,
   sectionTitle: string,
+  acceptRequest: boolean,
 ) => {
-  const db = firestore();
-  const batch = db.batch();
-
   const playerRef = db.collection('users').doc(playerId);
   const clubRef = db
     .collection('leagues')
     .doc(leagueId)
     .collection('clubs')
     .doc(clubId);
-
-  // Update Request Context
 
   const sectionIndex = data.findIndex(
     (section) => section.title === sectionTitle,
@@ -33,28 +32,25 @@ const onAcceptPlayer = async (
     newData.splice(sectionIndex, 1);
   }
 
-  // const currentCount = requestsContext.requestCount;
-  // requestsContext.setClubs(newData);
-  // requestsContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
-
-  // Update App Context
-
-  // const currentLeagueData = {...context.userLeagues};
-  // currentLeagueData[leagueId].clubs[clubId].roster[playerId].accepted = true;
-  // context.setUserLeagues(currentLeagueData);
-
-  // Update Firebase
-
-  batch.update(clubRef, {
-    ['roster.' + playerId + '.accepted']: true,
-  });
-  batch.update(playerRef, {
-    ['leagues.' + leagueId + '.accepted']: true,
-  });
+  if (acceptRequest) {
+    batch.update(clubRef, {
+      ['roster.' + playerId + '.accepted']: true,
+    });
+    batch.update(playerRef, {
+      ['leagues.' + leagueId + '.accepted']: true,
+    });
+  } else {
+    batch.update(playerRef, {
+      [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
+    });
+    batch.update(clubRef, {
+      ['roster.' + playerId]: firestore.FieldValue.delete(),
+    });
+  }
 
   await batch.commit();
 
   return newData;
 };
 
-export default onAcceptPlayer;
+export default handlePlayerRequest;
