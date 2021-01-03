@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {
   IClubRequest,
+  IClubRequestData,
   ILeagueRequest,
   IMyRequests,
   IPlayerRequestData,
@@ -13,8 +14,9 @@ import {
 import {ListHeading, ListSeparator, OneLine} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import handlePlayerRequest from '../club/actions/handlePlayerRequest';
+import handleClubRequest from '../club/actions/handleClubRequest';
 import {AppContext} from '../../context/appContext';
+import handleLeagueRequest from '../club/actions/handleLeagueRequest';
 
 const db = firestore();
 const Tab = createMaterialTopTabNavigator();
@@ -36,13 +38,16 @@ function ClubRequests() {
   const context = useContext(AppContext);
 
   const [data, setData] = useState<IClubRequest[]>(() => requests);
+  const [loading, setLoading] = useState(true);
 
   const onHandlePlayerRequest = async (
     selectedPlayer: IPlayerRequestData,
-    acceptRequest: boolean,
     sectionTitle: string,
+    acceptRequest: boolean,
   ) => {
-    await handlePlayerRequest(data, selectedPlayer, sectionTitle, acceptRequest)
+    setLoading(true);
+
+    await handleClubRequest(data, selectedPlayer, sectionTitle, acceptRequest)
       .then((newData) => {
         setData(newData);
         requestContext.setClubs(newData);
@@ -55,6 +60,7 @@ function ClubRequests() {
           selectedPlayer.clubId
         ].roster[selectedPlayer.playerId].accepted = true;
         context.setUserLeagues(currentLeagueData);
+        setLoading(false);
       });
   };
 
@@ -72,10 +78,10 @@ function ClubRequests() {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            onHandlePlayerRequest(item, true, title);
+            onHandlePlayerRequest(item, title, true);
             break;
           case 1:
-            onHandlePlayerRequest(item, false, title);
+            onHandlePlayerRequest(item, title, false);
             break;
         }
       },
@@ -107,50 +113,35 @@ function ClubRequests() {
 }
 
 function LeagueRequests() {
-  const requestsContext = useContext(RequestContext);
+  const requestContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
-  const requests: ILeagueRequest[] = requestsContext.leagues;
+  const requests: ILeagueRequest[] = requestContext.leagues;
 
   const [data, setData] = useState<ILeagueRequest[]>(requests);
+  const [loading, setLoading] = useState(true);
 
-  type Props = {
-    clubId: string;
-    leagueId: string;
+  const onHandleLeagueRequest = async (
+    selectedClub: IClubRequestData,
+    sectionTitle: string,
+    acceptRequest: boolean,
+  ) => {
+    setLoading(true);
+
+    await handleLeagueRequest(
+      data,
+      selectedClub,
+      sectionTitle,
+      acceptRequest,
+    ).then((newData) => {
+      setData(newData);
+      requestContext.setLeagues(newData);
+      const currentCount = requestContext.requestCount;
+      requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
+      setLoading(false);
+    });
   };
 
-  const onAcceptClub = ({clubId, leagueId}: Props, sectionTitle: string) => {
-    const clubRef = db
-      .collection('leagues')
-      .doc(leagueId)
-      .collection('clubs')
-      .doc(clubId);
-
-    clubRef.update({
-      accepted: true,
-    });
-
-    const sectionIndex = data.findIndex(
-      (section) => section.title === sectionTitle,
-    );
-
-    const unacceptedClubs = data[sectionIndex].data.filter((club) => {
-      return club.clubId !== clubId;
-    });
-    const newData = [...data];
-    newData[sectionIndex].data = unacceptedClubs;
-
-    if (unacceptedClubs.length === 0) {
-      newData.splice(sectionIndex, 1);
-    }
-    setData(newData);
-
-    requestsContext?.setLeagues(newData);
-
-    const currentCount = requestsContext?.requestCount;
-    requestsContext?.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
-  };
-
-  const onOpenActionSheet = (item: Props, title: string) => {
+  const onOpenActionSheet = (item: IClubRequestData, title: string) => {
     const options = ['Accept', 'Decline', 'Cancel'];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
@@ -164,10 +155,10 @@ function LeagueRequests() {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            onAcceptClub(item, title);
+            onHandleLeagueRequest(item, title, true);
             break;
           case 1:
-            console.log('decline club');
+            onHandleLeagueRequest(item, title, false);
             break;
         }
       },
@@ -199,12 +190,12 @@ function LeagueRequests() {
 }
 
 function MySentRequests() {
-  const requestsContext = useContext(RequestContext);
+  const requestContext = useContext(RequestContext);
   const user = useContext(AuthContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
-  const clubRequests: IMyRequests = requestsContext.myClubRequests;
-  const leagueRequests: IMyRequests = requestsContext.myLeagueRequests;
+  const clubRequests: IMyRequests = requestContext.myClubRequests;
+  const leagueRequests: IMyRequests = requestContext.myLeagueRequests;
 
   let requests: IMyRequests[] = [];
 
@@ -252,7 +243,7 @@ function MySentRequests() {
 
       setData(newData);
 
-      requestsContext?.setMyClubRequests(newData[sectionIndex]);
+      requestContext?.setMyClubRequests(newData[sectionIndex]);
 
       batch.update(clubRef, {
         ['roster.' + uid]: firestore.FieldValue.delete(),
@@ -272,7 +263,7 @@ function MySentRequests() {
       }
 
       setData(newData);
-      requestsContext?.setMyLeagueRequests(newData[sectionIndex]);
+      requestContext?.setMyLeagueRequests(newData[sectionIndex]);
 
       batch.delete(clubRef);
       batch.update(userRef, {

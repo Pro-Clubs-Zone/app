@@ -61,6 +61,7 @@ export default function CreateClub({route, navigation}: Props) {
       clubId: clubRef.id,
       manager: true,
       clubName: clubName,
+      accepted: isAdmin ? true : false,
     };
 
     batch.set(clubRef, clubInfo);

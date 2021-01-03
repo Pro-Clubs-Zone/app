@@ -8,7 +8,7 @@ import {LeagueStackType} from '../league/league';
 import {ListHeading, OneLine, ListSeparator} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import handlePlayerRequest from './actions/handlePlayerRequest';
+import handleClubRequest from './actions/handleClubRequest';
 import {RequestContext} from '../../context/requestContext';
 import {IconButton} from '../../components/buttons';
 
@@ -106,7 +106,7 @@ export default function Club({navigation, route}: Props) {
     selectedPlayer: IPlayerRequestData,
     acceptRequest: boolean,
   ) => {
-    await handlePlayerRequest(
+    await handleClubRequest(
       requests,
       selectedPlayer,
       requestSectionTitle,

@@ -4,7 +4,7 @@ import {IClubRequest, IPlayerRequestData} from '../../../utils/interface';
 const db = firestore();
 const batch = db.batch();
 
-const handlePlayerRequest = async (
+const handleClubRequest = async (
   data: IClubRequest[],
   {playerId, clubId, leagueId}: IPlayerRequestData,
   sectionTitle: string,
@@ -53,4 +53,4 @@ const handlePlayerRequest = async (
   return newData;
 };
 
-export default handlePlayerRequest;
+export default handleClubRequest;

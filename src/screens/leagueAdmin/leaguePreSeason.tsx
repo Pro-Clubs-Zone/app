@@ -54,13 +54,14 @@ export default function LeaguePreSeason({navigation, route}: Props) {
     }
   }, [navigation, newLeague]);
 
-  useEffect(() => {
-    if (userClub.clubId && context.userLeagues[leagueId].clubs) {
-      const clubRoster =
-        context.userLeagues[leagueId].clubs[userClub.clubId].roster;
-      setClubRosterLength(Object.values(clubRoster).length);
-    }
-  }, [context]);
+  //FIXME:
+  // useEffect(() => {
+  //   if (userClub.clubId && context.userLeagues[leagueId].clubs) {
+  //     const clubRoster =
+  //       context.userLeagues[leagueId].clubs[userClub.clubId].roster;
+  //     setClubRosterLength(Object.values(clubRoster).length);
+  //   }
+  // }, [context]);
 
   const scheduleMatches = async () => {
     setLoading(true);
