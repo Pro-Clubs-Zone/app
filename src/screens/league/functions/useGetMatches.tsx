@@ -17,13 +17,15 @@ const useGetMatches = (
   const [data, setData] = useState<FixtureList[]>([]);
   const [lastVisible, setLastVisible] = useState<any>(null);
   const [allLoaded, setAllLoaded] = useState<boolean>(false);
+  // const [resolved, setResolved] = useState<boolean>(published);
 
   const context = useContext(AppContext);
 
-  const league = context?.userLeagues[leagueId];
-  const userLeague = context?.userData?.leagues[leagueId];
-  const clubId = userLeague?.clubId;
-  const manager = userLeague?.manager;
+  const league = context.userLeagues[leagueId];
+  const userLeague = context.userData?.leagues[leagueId];
+  const clubId = userLeague.clubId;
+  const manager = userLeague.manager;
+  const leagueName = context.userLeagues[leagueId].name;
 
   const leagueRef = db
     .collection('leagues')
@@ -35,16 +37,13 @@ const useGetMatches = (
       .where('published', '==', published)
       .where('conflict', 'in', conflict)
       .orderBy('id', 'asc')
-      .limit(2);
-    // TODO: Replace back to get();
+      .limit(10);
 
     const subscriber = firstPage.onSnapshot((snapshot) => {
-      let matches: FixtureList[] = [];
-      let lastVisibleDoc: any = null;
-
       if (!snapshot.empty) {
+        let matches: FixtureList[] = [];
+        let lastVisibleDoc: any = null;
         lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
-        console.log('first page', published);
 
         snapshot.forEach((doc) => {
           const matchData = doc.data() as IMatch;
@@ -60,6 +59,7 @@ const useGetMatches = (
             manager: manager,
             matchId: matchId,
             leagueId: leagueId,
+            leagueName: leagueName,
           };
 
           const fixture: FixtureList = {
@@ -68,22 +68,22 @@ const useGetMatches = (
           };
           matches.push(fixture);
         });
+        setData(matches);
+        setLastVisible(lastVisibleDoc);
+        setAllLoaded(matches.length < 10);
       }
-
-      setData(matches);
-      setLastVisible(lastVisibleDoc);
     });
     return subscriber;
-  }, [context]);
+  }, []);
 
-  const onLoadMore = () => {
+  const onLoadMore = async () => {
     const nextPage = leagueRef
       .where('published', '==', published)
       .orderBy('id', 'asc')
       .startAfter(lastVisible)
-      .limit(1);
+      .limit(5);
 
-    nextPage.get().then((snapshot) => {
+    await nextPage.get().then((snapshot) => {
       if (!snapshot.empty) {
         let matches: FixtureList[] = [];
         const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
@@ -98,6 +98,11 @@ const useGetMatches = (
             ...matchData,
             homeTeamName: homeTeamName,
             awayTeamName: awayTeamName,
+            clubId: clubId,
+            manager: manager,
+            matchId: matchId,
+            leagueId: leagueId,
+            leagueName: leagueName,
           };
 
           const fixture: FixtureList = {
