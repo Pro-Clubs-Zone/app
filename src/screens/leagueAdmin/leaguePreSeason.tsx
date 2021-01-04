@@ -13,7 +13,7 @@ import {
 import {verticalScale} from 'react-native-size-matters';
 import FullScreenLoading from '../../components/loading';
 import {RouteProp} from '@react-navigation/native';
-import {StackActions} from '@react-navigation/native';
+import {StackActions, CommonActions} from '@react-navigation/native';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -71,6 +71,18 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         console.log('message from cloud', response);
         setLoading(false);
       })
+      .then(() => {
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 2,
+            routes: [
+              {name: 'Home'},
+              {name: 'League Explorer'},
+              {name: 'League', params: {leagueId: leagueId}},
+            ],
+          }),
+        );
+      })
       .catch((error) => {
         console.log(error);
       });
@@ -119,7 +131,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           onPress={() => console.log('nothing yet')}
         />
       </CardSmallContainer>
-      {scheduled && (
+      {!scheduled && (
         <CardMedium onPress={scheduleMatches} title="Schedule Matches" />
       )}
     </ScrollView>

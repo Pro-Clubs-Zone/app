@@ -31,6 +31,7 @@ export default function CreateLeague({navigation}: Props) {
   const leagueInfoDefault: ILeague = {
     name: '',
     description: '',
+    discord: '',
     platform: 'ps',
     teamNum: 8,
     matchNum: 2,
@@ -101,25 +102,29 @@ export default function CreateLeague({navigation}: Props) {
       },
       {merge: true},
     );
-    batch.commit().then(() => {
-      context.setUserData({
-        leagues: {
-          [leagueRef.id]: {
-            admin: true,
-            manager: false,
+    batch
+      .commit()
+      .then(() => {
+        context.setUserData({
+          leagues: {
+            [leagueRef.id]: {
+              admin: true,
+              manager: false,
+            },
           },
-        },
+        });
+        context.setUserLeagues({
+          [leagueRef.id]: data,
+        });
+        setLoading(false);
+      })
+      .then(() => {
+        navigation.navigate('League', {
+          leagueId: leagueRef.id,
+          isAdmin: true,
+          newLeague: true,
+        });
       });
-      context.setUserLeagues({
-        [leagueRef.id]: data,
-      });
-      setLoading(false);
-      navigation.navigate('League', {
-        leagueId: leagueRef.id,
-        isAdmin: true,
-        newLeague: true,
-      });
-    });
   };
 
   return (
@@ -227,6 +232,13 @@ export default function CreateLeague({navigation}: Props) {
           multiline={true}
           onChangeText={(text) => setData({...data, description: text})}
           autoCapitalize="sentences"
+        />
+        <TextField
+          value={data.discord}
+          placeholder="Discord URL"
+          label="Discord"
+          onChangeText={(text) => setData({...data, discord: text})}
+          autoCapitalize="none"
         />
       </FormContent>
       <BigButton

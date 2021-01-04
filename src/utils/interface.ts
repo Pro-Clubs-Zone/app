@@ -76,6 +76,7 @@ export interface IClubRequestData extends IClub {
 export interface ILeague {
   name: string;
   description: string;
+  discord: string;
   platform: 'ps' | 'xb';
   teamNum: number;
   matchNum: number;
@@ -108,7 +109,7 @@ export interface IUserLeague {
   manager: boolean;
   admin?: boolean;
   accepted?: boolean;
-  clubName: string;
+  clubName?: string;
 }
 
 export interface IUser {

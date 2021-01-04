@@ -27,7 +27,7 @@ export type AppNavStack = {
   'Create League': undefined;
   'League Explorer': undefined;
   Leagues: undefined;
-  League: ILeagueProps;
+  League: ILeagueProps & {leagueId: string};
 };
 
 export default function AppIndex() {

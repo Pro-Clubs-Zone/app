@@ -1,5 +1,5 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, ScrollView} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 
 export const FormView = ({children}) => (
@@ -7,7 +7,7 @@ export const FormView = ({children}) => (
 );
 
 export const FormContent = ({children}) => (
-  <View style={styles.form}>{children}</View>
+  <ScrollView contentContainerStyle={styles.form}>{children}</ScrollView>
 );
 
 const styles = ScaledSheet.create({
