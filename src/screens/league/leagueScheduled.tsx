@@ -26,6 +26,7 @@ export default function LeagueScheduled({navigation}: Props) {
 
   const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
+  const isAdmin = context.userData.leagues[leagueId].admin;
 
   return (
     <ScrollView
@@ -33,10 +34,12 @@ export default function LeagueScheduled({navigation}: Props) {
         paddingBottom: verticalScale(16),
       }}
       showsVerticalScrollIndicator={false}>
-      <CardMedium
-        title="Report Center"
-        onPress={() => navigation.navigate('Report Center')}
-      />
+      {isAdmin && (
+        <CardMedium
+          title="Report Center"
+          onPress={() => navigation.navigate('Report Center')}
+        />
+      )}
       <CardSmallContainer>
         <CardSmall
           title="Standings"

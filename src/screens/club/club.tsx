@@ -39,6 +39,9 @@ export default function Club({navigation, route}: Props) {
   const requestSectionTitle =
     club.clubName + ' / ' + context.userLeagues[leagueId].name;
 
+  const isManager = context.userData.leagues[leagueId].manager;
+  const managerId = context.userLeagues[leagueId].clubs[clubId].managerId;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -240,14 +243,24 @@ export default function Club({navigation, route}: Props) {
       <SectionList
         sections={sectionedData}
         keyExtractor={(item) => item.playerId}
-        renderItem={({item}) => (
-          <OneLine
-            title={item.username}
-            onPress={() =>
-              item.accepted ? onAcceptedPlayer(item) : onUnacceptedPlayer(item)
-            }
-          />
-        )}
+        renderItem={({item}) =>
+          item.playerId !== managerId && isManager ? (
+            item.accepted ? (
+              <OneLine
+                title={item.username}
+                icon="minus-circle"
+                onIconPress={() => onAcceptedPlayer(item)}
+              />
+            ) : (
+              <OneLine
+                title={item.username}
+                onPress={() => onUnacceptedPlayer(item)}
+              />
+            )
+          ) : (
+            <OneLine title={item.username} />
+          )
+        }
         ItemSeparatorComponent={() => <ListSeparator />}
         renderSectionHeader={({section: {title}}) => (
           <ListHeading col1={title} />

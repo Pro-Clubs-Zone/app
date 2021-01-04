@@ -1,11 +1,14 @@
 import React, {useContext} from 'react';
-import {Text, View, Button, Alert} from 'react-native';
+import {View, Alert} from 'react-native';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/league';
 import {LeagueContext} from '../../context/leagueContext';
 import removeClub from './actions/removeClub';
-
+import removePlayer from './actions/removePlayer';
+import {AuthContext} from '../../context/authContext';
+import RNRestart from 'react-native-restart';
+import {CardMedium} from '../../components/cards';
 // type ScreenNavigationProp = StackNavigationProp<
 //   LeagueStackType,
 //   'Club Settings'
@@ -18,18 +21,20 @@ type Props = {
 };
 
 export default function ClubSettings({route}: Props) {
+  const user = useContext(AuthContext);
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
 
+  const playerId = user.uid;
   const leagueId = leagueContext.leagueId;
   const clubId = route.params.clubId;
   const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-  // const isAdmin = context.userData.leagues[leagueId].admin;
+  const isManager = context.userData.leagues[leagueId].manager;
   const adminId = leagueContext.league.adminId;
 
   //TODO: if admin, do not restart.
 
-  const onRemove = async () => {
+  const onRemoveClub = async () => {
     Alert.alert(
       'Remove Club',
       'Remove club?',
@@ -37,7 +42,32 @@ export default function ClubSettings({route}: Props) {
         {
           text: 'Remove',
           onPress: () => {
-            removeClub(leagueId, clubId, adminId, clubRoster);
+            removeClub(leagueId, clubId, adminId, clubRoster).then(() => {
+              RNRestart.Restart();
+            });
+          },
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const onRemovePlayer = async () => {
+    Alert.alert(
+      'Remove Player',
+      'Remove Player?',
+      [
+        {
+          text: 'Remove',
+          onPress: () => {
+            removePlayer({leagueId, playerId, clubId}).then(() => {
+              RNRestart.Restart();
+            });
           },
         },
         {
@@ -52,8 +82,11 @@ export default function ClubSettings({route}: Props) {
 
   return (
     <View>
-      <Text>Club Settings</Text>
-      <Button title="remove club" onPress={onRemove} />
+      {isManager ? (
+        <CardMedium title="remove club" onPress={onRemoveClub} />
+      ) : (
+        <CardMedium title="remove myself" onPress={onRemovePlayer} />
+      )}
     </View>
   );
 }

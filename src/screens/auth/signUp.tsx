@@ -50,9 +50,7 @@ function SignUp({navigation}: Props) {
       .createUserWithEmailAndPassword(email, password)
       .then(async (data) => {
         console.log('User account created & signed in!', data);
-        await createDbEntry(data).then(() => {
-          setLoading(false);
-        });
+        await createDbEntry(data);
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {
@@ -193,12 +191,6 @@ function SignUp({navigation}: Props) {
     </ImageBackground>
   );
 }
-
-const Loading = () => (
-  <View>
-    <ActivityIndicator size="large" />
-  </View>
-);
 
 //---------- Stylesheet ----------//
 

@@ -1,23 +1,27 @@
 import firestore from '@react-native-firebase/firestore';
 import {IPlayerRequestData} from '../../../utils/interface';
 
-const removePlayer = async (selectedPlayer: IPlayerRequestData) => {
+const removePlayer = async ({
+  leagueId,
+  playerId,
+  clubId,
+}: Partial<IPlayerRequestData>) => {
   const db = firestore();
   const batch = db.batch();
 
   const clubRef = db
     .collection('leagues')
-    .doc(selectedPlayer.leagueId)
+    .doc(leagueId)
     .collection('clubs')
-    .doc(selectedPlayer.clubId);
-  const playerRef = db.collection('users').doc(selectedPlayer.playerId);
+    .doc(clubId);
+  const playerRef = db.collection('users').doc(playerId);
 
   batch.update(playerRef, {
-    ['leagues.' + selectedPlayer.leagueId]: firestore.FieldValue.delete(),
+    ['leagues.' + leagueId]: firestore.FieldValue.delete(),
   });
 
   batch.update(clubRef, {
-    ['roster.' + selectedPlayer.playerId]: firestore.FieldValue.delete(),
+    ['roster.' + playerId]: firestore.FieldValue.delete(),
   });
 
   await batch.commit();

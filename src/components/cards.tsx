@@ -42,7 +42,7 @@ export const CardSmall = ({onPress, title}: CardProps) => {
 //---------- Medium Card ----------//
 
 export const CardMedium = ({title, subTitle, onPress}: CardProps) => (
-  <Pressable onPress={onPress} style={{flex: 0.5}}>
+  <Pressable onPress={onPress} style={{height: verticalScale(112)}}>
     <ImageBackground
       style={[
         styles.card,

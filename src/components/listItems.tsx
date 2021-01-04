@@ -10,7 +10,7 @@ interface OneLineProps {
   key2?: string;
   // img,
   // flag,
-  onPress: () => void;
+  onPress?: () => void;
   icon?: string;
   onIconPress?: () => void;
   iconColor?: APP_COLORS;
@@ -125,16 +125,6 @@ export const OneLine = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        {icon && (
-          <View style={styles.oneLineIcon}>
-            <Icon
-              name={icon}
-              size={verticalScale(24)}
-              color={iconColor ? iconColor : APP_COLORS.Gray}
-              onPress={onIconPress}
-            />
-          </View>
-        )}
         {/* img && (
           <View>
             <Image
@@ -210,6 +200,17 @@ export const OneLine = ({
           </View>
         ) */}
       </View>
+
+      {icon && (
+        <View style={styles.oneLineIcon}>
+          <Icon
+            name={icon}
+            size={verticalScale(24)}
+            color={iconColor ? iconColor : APP_COLORS.Gray}
+            onPress={onIconPress}
+          />
+        </View>
+      )}
     </View>
   </Pressable>
 );
@@ -380,7 +381,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
   },
   oneLineIcon: {
-    marginRight: '16@vs',
+    marginLeft: '16@vs',
     justifyContent: 'center',
     alignItems: 'center',
   },

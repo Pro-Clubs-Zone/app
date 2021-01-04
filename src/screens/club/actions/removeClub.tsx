@@ -1,6 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
 import {IClubRosterMember} from '../../../utils/interface';
-import RNRestart from 'react-native-restart';
 
 const removeClub = async (
   leagueId: string,
@@ -34,9 +33,7 @@ const removeClub = async (
   }
   batch.delete(clubRef);
 
-  await batch.commit().then(() => {
-    RNRestart.Restart();
-  });
+  await batch.commit();
 };
 
 export default removeClub;

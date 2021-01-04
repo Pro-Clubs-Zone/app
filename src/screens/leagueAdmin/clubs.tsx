@@ -1,10 +1,10 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Alert, SectionList} from 'react-native';
 import {IClubRequestData, ILeagueRequest} from '../../utils/interface';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
+// import {StackNavigationProp} from '@react-navigation/stack';
+// import {RouteProp} from '@react-navigation/native';
+// import {LeagueStackType} from '../league/league';
 import {AppContext} from '../../context/appContext';
-import {LeagueStackType} from '../league/league';
 import {ListHeading, ListSeparator, TwoLine} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
@@ -13,16 +13,17 @@ import {RequestContext} from '../../context/requestContext';
 import {LeagueContext} from '../../context/leagueContext';
 import removeClub from '../club/actions/removeClub';
 import EmptyState from '../../components/emptyState';
+import RNRestart from 'react-native-restart';
 
-type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
-type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
+// type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
+// type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
 
-type Props = {
-  navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
-};
+// type Props = {
+//   navigation: ScreenNavigationProp;
+//   route: ScreenRouteProp;
+// };
 
-export default function Clubs({route}: Props) {
+export default function Clubs() {
   const [data, setData] = useState<IClubRequestData[]>([]);
   const [loading, setLoading] = useState(false);
   const [sectionedData, setSectionedData] = useState<ILeagueRequest[]>([]);
@@ -183,7 +184,9 @@ export default function Clubs({route}: Props) {
           text: 'Remove',
           onPress: () => {
             setLoading(true);
-            removeClub(leagueId, club.clubId, adminId, clubRoster);
+            removeClub(leagueId, club.clubId, adminId, clubRoster).then(() => {
+              RNRestart.Restart();
+            });
           },
         },
         {
