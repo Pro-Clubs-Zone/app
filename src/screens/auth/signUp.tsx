@@ -37,23 +37,22 @@ function SignUp({navigation}: Props) {
   const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onSignUp = () => {
+  const onSignUp = async () => {
     setLoading(true);
 
-    const createDbEntry = (data: {user: {uid: string}}) => {
-      db.collection('users').doc(data.user.uid).set({
+    const createDbEntry = async (data: {user: {uid: string}}) => {
+      await db.collection('users').doc(data.user.uid).set({
         username: username,
       });
     };
 
-    firAuth
+    await firAuth
       .createUserWithEmailAndPassword(email, password)
-      .then((data) => {
+      .then(async (data) => {
         console.log('User account created & signed in!', data);
-        return createDbEntry(data);
-      })
-      .then(() => {
-        setLoading(false);
+        await createDbEntry(data).then(() => {
+          setLoading(false);
+        });
       })
       .catch((error) => {
         if (error.code === 'auth/email-already-in-use') {

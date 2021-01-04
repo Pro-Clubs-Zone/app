@@ -171,17 +171,15 @@ export default function Home({navigation}: Props) {
               .then(() => {
                 getClubRequests(userLeagues);
                 getLeagueRequests(userLeagues);
-              })
-              .then(() => {
-                setLoading(false);
               });
           });
         } else {
           console.log('no leagues');
           context.setUserData(userInfo);
-          setLoading(false);
         }
       });
+
+      setLoading(false);
       return subscriber;
     }
   }, [user]);

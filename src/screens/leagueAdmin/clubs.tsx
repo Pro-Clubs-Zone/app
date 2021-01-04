@@ -12,6 +12,7 @@ import handleLeagueRequest from '../club/actions/handleLeagueRequest';
 import {RequestContext} from '../../context/requestContext';
 import {LeagueContext} from '../../context/leagueContext';
 import removeClub from '../club/actions/removeClub';
+import EmptyState from '../../components/emptyState';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -181,6 +182,7 @@ export default function Clubs({route}: Props) {
         {
           text: 'Remove',
           onPress: () => {
+            setLoading(true);
             removeClub(leagueId, club.clubId, adminId, clubRoster);
           },
         },
@@ -212,6 +214,16 @@ export default function Clubs({route}: Props) {
         renderSectionHeader={({section: {title}}) => (
           <ListHeading col1={title} />
         )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title="No Clubs in League"
+            body="You can invite clubs from league page"
+          />
+        )}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: sectionedData.length === 0 ? 'center' : null,
+        }}
       />
     </>
   );

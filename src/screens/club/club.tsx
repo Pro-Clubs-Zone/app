@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
-import {SectionList} from 'react-native';
+import {Alert, SectionList} from 'react-native';
 import {IClubRequest, IPlayerRequestData} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -12,6 +12,7 @@ import handleClubRequest from './actions/handleClubRequest';
 import {RequestContext} from '../../context/requestContext';
 import {IconButton} from '../../components/buttons';
 import {LeagueContext} from '../../context/leagueContext';
+import removePlayer from './actions/removePlayer';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'My Club'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'My Club'>;
@@ -165,7 +166,51 @@ export default function Club({navigation, route}: Props) {
     });
   };
 
-  const onOpenActionSheet = (player: IPlayerRequestData) => {
+  const onRemovePlayer = async (selectedPlayer: IPlayerRequestData) => {
+    setLoading(true);
+
+    const updatedList: IPlayerRequestData[] = data.filter(
+      (player) => player.playerId !== selectedPlayer.playerId,
+    );
+
+    removePlayer(selectedPlayer)
+      .then(() => {
+        const currentLeagueData = {...context.userLeagues};
+
+        delete currentLeagueData[selectedPlayer.leagueId].clubs[
+          selectedPlayer.clubId
+        ].roster[selectedPlayer.playerId];
+
+        context.setUserLeagues(currentLeagueData);
+      })
+      .then(() => {
+        setData(updatedList);
+        sortPlayers(updatedList);
+        setLoading(false);
+      });
+  };
+
+  const onAcceptedPlayer = (player: IPlayerRequestData) => {
+    Alert.alert(
+      'Remove Player',
+      'Are you sure you want to remove this player?',
+      [
+        {
+          text: 'Remove',
+          onPress: () => {
+            onRemovePlayer(player);
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const onUnacceptedPlayer = (player: IPlayerRequestData) => {
     const options = ['Accept', 'Decline', 'Cancel'];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
@@ -198,7 +243,9 @@ export default function Club({navigation, route}: Props) {
         renderItem={({item}) => (
           <OneLine
             title={item.username}
-            onPress={() => onOpenActionSheet(item)}
+            onPress={() =>
+              item.accepted ? onAcceptedPlayer(item) : onUnacceptedPlayer(item)
+            }
           />
         )}
         ItemSeparatorComponent={() => <ListSeparator />}
