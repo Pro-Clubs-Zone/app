@@ -5,6 +5,10 @@ import {IClubStanding} from '../../utils/interface';
 // import {RouteProp} from '@react-navigation/native';
 // import {LeagueStackType} from './league';
 import {LeagueContext} from '../../context/leagueContext';
+import {TableHeader, TableRow} from '../../components/standingItems';
+import {ListSeparator} from '../../components/listItems';
+import {verticalScale} from 'react-native-size-matters';
+
 // import {StackNavigationProp} from '@react-navigation/stack';
 
 // type ScreenRouteProp = RouteProp<LeagueStackType, 'Standings'>;
@@ -58,30 +62,30 @@ export default function LeagueStandings(/* {route}: Props */) {
   }, [data]);
 
   return (
-    <View>
-      <Text>Standings</Text>
-      <View>
-        <FlatList
-          data={standings}
-          renderItem={({item}) => (
-            <Item
-              name={item.data.name}
-              points={item.data.points}
-              won={item.data.won}
-              lost={item.data.lost}
-            />
-          )}
-          keyExtractor={(item) => item.key}
+    <FlatList
+      data={standings}
+      renderItem={({item, index}) => (
+        <TableRow
+          team={item.data.name}
+          p={item.data.points}
+          w={item.data.won}
+          d={item.data.draw}
+          l={item.data.lost}
+          dif={item.data.scored - item.data.conceded}
+          pts={item.data.points}
+          position={index + 1}
         />
-      </View>
-    </View>
+      )}
+      keyExtractor={(item) => item.key}
+      ItemSeparatorComponent={() => <ListSeparator />}
+      ListHeaderComponent={() => <TableHeader />}
+      stickyHeaderIndices={[0]}
+      bounces={false}
+      getItemLayout={(data, index) => ({
+        length: verticalScale(48),
+        offset: verticalScale(49) * index,
+        index,
+      })}
+    />
   );
 }
-const Item = ({name, points, won, draw, lost, scored, conceded, played}) => (
-  <View>
-    <Text>Name: {name}</Text>
-    <Text>Points: {points}</Text>
-    <Text>Won: {won}</Text>
-    <Text>Lost: {lost}</Text>
-  </View>
-);
