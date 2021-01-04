@@ -10,6 +10,7 @@ import {FormView, FormContent} from '../../components/templates';
 import {BigButton} from '../../components/buttons';
 import TextField from '../../components/textField';
 import FullScreenLoading from '../../components/loading';
+import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Create Club'>;
 
@@ -28,8 +29,9 @@ export default function CreateClub({route, navigation}: Props) {
 
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
+  const leagueContext = useContext(LeagueContext);
 
-  const leagueId = route.params.leagueId;
+  const leagueId = leagueContext.leagueId;
   const uid = user?.uid;
   const isAdmin = route.params.isAdmin;
   const username = context.userData.username;

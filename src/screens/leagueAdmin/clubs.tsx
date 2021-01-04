@@ -11,6 +11,7 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import handleLeagueRequest from '../club/actions/handleLeagueRequest';
 import {RequestContext} from '../../context/requestContext';
 import {LeagueContext} from '../../context/leagueContext';
+import removeClub from '../club/actions/removeClub';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -32,6 +33,7 @@ export default function Clubs({route}: Props) {
 
   const requests: ILeagueRequest[] = requestContext.leagues;
   const leagueId = leagueContext.leagueId;
+  const adminId = leagueContext.league.adminId;
 
   const sortClubs = (clubs: IClubRequestData[]) => {
     const acceptedClubList: ILeagueRequest = {
@@ -170,14 +172,16 @@ export default function Clubs({route}: Props) {
   };
 
   const onAcceptedClub = (club: IClubRequestData) => {
+    const clubRoster = context.userLeagues[leagueId].clubs[club.clubId].roster;
+
     Alert.alert(
       'Remove Club',
-      'Are you sure you want to remove club?',
+      'After removal, you will be to moved the home screen',
       [
         {
           text: 'Remove',
           onPress: () => {
-            onDeclineClub(club);
+            removeClub(leagueId, club.clubId, adminId, clubRoster);
           },
         },
         {

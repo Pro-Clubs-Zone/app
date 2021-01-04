@@ -1,11 +1,10 @@
 import React, {useContext} from 'react';
 import {Text, View, Button, Alert} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
-import RNRestart from 'react-native-restart';
 import {LeagueStackType} from '../league/league';
 import {LeagueContext} from '../../context/leagueContext';
+import removeClub from './actions/removeClub';
 
 // type ScreenNavigationProp = StackNavigationProp<
 //   LeagueStackType,
@@ -19,22 +18,14 @@ type Props = {
 };
 
 export default function ClubSettings({route}: Props) {
-  const db = firestore();
-  const batch = db.batch();
-
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
   const clubId = route.params.clubId;
   const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-  const isAdmin = context.userData.leagues[leagueId].admin;
-
-  const clubRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('clubs')
-    .doc(clubId);
+  // const isAdmin = context.userData.leagues[leagueId].admin;
+  const adminId = leagueContext.league.adminId;
 
   //TODO: if admin, do not restart.
 
@@ -46,7 +37,7 @@ export default function ClubSettings({route}: Props) {
         {
           text: 'Remove',
           onPress: () => {
-            removeData().then(() => RNRestart.Restart());
+            removeClub(leagueId, clubId, adminId, clubRoster);
           },
         },
         {
@@ -57,25 +48,6 @@ export default function ClubSettings({route}: Props) {
       ],
       {cancelable: false},
     );
-
-    const removeData = async () => {
-      for (const playerId of Object.keys(clubRoster)) {
-        const playerRef = db.collection('users').doc(playerId);
-        if (isAdmin) {
-          batch.update(playerRef, {
-            ['leagues.' + leagueId + '.manager']: firestore.FieldValue.delete(),
-            ['leagues.' + leagueId + '.clubId']: firestore.FieldValue.delete(),
-          });
-        } else {
-          batch.update(playerRef, {
-            ['leagues.' + leagueId]: firestore.FieldValue.delete(),
-          });
-        }
-      }
-      batch.delete(clubRef);
-      const commit = await batch.commit();
-      return commit;
-    };
   };
 
   return (
