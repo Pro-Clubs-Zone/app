@@ -1,11 +1,12 @@
 import React, {useState, useEffect, useContext} from 'react';
 import {Text, View, Button, FlatList} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
+// import {RouteProp} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {IMatch, IMatchNavData} from '../../utils/interface';
 import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/league';
+import {LeagueContext} from '../../context/leagueContext';
 
 type FixtureList = {
   key: string;
@@ -17,20 +18,22 @@ type ScreenNavigationProp = StackNavigationProp<
   'Report Center'
 >;
 
-type ScreenRouteProp = RouteProp<LeagueStackType, 'Report Center'>;
+// type ScreenRouteProp = RouteProp<LeagueStackType, 'Report Center'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
+  // route: ScreenRouteProp;
 };
 const db = firestore();
 
-export default function ReportCenter({navigation, route}: Props) {
-  const [data, setData] = useState([]);
-  const leagueId = route.params.leagueId;
-
+export default function ReportCenter({navigation}: Props) {
+  const leagueContext = useContext(LeagueContext);
   const context = useContext(AppContext);
-  const league = context?.userLeagues[leagueId];
+
+  const leagueId = leagueContext.leagueId;
+  const league = context.userLeagues[leagueId];
+
+  const [data, setData] = useState([]);
 
   const leagueRef = db
     .collection('leagues')

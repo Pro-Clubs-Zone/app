@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {SectionList} from 'react-native';
+import {Alert, SectionList} from 'react-native';
 import {IClubRequestData, ILeagueRequest} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
@@ -10,6 +10,7 @@ import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import handleLeagueRequest from '../club/actions/handleLeagueRequest';
 import {RequestContext} from '../../context/requestContext';
+import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -21,27 +22,28 @@ type Props = {
 
 export default function Clubs({route}: Props) {
   const [data, setData] = useState<IClubRequestData[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [sectionedData, setSectionedData] = useState<ILeagueRequest[]>([]);
 
-  const leagueId = route.params.leagueId;
   const context = useContext(AppContext);
   const requestContext = useContext(RequestContext);
+  const leagueContext = useContext(LeagueContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
   const requests: ILeagueRequest[] = requestContext.leagues;
-
-  const acceptedClubList: ILeagueRequest = {
-    title: 'Accepted',
-    data: [],
-  };
-
-  const clubRequestList: ILeagueRequest = {
-    title: 'New requests',
-    data: [],
-  };
+  const leagueId = leagueContext.leagueId;
 
   const sortClubs = (clubs: IClubRequestData[]) => {
+    const acceptedClubList: ILeagueRequest = {
+      title: 'Accepted',
+      data: [],
+    };
+
+    const clubRequestList: ILeagueRequest = {
+      title: 'New requests',
+      data: [],
+    };
+
     clubs.forEach((club) => {
       if (club.accepted) {
         acceptedClubList.data.push(club);
@@ -131,9 +133,6 @@ export default function Clubs({route}: Props) {
   };
 
   const onDeclineClub = async (selectedClub: IClubRequestData) => {
-    // const declinedClub: IClubRequestData = data.find(
-    //   (club) => club.clubId === selectedClub.clubId,
-    // );
     setLoading(true);
 
     const updatedList: IClubRequestData[] = data.filter(
@@ -146,7 +145,7 @@ export default function Clubs({route}: Props) {
     });
   };
 
-  const onOpenActionSheet = (club: IClubRequestData) => {
+  const onUnacceptedClub = (club: IClubRequestData) => {
     const options = ['Accept', 'Decline', 'Cancel'];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
@@ -170,6 +169,26 @@ export default function Clubs({route}: Props) {
     );
   };
 
+  const onAcceptedClub = (club: IClubRequestData) => {
+    Alert.alert(
+      'Remove Club',
+      'Are you sure you want to remove club?',
+      [
+        {
+          text: 'Remove',
+          onPress: () => {
+            onDeclineClub(club);
+          },
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   return (
     <>
       <FullScreenLoading visible={loading} />
@@ -180,7 +199,9 @@ export default function Clubs({route}: Props) {
           <TwoLine
             title={item.name}
             sub={item.managerUsername}
-            onPress={() => onOpenActionSheet(item)}
+            onPress={() =>
+              item.accepted ? onAcceptedClub(item) : onUnacceptedClub(item)
+            }
           />
         )}
         ItemSeparatorComponent={() => <ListSeparator />}

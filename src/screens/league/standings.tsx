@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {Text, View, FlatList} from 'react-native';
 import {IClubStanding} from '../../utils/interface';
-import {RouteProp} from '@react-navigation/native';
-import {LeagueStackType} from './league';
+// import {RouteProp} from '@react-navigation/native';
+// import {LeagueStackType} from './league';
+import {LeagueContext} from '../../context/leagueContext';
 // import {StackNavigationProp} from '@react-navigation/stack';
 
-type ScreenRouteProp = RouteProp<LeagueStackType, 'Standings'>;
+// type ScreenRouteProp = RouteProp<LeagueStackType, 'Standings'>;
 
 const db = firestore();
 
@@ -15,16 +16,17 @@ type StandingsList = {
   data: IClubStanding;
 };
 
-type Props = {
-  // navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
-};
+// type Props = {
+//   // navigation: ScreenNavigationProp;
+//   route: ScreenRouteProp;
+// };
 
-export default function LeagueStandings({route}: Props) {
+export default function LeagueStandings(/* {route}: Props */) {
   const [data, setData] = useState<{[id: string]: IClubStanding}>({});
   const [standings, setStandings] = useState<StandingsList[]>([]);
 
-  const leagueId = route.params.leagueId;
+  const leagueContext = useContext(LeagueContext);
+  const leagueId = leagueContext.leagueId;
 
   useEffect(() => {
     const standingsRef = db

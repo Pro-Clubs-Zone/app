@@ -87,7 +87,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         <CardMedium
           onPress={() =>
             navigation.navigate('My Club', {
-              leagueId: leagueId,
               clubId: userClub.clubId,
               manager: userClub.manager,
             })
@@ -103,7 +102,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         <CardMedium
           onPress={() =>
             navigation.navigate('Create Club', {
-              leagueId: leagueId,
               isAdmin: true,
             })
           }
@@ -114,11 +112,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       <CardSmallContainer>
         <CardSmall
           title={'League\nClubs'}
-          onPress={() =>
-            navigation.navigate('Clubs', {
-              leagueId: leagueId,
-            })
-          }
+          onPress={() => navigation.navigate('Clubs')}
         />
         <CardSmall
           title={'Invite\nClubs'}

@@ -5,6 +5,7 @@ import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
 import RNRestart from 'react-native-restart';
 import {LeagueStackType} from '../league/league';
+import {LeagueContext} from '../../context/leagueContext';
 
 // type ScreenNavigationProp = StackNavigationProp<
 //   LeagueStackType,
@@ -18,20 +19,23 @@ type Props = {
 };
 
 export default function ClubSettings({route}: Props) {
-  const leagueId = route.params.leagueId;
-  const clubId = route.params.clubId;
   const db = firestore();
   const batch = db.batch();
+
+  const context = useContext(AppContext);
+  const leagueContext = useContext(LeagueContext);
+
+  const leagueId = leagueContext.leagueId;
+  const clubId = route.params.clubId;
+  const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
+  const isAdmin = context.userData.leagues[leagueId].admin;
+
   const clubRef = db
     .collection('leagues')
     .doc(leagueId)
     .collection('clubs')
     .doc(clubId);
 
-  const context = useContext(AppContext);
-
-  const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-  const isAdmin = context.userData.leagues[leagueId].admin;
   //TODO: if admin, do not restart.
 
   const onRemove = async () => {

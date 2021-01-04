@@ -27,8 +27,6 @@ export default function LeagueScheduled({navigation}: Props) {
   const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
 
-  console.log(leagueId);
-
   return (
     <ScrollView
       contentContainerStyle={{
@@ -37,35 +35,22 @@ export default function LeagueScheduled({navigation}: Props) {
       showsVerticalScrollIndicator={false}>
       <CardMedium
         title="Report Center"
-        onPress={() =>
-          navigation.navigate('Report Center', {
-            leagueId: leagueId,
-          })
-        }
+        onPress={() => navigation.navigate('Report Center')}
       />
       <CardSmallContainer>
         <CardSmall
           title="Standings"
-          onPress={() =>
-            navigation.navigate('Standings', {
-              leagueId: leagueId,
-            })
-          }
+          onPress={() => navigation.navigate('Standings')}
         />
         <CardSmall
           title="Fixtures"
-          onPress={() =>
-            navigation.navigate('Fixtures', {
-              leagueId: leagueId,
-            })
-          }
+          onPress={() => navigation.navigate('Fixtures')}
         />
       </CardSmallContainer>
       <CardMedium
         title={userClub.clubName}
         onPress={() =>
           navigation.navigate('My Club', {
-            leagueId: leagueId,
             clubId: userClub.clubId,
             manager: userClub.manager,
           })

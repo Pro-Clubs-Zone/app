@@ -6,7 +6,6 @@ export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
 export interface ILeagueProps {
-  leagueId: string;
   isAdmin?: boolean;
   newLeague?: boolean;
 }

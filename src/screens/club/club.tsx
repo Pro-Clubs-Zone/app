@@ -11,6 +11,7 @@ import {useActionSheet} from '@expo/react-native-action-sheet';
 import handleClubRequest from './actions/handleClubRequest';
 import {RequestContext} from '../../context/requestContext';
 import {IconButton} from '../../components/buttons';
+import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'My Club'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'My Club'>;
@@ -25,12 +26,13 @@ export default function Club({navigation, route}: Props) {
   const [loading, setLoading] = useState(true);
   const [sectionedData, setSectionedData] = useState<IClubRequest[]>([]);
 
-  const leagueId = route.params.leagueId;
-  const clubId = route.params.clubId;
   const context = useContext(AppContext);
   const requestContext = useContext(RequestContext);
+  const leagueContext = useContext(LeagueContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
+  const clubId = route.params.clubId;
+  const leagueId = leagueContext.leagueId;
   const club = context.userData.leagues[leagueId];
   const requests = requestContext.clubs;
   const requestSectionTitle =
@@ -43,7 +45,6 @@ export default function Club({navigation, route}: Props) {
           name="cog"
           onPress={() =>
             navigation.navigate('Club Settings', {
-              leagueId: leagueId,
               clubId: clubId,
             })
           }

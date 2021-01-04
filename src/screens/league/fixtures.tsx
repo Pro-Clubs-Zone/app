@@ -1,10 +1,11 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {Text, View, FlatList, Button} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import useGetMatches from './functions/useGetMatches';
-import {RouteProp} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {LeagueStackType} from './league';
+// import {RouteProp} from '@react-navigation/native';
+// import {StackNavigationProp} from '@react-navigation/stack';
+// import {LeagueStackType} from './league';
+import {LeagueContext} from '../../context/leagueContext';
 
 type FixturesStack = {
   Upcoming: {leagueId: string};
@@ -14,15 +15,16 @@ type FixturesStack = {
 const Tab = createMaterialTopTabNavigator<FixturesStack>();
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Fixtures'>;
-type ScreenRouteProp = RouteProp<LeagueStackType, 'Fixtures'>;
+// type ScreenRouteProp = RouteProp<LeagueStackType, 'Fixtures'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
+  // route: ScreenRouteProp;
 };
 
-export default function Fixtures({route}: Props) {
-  const leagueId: string = route.params.leagueId;
+export default function Fixtures(/*{route}: Props*/) {
+  const leagueContext = useContext(LeagueContext);
+  const leagueId = leagueContext.leagueId;
 
   return (
     <Tab.Navigator>
@@ -40,8 +42,9 @@ export default function Fixtures({route}: Props) {
   );
 }
 
-function UpcomingFixtures({navigation, route}: Props) {
-  const leagueId = route.params.leagueId;
+function UpcomingFixtures({navigation}: Props) {
+  const leagueContext = useContext(LeagueContext);
+  const leagueId = leagueContext.leagueId;
 
   const getMatches = useGetMatches(leagueId, false, [true, false]);
 
@@ -72,8 +75,9 @@ function UpcomingFixtures({navigation, route}: Props) {
   );
 }
 
-export function PastFixtures({navigation, route}: Props) {
-  const leagueId = route.params.leagueId;
+export function PastFixtures({navigation}: Props) {
+  const leagueContext = useContext(LeagueContext);
+  const leagueId = leagueContext.leagueId;
 
   const getMatches = useGetMatches(leagueId, true, [true, false]);
 
