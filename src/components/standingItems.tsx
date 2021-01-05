@@ -34,28 +34,10 @@ export const TableRow = ({
         style={{
           marginRight: verticalScale(8),
         }}>
-        <Text
-          style={
-            (TEXT_STYLES.small,
-            {
-              fontWeight: 'bold',
-              color: APP_COLORS.Light,
-            })
-          }>
-          {position}.
-        </Text>
+        <Text style={TEXT_STYLES.small}>{position}.</Text>
       </View>
       <View>
-        <Text
-          style={
-            (TEXT_STYLES.small,
-            {
-              fontWeight: 'bold',
-              color: APP_COLORS.Light,
-            })
-          }>
-          {team}
-        </Text>
+        <Text style={TEXT_STYLES.small}>{team}</Text>
       </View>
     </View>
     <View style={styles.teamData}>

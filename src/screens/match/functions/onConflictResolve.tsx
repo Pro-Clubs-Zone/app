@@ -3,11 +3,11 @@ import {IMatchNavData} from '../../../utils/interface';
 
 const firFunc = functions();
 
-const onConflictResolve = (data: IMatchNavData, teamId: string) => {
+const onConflictResolve = async (data: IMatchNavData, teamId: string) => {
   const selectedResult = data.submissions[teamId];
   const resolveConflict = firFunc.httpsCallable('conflictResolution');
 
-  resolveConflict({match: data, result: selectedResult})
+  await resolveConflict({match: data, result: selectedResult})
     .then((response) => {
       console.log('message from cloud', response);
     })

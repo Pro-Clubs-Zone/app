@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Text, View} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -8,6 +8,7 @@ import {LeagueStackType} from '../league/league';
 import onSubmitMatch from './functions/onSubmitMatch';
 import MatchConflict from './matchConflict';
 import onConflictResolve from './functions/onConflictResolve';
+import {AppContext} from '../../context/appContext';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Match'>;
 
@@ -22,16 +23,32 @@ export default function Match({navigation, route}: Props) {
   const [homeScore, setHomeScore] = useState<number>();
   const [awayScore, setAwayScore] = useState<number>();
 
+  const context = useContext(AppContext);
+
   let matchData: IMatchNavData = route.params.matchInfo;
   console.log(matchData);
+
+  const decrementConflictCounter = () => {
+    const leagueData = {...context.userLeagues};
+    leagueData[matchData.leagueId].conflictMatchesCount -= 1;
+    context.setUserLeagues(leagueData);
+  };
 
   if (matchData.conflict) {
     return (
       <>
         <MatchConflict
           data={matchData}
-          onSelectHome={() => onConflictResolve(matchData, matchData.home)}
-          onSelectAway={() => onConflictResolve(matchData, matchData.away)}
+          onSelectHome={() =>
+            onConflictResolve(matchData, matchData.home).then(
+              () => decrementConflictCounter,
+            )
+          }
+          onSelectAway={() =>
+            onConflictResolve(matchData, matchData.away).then(
+              () => decrementConflictCounter,
+            )
+          }
         />
       </>
     );

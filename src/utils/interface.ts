@@ -87,6 +87,7 @@ export interface ILeague {
   clubs?: {
     [club: string]: IClub;
   };
+  conflictMatchesCount?: 0;
 }
 
 export interface IClubRosterMember {

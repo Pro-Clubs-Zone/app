@@ -27,6 +27,8 @@ export default function LeagueScheduled({navigation}: Props) {
   const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
   const isAdmin = context.userData.leagues[leagueId].admin;
+  const conflictMatchesCount =
+    context.userLeagues[leagueId].conflictMatchesCount;
 
   return (
     <ScrollView
@@ -37,6 +39,11 @@ export default function LeagueScheduled({navigation}: Props) {
       {isAdmin && (
         <CardMedium
           title="Report Center"
+          subTitle={
+            conflictMatchesCount !== 0
+              ? `${conflictMatchesCount} conflicts`
+              : 'no conflicts'
+          }
           onPress={() => navigation.navigate('Report Center')}
         />
       )}
@@ -61,46 +68,4 @@ export default function LeagueScheduled({navigation}: Props) {
       />
     </ScrollView>
   );
-
-  // return (
-  //   <View>
-  //     <Text>League Home</Text>
-  //     <Button
-  //       title="Standings"
-  //       onPress={() =>
-  //         navigation.navigate('Standings', {
-  //           leagueId: leagueId,
-  //         })
-  //       }
-  //     />
-  //     <Button
-  //       title="Fixtures"
-  //       onPress={() =>
-  //         navigation.navigate('Fixtures', {
-  //           leagueId: leagueId,
-  //         })
-  //       }
-  //     />
-
-  //     <Button
-  //       title="My Club"
-  //       onPress={() =>
-  //         navigation.navigate('My Club', {
-  //           leagueId: leagueId,
-  //           clubId: userClub.clubId,
-  //           manager: userClub.manager,
-  //         })
-  //       }
-  //     />
-
-  //     <Button
-  //       title="Report Center"
-  //       onPress={() =>
-  //         navigation.navigate('Report Center', {
-  //           leagueId: leagueId,
-  //         })
-  //       }
-  //     />
-  //   </View>
-  // );
 }
