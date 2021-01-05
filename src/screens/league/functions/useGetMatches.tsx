@@ -17,7 +17,6 @@ const useGetMatches = (
   const [data, setData] = useState<FixtureList[]>([]);
   const [lastVisible, setLastVisible] = useState<any>(null);
   const [allLoaded, setAllLoaded] = useState<boolean>(false);
-  // const [resolved, setResolved] = useState<boolean>(published);
 
   const context = useContext(AppContext);
 

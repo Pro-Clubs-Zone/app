@@ -12,6 +12,7 @@ import {ListSeparator} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+
 // import {verticalScale} from 'react-native-size-matters';
 
 type FixturesStack = {
@@ -85,7 +86,7 @@ export function PastFixtures({navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
   const leagueId = leagueContext.leagueId;
 
-  const getMatches = useGetMatches(leagueId, true, [true, false]);
+  const getMatches = useGetMatches(leagueId, true, [false]);
 
   return (
     <FlatList

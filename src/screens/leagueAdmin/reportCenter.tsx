@@ -1,17 +1,24 @@
-import React, {useState, useEffect, useContext} from 'react';
-import {Text, View, Button, FlatList} from 'react-native';
+import React, {useContext} from 'react';
+import {FlatList} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 // import {RouteProp} from '@react-navigation/native';
-import firestore from '@react-native-firebase/firestore';
-import {IMatch, IMatchNavData} from '../../utils/interface';
-import {AppContext} from '../../context/appContext';
+// import firestore from '@react-native-firebase/firestore';
+// import {IMatchNavData} from '../../utils/interface';
+// import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/league';
 import {LeagueContext} from '../../context/leagueContext';
+import {ListSeparator} from '../../components/listItems';
+import EmptyState from '../../components/emptyState';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
+import FixtureItem from '../../components/fixtureItems';
+import useGetMatches from '../league/functions/useGetMatches';
+import {MinButton} from '../../components/buttons';
 
-type FixtureList = {
-  key: string;
-  data: IMatchNavData;
-};
+// type FixtureList = {
+//   key: string;
+//   data: IMatchNavData;
+// };
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -24,85 +31,43 @@ type Props = {
   navigation: ScreenNavigationProp;
   // route: ScreenRouteProp;
 };
-const db = firestore();
+//const db = firestore();
 
 export default function ReportCenter({navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
-  const context = useContext(AppContext);
 
   const leagueId = leagueContext.leagueId;
-  const league = context.userLeagues[leagueId];
 
-  const [data, setData] = useState([]);
-
-  const leagueRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('matches');
-
-  useEffect(() => {
-    let matches: FixtureList[] = [];
-    const conflictMatches = leagueRef
-      .where('conflict', '==', true)
-      .orderBy('id', 'asc');
-
-    conflictMatches
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          const matchData = doc.data() as IMatch;
-          const matchId = doc.id;
-          const awayTeamName = league.clubs[matchData.away].name;
-          const homeTeamName = league.clubs[matchData.home].name;
-
-          const match: IMatchNavData = {
-            ...matchData,
-            homeTeamName: homeTeamName,
-            awayTeamName: awayTeamName,
-            matchId: matchId,
-            leagueId: leagueId,
-            leagueName: league.name,
-          };
-
-          const fixture: FixtureList = {
-            key: matchId,
-            data: match,
-          };
-
-          matches.push(fixture);
-        });
-      })
-      .then(() => {
-        setData(matches);
-      });
-  }, [league, leagueId]);
+  const getMatches = useGetMatches(leagueId, false, [true]);
 
   return (
-    <View>
-      <Text>Report Center</Text>
-      <FlatList
-        data={data}
-        renderItem={({item}) => (
-          <Item
-            home={item.data.homeTeamName}
-            away={item.data.awayTeamName}
-            onPress={() =>
-              navigation.navigate('Match', {
-                matchInfo: item.data,
-              })
-            }
-          />
-        )}
-        keyExtractor={(item) => item.key}
-      />
-    </View>
+    <FlatList
+      data={getMatches.data}
+      renderItem={({item}) => (
+        <FixtureItem
+          homeTeamName={item.data.homeTeamName}
+          awayTeamName={item.data.awayTeamName}
+          conflict={item.data.conflict}
+          onPress={() =>
+            navigation.navigate('Match', {
+              matchInfo: item.data,
+            })
+          }
+        />
+      )}
+      keyExtractor={(item) => item.data.matchId}
+      ItemSeparatorComponent={() => <ListSeparator />}
+      ListEmptyComponent={() => <EmptyState title={i18n._(t`No Fixtures`)} />}
+      contentContainerStyle={{
+        justifyContent: getMatches.data.length === 0 ? 'center' : null,
+        flexGrow: 1,
+      }}
+      ListFooterComponent={() =>
+        getMatches.data.length !== 0 &&
+        !getMatches.allLoaded && (
+          <MinButton title="load more" onPress={getMatches.onLoadMore} />
+        )
+      }
+    />
   );
 }
-
-const Item = ({home, away, onPress}) => (
-  <View>
-    <Text>Home: {home}</Text>
-    <Text>away: {away}</Text>
-    <Button title="match page" onPress={onPress} />
-  </View>
-);
