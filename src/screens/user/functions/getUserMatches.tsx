@@ -25,13 +25,17 @@ const getUserMatches = async (
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
-            const {home, away, submissions} = doc.data() as IMatch;
+            const {
+              homeTeamId: home,
+              awayTeamId: away,
+              submissions,
+            } = doc.data() as IMatch;
             const leagueData = userLeagues[leagueId];
 
             let matchData: IMatchNavData = {
               matchId: doc.id,
-              home: home,
-              away: away,
+              homeTeamId: home,
+              awayTeamId: away,
               clubId: clubId,
               manager: league.manager,
               leagueId: leagueId,

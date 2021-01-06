@@ -154,6 +154,40 @@ const TextField = (props: Props) => {
   );
 };
 
+export const MatchTextField = (props) => {
+  const [style, setStyle] = useState<any>(styles.fieldNormal);
+  const inputRef = useRef(null);
+
+  return (
+    <Pressable
+      onPress={
+        props.onPress
+          ? props.onPress
+          : props.disabled
+          ? null
+          : () => {
+              inputRef.current.focus();
+            }
+      }>
+      <View
+        style={[style, styles.matchField, props.error && styles.fieldError]}>
+        <TextInput
+          {...props}
+          ref={inputRef}
+          style={[TEXT_STYLES.body]}
+          placeholder="0"
+          placeholderTextColor={APP_COLORS.Gray}
+          onFocus={() => setStyle([styles.fieldNormal, styles.fieldFocus])}
+          onEndEditing={() => setStyle(styles.fieldNormal)}
+          underlineColorAndroid="transparent"
+          autoCorrect={false}
+          keyboardAppearance="dark"
+        />
+      </View>
+    </Pressable>
+  );
+};
+
 const styles = ScaledSheet.create({
   fieldNormal: {
     backgroundColor: APP_COLORS.Primary,
@@ -163,6 +197,12 @@ const styles = ScaledSheet.create({
     borderRadius: '2@vs',
     paddingHorizontal: '8@vs',
     flexDirection: 'row',
+  },
+  matchField: {
+    width: '40@vs',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 0,
   },
   fieldFocus: {
     borderColor: APP_COLORS.Accent,

@@ -1,84 +1,39 @@
-import React, {useContext, useState} from 'react';
-import {Button, Text, View} from 'react-native';
+import React from 'react';
 import {IMatchNavData} from '../../utils/interface';
-import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {TextInput} from 'react-native-gesture-handler';
 import {LeagueStackType} from '../league/league';
-import onSubmitMatch from './functions/onSubmitMatch';
-import MatchConflict from './matchConflict';
-import onConflictResolve from './functions/onConflictResolve';
-import {AppContext} from '../../context/appContext';
+import {createStackNavigator} from '@react-navigation/stack';
 
-type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Match'>;
+// Screens
+import UpcomingMatch from './upcomingMatch';
+
+export type MatchStackType = {
+  'Upcoming Match': IMatchNavData;
+  'Conflict Match': IMatchNavData;
+  'Finished Match': IMatchNavData;
+};
+
+const Stack = createStackNavigator<MatchStackType>();
 
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Match'>;
 
 type Props = {
-  navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 
-export default function Match({navigation, route}: Props) {
-  const [homeScore, setHomeScore] = useState<number>();
-  const [awayScore, setAwayScore] = useState<number>();
-
-  const context = useContext(AppContext);
-
-  let matchData: IMatchNavData = route.params.matchInfo;
-  console.log(matchData);
-
-  const decrementConflictCounter = () => {
-    const leagueData = {...context.userLeagues};
-    leagueData[matchData.leagueId].conflictMatchesCount -= 1;
-    context.setUserLeagues(leagueData);
-  };
-
-  if (matchData.conflict) {
-    return (
-      <>
-        <MatchConflict
-          data={matchData}
-          onSelectHome={() =>
-            onConflictResolve(matchData, matchData.home).then(
-              () => decrementConflictCounter,
-            )
-          }
-          onSelectAway={() =>
-            onConflictResolve(matchData, matchData.away).then(
-              () => decrementConflictCounter,
-            )
-          }
-        />
-      </>
-    );
-  }
+export default function Match({route}: Props) {
+  const data: IMatchNavData = route.params.matchInfo;
 
   return (
-    <View>
-      <Text>hello from matches</Text>
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(score: any) => setHomeScore(score)}
-        value={homeScore}
-        placeholder="Home"
-        autoCorrect={false}
-        keyboardType="number-pad"
+    <Stack.Navigator
+      screenOptions={{
+        headerBackTitleVisible: false,
+      }}>
+      <Stack.Screen
+        name="Upcoming Match"
+        component={UpcomingMatch}
+        initialParams={data}
       />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(score: any) => setAwayScore(score)}
-        value={awayScore}
-        placeholder="Away"
-        autoCorrect={false}
-        keyboardType="number-pad"
-      />
-      {matchData.teams?.includes(matchData.clubId) && matchData.manager && (
-        <Button
-          title="submit"
-          onPress={() => onSubmitMatch(homeScore, awayScore, matchData)}
-        />
-      )}
-    </View>
+    </Stack.Navigator>
   );
 }

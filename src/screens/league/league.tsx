@@ -113,7 +113,11 @@ export default function LeagueStack({route}: Props) {
           <Stack.Screen name="League Scheduled" component={LeagueScheduled} />
           <Stack.Screen name="Standings" component={LeagueStandings} />
           <Stack.Screen name="Fixtures" component={Fixtures} />
-          <Stack.Screen name="Match" component={Match} />
+          <Stack.Screen
+            name="Match"
+            component={Match}
+            options={{headerShown: false}}
+          />
           <Stack.Screen name="Report Center" component={ReportCenter} />
           {commonStack}
         </Stack.Navigator>

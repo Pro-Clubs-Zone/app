@@ -12,8 +12,8 @@ const onSubmitMatch = (
 ) => {
   const teamSubmission = {
     [matchData.clubId]: {
-      [matchData.home]: homeScore,
-      [matchData.away]: awayScore,
+      [matchData.homeTeamId]: homeScore,
+      [matchData.awayTeamId]: awayScore,
     },
   };
   const matchRef = db

@@ -95,8 +95,8 @@ export function PastFixtures({navigation}: Props) {
         <FixtureItem
           homeTeamName={item.data.homeTeamName}
           awayTeamName={item.data.awayTeamName}
-          homeTeamScore={item.data.result[item.data.home]}
-          awayTeamScore={item.data.result[item.data.away]}
+          homeTeamScore={item.data.result[item.data.homeTeamId]}
+          awayTeamScore={item.data.result[item.data.awayTeamId]}
           conflict={false}
           onPress={() =>
             navigation.navigate('Match', {

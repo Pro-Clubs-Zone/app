@@ -21,8 +21,8 @@ export interface IMatchNavData extends IMatch {
 }
 
 export interface IMatch {
-  away: string;
-  home: string;
+  awayTeamId: string;
+  homeTeamId: string;
   id: number;
   submissions?: {
     [team: string]: {

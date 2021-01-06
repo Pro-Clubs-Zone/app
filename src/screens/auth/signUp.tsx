@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   Text,
   View,
-  ActivityIndicator,
   Keyboard,
   ImageBackground,
   Linking,

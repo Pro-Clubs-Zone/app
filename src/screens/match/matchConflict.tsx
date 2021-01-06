@@ -11,11 +11,11 @@ const MatchConflict = (props) => {
         <Text>Home Team: {data.homeTeamName}</Text>
         <View>
           <Text>Home Team: {data.homeTeamName}</Text>
-          <Text>{data.submissions[data.home][data.home]}</Text>
+          <Text>{data.submissions[data.homeTeamId][data.homeTeamId]}</Text>
         </View>
         <View>
           <Text>Away Team: {data.awayTeamName}</Text>
-          <Text>{data.submissions[data.away][data.away]}</Text>
+          <Text>{data.submissions[data.awayTeamId][data.awayTeamId]}</Text>
         </View>
         <Button title="select home" onPress={props.onSelectHome} />
       </View>
@@ -23,11 +23,11 @@ const MatchConflict = (props) => {
         <Text>Away Team: {data.awayTeamName}</Text>
         <View>
           <Text>Home Team: {data.homeTeamName}</Text>
-          <Text>{data.submissions[data.away][data.home]}</Text>
+          <Text>{data.submissions[data.awayTeamId][data.homeTeamId]}</Text>
         </View>
         <View>
           <Text>Away Team: {data.awayTeamName}</Text>
-          <Text>{data.submissions[data.away][data.away]}</Text>
+          <Text>{data.submissions[data.awayTeamId][data.awayTeamId]}</Text>
         </View>
         <Button title="select away" onPress={props.onSelectAway} />
       </View>
