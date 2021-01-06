@@ -5,6 +5,7 @@ import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type Props = {
+  matchId: number;
   homeTeamName: string;
   awayTeamName: string;
   homeTeamScore?: number | '-';
@@ -14,6 +15,7 @@ type Props = {
 };
 
 const FixtureItem = ({
+  matchId,
   homeTeamName,
   awayTeamName,
   homeTeamScore = '-',
@@ -33,6 +35,11 @@ const FixtureItem = ({
         {conflict && (
           <Icon name="alert" size={verticalScale(20)} color={APP_COLORS.Red} />
         )}
+        <View style={styles.dateTime}>
+          <Text numberOfLines={1} style={TEXT_STYLES.small}>
+            {matchId}
+          </Text>
+        </View>
       </View>
       <View style={styles.teams}>
         <View style={styles.teamRow}>
@@ -84,13 +91,13 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-between',
   },
   status: {
-    borderRightWidth: 8,
+    borderRightWidth: 1,
     marginRight: '16@vs',
-    //  width: '96@vs',
+    width: '40@vs',
     height: '48@vs',
     flexDirection: 'row',
     alignItems: 'center',
-    // paddingLeft: '8@vs',
+    paddingLeft: '8@vs',
     //   overflow: 'hidden',
   },
   dateTime: {

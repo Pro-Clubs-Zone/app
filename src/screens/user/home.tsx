@@ -34,7 +34,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>();
   const [matches, setMatches] = useState<IMatchNavData[]>([]);
 
   const context = useContext(AppContext);
@@ -155,6 +155,7 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
+      setLoading(true);
       const userRef = db.collection('users').doc(uid);
       let userInfo: IUser;
       const subscriber = userRef.onSnapshot((doc) => {

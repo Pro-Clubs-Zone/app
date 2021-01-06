@@ -16,7 +16,17 @@ type Props = React.ComponentProps<typeof TextInput> &
     onPressIcon?: () => void;
   };
 
-const TextField = (props: Props) => {
+const TextField = ({
+  label,
+  helper,
+  fieldIco,
+  maxHeight,
+  customStyles,
+  onPress,
+  onPressIcon,
+  error,
+  ...props
+}: Props) => {
   const [style, setStyle] = useState<any>(styles.fieldNormal);
   const [height, setHeight] = useState(0);
 
@@ -25,8 +35,8 @@ const TextField = (props: Props) => {
   return (
     <Pressable
       onPress={
-        props.onPress
-          ? props.onPress
+        onPress
+          ? onPress
           : props.disabled
           ? null
           : () => {
@@ -40,7 +50,7 @@ const TextField = (props: Props) => {
         <View
           style={[
             style,
-            props.error && styles.fieldError,
+            error && styles.fieldError,
             {
               height: props.multiline
                 ? Math.max(verticalScale(128), height)
@@ -48,8 +58,8 @@ const TextField = (props: Props) => {
               backgroundColor: props.disabled
                 ? 'rgba(61, 62, 77, 0.4)'
                 : APP_COLORS.Primary,
-              maxHeight: props.maxHeight ? props.maxHeight : null,
-              ...props.customStyles,
+              maxHeight: maxHeight ? maxHeight : null,
+              ...customStyles,
             },
           ]}>
           <View
@@ -59,18 +69,12 @@ const TextField = (props: Props) => {
               paddingHorizontal: verticalScale(8),
               top: verticalScale(2),
             }}>
-            <Text style={[TEXT_STYLES.small, styles.fieldLabel]}>
-              {props.label}
-            </Text>
+            <Text style={[TEXT_STYLES.small, styles.fieldLabel]}>{label}</Text>
           </View>
           <View style={{flex: 1}}>
             <View
               pointerEvents={
-                props.onPress
-                  ? Platform.OS === 'ios'
-                    ? 'none'
-                    : 'auto'
-                  : 'auto'
+                onPress ? (Platform.OS === 'ios' ? 'none' : 'auto') : 'auto'
               }
               style={{
                 flex: 1,
@@ -89,9 +93,7 @@ const TextField = (props: Props) => {
                         : null,
                     padding: 0,
                     lineHeight: null,
-                    maxHeight: props.maxHeight
-                      ? props.maxHeight - verticalScale(40)
-                      : null,
+                    maxHeight: maxHeight ? maxHeight - verticalScale(40) : null,
                   },
                 ]}
                 placeholderTextColor={APP_COLORS.Gray}
@@ -109,7 +111,7 @@ const TextField = (props: Props) => {
               />
             </View>
           </View>
-          {props.fieldIco && !props.disabled && (
+          {fieldIco && !props.disabled && (
             <View
               style={{
                 width: verticalScale(32),
@@ -117,22 +119,22 @@ const TextField = (props: Props) => {
                 alignItems: 'flex-end',
               }}>
               <Icon
-                name={props.fieldIco}
+                name={fieldIco}
                 size={verticalScale(24)}
                 color={APP_COLORS.Gray}
-                onPress={props.onPressIcon}
+                onPress={onPressIcon}
               />
             </View>
           )}
         </View>
-        {props.helper || props.error ? (
+        {helper || error ? (
           <View
             style={{
               paddingHorizontal: verticalScale(8),
               height: verticalScale(20),
               justifyContent: 'flex-end',
             }}>
-            {props.error ? (
+            {error ? (
               <Text
                 style={[
                   TEXT_STYLES.small,
@@ -140,11 +142,11 @@ const TextField = (props: Props) => {
                     color: APP_COLORS.Red,
                   },
                 ]}>
-                {props.error}
+                {error}
               </Text>
             ) : (
               <Text style={[TEXT_STYLES.small, styles.fieldHelper]}>
-                {props.helper}
+                {helper}
               </Text>
             )}
           </View>
@@ -154,16 +156,16 @@ const TextField = (props: Props) => {
   );
 };
 
-export const MatchTextField = (props) => {
+export const MatchTextField = (
+  props: React.ComponentProps<typeof TextInput>,
+) => {
   const [style, setStyle] = useState<any>(styles.fieldNormal);
   const inputRef = useRef(null);
 
   return (
     <Pressable
       onPress={
-        props.onPress
-          ? props.onPress
-          : props.disabled
+        props.disabled
           ? null
           : () => {
               inputRef.current.focus();
@@ -174,7 +176,12 @@ export const MatchTextField = (props) => {
         <TextInput
           {...props}
           ref={inputRef}
-          style={[TEXT_STYLES.body]}
+          style={[
+            TEXT_STYLES.body,
+            {
+              lineHeight: 0,
+            },
+          ]}
           placeholder="0"
           placeholderTextColor={APP_COLORS.Gray}
           onFocus={() => setStyle([styles.fieldNormal, styles.fieldFocus])}
@@ -182,6 +189,8 @@ export const MatchTextField = (props) => {
           underlineColorAndroid="transparent"
           autoCorrect={false}
           keyboardAppearance="dark"
+          keyboardType={'number-pad'}
+          maxLength={2}
         />
       </View>
     </Pressable>
@@ -199,10 +208,10 @@ const styles = ScaledSheet.create({
     flexDirection: 'row',
   },
   matchField: {
-    width: '40@vs',
+    height: '40@vs',
+    width: '36@vs',
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 0,
   },
   fieldFocus: {
     borderColor: APP_COLORS.Accent,

@@ -45,6 +45,7 @@ export default function ReportCenter({navigation}: Props) {
       data={getMatches.data}
       renderItem={({item}) => (
         <FixtureItem
+          matchId={item.data.id}
           homeTeamName={item.data.homeTeamName}
           awayTeamName={item.data.awayTeamName}
           conflict={item.data.conflict}

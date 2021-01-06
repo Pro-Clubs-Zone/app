@@ -1,13 +1,17 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, Text, View} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
-import {TextInput} from 'react-native-gesture-handler';
 import onSubmitMatch from './functions/onSubmitMatch';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
 import {RouteProp} from '@react-navigation/native';
 import ScoreBoard from '../../components/scoreboard';
+import {MatchTextField} from '../../components/textField';
+import {ScaledSheet} from 'react-native-size-matters';
+import {APP_COLORS} from '../../utils/designSystem';
+import {AuthContext} from '../../context/authContext';
+import {LeagueContext} from '../../context/leagueContext';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
 
@@ -18,11 +22,23 @@ type Props = {
 export default function UpcomingMatch({route}: Props) {
   const [homeScore, setHomeScore] = useState<number>();
   const [awayScore, setAwayScore] = useState<number>();
+  const [editable, setEditable] = useState<boolean>();
 
   const context = useContext(AppContext);
+  const leagueContext = useContext(LeagueContext);
 
+  const leagueId = leagueContext.leagueId;
   const matchData: IMatchNavData = route.params;
-  console.log(matchData);
+
+  useEffect(() => {
+    console.log(matchData);
+
+    const userClub = context.userData.leagues[leagueId].clubId;
+    const isManager = matchData.teams.includes(userClub) && matchData.manager;
+    const hasSubmitted = isManager && !matchData.submissions?.[userClub];
+
+    setEditable(hasSubmitted);
+  }, [context, matchData]);
 
   const decrementConflictCounter = () => {
     const leagueData = {...context.userLeagues};
@@ -30,9 +46,33 @@ export default function UpcomingMatch({route}: Props) {
     context.setUserLeagues(leagueData);
   };
 
-  if (matchData.conflict) {
-    return (
-      <>
+  return (
+    <View>
+      <ScoreBoard
+        data={matchData}
+        onSubmit={() => onSubmitMatch(homeScore, awayScore, matchData)}
+        editable={editable}>
+        <MatchTextField
+          // error={
+          //   data.scoresErrors && data.scoresErrors[data.team1]
+          //     ? true
+          //     : false
+          // }
+          onChangeText={(score: any) => setHomeScore(score)}
+          value={homeScore}
+        />
+        <View style={styles.divider} />
+        <MatchTextField
+          // error={
+          //   data.scoresErrors && data.scoresErrors[data.team2]
+          //     ? true
+          //     : false
+          // }
+          onChangeText={(score: any) => setAwayScore(score)}
+          value={awayScore}
+        />
+      </ScoreBoard>
+      {matchData.conflict && matchData.admin ? (
         <MatchConflict
           data={matchData}
           onSelectHome={() =>
@@ -46,40 +86,9 @@ export default function UpcomingMatch({route}: Props) {
             )
           }
         />
-      </>
-    );
-  }
-
-  return (
-    <View>
-      <ScoreBoard
-        data={matchData}
-        onSubmit={() => onSubmitMatch(homeScore, awayScore, matchData)}
-        editable={true}
-      />
-      {/* <Text>hello from matches</Text>
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(score: any) => setHomeScore(score)}
-        value={homeScore}
-        placeholder="Home"
-        autoCorrect={false}
-        keyboardType="number-pad"
-      />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        onChangeText={(score: any) => setAwayScore(score)}
-        value={awayScore}
-        placeholder="Away"
-        autoCorrect={false}
-        keyboardType="number-pad"
-      />
-      {matchData.teams?.includes(matchData.clubId) && matchData.manager && (
-        <Button
-          title="submit"
-          onPress={() => onSubmitMatch(homeScore, awayScore, matchData)}
-        />
-      )} */}
+      ) : (
+        <Text>Past Fixtures</Text>
+      )}
     </View>
   );
 }
@@ -116,3 +125,12 @@ const MatchConflict = (props) => {
     </View>
   );
 };
+
+const styles = ScaledSheet.create({
+  divider: {
+    height: '3@vs',
+    width: '8@vs',
+    backgroundColor: APP_COLORS.Accent,
+    marginHorizontal: '8@vs',
+  },
+});

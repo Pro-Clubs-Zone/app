@@ -18,6 +18,7 @@ export interface IMatchNavData extends IMatch {
   leagueId: string;
   manager: boolean;
   awayTeamName: string;
+  admin: boolean;
 }
 
 export interface IMatch {

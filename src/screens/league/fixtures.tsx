@@ -50,6 +50,7 @@ function UpcomingFixtures({navigation}: Props) {
       data={getMatches.data}
       renderItem={({item}) => (
         <FixtureItem
+          matchId={item.data.id}
           homeTeamName={item.data.homeTeamName}
           awayTeamName={item.data.awayTeamName}
           conflict={item.data.conflict}
@@ -93,6 +94,7 @@ export function PastFixtures({navigation}: Props) {
       data={getMatches.data}
       renderItem={({item}) => (
         <FixtureItem
+          matchId={item.data.id}
           homeTeamName={item.data.homeTeamName}
           awayTeamName={item.data.awayTeamName}
           homeTeamScore={item.data.result[item.data.homeTeamId]}

@@ -25,6 +25,7 @@ const useGetMatches = (
   const clubId = userLeague.clubId;
   const manager = userLeague.manager;
   const leagueName = context.userLeagues[leagueId].name;
+  const admin = userLeague.admin;
 
   const leagueRef = db
     .collection('leagues')
@@ -59,6 +60,7 @@ const useGetMatches = (
             matchId: matchId,
             leagueId: leagueId,
             leagueName: leagueName,
+            admin: admin,
           };
 
           const fixture: FixtureList = {
