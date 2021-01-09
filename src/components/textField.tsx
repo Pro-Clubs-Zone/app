@@ -37,7 +37,7 @@ const TextField = ({
       onPress={
         onPress
           ? onPress
-          : props.disabled
+          : props.editable
           ? null
           : () => {
               inputRef.current.focus();
@@ -55,7 +55,7 @@ const TextField = ({
               height: props.multiline
                 ? Math.max(verticalScale(128), height)
                 : verticalScale(48),
-              backgroundColor: props.disabled
+              backgroundColor: props.editable
                 ? 'rgba(61, 62, 77, 0.4)'
                 : APP_COLORS.Primary,
               maxHeight: maxHeight ? maxHeight : null,
@@ -111,7 +111,7 @@ const TextField = ({
               />
             </View>
           </View>
-          {fieldIco && !props.disabled && (
+          {fieldIco && !props.editable && (
             <View
               style={{
                 width: verticalScale(32),
@@ -156,23 +156,23 @@ const TextField = ({
   );
 };
 
-export const MatchTextField = (
-  props: React.ComponentProps<typeof TextInput>,
-) => {
+export const MatchTextField = ({
+  error,
+  ...props
+}: {error: boolean} & React.ComponentProps<typeof TextInput>) => {
   const [style, setStyle] = useState<any>(styles.fieldNormal);
   const inputRef = useRef(null);
 
   return (
     <Pressable
       onPress={
-        props.disabled
+        props.editable
           ? null
           : () => {
               inputRef.current.focus();
             }
       }>
-      <View
-        style={[style, styles.matchField, props.error && styles.fieldError]}>
+      <View style={[style, styles.matchField, error && styles.fieldError]}>
         <TextInput
           {...props}
           ref={inputRef}

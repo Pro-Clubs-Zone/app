@@ -5,15 +5,15 @@ import {IMatchNavData} from '../../../utils/interface';
 const db = firestore();
 const firFunc = functions();
 
-const onSubmitMatch = (
-  homeScore: number,
-  awayScore: number,
+const onSubmitMatch = async (
+  homeScore: string,
+  awayScore: string,
   matchData: IMatchNavData,
 ) => {
   const teamSubmission = {
     [matchData.clubId]: {
-      [matchData.homeTeamId]: homeScore,
-      [matchData.awayTeamId]: awayScore,
+      [matchData.homeTeamId]: Number(homeScore),
+      [matchData.awayTeamId]: Number(awayScore),
     },
   };
   const matchRef = db
@@ -22,7 +22,7 @@ const onSubmitMatch = (
     .collection('matches')
     .doc(matchData.matchId);
 
-  matchRef
+  return matchRef
     .set(
       {
         submissions: teamSubmission,
@@ -50,9 +50,6 @@ const onSubmitMatch = (
           });
       }
     });
-  // .then(() => {
-  //   navigation.goBack();
-  // });
 };
 
 export default onSubmitMatch;

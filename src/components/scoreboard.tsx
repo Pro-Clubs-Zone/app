@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, ImageBackground, TextInput} from 'react-native';
+import {View, Text, Image, ImageBackground} from 'react-native';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import {PrimaryButton} from './buttons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
@@ -11,9 +11,9 @@ import i18n from '../utils/i18n';
 
 type Props = {
   editable: boolean;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   data: IMatchNavData;
-  children: any;
+  children?: any;
 };
 
 const ScoreBoard = ({data, editable, onSubmit, children}: Props) => {

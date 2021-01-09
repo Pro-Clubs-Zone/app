@@ -1,12 +1,8 @@
 import {useContext, useEffect, useState} from 'react';
-import {IMatchNavData, IMatch} from '../../../utils/interface';
+import {IMatchNavData, IMatch, FixtureList} from '../../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../../context/appContext';
 
-type FixtureList = {
-  key: string;
-  data: IMatchNavData;
-};
 const db = firestore();
 
 const useGetMatches = (
@@ -17,6 +13,7 @@ const useGetMatches = (
   const [data, setData] = useState<FixtureList[]>([]);
   const [lastVisible, setLastVisible] = useState<any>(null);
   const [allLoaded, setAllLoaded] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const context = useContext(AppContext);
 
@@ -72,55 +69,62 @@ const useGetMatches = (
         setData(matches);
         setLastVisible(lastVisibleDoc);
         setAllLoaded(matches.length < 10);
+        setLoading(false);
       }
     });
     return subscriber;
   }, []);
 
   const onLoadMore = async () => {
+    setLoading(true);
     const nextPage = leagueRef
       .where('published', '==', published)
       .orderBy('id', 'asc')
       .startAfter(lastVisible)
       .limit(5);
 
-    await nextPage.get().then((snapshot) => {
-      if (!snapshot.empty) {
-        let matches: FixtureList[] = [];
-        const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+    await nextPage
+      .get()
+      .then((snapshot) => {
+        if (!snapshot.empty) {
+          let matches: FixtureList[] = [];
+          const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
 
-        snapshot.forEach((doc) => {
-          const matchData = doc.data() as IMatch;
-          const matchId = doc.id;
-          const awayTeamName = league.clubs[matchData.awayTeamId].name;
-          const homeTeamName = league.clubs[matchData.homeTeamId].name;
+          snapshot.forEach((doc) => {
+            const matchData = doc.data() as IMatch;
+            const matchId = doc.id;
+            const awayTeamName = league.clubs[matchData.awayTeamId].name;
+            const homeTeamName = league.clubs[matchData.homeTeamId].name;
 
-          const match: IMatchNavData = {
-            ...matchData,
-            homeTeamName: homeTeamName,
-            awayTeamName: awayTeamName,
-            clubId: clubId,
-            manager: manager,
-            matchId: matchId,
-            leagueId: leagueId,
-            leagueName: leagueName,
-          };
+            const match: IMatchNavData = {
+              ...matchData,
+              homeTeamName: homeTeamName,
+              awayTeamName: awayTeamName,
+              clubId: clubId,
+              manager: manager,
+              matchId: matchId,
+              leagueId: leagueId,
+              leagueName: leagueName,
+            };
 
-          const fixture: FixtureList = {
-            key: matchId,
-            data: match,
-          };
-          matches.push(fixture);
-        });
-        setData([...data, ...matches]);
-        setLastVisible(lastVisibleDoc);
-      } else {
-        setAllLoaded(true);
-      }
-    });
+            const fixture: FixtureList = {
+              key: matchId,
+              data: match,
+            };
+            matches.push(fixture);
+          });
+          setData([...data, ...matches]);
+          setLastVisible(lastVisibleDoc);
+        } else {
+          setAllLoaded(true);
+        }
+      })
+      .then(() => {
+        setLoading(false);
+      });
   };
 
-  return {data, lastVisible, onLoadMore, allLoaded};
+  return {data, lastVisible, onLoadMore, allLoaded, loading};
 };
 
 export default useGetMatches;

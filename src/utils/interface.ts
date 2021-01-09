@@ -5,6 +5,11 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
+export interface FixtureList {
+  key: string;
+  data: IMatchNavData;
+}
+
 export interface ILeagueProps {
   isAdmin?: boolean;
   newLeague?: boolean;

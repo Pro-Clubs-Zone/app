@@ -6,11 +6,16 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 // Screens
 import UpcomingMatch from './upcomingMatch';
+import FinishedMatch from './finishedMatch';
+
+type MatchProps = {
+  matchData: IMatchNavData;
+};
 
 export type MatchStackType = {
-  'Upcoming Match': IMatchNavData;
-  'Conflict Match': IMatchNavData;
-  'Finished Match': IMatchNavData;
+  'Upcoming Match': MatchProps;
+  'Conflict Match': MatchProps;
+  'Finished Match': MatchProps;
 };
 
 const Stack = createStackNavigator<MatchStackType>();
@@ -22,17 +27,29 @@ type Props = {
 };
 
 export default function Match({route}: Props) {
-  const data: IMatchNavData = route.params.matchInfo;
+  const data: IMatchNavData = route.params.matchData;
 
   return (
     <Stack.Navigator
+      initialRouteName={
+        route.params.upcoming ? 'Upcoming Match' : 'Finished Match'
+      }
       screenOptions={{
         headerBackTitleVisible: false,
       }}>
       <Stack.Screen
         name="Upcoming Match"
         component={UpcomingMatch}
-        initialParams={data}
+        initialParams={{
+          matchData: data,
+        }}
+      />
+      <Stack.Screen
+        name="Finished Match"
+        component={FinishedMatch}
+        initialParams={{
+          matchData: data,
+        }}
       />
     </Stack.Navigator>
   );

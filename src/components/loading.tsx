@@ -11,7 +11,7 @@ export default function FullScreenLoading(props: ModalProps) {
       <View style={styles.container}>
         <ActivityIndicator size="large" color={APP_COLORS.Accent} />
         <Text style={[TEXT_STYLES.title, styles.text]}>
-          {props.label ? props.label : i18n._(t`Loading`)}
+          {props.title ? props.label : i18n._(t`Loading`)}
         </Text>
       </View>
     </Modal>

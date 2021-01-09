@@ -35,7 +35,7 @@ export type LeagueStackType = {
   'Create Club': ILeagueProps;
   Standings: ILeagueProps;
   Fixtures: ILeagueProps;
-  Match: {matchInfo: IMatchNavData};
+  Match: {matchData: IMatchNavData; upcoming: boolean};
   'My Club': ClubProps;
   'Club Settings': ClubProps;
   'Report Center': ILeagueProps;
