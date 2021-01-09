@@ -1,14 +1,13 @@
 import {useContext, useEffect, useState} from 'react';
 import {IMatchNavData, IMatch, FixtureList} from '../../../utils/interface';
-import firestore from '@react-native-firebase/firestore';
+import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore';
 import {AppContext} from '../../../context/appContext';
-
-const db = firestore();
 
 const useGetMatches = (
   leagueId: string,
-  published: boolean,
-  conflict: boolean[],
+  query: FirebaseFirestoreTypes.Query<FirebaseFirestoreTypes.DocumentData>,
+  // published: boolean,
+  // conflict: boolean[],
 ) => {
   const [data, setData] = useState<FixtureList[]>([]);
   const [lastVisible, setLastVisible] = useState<any>(null);
@@ -24,18 +23,8 @@ const useGetMatches = (
   const leagueName = context.userLeagues[leagueId].name;
   const admin = userLeague.admin;
 
-  const leagueRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('matches');
-
   useEffect(() => {
-    const firstPage = leagueRef
-      .where('published', '==', published)
-      .where('conflict', 'in', conflict)
-      .orderBy('id', 'asc')
-      .limit(10);
-
+    const firstPage = query.orderBy('id', 'asc').limit(2);
     const subscriber = firstPage.onSnapshot((snapshot) => {
       if (!snapshot.empty) {
         let matches: FixtureList[] = [];
@@ -68,7 +57,7 @@ const useGetMatches = (
         });
         setData(matches);
         setLastVisible(lastVisibleDoc);
-        setAllLoaded(matches.length < 10);
+        setAllLoaded(matches.length < 2);
         setLoading(false);
       }
     });
@@ -77,11 +66,10 @@ const useGetMatches = (
 
   const onLoadMore = async () => {
     setLoading(true);
-    const nextPage = leagueRef
-      .where('published', '==', published)
+    const nextPage = query
       .orderBy('id', 'asc')
       .startAfter(lastVisible)
-      .limit(5);
+      .limit(2);
 
     await nextPage
       .get()
@@ -105,6 +93,7 @@ const useGetMatches = (
               matchId: matchId,
               leagueId: leagueId,
               leagueName: leagueName,
+              admin: admin,
             };
 
             const fixture: FixtureList = {
@@ -115,6 +104,7 @@ const useGetMatches = (
           });
           setData([...data, ...matches]);
           setLastVisible(lastVisibleDoc);
+          snapshot.size < 2 && setAllLoaded(true);
         } else {
           setAllLoaded(true);
         }

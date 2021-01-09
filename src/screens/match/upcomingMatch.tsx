@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Text, View, FlatList} from 'react-native';
-import {FixtureList, IMatch, IMatchNavData} from '../../utils/interface';
+import {Button, Text, View, FlatList, Alert} from 'react-native';
+import {IMatchNavData} from '../../utils/interface';
 import onSubmitMatch from './functions/onSubmitMatch';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
@@ -19,6 +19,7 @@ import {ListHeading, ListSeparator} from '../../components/listItems';
 import {t} from '@lingui/macro';
 import FullScreenLoading from '../../components/loading';
 import {StackNavigationProp} from '@react-navigation/stack';
+import useGetMatches from '../league/functions/useGetMatches';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -37,8 +38,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
   const [homeScore, setHomeScore] = useState<string>();
   const [awayScore, setAwayScore] = useState<string>();
   const [editable, setEditable] = useState<boolean>();
-  const [pastMatches, setPastMatches] = useState<FixtureList[]>([]);
-  const [loading, setLoading] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
@@ -46,7 +46,21 @@ export default function UpcomingMatch({navigation, route}: Props) {
   const leagueId = leagueContext.leagueId;
   const matchData: IMatchNavData = route.params.matchData;
 
+  const leagueRef = db
+    .collection('leagues')
+    .doc(leagueId)
+    .collection('matches');
+
+  const query = leagueRef
+    .where('teams', 'in', [matchData.teams, matchData.teams.reverse()])
+    .where('published', '==', true);
+
+  const getMatches = useGetMatches(leagueId, query);
+
   useEffect(() => {
+    console.log('====================================');
+    console.log(matchData);
+    console.log('====================================');
     const userClub = context.userData.leagues[leagueId].clubId;
     const isManager = matchData.teams.includes(userClub) && matchData.manager;
     const hasSubmitted = !!matchData.submissions?.[userClub];
@@ -55,63 +69,68 @@ export default function UpcomingMatch({navigation, route}: Props) {
     setEditable(canSubmit);
   }, [leagueId]);
 
-  useEffect(() => {
-    let matches: FixtureList[] = [];
-    const leagueRef = db
-      .collection('leagues')
-      .doc(leagueId)
-      .collection('matches');
-
-    leagueRef
-      .where('teams', 'in', [matchData.teams, matchData.teams.reverse()])
-      .where('published', '==', true)
-      .get()
-      .then((snapshot) => {
-        snapshot.forEach((doc) => {
-          const data = doc.data() as IMatch;
-          const matchId = doc.id;
-          const match: IMatchNavData = {
-            ...data,
-            homeTeamName:
-              context.userLeagues[leagueId].clubs[data.homeTeamId].name,
-            awayTeamName:
-              context.userLeagues[leagueId].clubs[data.awayTeamId].name,
-            clubId: matchData.clubId,
-            manager: matchData.manager,
-            matchId: matchId,
-            leagueId: leagueId,
-            leagueName: matchData.leagueName,
-            admin: matchData.admin,
-          };
-
-          const fixture: FixtureList = {
-            key: matchId,
-            data: match,
-          };
-          matches.push(fixture);
-        });
-      })
-      .then(() => {
-        setPastMatches(matches);
-        setLoading(false);
-      });
-  }, [leagueId]);
-
   const decrementConflictCounter = () => {
     const leagueData = {...context.userLeagues};
     leagueData[matchData.leagueId].conflictMatchesCount -= 1;
     context.setUserLeagues(leagueData);
   };
 
+  const showAlert = (submissionResult: string) => {
+    let title: string;
+    let body: string;
+
+    switch (submissionResult) {
+      case 'Success':
+        title = 'Results Published';
+        body = 'Publish Message';
+        break;
+      case 'Conflict':
+        title = 'Submission Conflict';
+        body = 'Conflict Message';
+        break;
+      case 'First Submission':
+        title = 'Submission Succesfull';
+        body = 'Success Message';
+        break;
+      case 'Conflict Resolved':
+        title = 'Conflict Resolved';
+        body = 'Match was published with the selected result';
+        break;
+    }
+
+    Alert.alert(
+      title,
+      body,
+      [
+        {
+          text: 'Close',
+          onPress: () => {
+            navigation.goBack();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const onSelectResult = (id) => {
+    onConflictResolve(matchData, id).then((result) => {
+      decrementConflictCounter;
+      showAlert(result);
+    });
+  };
+
   return (
     <View>
+      <FullScreenLoading visible={loading} />
       <ScoreBoard
         data={matchData}
-        onSubmit={() =>
-          onSubmitMatch(homeScore, awayScore, matchData).then(() => {
-            navigation.goBack();
-          })
-        }
+        onSubmit={() => {
+          setLoading(true);
+          onSubmitMatch(homeScore, awayScore, matchData).then((result) => {
+            showAlert(result);
+          });
+        }}
         editable={editable}>
         <MatchTextField
           // error={
@@ -136,20 +155,16 @@ export default function UpcomingMatch({navigation, route}: Props) {
       {matchData.conflict && matchData.admin ? (
         <MatchConflict
           data={matchData}
-          onSelectHome={() =>
-            onConflictResolve(matchData, matchData.homeTeamId).then(
-              () => decrementConflictCounter,
-            )
-          }
-          onSelectAway={() =>
-            onConflictResolve(matchData, matchData.awayTeamId).then(
-              () => decrementConflictCounter,
-            )
-          }
+          onSelectHome={() => {
+            onSelectResult(matchData.homeTeamId);
+          }}
+          onSelectAway={() => {
+            onSelectResult(matchData.awayTeamId);
+          }}
         />
       ) : (
         <FlatList
-          data={pastMatches}
+          data={getMatches.data}
           ListHeaderComponent={() => <ListHeading col1="Past Fixtures" />}
           renderItem={({item}) => (
             <FixtureItem
@@ -172,7 +187,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
             <EmptyState title={i18n._(t`No Fixtures`)} />
           )}
           contentContainerStyle={{
-            justifyContent: pastMatches.length === 0 ? 'center' : null,
+            justifyContent: getMatches.data.length === 0 ? 'center' : null,
             flexGrow: 1,
           }}
           stickyHeaderIndices={[0]}
@@ -182,8 +197,15 @@ export default function UpcomingMatch({navigation, route}: Props) {
   );
 }
 
-const MatchConflict = (props) => {
-  const data: IMatchNavData = props.data;
+const MatchConflict = ({
+  onSelectHome,
+  onSelectAway,
+  data,
+}: {
+  onSelectHome: () => void;
+  onSelectAway: () => void;
+  data: IMatchNavData;
+}) => {
   return (
     <View>
       <Text>This is conflict match</Text>
@@ -197,7 +219,7 @@ const MatchConflict = (props) => {
           <Text>Away Team: {data.awayTeamName}</Text>
           <Text>{data.submissions[data.awayTeamId][data.awayTeamId]}</Text>
         </View>
-        <Button title="select home" onPress={props.onSelectHome} />
+        <Button title="select home" onPress={onSelectHome} />
       </View>
       <View>
         <Text>Away Team: {data.awayTeamName}</Text>
@@ -209,7 +231,7 @@ const MatchConflict = (props) => {
           <Text>Away Team: {data.awayTeamName}</Text>
           <Text>{data.submissions[data.awayTeamId][data.awayTeamId]}</Text>
         </View>
-        <Button title="select away" onPress={props.onSelectAway} />
+        <Button title="select away" onPress={onSelectAway} />
       </View>
     </View>
   );

@@ -9,7 +9,7 @@ const onSubmitMatch = async (
   homeScore: string,
   awayScore: string,
   matchData: IMatchNavData,
-) => {
+): Promise<string> => {
   const teamSubmission = {
     [matchData.clubId]: {
       [matchData.homeTeamId]: Number(homeScore),
@@ -30,6 +30,7 @@ const onSubmitMatch = async (
       {merge: true},
     )
     .then(() => {
+      // let message;
       if (
         matchData.submissions &&
         Object.keys(matchData.submissions).length === 1
@@ -39,16 +40,20 @@ const onSubmitMatch = async (
           ...matchData,
           submissions: {...matchData.submissions, ...teamSubmission},
         };
-        console.log({...match});
 
-        controlMatch({match: match})
+        return controlMatch({match: match})
           .then((response) => {
-            console.log('message from cloud', response);
+            return response.data;
           })
           .catch((error) => {
             console.log(error);
           });
+      } else {
+        return 'First Submission';
       }
+    })
+    .then((message) => {
+      return message;
     });
 };
 

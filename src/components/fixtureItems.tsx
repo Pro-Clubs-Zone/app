@@ -32,14 +32,15 @@ const FixtureItem = ({
             borderRightColor: conflict ? APP_COLORS.Red : APP_COLORS.Primary,
           },
         ]}>
-        {conflict && (
+        {conflict ? (
           <Icon name="alert" size={verticalScale(20)} color={APP_COLORS.Red} />
+        ) : (
+          <View style={styles.dateTime}>
+            <Text numberOfLines={1} style={TEXT_STYLES.small}>
+              {matchId}
+            </Text>
+          </View>
         )}
-        <View style={styles.dateTime}>
-          <Text numberOfLines={1} style={TEXT_STYLES.small}>
-            {matchId}
-          </Text>
-        </View>
       </View>
       <View style={styles.teams}>
         <View style={styles.teamRow}>

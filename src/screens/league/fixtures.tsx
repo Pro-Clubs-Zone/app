@@ -13,6 +13,7 @@ import EmptyState from '../../components/emptyState';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FullScreenLoading from '../../components/loading';
+import firestore from '@react-native-firebase/firestore';
 
 // import {verticalScale} from 'react-native-size-matters';
 
@@ -31,6 +32,8 @@ type Props = {
   // route: ScreenRouteProp;
 };
 
+const db = firestore();
+
 export default function Fixtures(/*{route}: Props*/) {
   return (
     <Tab.Navigator>
@@ -44,7 +47,16 @@ function UpcomingFixtures({navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
   const leagueId = leagueContext.leagueId;
 
-  const getMatches = useGetMatches(leagueId, false, [true, false]);
+  const leagueRef = db
+    .collection('leagues')
+    .doc(leagueId)
+    .collection('matches');
+
+  const query = leagueRef
+    .where('published', '==', false)
+    .where('conflict', 'in', [true, false]);
+
+  const getMatches = useGetMatches(leagueId, query);
 
   return (
     <>
@@ -92,7 +104,16 @@ export function PastFixtures({navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
   const leagueId = leagueContext.leagueId;
 
-  const getMatches = useGetMatches(leagueId, true, [false]);
+  const leagueRef = db
+    .collection('leagues')
+    .doc(leagueId)
+    .collection('matches');
+
+  const query = leagueRef
+    .where('published', '==', true)
+    .where('conflict', 'in', [false]);
+
+  const getMatches = useGetMatches(leagueId, query);
 
   return (
     <FlatList

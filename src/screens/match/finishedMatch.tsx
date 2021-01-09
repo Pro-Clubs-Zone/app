@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import {MatchStackType} from './match';
 import {RouteProp} from '@react-navigation/native';
@@ -29,6 +29,7 @@ export default function FinishedMatch({navigation, route}: Props) {
   return (
     <View>
       <ScoreBoard data={matchData} editable={false} />
+      <Text>GoalScorers</Text>
     </View>
   );
 }

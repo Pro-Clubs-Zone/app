@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import {FlatList} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 // import {RouteProp} from '@react-navigation/native';
-// import firestore from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 // import {IMatchNavData} from '../../utils/interface';
 // import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/league';
@@ -31,14 +31,24 @@ type Props = {
   navigation: ScreenNavigationProp;
   // route: ScreenRouteProp;
 };
-//const db = firestore();
+
+const db = firestore();
 
 export default function ReportCenter({navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
 
-  const getMatches = useGetMatches(leagueId, false, [true]);
+  const leagueRef = db
+    .collection('leagues')
+    .doc(leagueId)
+    .collection('matches');
+
+  const query = leagueRef
+    .where('published', '==', false)
+    .where('conflict', 'in', [true]);
+
+  const getMatches = useGetMatches(leagueId, query);
 
   return (
     <FlatList
