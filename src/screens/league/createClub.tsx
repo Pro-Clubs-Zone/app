@@ -33,7 +33,7 @@ export default function CreateClub({route, navigation}: Props) {
 
   const leagueId = leagueContext.leagueId;
   const uid = user?.uid;
-  const isAdmin = route.params.isAdmin;
+  const isAdmin = route?.params.isAdmin;
   const username = context.userData.username;
 
   const onCreateClub = async () => {

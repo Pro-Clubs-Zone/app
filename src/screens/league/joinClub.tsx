@@ -91,10 +91,9 @@ export default function JoinClub({navigation}: Props) {
   };
 
   const onSendRequest = (club: ClubListItem) => {
-    console.log('onsendrequest');
     Alert.alert(
       'Join Club',
-      'Send request to "club name" to join?',
+      `Send request to ${club.name} to join?`,
       [
         {
           text: 'Send Request',

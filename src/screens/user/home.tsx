@@ -215,7 +215,12 @@ export default function Home({navigation}: Props) {
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) => (
               <UpcomingMatchCard
-                teamName={getRivalsName(item.data)}
+                clubName={
+                  context.userLeagues[item.data.leagueId]?.clubs[
+                    item.data.clubId
+                  ].name
+                }
+                rivalName={getRivalsName(item.data)}
                 leagueName={item.data.leagueName}
                 onPress={() =>
                   navigation.navigate('Match', {
@@ -223,7 +228,7 @@ export default function Home({navigation}: Props) {
                     upcoming: true,
                   })
                 }
-                submitted={!!item.data.submissions[item.data.clubId]}
+                submitted={!!item.data.submissions?.[item.data.clubId]}
                 conflict={item.data.conflict}
               />
             )}

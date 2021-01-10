@@ -12,7 +12,12 @@ import {
   IPlayerRequestData,
   ISentRequest,
 } from '../../utils/interface';
-import {ListHeading, ListSeparator, OneLine} from '../../components/listItems';
+import {
+  ListHeading,
+  ListSeparator,
+  OneLine,
+  TwoLine,
+} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import handleClubRequest from '../club/actions/handleClubRequest';
@@ -197,9 +202,11 @@ function LeagueRequests() {
         stickySectionHeadersEnabled={true}
         keyExtractor={(item) => item.clubId}
         renderItem={({item, section}) => (
-          <OneLine
+          <TwoLine
             title={item.name}
+            sub={item.managerUsername}
             onPress={() => onOpenActionSheet(item, section.title)}
+            rightDefaultIcon
           />
         )}
         ItemSeparatorComponent={() => <ListSeparator />}

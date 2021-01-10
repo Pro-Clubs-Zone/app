@@ -22,9 +22,10 @@ const useGetMatches = (
   const manager = userLeague.manager;
   const leagueName = context.userLeagues[leagueId].name;
   const admin = userLeague.admin;
+  const queryLimit = 5;
 
   useEffect(() => {
-    const firstPage = query.orderBy('id', 'asc').limit(2);
+    const firstPage = query.orderBy('id', 'asc').limit(queryLimit);
     const subscriber = firstPage.onSnapshot((snapshot) => {
       if (!snapshot.empty) {
         let matches: FixtureList[] = [];
@@ -69,7 +70,7 @@ const useGetMatches = (
     const nextPage = query
       .orderBy('id', 'asc')
       .startAfter(lastVisible)
-      .limit(2);
+      .limit(queryLimit);
 
     await nextPage
       .get()
@@ -104,7 +105,7 @@ const useGetMatches = (
           });
           setData([...data, ...matches]);
           setLastVisible(lastVisibleDoc);
-          snapshot.size < 2 && setAllLoaded(true);
+          snapshot.size < queryLimit && setAllLoaded(true);
         } else {
           setAllLoaded(true);
         }

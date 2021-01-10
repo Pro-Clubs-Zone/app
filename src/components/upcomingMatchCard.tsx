@@ -5,13 +5,15 @@ import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const UpcomingMatchCard = ({
-  teamName,
+  rivalName,
+  clubName,
   leagueName,
   onPress,
   submitted,
   conflict,
 }: {
-  teamName: string;
+  rivalName: string;
+  clubName: string;
   leagueName: string;
   onPress: () => void;
   submitted: boolean;
@@ -48,7 +50,8 @@ const UpcomingMatchCard = ({
             flexDirection: 'row',
             alignItems: 'flex-end',
           }}>
-          <Text style={TEXT_STYLES.small}>vs. </Text>
+          <Text style={TEXT_STYLES.small}>{clubName}</Text>
+          <Text style={TEXT_STYLES.small}> vs. </Text>
           <Text
             style={[
               TEXT_STYLES.small,
@@ -58,7 +61,7 @@ const UpcomingMatchCard = ({
                 fontWeight: 'bold',
               },
             ]}>
-            {teamName}
+            {rivalName}
           </Text>
         </View>
         <Text style={TEXT_STYLES.small}>{leagueName}</Text>

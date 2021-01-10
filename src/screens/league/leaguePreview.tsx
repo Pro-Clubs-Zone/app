@@ -34,8 +34,30 @@ export default function LeaguePreview({navigation}: Props) {
       setAccepted(userLeague.accepted);
       return userInLeague();
     } else {
-      return showUserTypeSelection();
+      if (leagueContext.league.scheduled) {
+        return showJoinAsPlayer();
+      } else {
+        return showUserTypeSelection();
+      }
     }
+  };
+
+  const showJoinAsPlayer = () => {
+    Alert.alert(
+      'Join as a Player',
+      'You can join only as a player as this league has already started',
+      [
+        {
+          text: 'Join',
+          onPress: () => navigation.navigate('Join Club'),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   const showUserTypeSelection = () => {
@@ -50,7 +72,10 @@ export default function LeaguePreview({navigation}: Props) {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            navigation.navigate('Create Club');
+            navigation.navigate('Create Club', {
+              isAdmin: false,
+              newLeague: false,
+            });
             break;
           case 1:
             navigation.navigate('Join Club');

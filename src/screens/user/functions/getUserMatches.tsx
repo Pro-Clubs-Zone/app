@@ -28,7 +28,7 @@ const getUserMatches = async (
         .where('teams', 'array-contains', clubId)
         .where('published', '==', false)
         .orderBy('id', 'asc')
-        .limit(10)
+        .limit(4)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {

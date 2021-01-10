@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {ScrollView} from 'react-native';
 import {LeagueStackType} from './league';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -21,6 +21,9 @@ type Props = {
 };
 
 export default function LeagueScheduled({navigation}: Props) {
+  const [clubRequests, setClubReqests] = useState<number>(0);
+  const [clubRosterLength, setClubRosterLength] = useState<number>(0);
+
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
 
@@ -29,9 +32,24 @@ export default function LeagueScheduled({navigation}: Props) {
   const isAdmin = context.userData.leagues[leagueId].admin;
   const conflictMatchesCount =
     context.userLeagues[leagueId].conflictMatchesCount;
-  const clubRoster =
-    context.userLeagues[leagueId].clubs[userClub.clubId].roster;
-  const clubRosterLength = Object.keys(clubRoster).length;
+
+  useEffect(() => {
+    console.log('use effect running');
+
+    const clubRoster =
+      context.userLeagues[leagueId].clubs[userClub.clubId].roster;
+    let requests = 0;
+    let roster = 0;
+    for (const request of Object.values(clubRoster)) {
+      if (!request.accepted) {
+        requests += 1;
+      } else {
+        roster += 1;
+      }
+    }
+    setClubReqests(requests);
+    setClubRosterLength(roster);
+  }, [context, userClub.clubId, leagueId]);
 
   return (
     <ScrollView
@@ -60,6 +78,7 @@ export default function LeagueScheduled({navigation}: Props) {
       <CardMedium
         title={userClub.clubName}
         subTitle={`${clubRosterLength} club members`}
+        badgeNumber={clubRequests}
         onPress={() =>
           navigation.navigate('My Club', {
             clubId: userClub.clubId,

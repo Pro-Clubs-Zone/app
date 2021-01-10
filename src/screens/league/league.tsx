@@ -23,7 +23,7 @@ import CreateClub from './createClub';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
 
-interface ClubProps extends ILeagueProps {
+interface ClubProps {
   clubId: string;
   manager?: boolean;
 }
@@ -39,7 +39,7 @@ export type LeagueStackType = {
   'My Club': ClubProps;
   'Club Settings': ClubProps;
   'Report Center': ILeagueProps;
-  'Join Club': ILeagueProps;
+  'Join Club': undefined;
   Home: {
     screen: string;
   };
@@ -66,7 +66,7 @@ export default function LeagueStack({route}: Props) {
   const newLeague = route.params.newLeague;
   const leagueContext = useContext(LeagueContext);
 
-  const userInLeague = userData.leagues && userData.leagues[leagueId];
+  const userInLeague = userData.leagues && userData.leagues[leagueId]?.accepted;
   const leagueScheduled = league?.scheduled;
   const userAdmin = league?.adminId === uid;
 
@@ -129,6 +129,8 @@ export default function LeagueStack({route}: Props) {
             headerBackTitleVisible: false,
           }}>
           <Stack.Screen name="League Preview" component={LeaguePreview} />
+
+          <Stack.Screen name="Join Club" component={JoinClub} />
         </Stack.Navigator>
       );
     }

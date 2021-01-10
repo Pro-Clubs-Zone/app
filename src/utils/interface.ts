@@ -10,8 +10,8 @@ export interface FixtureList extends IFlatList {
 }
 
 export interface ILeagueProps {
-  isAdmin?: boolean;
-  newLeague?: boolean;
+  isAdmin: boolean;
+  newLeague: boolean;
 }
 
 export interface IMatchNavData extends IMatch {

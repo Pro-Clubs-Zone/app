@@ -70,7 +70,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       [
         {
           text: 'Schedule',
-          onPress: () => scheduleMatches,
+          onPress: () => scheduleMatches(),
         },
         {
           text: 'Close',
@@ -85,8 +85,14 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const scheduleMatches = async () => {
     setLoading(true);
     const functionRef = firFunc.httpsCallable('scheduleMatches');
-
-    functionRef({leagueId: leagueId})
+    const league = leagueContext.league;
+    console.log('====================================');
+    console.log(leagueId);
+    console.log('====================================');
+    await functionRef({
+      matchNum: league.matchNum,
+      leagueId: leagueId,
+    })
       .then((response) => {
         console.log('message from cloud', response);
         setLoading(false);
@@ -135,6 +141,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           onPress={() =>
             navigation.navigate('Create Club', {
               isAdmin: true,
+              newLeague: false,
             })
           }
           title="Create My Club"
