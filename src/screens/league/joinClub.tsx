@@ -4,34 +4,36 @@ import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
-import {RouteProp} from '@react-navigation/native';
+// import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './league';
 import FullScreenLoading from '../../components/loading';
 import {ListHeading, TwoLine, ListSeparator} from '../../components/listItems';
 import {verticalScale} from 'react-native-size-matters';
 import EmptyState from '../../components/emptyState';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {LeagueContext} from '../../context/leagueContext';
 
-type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
+// type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Join Club'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
+  //  route: ScreenRouteProp;
 };
 
 const db = firestore();
 type ClubListItem = IClub & {clubId: string};
 
-export default function JoinClub({route, navigation}: Props) {
+export default function JoinClub({navigation}: Props) {
   const [data, setData] = useState<ClubListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
+  const leagueContext = useContext(LeagueContext);
   const uid = user?.uid;
   const userRef = db.collection('users').doc(uid);
-  const leagueId = route.params.leagueId;
+  const leagueId = leagueContext.leagueId;
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
 
@@ -120,9 +122,9 @@ export default function JoinClub({route, navigation}: Props) {
         renderItem={({item}) => (
           <TwoLine
             title={item.name}
-            sub={item.managerId}
+            sub={item.managerUsername}
             onPress={() => onSendRequest(item)}
-            icon
+            rightDefaultIcon
           />
         )}
         ListHeaderComponent={() =>
@@ -132,7 +134,7 @@ export default function JoinClub({route, navigation}: Props) {
         ListEmptyComponent={() => (
           <EmptyState title="No Public Leagues" body="Check out later" />
         )}
-        getItemLayout={(data, index) => ({
+        getItemLayout={(item, index) => ({
           length: verticalScale(56),
           offset: verticalScale(57) * index,
           index,

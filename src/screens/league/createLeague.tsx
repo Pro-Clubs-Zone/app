@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {AuthContext} from '../../context/authContext';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';

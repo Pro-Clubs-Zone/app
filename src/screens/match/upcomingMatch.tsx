@@ -111,7 +111,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
     );
   };
 
-  const onSelectResult = (id) => {
+  const onSelectResult = (id: string) => {
     onConflictResolve(matchData, id).then((result) => {
       decrementConflictCounter;
       showAlert(result);

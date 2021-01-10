@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import {Text, View, FlatList} from 'react-native';
+import {FlatList} from 'react-native';
 import {IClubStanding} from '../../utils/interface';
 // import {RouteProp} from '@react-navigation/native';
 // import {LeagueStackType} from './league';
@@ -81,7 +81,7 @@ export default function LeagueStandings(/* {route}: Props */) {
       ListHeaderComponent={() => <TableHeader />}
       stickyHeaderIndices={[0]}
       bounces={false}
-      getItemLayout={(data, index) => ({
+      getItemLayout={(item, index) => ({
         length: verticalScale(48),
         offset: verticalScale(49) * index,
         index,

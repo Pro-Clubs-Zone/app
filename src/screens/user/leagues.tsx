@@ -31,31 +31,40 @@ export default function Leagues({navigation}: Props) {
   const context = useContext(AppContext);
 
   useEffect(() => {
-    const leagueList: IleagueData[] = [];
     const userLeagues = context.userLeagues;
 
-    for (const [leagueId, league] of Object.entries(userLeagues)) {
-      const userClubName = context.userData.leagues[leagueId].clubName;
-      const isAdmin = context.userData.leagues[leagueId].admin;
-      const updatedData = {...league, clubName: userClubName, isAdmin: isAdmin};
+    if (userLeagues) {
+      const leagueList: IleagueData[] = [];
 
-      const leagueData: IleagueData = {
-        id: leagueId,
-        data: updatedData,
-      };
-      leagueList.push(leagueData);
+      for (const [leagueId, league] of Object.entries(userLeagues)) {
+        if (context.userData.leagues[leagueId]?.accepted) {
+          const userClubName = context.userData.leagues[leagueId].clubName;
+          const isAdmin = context.userData.leagues[leagueId].admin;
+          const updatedData = {
+            ...league,
+            clubName: userClubName,
+            isAdmin: isAdmin,
+          };
+
+          const leagueData: IleagueData = {
+            id: leagueId,
+            data: updatedData,
+          };
+          leagueList.push(leagueData);
+        }
+      }
+
+      setData(leagueList);
     }
-
-    setData(leagueList);
   }, [context]);
 
   return (
     <View>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={TEXT_STYLES.caption}>My Leagues & Clubs</Text>
-        </View>
-        {data.length !== 0 ? (
+      {data.length !== 0 && (
+        <View style={styles.container}>
+          <View style={styles.header}>
+            <Text style={TEXT_STYLES.caption}>My Leagues & Clubs</Text>
+          </View>
           <FlatList
             data={data}
             horizontal={true}
@@ -65,7 +74,9 @@ export default function Leagues({navigation}: Props) {
               <UserLeagueCard
                 teamName={item.data.clubName}
                 leagueName={item.data.name}
-                conflictsCount={item.data.conflictMatchesCount}
+                conflictsCount={
+                  item.data.isAdmin && item.data.conflictMatchesCount
+                }
                 onPress={() =>
                   navigation.navigate('League', {
                     leagueId: item.id,
@@ -76,10 +87,8 @@ export default function Leagues({navigation}: Props) {
             )}
             keyExtractor={(item) => item.id}
           />
-        ) : (
-          <Text>No Upcoming Matches</Text>
-        )}
-      </View>
+        </View>
+      )}
       <ScrollView
         contentContainerStyle={{
           paddingBottom: verticalScale(16),

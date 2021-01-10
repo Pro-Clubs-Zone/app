@@ -61,7 +61,8 @@ export default function ReportCenter({navigation}: Props) {
           conflict={item.data.conflict}
           onPress={() =>
             navigation.navigate('Match', {
-              matchInfo: item.data,
+              matchData: item.data,
+              upcoming: true,
             })
           }
         />

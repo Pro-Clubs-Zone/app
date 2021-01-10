@@ -1,6 +1,7 @@
 import React, {useState, createContext, Dispatch, SetStateAction} from 'react';
 import {IClubRequest, ILeagueRequest, IMyRequests} from '../utils/interface';
 
+// eslint-disable-next-line no-spaced-func
 const RequestContext = createContext<{
   clubs: IClubRequest[];
   leagues: ILeagueRequest[];

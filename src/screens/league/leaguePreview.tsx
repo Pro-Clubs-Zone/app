@@ -50,14 +50,10 @@ export default function LeaguePreview({navigation}: Props) {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            navigation.navigate('Create Club', {
-              leagueId,
-            });
+            navigation.navigate('Create Club');
             break;
           case 1:
-            navigation.navigate('Join Club', {
-              leagueId,
-            });
+            navigation.navigate('Join Club');
             break;
         }
       },

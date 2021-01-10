@@ -45,7 +45,7 @@ export default function LeagueExplorer({navigation}: Props) {
         renderItem={({item}) => (
           <OneLine
             title={item.name}
-            icon={
+            leftIcon={
               item.platform === 'ps' ? 'sony-playstation' : 'microsoft-xbox'
             }
             key1={item.teamNum.toString()}
@@ -63,7 +63,7 @@ export default function LeagueExplorer({navigation}: Props) {
         ListEmptyComponent={() => (
           <EmptyState title="No Public Leagues" body="Check out later" />
         )}
-        getItemLayout={(data, index) => ({
+        getItemLayout={(item, index) => ({
           length: verticalScale(56),
           offset: verticalScale(57) * index,
           index,

@@ -11,7 +11,8 @@ interface OneLineProps {
   // img,
   // flag,
   onPress?: () => void;
-  icon?: string;
+  leftIcon?: string;
+  rightIcon?: string;
   onIconPress?: () => void;
   iconColor?: APP_COLORS;
   keyColor?: APP_COLORS;
@@ -25,7 +26,7 @@ interface TwoLineProps extends OneLineProps {
   iconCustomColor?: string;
   iconCustom?: string;
   disabled?: boolean;
-  icon?: boolean;
+  rightDefaultIcon?: boolean;
 }
 
 type ListHeadingProps = {
@@ -105,7 +106,8 @@ export const OneLine = ({
   // img,
   // flag,
   onPress,
-  icon,
+  leftIcon,
+  rightIcon,
   onIconPress,
   iconColor,
   keyColor,
@@ -125,28 +127,16 @@ export const OneLine = ({
           flexDirection: 'row',
           alignItems: 'center',
         }}>
-        {/* img && (
-          <View>
-            <Image
-              source={img}
-              style={{
-                width: !large ? verticalScale(24) : verticalScale(36),
-                height: !large ? verticalScale(24) : verticalScale(36),
-                marginRight: verticalScale(16),
-              }}
+        {leftIcon && (
+          <View style={styles.leftIcon}>
+            <Icon
+              name={leftIcon}
+              size={verticalScale(24)}
+              color={iconColor ? iconColor : APP_COLORS.Gray}
+              onPress={onIconPress}
             />
           </View>
-            )*/}
-        {/* flag && (
-          <CountryFlag
-            containerSize={verticalScale(24)}
-            containerStyle={{
-              marginRight: verticalScale(16),
-            }}
-            country={flag}
-            ripple={false}
-          />
-        ) */}
+        )}
         <Text
           style={[
             TEXT_STYLES.body,
@@ -201,10 +191,10 @@ export const OneLine = ({
         ) */}
       </View>
 
-      {icon && (
-        <View style={styles.oneLineIcon}>
+      {rightIcon && (
+        <View style={styles.rightIcon}>
           <Icon
-            name={icon}
+            name={rightIcon}
             size={verticalScale(24)}
             color={iconColor ? iconColor : APP_COLORS.Gray}
             onPress={onIconPress}
@@ -327,7 +317,7 @@ export const TwoLine = (props: TwoLineProps) => (
           {props.value}
         </Text>
       </View>
-      {props.icon || props.iconCustom ? (
+      {props.rightDefaultIcon || props.iconCustom ? (
         <View style={styles.twoLineIcon}>
           <Icon
             name={props.iconCustom ? props.iconCustom : 'chevron-right'}
@@ -380,8 +370,13 @@ const styles = ScaledSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  oneLineIcon: {
+  rightIcon: {
     marginLeft: '16@vs',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  leftIcon: {
+    marginRight: '16@vs',
     justifyContent: 'center',
     alignItems: 'center',
   },

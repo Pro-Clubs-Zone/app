@@ -105,7 +105,7 @@ export default function Club({navigation, route}: Props) {
     setData(playerList);
     sortPlayers(playerList);
     setLoading(false);
-  }, []);
+  }, [context]);
 
   const onHandlePlayerRequest = async (
     selectedPlayer: IPlayerRequestData,
@@ -248,7 +248,7 @@ export default function Club({navigation, route}: Props) {
             item.accepted ? (
               <OneLine
                 title={item.username}
-                icon="minus-circle"
+                rightIcon="minus-circle"
                 onIconPress={() => onAcceptedPlayer(item)}
               />
             ) : (

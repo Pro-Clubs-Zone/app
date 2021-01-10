@@ -24,7 +24,9 @@ const getLeaguesClubs = async (
       .then((doc) => {
         const league = doc.data() as ILeague;
         userLeagues = {...userLeagues, [doc.id]: league};
-        adminConflictCounts += league.conflictMatchesCount;
+        if (userData.leagues[leagueId].admin) {
+          adminConflictCounts += league.conflictMatchesCount;
+        }
       })
       .then(async () => {
         await clubRef.get().then((querySnapshot) => {

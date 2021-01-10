@@ -2,7 +2,6 @@ import React from 'react';
 import {Pressable, View, Text} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {Badge} from './elements';
 
 const UserLeagueCard = ({

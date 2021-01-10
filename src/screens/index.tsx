@@ -3,9 +3,10 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {APP_COLORS, FONT_SIZES, TEXT_STYLES} from '../utils/designSystem';
+import {APP_COLORS, FONT_SIZES} from '../utils/designSystem';
 import {IconButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
+import RNRestart from 'react-native-restart';
 
 // Screens
 import Home from './user/home';
@@ -54,7 +55,7 @@ export default function AppIndex() {
       // requestContext?.resetRequests();
       // context?.setUserData(null);
       // context?.setUserLeagues(null);
-      console.log('signed out');
+      RNRestart.Restart();
     });
   };
 

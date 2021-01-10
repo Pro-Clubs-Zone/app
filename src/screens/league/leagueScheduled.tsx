@@ -29,6 +29,9 @@ export default function LeagueScheduled({navigation}: Props) {
   const isAdmin = context.userData.leagues[leagueId].admin;
   const conflictMatchesCount =
     context.userLeagues[leagueId].conflictMatchesCount;
+  const clubRoster =
+    context.userLeagues[leagueId].clubs[userClub.clubId].roster;
+  const clubRosterLength = Object.keys(clubRoster).length;
 
   return (
     <ScrollView
@@ -39,11 +42,8 @@ export default function LeagueScheduled({navigation}: Props) {
       {isAdmin && (
         <CardMedium
           title="Report Center"
-          subTitle={
-            conflictMatchesCount !== 0
-              ? `${conflictMatchesCount} conflicts`
-              : 'no conflicts'
-          }
+          subTitle="Review and resolve all conflicted matches"
+          badgeNumber={conflictMatchesCount}
           onPress={() => navigation.navigate('Report Center')}
         />
       )}
@@ -59,6 +59,7 @@ export default function LeagueScheduled({navigation}: Props) {
       </CardSmallContainer>
       <CardMedium
         title={userClub.clubName}
+        subTitle={`${clubRosterLength} club members`}
         onPress={() =>
           navigation.navigate('My Club', {
             clubId: userClub.clubId,

@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
-import {ScrollView} from 'react-native';
+import React, {useContext, useLayoutEffect, useState} from 'react';
+import {Alert, ScrollView} from 'react-native';
 import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
@@ -63,9 +63,29 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   //   }
   // }, [context]);
 
+  const onScheduleMatches = () => {
+    Alert.alert(
+      'Schedule Matches',
+      'Are you sure you want to schedule matches and start the league?',
+      [
+        {
+          text: 'Schedule',
+          onPress: () => scheduleMatches,
+        },
+        {
+          text: 'Close',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   const scheduleMatches = async () => {
     setLoading(true);
     const functionRef = firFunc.httpsCallable('scheduleMatches');
+
     functionRef({leagueId: leagueId})
       .then((response) => {
         console.log('message from cloud', response);
@@ -132,7 +152,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         />
       </CardSmallContainer>
       {!scheduled && (
-        <CardMedium onPress={scheduleMatches} title="Schedule Matches" />
+        <CardMedium onPress={onScheduleMatches} title="Schedule Matches" />
       )}
     </ScrollView>
   );

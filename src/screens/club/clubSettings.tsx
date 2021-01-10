@@ -31,30 +31,46 @@ export default function ClubSettings({route}: Props) {
   const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
   const isManager = context.userData.leagues[leagueId].manager;
   const adminId = leagueContext.league.adminId;
+  const leagueScheduled = leagueContext.league.scheduled;
 
   //TODO: if admin, do not restart.
 
   const onRemoveClub = async () => {
-    Alert.alert(
-      'Remove Club',
-      'Remove club?',
-      [
-        {
-          text: 'Remove',
-          onPress: () => {
-            removeClub(leagueId, clubId, adminId, clubRoster).then(() => {
-              RNRestart.Restart();
-            });
+    if (leagueScheduled) {
+      Alert.alert(
+        'Remove Club',
+        'You cannot remove club when league is scheduled',
+        [
+          {
+            text: 'Close',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
           },
-        },
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-      ],
-      {cancelable: false},
-    );
+        ],
+        {cancelable: false},
+      );
+    } else {
+      Alert.alert(
+        'Remove Club',
+        'Remove club?',
+        [
+          {
+            text: 'Remove',
+            onPress: () => {
+              removeClub(leagueId, clubId, adminId, clubRoster).then(() => {
+                RNRestart.Restart();
+              });
+            },
+          },
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
   };
 
   const onRemovePlayer = async () => {
