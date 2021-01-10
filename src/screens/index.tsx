@@ -3,7 +3,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {APP_COLORS} from '../utils/designSystem';
+import {APP_COLORS, FONT_SIZES, TEXT_STYLES} from '../utils/designSystem';
 import {IconButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
 
@@ -17,7 +17,10 @@ import CreateLeague from './league/createLeague';
 import LeagueExplorer from './user/leagueExplorer';
 import LeagueStack from './league/league';
 import FullScreenLoading from '../components/loading';
-import {ILeagueProps} from '../utils/interface';
+import {ILeagueProps, IMatchNavData} from '../utils/interface';
+import Match from './match/match';
+import {RequestContext} from '../context/requestContext';
+import {verticalScale} from 'react-native-size-matters';
 
 export type AppNavStack = {
   Home: undefined;
@@ -28,6 +31,7 @@ export type AppNavStack = {
   'League Explorer': undefined;
   Leagues: undefined;
   League: ILeagueProps & {leagueId: string};
+  Match: {matchData: IMatchNavData; upcoming: boolean};
 };
 
 export default function AppIndex() {
@@ -88,6 +92,11 @@ export default function AppIndex() {
             ),
           }}
         />
+        <Stack.Screen
+          name="Match"
+          component={Match}
+          options={{headerShown: false}}
+        />
         {commonStack}
       </Stack.Navigator>
     );
@@ -127,6 +136,9 @@ export default function AppIndex() {
 
 const HomeTabs = () => {
   const Tab = createBottomTabNavigator();
+  const requestContext = useContext(RequestContext);
+  const requestCount = requestContext.requestCount;
+
   return (
     <Tab.Navigator
       tabBarOptions={{
@@ -141,11 +153,25 @@ const HomeTabs = () => {
       <Tab.Screen
         name="Home"
         component={Home}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="home" color={color} size={size} />
-          ),
-        }}
+        options={
+          requestCount > 0
+            ? {
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="home" color={color} size={size} />
+                ),
+                tabBarBadge: requestCount,
+                tabBarBadgeStyle: {
+                  backgroundColor: APP_COLORS.Red,
+                  fontSize: FONT_SIZES.XXSS,
+                  fontWeight: 'bold',
+                },
+              }
+            : {
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="home" color={color} size={size} />
+                ),
+              }
+        }
       />
       <Tab.Screen
         name="Leagues"

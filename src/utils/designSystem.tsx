@@ -140,20 +140,12 @@ export const TEXT_STYLES: FontStyles = {
     backgroundColor: 'transparent',
   },
   small: {
-    fontSize: moderateVerticalScale(FONT_SIZES.XXS, 0.5),
+    fontSize: moderateVerticalScale(FONT_SIZES.XXS, 0.2),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(16),
     color: APP_COLORS.Light,
     backgroundColor: 'transparent',
   },
-  // smallBold: {
-  //   fontSize: verticalScale(FONT_SIZES[7]),
-  //   fontFamily: fontFamilies.body,
-  //   fontWeight: "bold",
-  //   lineHeight: verticalScale(16),
-  //   color: COLORS.Light,
-  //   backgroundColor: "transparent"
-  // },
   buttonLabel: {
     fontFamily: fontFamilies.body,
     fontSize: moderateVerticalScale(FONT_SIZES.XS, 0.2),

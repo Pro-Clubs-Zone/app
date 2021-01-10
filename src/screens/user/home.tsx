@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, Button} from 'react-native';
+import {Text, View, Button, FlatList} from 'react-native';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
@@ -16,14 +16,18 @@ import {
   IMatchNavData,
   IClubRequestData,
   IPlayerRequestData,
+  FixtureList,
 } from '../../utils/interface';
 import getUserMatches from './functions/getUserMatches';
 import getLeaguesClubs from './functions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
-import {TEXT_STYLES} from '../../utils/designSystem';
-import {t, plural} from '@lingui/macro';
+import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
+import {t, plural, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FullScreenLoading from '../../components/loading';
+import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import UpcomingMatchCard from '../../components/upcomingMatchCard';
+import {CardMedium} from '../../components/cards';
 
 const db = firestore();
 
@@ -35,7 +39,7 @@ type Props = {
 
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>();
-  const [matches, setMatches] = useState<IMatchNavData[]>([]);
+  const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -168,7 +172,10 @@ export default function Home({navigation}: Props) {
             context.setUserData(userData);
             context.setUserLeagues(userLeagues);
             getUserMatches(userData, userLeagues)
-              .then((matchesData) => setMatches(matchesData))
+              .then((matchesData) => {
+                console.log(matchesData, 'matches');
+                setUpcomingMatches(matchesData);
+              })
               .then(() => {
                 getClubRequests(userLeagues);
                 getLeagueRequests(userLeagues);
@@ -185,29 +192,77 @@ export default function Home({navigation}: Props) {
     }
   }, [user]);
 
-  //TODO UI
-  // TODO Stats
+  const getRivalsName = (match: IMatchNavData) => {
+    const rivalId = match.teams.filter((teamId) => teamId !== match.clubId);
+    const rivalName =
+      context.userLeagues[match.leagueId]?.clubs[rivalId[0]].name;
+    return rivalName;
+  };
 
   return (
     <>
       <FullScreenLoading visible={loading} />
-      <Text style={{...TEXT_STYLES.display4}}>Home Screen</Text>
-      <Text>{context?.userData?.username}</Text>
-      <Button
-        onPress={() => navigation.navigate('Requests')}
-        title={`Requests ${requestContext?.requestCount}`}
-      />
-      <Button
-        onPress={() =>
-          navigation.navigate('Leagues', {
-            screen: 'Match',
-            params: {
-              matchInfo: matches, //FIXME pass correct match from array}
-            },
-          })
-        }
-        title="Match Screen"
-      />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <Text style={TEXT_STYLES.caption}>
+            <Trans>Next Matches</Trans>
+          </Text>
+          <Text style={TEXT_STYLES.small}>Club Fixtures</Text>
+        </View>
+        {upcomingMatches.length !== 0 ? (
+          <FlatList
+            data={upcomingMatches}
+            horizontal={true}
+            contentContainerStyle={styles.scrollContainer}
+            showsHorizontalScrollIndicator={false}
+            renderItem={({item}) => (
+              <UpcomingMatchCard
+                teamName={getRivalsName(item.data)}
+                leagueName={item.data.leagueName}
+                onPress={() =>
+                  navigation.navigate('Match', {
+                    matchData: item.data,
+                    upcoming: true,
+                  })
+                }
+                submitted={!!item.data.submissions[item.data.clubId]}
+                conflict={item.data.conflict}
+              />
+            )}
+            keyExtractor={(item) => item.key}
+          />
+        ) : (
+          <Text>No Upcoming Matches</Text>
+        )}
+      </View>
+      <View>
+        <CardMedium
+          title="My Requests"
+          subTitle="All your sent and received request"
+          badgeNumber={requestContext.requestCount}
+          onPress={() => navigation.navigate('Requests')}
+        />
+        <Text>{context?.userData?.username}</Text>
+      </View>
     </>
   );
 }
+
+//---------- Stylesheet ----------//
+
+const styles = ScaledSheet.create({
+  container: {
+    backgroundColor: APP_COLORS.Primary,
+    height: '128@vs',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: '16@vs',
+    paddingHorizontal: '8@vs',
+  },
+  scrollContainer: {
+    paddingHorizontal: '8@vs',
+  },
+});

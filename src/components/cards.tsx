@@ -10,6 +10,7 @@ type CardProps = {
   onPress: () => void;
   title: string;
   subTitle?: string;
+  badgeNumber: number;
 };
 
 export const CardSmallContainer = ({children}: {children: JSX.Element[]}) => (
@@ -41,7 +42,12 @@ export const CardSmall = ({onPress, title}: CardProps) => {
 
 //---------- Medium Card ----------//
 
-export const CardMedium = ({title, subTitle, onPress}: CardProps) => (
+export const CardMedium = ({
+  title,
+  subTitle,
+  onPress,
+  badgeNumber,
+}: CardProps) => (
   <Pressable onPress={onPress} style={{height: verticalScale(112)}}>
     <ImageBackground
       style={[
@@ -51,7 +57,20 @@ export const CardMedium = ({title, subTitle, onPress}: CardProps) => (
         },
       ]}
       source={bgOverlay}>
-      <View pointerEvents="none">
+      {badgeNumber > 0 && (
+        <View style={styles.badge}>
+          <Text
+            style={[
+              TEXT_STYLES.small,
+              {
+                fontWeight: 'bold',
+              },
+            ]}>
+            {badgeNumber}
+          </Text>
+        </View>
+      )}
+      <View>
         <Text style={TEXT_STYLES.display5}>
           {title.replace('<br>', '\n').toUpperCase()}
         </Text>
@@ -136,5 +155,16 @@ const styles = ScaledSheet.create({
     flex: 1,
     height: '256@vs',
     width: deviceWidth,
+  },
+  badge: {
+    position: 'absolute',
+    right: 16,
+    top: 16,
+    height: '20@vs',
+    width: '20@vs',
+    borderRadius: '20@vs',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: APP_COLORS.Red,
   },
 });

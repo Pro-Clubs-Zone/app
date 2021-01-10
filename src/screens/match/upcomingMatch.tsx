@@ -10,7 +10,6 @@ import ScoreBoard from '../../components/scoreboard';
 import {MatchTextField} from '../../components/textField';
 import {ScaledSheet} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
-import {LeagueContext} from '../../context/leagueContext';
 import firestore from '@react-native-firebase/firestore';
 import FixtureItem from '../../components/fixtureItems';
 import EmptyState from '../../components/emptyState';
@@ -41,9 +40,8 @@ export default function UpcomingMatch({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const context = useContext(AppContext);
-  const leagueContext = useContext(LeagueContext);
 
-  const leagueId = leagueContext.leagueId;
+  const leagueId = route.params.matchData.leagueId;
   const matchData: IMatchNavData = route.params.matchData;
 
   const leagueRef = db
