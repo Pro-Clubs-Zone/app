@@ -20,7 +20,7 @@ import FullScreenLoading from '../components/loading';
 import {ILeagueProps, IMatchNavData} from '../utils/interface';
 import Match from './match/match';
 import {RequestContext} from '../context/requestContext';
-import {verticalScale} from 'react-native-size-matters';
+import {AppContext} from '../context/appContext';
 
 export type AppNavStack = {
   Home: undefined;
@@ -137,7 +137,10 @@ export default function AppIndex() {
 const HomeTabs = () => {
   const Tab = createBottomTabNavigator();
   const requestContext = useContext(RequestContext);
-  const requestCount = requestContext.requestCount;
+  const context = useContext(AppContext);
+
+  const conflictsCount = context.userData?.adminConflictCounts;
+  const requestCount = requestContext?.requestCount;
 
   return (
     <Tab.Navigator
@@ -176,11 +179,25 @@ const HomeTabs = () => {
       <Tab.Screen
         name="Leagues"
         component={Leagues}
-        options={{
-          tabBarIcon: ({color, size}) => (
-            <Icon name="trophy-variant" color={color} size={size} />
-          ),
-        }}
+        options={
+          conflictsCount > 0
+            ? {
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="trophy-variant" color={color} size={size} />
+                ),
+                tabBarBadge: conflictsCount,
+                tabBarBadgeStyle: {
+                  backgroundColor: APP_COLORS.Red,
+                  fontSize: FONT_SIZES.XXSS,
+                  fontWeight: 'bold',
+                },
+              }
+            : {
+                tabBarIcon: ({color, size}) => (
+                  <Icon name="trophy-variant" color={color} size={size} />
+                ),
+              }
+        }
       />
     </Tab.Navigator>
   );

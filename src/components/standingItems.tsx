@@ -147,10 +147,10 @@ const styles = ScaledSheet.create({
   },
   teamDataItem: {
     textAlign: 'right',
-    minWidth: '12@vs',
+    minWidth: '16@vs',
   },
   ptsDif: {
-    minWidth: '26@vs',
+    minWidth: '32@vs',
     textAlign: 'right',
     fontWeight: 'bold',
   },

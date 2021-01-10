@@ -51,7 +51,7 @@ const getUserMatches = async (
             };
 
             const fixture: FixtureList = {
-              key: matchId,
+              id: matchId,
               data: match,
             };
 

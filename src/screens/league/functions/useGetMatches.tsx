@@ -50,7 +50,7 @@ const useGetMatches = (
           };
 
           const fixture: FixtureList = {
-            key: matchId,
+            id: matchId,
             data: match,
           };
           matches.push(fixture);
@@ -97,7 +97,7 @@ const useGetMatches = (
             };
 
             const fixture: FixtureList = {
-              key: matchId,
+              id: matchId,
               data: match,
             };
             matches.push(fixture);

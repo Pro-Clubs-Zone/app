@@ -163,17 +163,15 @@ export default function Home({navigation}: Props) {
       const userRef = db.collection('users').doc(uid);
       let userInfo: IUser;
       const subscriber = userRef.onSnapshot((doc) => {
-        console.log('call to fir');
         userInfo = doc.data() as IUser;
 
         if (userInfo.leagues) {
           getLeaguesClubs(userInfo).then(async (data) => {
-            const {userData, userLeagues} = data;
-            context.setUserData(userData);
+            const {updatedUserData, userLeagues} = data;
+            context.setUserData(updatedUserData);
             context.setUserLeagues(userLeagues);
-            getUserMatches(userData, userLeagues)
+            getUserMatches(updatedUserData, userLeagues)
               .then((matchesData) => {
-                console.log(matchesData, 'matches');
                 setUpcomingMatches(matchesData);
               })
               .then(() => {
@@ -229,7 +227,7 @@ export default function Home({navigation}: Props) {
                 conflict={item.data.conflict}
               />
             )}
-            keyExtractor={(item) => item.key}
+            keyExtractor={(item) => item.id}
           />
         ) : (
           <Text>No Upcoming Matches</Text>

@@ -3,6 +3,7 @@ import {Pressable, ImageBackground, View, Text, Dimensions} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
 import bgOverlay from '../assets/images/bg-overlay.png';
+import {Badge} from './elements';
 
 const deviceWidth = Dimensions.get('window').width;
 
@@ -10,7 +11,7 @@ type CardProps = {
   onPress: () => void;
   title: string;
   subTitle?: string;
-  badgeNumber: number;
+  badgeNumber?: number;
 };
 
 export const CardSmallContainer = ({children}: {children: JSX.Element[]}) => (
@@ -57,19 +58,7 @@ export const CardMedium = ({
         },
       ]}
       source={bgOverlay}>
-      {badgeNumber > 0 && (
-        <View style={styles.badge}>
-          <Text
-            style={[
-              TEXT_STYLES.small,
-              {
-                fontWeight: 'bold',
-              },
-            ]}>
-            {badgeNumber}
-          </Text>
-        </View>
-      )}
+      {badgeNumber > 0 && <Badge number={badgeNumber} />}
       <View>
         <Text style={TEXT_STYLES.display5}>
           {title.replace('<br>', '\n').toUpperCase()}

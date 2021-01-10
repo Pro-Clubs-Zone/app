@@ -5,8 +5,7 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
-export interface FixtureList {
-  key: string;
+export interface FixtureList extends IFlatList {
   data: IMatchNavData;
 }
 
@@ -41,12 +40,17 @@ export interface IMatch {
   result?: {[team: string]: number};
 }
 
-export interface IFlatList {
+export interface ISectionList {
   title: string;
   data: {}[];
 }
 
-export interface IMyRequests extends IFlatList {
+export interface IFlatList {
+  id: string;
+  data: {};
+}
+
+export interface IMyRequests extends ISectionList {
   data: ISentRequest[];
 }
 
@@ -59,11 +63,11 @@ export interface ISentRequest {
   playerId?: string;
 }
 
-export interface IClubRequest extends IFlatList {
+export interface IClubRequest extends ISectionList {
   data: IPlayerRequestData[];
 }
 
-export interface ILeagueRequest extends IFlatList {
+export interface ILeagueRequest extends ISectionList {
   data: IClubRequestData[];
 }
 
@@ -93,7 +97,7 @@ export interface ILeague {
   clubs?: {
     [club: string]: IClub;
   };
-  conflictMatchesCount?: 0;
+  conflictMatchesCount: 0;
 }
 
 export interface IClubRosterMember {
@@ -121,6 +125,7 @@ export interface IUserLeague {
 
 export interface IUser {
   username?: string;
+  adminConflictCounts?: number;
   leagues: {
     [league: string]: IUserLeague;
   };

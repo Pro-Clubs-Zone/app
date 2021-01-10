@@ -46,9 +46,7 @@ export default function LeagueExplorer({navigation}: Props) {
           <OneLine
             title={item.name}
             icon={
-              item.platform === 'playstation'
-                ? 'sony-playstation'
-                : 'microsoft-xbox'
+              item.platform === 'ps' ? 'sony-playstation' : 'microsoft-xbox'
             }
             key1={item.teamNum.toString()}
             onPress={() =>

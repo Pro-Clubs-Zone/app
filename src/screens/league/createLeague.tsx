@@ -26,7 +26,7 @@ export default function CreateLeague({navigation}: Props) {
   const context = useContext(AppContext);
 
   const uid = user.uid;
-  const userLeagues = context.userData?.leagues;
+  //const userLeagues = context.userData.leagues;
 
   const leagueInfoDefault: ILeague = {
     name: '',
@@ -39,6 +39,7 @@ export default function CreateLeague({navigation}: Props) {
     private: false,
     scheduled: false,
     created: firestore.Timestamp.now(),
+    conflictMatchesCount: 0,
   };
 
   type PickerProps = {

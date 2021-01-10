@@ -6,22 +6,25 @@ const db = firestore();
 const getLeaguesClubs = async (
   userData: IUser,
 ): Promise<{
-  userData: IUser;
+  updatedUserData: IUser;
   userLeagues: {[league: string]: ILeague};
 }> => {
-  const leagues = Object.entries(userData.leagues);
+  const leagues = Object.keys(userData.leagues);
   const leaguesRef = db.collection('leagues');
 
   let userLeagues: {[league: string]: ILeague} = {};
+  let adminConflictCounts: number = 0;
 
-  for (const [leagueId, league] of leagues) {
+  for (const leagueId of leagues) {
     const clubRef = leaguesRef.doc(leagueId).collection('clubs');
 
     await leaguesRef
       .doc(leagueId)
       .get()
       .then((doc) => {
-        userLeagues = {...userLeagues, [doc.id]: doc.data() as ILeague};
+        const league = doc.data() as ILeague;
+        userLeagues = {...userLeagues, [doc.id]: league};
+        adminConflictCounts += league.conflictMatchesCount;
       })
       .then(async () => {
         await clubRef.get().then((querySnapshot) => {
@@ -35,9 +38,14 @@ const getLeaguesClubs = async (
       });
   }
 
+  const updatedUserData: IUser = {
+    ...userData,
+    adminConflictCounts: adminConflictCounts,
+  };
+
   return {
     userLeagues,
-    userData,
+    updatedUserData,
   };
 };
 
