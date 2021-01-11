@@ -61,7 +61,15 @@ export default function AppIndex() {
 
   const commonStack = (
     <>
-      <Stack.Screen name="Requests" component={Requests} />
+      <Stack.Screen
+        name="Requests"
+        component={Requests}
+        options={{
+          headerStyle: {
+            elevation: 0,
+          },
+        }}
+      />
       <Stack.Screen name="Create League" component={CreateLeague} />
       <Stack.Screen name="League Explorer" component={LeagueExplorer} />
       <Stack.Screen

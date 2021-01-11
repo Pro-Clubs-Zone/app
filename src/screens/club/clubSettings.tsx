@@ -75,8 +75,8 @@ export default function ClubSettings({route}: Props) {
 
   const onRemovePlayer = async () => {
     Alert.alert(
-      'Remove Player',
-      'Remove Player?',
+      'Leave Club',
+      "Are you sure you want to leavue this club? This can't be undone",
       [
         {
           text: 'Remove',
@@ -99,9 +99,9 @@ export default function ClubSettings({route}: Props) {
   return (
     <View>
       {isManager ? (
-        <CardMedium title="remove club" onPress={onRemoveClub} />
+        <CardMedium title="Remove Club" onPress={onRemoveClub} />
       ) : (
-        <CardMedium title="remove myself" onPress={onRemovePlayer} />
+        <CardMedium title="Leave Club" onPress={onRemovePlayer} />
       )}
     </View>
   );
