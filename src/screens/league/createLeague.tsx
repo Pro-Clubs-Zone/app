@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from '../../context/authContext';
-import firestore from '@react-native-firebase/firestore';
+// import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
 import {AppNavStack} from '../index';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -13,6 +13,7 @@ import {Alert, View} from 'react-native';
 import PickerContainer from '../../components/pickerContainer';
 import {APP_COLORS} from '../../utils/designSystem';
 import {Picker} from '@react-native-picker/picker';
+import createLeague from '../../actions/createLeague';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -20,13 +21,12 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-const db = firestore();
-
 export default function CreateLeague({navigation}: Props) {
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
 
   const uid = user.uid;
+
   //const userLeagues = context.userData.leagues;
 
   const leagueInfoDefault: ILeague = {
@@ -36,10 +36,10 @@ export default function CreateLeague({navigation}: Props) {
     platform: 'ps',
     teamNum: 8,
     matchNum: 2,
-    adminId: uid,
+    adminId: null,
     private: false,
     scheduled: false,
-    created: firestore.Timestamp.now(),
+    created: null,
     conflictMatchesCount: 0,
   };
 
@@ -111,45 +111,33 @@ export default function CreateLeague({navigation}: Props) {
   const onCreateLeague = () => {
     fieldValidation().then(async (noErrors) => {
       if (noErrors) {
-        setLoading(true);
-        const batch = db.batch();
-        const leagueRef = db.collection('leagues').doc();
-        const userRef = db.collection('users').doc(uid);
-        batch.set(leagueRef, data);
-        batch.set(
-          userRef,
-          {
-            leagues: {
-              [leagueRef.id]: {
-                admin: true,
-              },
-            },
-          },
-          {merge: true},
-        );
-        await batch
-          .commit()
-          .then(() => {
+        if (uid) {
+          setLoading(true);
+          await createLeague(data, uid).then((leagueId) => {
             context.setUserData({
               leagues: {
-                [leagueRef.id]: {
+                [leagueId]: {
                   admin: true,
                   manager: false,
                 },
               },
             });
             context.setUserLeagues({
-              [leagueRef.id]: data,
+              [leagueId]: data,
             });
             setLoading(false);
-          })
-          .then(() => {
             navigation.navigate('League', {
-              leagueId: leagueRef.id,
+              leagueId: leagueId,
               isAdmin: true,
               newLeague: true,
             });
           });
+        } else {
+          navigation.navigate('Sign Up', {
+            data: data,
+            redirectedFrom: 'createLeague',
+          });
+        }
       }
     });
   };

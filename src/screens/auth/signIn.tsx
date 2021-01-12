@@ -12,7 +12,7 @@ import i18n from '../../utils/i18n';
 import auth from '@react-native-firebase/auth';
 import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
-import {ScaledSheet} from 'react-native-size-matters';
+import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
@@ -108,22 +108,24 @@ export default function SignIn({navigation}: Props) {
     fieldValidation().then(async (noErrors) => {
       if (noErrors) {
         setLoading(true);
-        firAuth.signInWithEmailAndPassword(email, password).catch((error) => {
-          setLoading(false);
+        await firAuth
+          .signInWithEmailAndPassword(email, password)
+          .catch((error) => {
+            setLoading(false);
 
-          if (error.code === 'auth/invalid-email') {
-            onShowToast('That email address is invalid');
-          }
-          if (error.code === 'auth/user-not-found') {
-            onShowToast('There is no user with this email');
-          }
-          if (error.code === 'auth/wrong-password') {
-            onShowToast(
-              'The password is invalid or the user does not have a password.',
-            );
-          }
-          console.error(error);
-        });
+            if (error.code === 'auth/invalid-email') {
+              onShowToast('That email address is invalid');
+            }
+            if (error.code === 'auth/user-not-found') {
+              onShowToast('There is no user with this email');
+            }
+            if (error.code === 'auth/wrong-password') {
+              onShowToast(
+                'The password is invalid or the user does not have a password.',
+              );
+            }
+            console.error(error);
+          });
       }
     });
   }
@@ -176,19 +178,19 @@ export default function SignIn({navigation}: Props) {
                 //   !password
                 // }
               />
-              {/* <Pressable onPress={onResetPassword.bind(this)}>
+              <Pressable>
                 <View style={styles.resetPass}>
                   <Trans>
-                    <Text style={TEXT_STYLES.small.small}>
-                      Forgot login details?{" "}
-                      <Text style={TEXT_STYLES.small.smallBold}>
+                    <Text style={TEXT_STYLES.small}>
+                      Forgot login details?{' '}
+                      <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
                         Get help recovering it.
                       </Text>
                     </Text>
                   </Trans>
                 </View>
               </Pressable>
-              <View
+              {/* <View
                 style={{
                   marginTop: verticalScale(24)
                 }}
@@ -225,7 +227,7 @@ export default function SignIn({navigation}: Props) {
           <Trans>
             <Text style={TEXT_STYLES.small}>
               Don’t have an account?{' '}
-              <Text style={{...TEXT_STYLES.small, fontWeight: 'bold'}}>
+              <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
                 Sign up now.
               </Text>
             </Text>

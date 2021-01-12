@@ -25,7 +25,10 @@ import {AppContext} from '../context/appContext';
 
 export type AppNavStack = {
   Home: undefined;
-  'Sign Up': undefined;
+  'Sign Up': {
+    data?: {};
+    redirectedFrom?: string | null;
+  };
   'Sign In': undefined;
   Requests: undefined;
   'Create League': undefined;

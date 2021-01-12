@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Text,
   View,
@@ -16,22 +16,28 @@ import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
+import createLeague from '../../actions/createLeague';
+import {ILeague} from '../../utils/interface';
+import {AppContext} from '../../context/appContext';
 
-type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign Up'>;
+type ScreenRouteProp = RouteProp<AppNavStack, 'Sign Up'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
 const db = firestore();
 const firAuth = auth();
 
-function SignUp({navigation}: Props) {
+function SignUp({navigation, route}: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
@@ -43,6 +49,11 @@ function SignUp({navigation}: Props) {
     password: null,
     username: null,
   });
+
+  const context = useContext(AppContext);
+
+  const redirectedFrom: string = route.params?.redirectedFrom;
+  const redirectedData = route.params?.data as ILeague;
 
   const onShowToast = (message: string) => {
     setShowToast(true);
@@ -141,6 +152,33 @@ function SignUp({navigation}: Props) {
           .then(async (data) => {
             //  console.log('User account created & signed in!', data);
             await createDbEntry(data);
+            return data;
+          })
+          .then(async ({user}) => {
+            console.log(user.uid, 'user');
+
+            if (redirectedFrom) {
+              await createLeague(redirectedData, user.uid).then((leagueId) => {
+                console.log(leagueId);
+
+                context.setUserData({
+                  leagues: {
+                    [leagueId]: {
+                      admin: true,
+                      manager: false,
+                    },
+                  },
+                });
+                context.setUserLeagues({
+                  [leagueId]: redirectedData,
+                });
+                navigation.navigate('League', {
+                  leagueId: leagueId,
+                  isAdmin: true,
+                  newLeague: true,
+                });
+              });
+            }
           })
           .catch((error) => {
             setLoading(false);
