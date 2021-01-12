@@ -4,7 +4,6 @@ import {
   View,
   Keyboard,
   ImageBackground,
-  Linking,
   Pressable,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -19,6 +18,7 @@ import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
+import Toast from '../../components/toast';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
@@ -32,54 +32,130 @@ export default function SignIn({navigation}: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [errorStates, setErrorStates] = useState({
+    email: null,
+    password: null,
+  });
+
+  const onShowToast = (message: string) => {
+    setShowToast(true);
+    setToastMessage(message);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 1000);
+  };
+
+  const onChangeText = (text: string, field: 'email' | 'password') => {
+    switch (field) {
+      case 'email':
+        setEmail(text);
+        break;
+      case 'password':
+        setPassword(text);
+        break;
+    }
+
+    if (errorStates[field]) {
+      setErrorStates({...errorStates, [field]: null});
+    }
+  };
+
+  const fieldValidation = async () => {
+    const re = /\S+@\S+\.\S+/;
+    const emailValid = re.test(email);
+
+    let errorStatus: Record<
+      'email' | 'password' | 'username',
+      null | string
+    > = {
+      email: null,
+      password: null,
+      username: null,
+    };
+
+    let noErrors = true;
+
+    if (!emailValid && email !== '') {
+      errorStatus.email = 'email is badly formatted';
+      noErrors = false;
+    }
+    if (email === '') {
+      errorStatus.email = "Field can't be empty";
+      noErrors = false;
+    }
+
+    if (password === '') {
+      errorStatus.password = "Field can't be empty";
+      noErrors = false;
+    }
+
+    if (password.length < 6 && password !== '') {
+      errorStatus.password = 'at least 6 characters';
+      noErrors = false;
+    }
+
+    if (!noErrors) {
+      setErrorStates(errorStatus);
+      return false;
+    }
+
+    return true;
+  };
 
   function onSignIn() {
-    setLoading(true);
-    firAuth.signInWithEmailAndPassword(email, password).then(() => {
-      setLoading(false);
+    fieldValidation().then(async (noErrors) => {
+      if (noErrors) {
+        setLoading(true);
+        firAuth.signInWithEmailAndPassword(email, password).catch((error) => {
+          setLoading(false);
+
+          if (error.code === 'auth/invalid-email') {
+            onShowToast('That email address is invalid');
+          }
+          if (error.code === 'auth/user-not-found') {
+            onShowToast('There is no user with this email');
+          }
+          if (error.code === 'auth/wrong-password') {
+            onShowToast(
+              'The password is invalid or the user does not have a password.',
+            );
+          }
+          console.error(error);
+        });
+      }
     });
   }
 
-  // if (loading) {
-  //   return <FullScreenLoading />;
-  // }
-
   return (
     <ImageBackground source={screenBg} style={styles.backgroundImage}>
+      <Toast message={toastMessage} visible={showToast} />
       <FullScreenLoading visible={loading} />
-
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
-          {/* <View style={styles.logoContainer}>
-            <Image
-              source={require('../../assets/images/logo.png')}
-              resizeMode="contain"
-              style={{
-                height: '100%',
-              }}
-            />
-          </View> */}
           <View style={styles.contentFrame}>
             <View style={styles.content}>
               <TextField
                 value={email}
                 placeholder={i18n._(t`Enter E-mail`)}
-                onChangeText={(text) => setEmail(text)}
+                onChangeText={(text) => onChangeText(text, 'email')}
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
                 label={i18n._(t`E-mail`)}
                 returnKeyType="next"
-                // onBlur={onEmailBlur}
-                // error={emailError}
+                helper="example@gmail.com"
+                error={errorStates.email}
               />
               <TextField
                 value={password}
                 placeholder={i18n._(t`Enter Password`)}
-                onChangeText={(text) => setPassword(text)}
+                onChangeText={(text) => onChangeText(text, 'password')}
                 autoCorrect={false}
                 autoCapitalize="none"
                 label={i18n._(t`Password`)}
+                error={errorStates.password}
                 //  blurOnSubmit={false}
                 //   secureTextEntry={true}
                 //  textContentType="password"

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   Text,
   View,
@@ -7,7 +7,6 @@ import {
   Linking,
   Pressable,
   TouchableWithoutFeedback,
-  Alert,
 } from 'react-native';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
@@ -39,7 +38,7 @@ function SignUp({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
-  const [error, setError] = useState({
+  const [errorStates, setErrorStates] = useState({
     email: null,
     password: null,
     username: null,
@@ -69,8 +68,8 @@ function SignUp({navigation}: Props) {
         break;
     }
 
-    if (error[field]) {
-      setError({...error, [field]: null});
+    if (errorStates[field]) {
+      setErrorStates({...errorStates, [field]: null});
     }
   };
 
@@ -119,7 +118,7 @@ function SignUp({navigation}: Props) {
     }
 
     if (!noErrors) {
-      setError(errorStatus);
+      setErrorStates(errorStatus);
       return false;
     }
 
@@ -146,17 +145,13 @@ function SignUp({navigation}: Props) {
           .catch((error) => {
             setLoading(false);
             if (error.code === 'auth/email-already-in-use') {
-              // <Toast message="That email address is already in use'" />;
-              // onShowAlert('Error', ');
               onShowToast('That email address is already in use!');
             }
 
             if (error.code === 'auth/invalid-email') {
-              //      onShowAlert('Error', 'That email address is invalid');
-              // console.log('That email address is invalid!');
+              onShowToast('That email address is invalid');
             }
-
-            //   console.error(error);
+            console.error(error);
           });
       }
     });
@@ -192,7 +187,7 @@ function SignUp({navigation}: Props) {
                 //    onBlur={checkEmailFormat}
 
                 helper="example@gmail.com"
-                error={error.email}
+                error={errorStates.email}
               />
               <TextField
                 value={password}
@@ -211,7 +206,7 @@ function SignUp({navigation}: Props) {
                 //   passwordTouched &&
                 //   i18n._(t`Password field cant't be empty`)
                 // }
-                error={error.password}
+                error={errorStates.password}
               />
               <TextField
                 value={username}
@@ -222,7 +217,7 @@ function SignUp({navigation}: Props) {
                 autoCapitalize="none"
                 label={i18n._(t`Username`)}
                 returnKeyType="next"
-                error={error.username}
+                error={errorStates.username}
                 helper={i18n._(t`PSN or Xbox Username`)}
               />
               <BigButtonOutlined
