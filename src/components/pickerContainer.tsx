@@ -5,13 +5,13 @@ import {ScaledSheet} from 'react-native-size-matters';
 import {APP_COLORS} from '../utils/designSystem';
 import {Picker} from '@react-native-picker/picker';
 
-const PickerContainer = (props: {
-  children: JSX.Element[];
+const PickerContainer = <T extends {}>(props: {
+  children: T;
   onApply: () => void;
   onCancel: () => void;
   visible: boolean;
   selectedValue: any;
-  onValueChange: any;
+  onValueChange: (itemValue: any) => void;
 }) => (
   <Modal
     presentationStyle="overFullScreen"
@@ -39,10 +39,6 @@ const PickerContainer = (props: {
       </View>
     </View>
   </Modal>
-);
-
-export const PickerItem = (props) => (
-  <Picker.Item color={APP_COLORS.Light} {...props} />
 );
 
 const styles = ScaledSheet.create({

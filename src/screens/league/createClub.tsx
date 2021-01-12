@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
@@ -26,6 +26,9 @@ const db = firestore();
 export default function CreateClub({route, navigation}: Props) {
   const [clubName, setClubName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState({
+    clubName: null,
+  });
 
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
@@ -36,49 +39,71 @@ export default function CreateClub({route, navigation}: Props) {
   const isAdmin = route?.params.isAdmin;
   const username = context.userData.username;
 
-  const onCreateClub = async () => {
-    setLoading(true);
-    const batch = db.batch();
-    const userRef = db.collection('users').doc(uid);
-    const clubRef = db
-      .collection('leagues')
-      .doc(leagueId)
-      .collection('clubs')
-      .doc();
+  useEffect(() => {
+    if (error.clubName && clubName !== '') {
+      setError({...error, clubName: null});
+    }
+  }, [clubName]);
 
-    const clubInfo: IClub = {
-      name: clubName,
-      managerId: uid,
-      managerUsername: username,
-      accepted: isAdmin ? true : false,
-      roster: {
-        [uid]: {
-          accepted: true,
-          username: username,
-        },
-      },
-      created: firestore.Timestamp.now(),
-    };
-    const userInfo: IUserLeague = {
-      clubId: clubRef.id,
-      manager: true,
-      clubName: clubName,
-      accepted: isAdmin ? true : false,
-    };
+  const fieldValidation = async () => {
+    if (clubName === '') {
+      setError({...error, clubName: "Field can't be empty"});
+      return false;
+    }
+    if (clubName.length < 4 && clubName !== '') {
+      setError({...error, clubName: 'At least 4 letters'});
+      return false;
+    }
+    return true;
+  };
 
-    batch.set(clubRef, clubInfo);
-    batch.set(
-      userRef,
-      {
-        leagues: {
-          [leagueId]: userInfo,
-        },
-      },
-      {merge: true},
-    );
-    await batch.commit().then(() => {
-      setLoading(false);
-      navigation.goBack();
+  const onCreateClub = () => {
+    fieldValidation().then(async (noErrors) => {
+      if (noErrors) {
+        setLoading(true);
+        const batch = db.batch();
+        const userRef = db.collection('users').doc(uid);
+        const clubRef = db
+          .collection('leagues')
+          .doc(leagueId)
+          .collection('clubs')
+          .doc();
+
+        const clubInfo: IClub = {
+          name: clubName,
+          managerId: uid,
+          managerUsername: username,
+          accepted: isAdmin ? true : false,
+          roster: {
+            [uid]: {
+              accepted: true,
+              username: username,
+            },
+          },
+          created: firestore.Timestamp.now(),
+        };
+        const userInfo: IUserLeague = {
+          clubId: clubRef.id,
+          manager: true,
+          clubName: clubName,
+          accepted: isAdmin ? true : false,
+        };
+
+        batch.set(clubRef, clubInfo);
+        batch.set(
+          userRef,
+          {
+            leagues: {
+              [leagueId]: userInfo,
+            },
+          },
+          {merge: true},
+        );
+        await batch.commit().then(() => {
+          setLoading(false);
+          navigation.goBack();
+        });
+      }
     });
   };
 
@@ -92,6 +117,7 @@ export default function CreateClub({route, navigation}: Props) {
           placeholder="Club Name"
           autoCorrect={false}
           label="Club Name"
+          error={error.clubName}
         />
       </FormContent>
       <BigButton onPress={onCreateClub} title="Create Club" />

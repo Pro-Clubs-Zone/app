@@ -8,7 +8,7 @@ type Props = React.ComponentProps<typeof TextInput> &
   React.ComponentProps<typeof Pressable> & {
     label: string;
     placeholder: string;
-    error?: boolean;
+    error?: string;
     helper?: string;
     fieldIco?: string;
     maxHeight?: number;

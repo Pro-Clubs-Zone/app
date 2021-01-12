@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -7,6 +7,7 @@ import {
   Linking,
   Pressable,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
@@ -20,6 +21,7 @@ import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
+import Toast from '../../components/toast';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
@@ -35,33 +37,118 @@ function SignUp({navigation}: Props) {
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState({
+    email: null,
+    password: null,
+    username: null,
+  });
 
-  const onSignUp = async () => {
-    setLoading(true);
+  const onShowAlert = (title, error) => {
+    Alert.alert(
+      title,
+      error,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
-    const createDbEntry = async (data: {user: {uid: string}}) => {
-      await db.collection('users').doc(data.user.uid).set({
-        username: username,
-      });
-    };
+  const onChangeText = (
+    text: string,
+    field: 'email' | 'password' | 'username',
+  ) => {
+    switch (field) {
+      case 'email':
+        setEmail(text);
+        break;
+      case 'username':
+        setUsername(text);
+        break;
+      case 'password':
+        setPassword(text);
+        break;
+    }
 
-    await firAuth
-      .createUserWithEmailAndPassword(email, password)
-      .then(async (data) => {
-        console.log('User account created & signed in!', data);
-        await createDbEntry(data);
-      })
-      .catch((error) => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
+    if (error[field]) {
+      setError({...error, [field]: null});
+    }
+  };
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
-        setLoading(false);
-        console.error(error);
-      });
+  const fieldValidation = async () => {
+    const re = /\S+@\S+\.\S+/;
+    const emailValid = re.test(email);
+
+    if (!emailValid && email !== '') {
+      setError({...error, email: 'email is badly formatted'});
+      return false;
+    }
+    if (email === '') {
+      setError({...error, email: "Field can't be empty"});
+      return false;
+    }
+
+    if (password === '') {
+      setError({...error, password: "Field can't be empty"});
+      return false;
+    }
+
+    if (password.length < 6 && password !== '') {
+      setError({...error, password: 'at least 6 characters'});
+      return false;
+    }
+
+    if (username === '') {
+      setError({...error, username: "Field can't be empty"});
+      return false;
+    }
+
+    if (username !== '' && username.length < 4) {
+      setError({...error, username: 'At least 4 letters'});
+      return false;
+    }
+
+    return true;
+  };
+
+  const onSignUp = () => {
+    fieldValidation().then(async (noErrors) => {
+      if (noErrors) {
+        setLoading(true);
+
+        const createDbEntry = async (data: {user: {uid: string}}) => {
+          await db.collection('users').doc(data.user.uid).set({
+            username: username,
+          });
+        };
+
+        await firAuth
+          .createUserWithEmailAndPassword(email, password)
+          .then(async (data) => {
+            //  console.log('User account created & signed in!', data);
+            await createDbEntry(data);
+          })
+          .catch((error) => {
+            if (error.code === 'auth/email-already-in-use') {
+              // <Toast message="That email address is already in use'" />;
+              // onShowAlert('Error', ');
+              //     console.log('That email address is already in use!');
+            }
+
+            if (error.code === 'auth/invalid-email') {
+              onShowAlert('Error', 'That email address is invalid');
+
+              // console.log('That email address is invalid!');
+            }
+
+            //   setLoading(false);
+            console.error(error);
+          });
+      }
+    });
   };
 
   return (
@@ -82,36 +169,28 @@ function SignUp({navigation}: Props) {
           <View style={styles.contentFrame}>
             <View style={styles.content}>
               <TextField
-                value={username}
-                placeholder={i18n._(t`PSN or Xbox Username`)}
-                onChangeText={(text) => setUsername(text)}
-                keyboardType="default"
-                autoCorrect={false}
-                autoCapitalize="none"
-                label={i18n._(t`Username`)}
-                returnKeyType="next"
-                //   onBlur={onEmailBlur}
-                //   error={emailError}
-              />
-              <TextField
                 value={email}
                 placeholder={i18n._(t`Enter E-mail`)}
-                onChangeText={(text) => setEmail(text)}
+                onChangeText={(text) => onChangeText(text, 'email')}
                 keyboardType="email-address"
                 autoCorrect={false}
                 autoCapitalize="none"
                 label={i18n._(t`E-mail`)}
                 returnKeyType="next"
-                //   onBlur={onEmailBlur}
-                //   error={emailError}
+                //    onBlur={checkEmailFormat}
+
+                helper="example@gmail.com"
+                error={error.email}
               />
               <TextField
                 value={password}
                 //  secureTextEntry={true}
                 placeholder={i18n._(t`Enter Password`)}
-                onChangeText={(text) => setPassword(text)}
+                onChangeText={(text) => onChangeText(text, 'password')}
                 autoCorrect={false}
                 label={i18n._(t`Password`)}
+                helper="at least 6 characters"
+                //      onBlur={checkPasswordFormat}
                 // textContentType="newPassword"
                 //  fieldIco={visibility}
                 //  onPressIco={changePwdType}
@@ -120,6 +199,19 @@ function SignUp({navigation}: Props) {
                 //   passwordTouched &&
                 //   i18n._(t`Password field cant't be empty`)
                 // }
+                error={error.password}
+              />
+              <TextField
+                value={username}
+                placeholder={i18n._(t`Enter Username`)}
+                onChangeText={(text) => onChangeText(text, 'username')}
+                keyboardType="default"
+                autoCorrect={false}
+                autoCapitalize="none"
+                label={i18n._(t`Username`)}
+                returnKeyType="next"
+                error={error.username}
+                helper={i18n._(t`PSN or Xbox Username`)}
               />
               <BigButtonOutlined
                 onPress={onSignUp}

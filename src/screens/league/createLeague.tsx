@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {AuthContext} from '../../context/authContext';
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../../utils/interface';
@@ -10,8 +10,9 @@ import {FormView, FormContent} from '../../components/templates';
 import {AppContext} from '../../context/appContext';
 import FullScreenLoading from '../../components/loading';
 import {Alert, View} from 'react-native';
-import PickerContainer, {PickerItem} from '../../components/pickerContainer';
+import PickerContainer from '../../components/pickerContainer';
 import {APP_COLORS} from '../../utils/designSystem';
+import {Picker} from '@react-native-picker/picker';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -48,7 +49,7 @@ export default function CreateLeague({navigation}: Props) {
     matchNum: boolean;
   };
 
-  const [data, setData] = useState<ILeague>(leagueInfoDefault);
+  const [data, setData] = useState(leagueInfoDefault);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasLeague, setHasLeague] = useState<boolean>(false);
   const [tempData, setTempData] = useState<Partial<ILeague>>({
@@ -61,6 +62,9 @@ export default function CreateLeague({navigation}: Props) {
     teamNum: false,
     matchNum: false,
   });
+  const [error, setError] = useState({
+    name: null,
+  });
 
   // useEffect(() => {
   //   if (userLeagues) {
@@ -71,6 +75,24 @@ export default function CreateLeague({navigation}: Props) {
   //     }
   //   }
   // }, [userLeagues]);
+
+  useEffect(() => {
+    if (error.name && data.name !== '') {
+      setError({...error, name: null});
+    }
+  }, [data.name]);
+
+  const fieldValidation = async () => {
+    if (data.name === '') {
+      setError({...error, name: "Field can't be empty"});
+      return false;
+    }
+    if (data.name.length < 4 && data.name !== '') {
+      setError({...error, name: 'At least 4 letters'});
+      return false;
+    }
+    return true;
+  };
 
   const showLimitAlert = () => {
     Alert.alert(
@@ -87,45 +109,49 @@ export default function CreateLeague({navigation}: Props) {
   };
 
   const onCreateLeague = () => {
-    const batch = db.batch();
-    const leagueRef = db.collection('leagues').doc();
-    const userRef = db.collection('users').doc(uid);
-    setLoading(true);
-    batch.set(leagueRef, data);
-    batch.set(
-      userRef,
-      {
-        leagues: {
-          [leagueRef.id]: {
-            admin: true,
-          },
-        },
-      },
-      {merge: true},
-    );
-    batch
-      .commit()
-      .then(() => {
-        context.setUserData({
-          leagues: {
-            [leagueRef.id]: {
-              admin: true,
-              manager: false,
+    fieldValidation().then(async (noErrors) => {
+      if (noErrors) {
+        setLoading(true);
+        const batch = db.batch();
+        const leagueRef = db.collection('leagues').doc();
+        const userRef = db.collection('users').doc(uid);
+        batch.set(leagueRef, data);
+        batch.set(
+          userRef,
+          {
+            leagues: {
+              [leagueRef.id]: {
+                admin: true,
+              },
             },
           },
-        });
-        context.setUserLeagues({
-          [leagueRef.id]: data,
-        });
-        setLoading(false);
-      })
-      .then(() => {
-        navigation.navigate('League', {
-          leagueId: leagueRef.id,
-          isAdmin: true,
-          newLeague: true,
-        });
-      });
+          {merge: true},
+        );
+        await batch
+          .commit()
+          .then(() => {
+            context.setUserData({
+              leagues: {
+                [leagueRef.id]: {
+                  admin: true,
+                  manager: false,
+                },
+              },
+            });
+            context.setUserLeagues({
+              [leagueRef.id]: data,
+            });
+            setLoading(false);
+          })
+          .then(() => {
+            navigation.navigate('League', {
+              leagueId: leagueRef.id,
+              isAdmin: true,
+              newLeague: true,
+            });
+          });
+      }
+    });
   };
 
   return (
@@ -146,8 +172,12 @@ export default function CreateLeague({navigation}: Props) {
             setData({...data, platform: tempData.platform});
             setShowPicker({...showPicker, platform: false});
           }}>
-          <PickerItem label="Playstation" value="ps" color={APP_COLORS.Light} />
-          <PickerItem label="Xbox" value="xb" color={APP_COLORS.Light} />
+          <Picker.Item
+            label="Playstation"
+            value="ps"
+            color={APP_COLORS.Light}
+          />
+          <Picker.Item label="Xbox" value="xb" color={APP_COLORS.Light} />
         </PickerContainer>
         <PickerContainer
           selectedValue={tempData.teamNum}
@@ -163,8 +193,8 @@ export default function CreateLeague({navigation}: Props) {
             setData({...data, teamNum: tempData.teamNum});
             setShowPicker({...showPicker, teamNum: false});
           }}>
-          <PickerItem label="4 Teams" value={4} color={APP_COLORS.Light} />
-          <PickerItem label="8 Teams" value={8} color={APP_COLORS.Light} />
+          <Picker.Item label="4 Teams" value={4} color={APP_COLORS.Light} />
+          <Picker.Item label="8 Teams" value={8} color={APP_COLORS.Light} />
         </PickerContainer>
         <PickerContainer
           selectedValue={tempData.matchNum}
@@ -180,14 +210,16 @@ export default function CreateLeague({navigation}: Props) {
             setData({...data, matchNum: tempData.matchNum});
             setShowPicker({...showPicker, matchNum: false});
           }}>
-          <PickerItem label="1 Match" value={1} color={APP_COLORS.Light} />
-          <PickerItem label="2 Matches" value={2} color={APP_COLORS.Light} />
+          <Picker.Item label="1 Match" value={1} color={APP_COLORS.Light} />
+          <Picker.Item label="2 Matches" value={2} color={APP_COLORS.Light} />
         </PickerContainer>
         <TextField
           onChangeText={(text) => setData({...data, name: text})}
           value={data.name}
           placeholder="League Name"
           label="League Name"
+          error={error.name}
+          helper="test"
         />
         <TextField
           value={data.platform === 'ps' ? 'Playstation' : 'Xbox'}
