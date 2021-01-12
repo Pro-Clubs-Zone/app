@@ -37,24 +37,20 @@ function SignUp({navigation}: Props) {
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   const [error, setError] = useState({
     email: null,
     password: null,
     username: null,
   });
 
-  const onShowAlert = (title, error) => {
-    Alert.alert(
-      title,
-      error,
-      [
-        {
-          text: 'Cancel',
-          style: 'cancel',
-        },
-      ],
-      {cancelable: false},
-    );
+  const onShowToast = (message: string) => {
+    setShowToast(true);
+    setToastMessage(message);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 1000);
   };
 
   const onChangeText = (
@@ -82,32 +78,48 @@ function SignUp({navigation}: Props) {
     const re = /\S+@\S+\.\S+/;
     const emailValid = re.test(email);
 
+    let errorStatus: Record<
+      'email' | 'password' | 'username',
+      null | string
+    > = {
+      email: null,
+      password: null,
+      username: null,
+    };
+
+    let noErrors = true;
+
     if (!emailValid && email !== '') {
-      setError({...error, email: 'email is badly formatted'});
-      return false;
+      errorStatus.email = 'email is badly formatted';
+      noErrors = false;
     }
     if (email === '') {
-      setError({...error, email: "Field can't be empty"});
-      return false;
+      errorStatus.email = "Field can't be empty";
+      noErrors = false;
     }
 
     if (password === '') {
-      setError({...error, password: "Field can't be empty"});
-      return false;
+      errorStatus.password = "Field can't be empty";
+      noErrors = false;
     }
 
     if (password.length < 6 && password !== '') {
-      setError({...error, password: 'at least 6 characters'});
-      return false;
+      errorStatus.password = 'at least 6 characters';
+      noErrors = false;
     }
 
     if (username === '') {
-      setError({...error, username: "Field can't be empty"});
-      return false;
+      errorStatus.username = "Field can't be empty";
+      noErrors = false;
     }
 
     if (username !== '' && username.length < 4) {
-      setError({...error, username: 'At least 4 letters'});
+      errorStatus.username = 'At least 4 letters';
+      noErrors = false;
+    }
+
+    if (!noErrors) {
+      setError(errorStatus);
       return false;
     }
 
@@ -132,20 +144,19 @@ function SignUp({navigation}: Props) {
             await createDbEntry(data);
           })
           .catch((error) => {
+            setLoading(false);
             if (error.code === 'auth/email-already-in-use') {
               // <Toast message="That email address is already in use'" />;
               // onShowAlert('Error', ');
-              //     console.log('That email address is already in use!');
+              onShowToast('That email address is already in use!');
             }
 
             if (error.code === 'auth/invalid-email') {
-              onShowAlert('Error', 'That email address is invalid');
-
+              //      onShowAlert('Error', 'That email address is invalid');
               // console.log('That email address is invalid!');
             }
 
-            //   setLoading(false);
-            console.error(error);
+            //   console.error(error);
           });
       }
     });
@@ -153,6 +164,7 @@ function SignUp({navigation}: Props) {
 
   return (
     <ImageBackground source={screenBg} style={styles.backgroundImage}>
+      <Toast message={toastMessage} visible={showToast} />
       <FullScreenLoading visible={loading} />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
