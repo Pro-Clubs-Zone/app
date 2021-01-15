@@ -25,6 +25,9 @@ export default function LeaguePreview({navigation}: Props) {
   const {showActionSheetWithOptions} = useActionSheet();
 
   const leagueId = leagueContext.leagueId;
+  const scheduled = leagueContext.league.scheduled;
+  const leagueComplete =
+    leagueContext.league.acceptedClubs === leagueContext.league.teamNum;
 
   const onCheckUserInLeague = () => {
     const userLeague = context.userData?.leagues?.[leagueId];
@@ -34,7 +37,7 @@ export default function LeaguePreview({navigation}: Props) {
       setAccepted(userLeague.accepted);
       return userInLeague();
     } else {
-      if (leagueContext.league.scheduled) {
+      if (scheduled || leagueComplete) {
         return showJoinAsPlayer();
       } else {
         return showUserTypeSelection();
@@ -45,7 +48,7 @@ export default function LeaguePreview({navigation}: Props) {
   const showJoinAsPlayer = () => {
     Alert.alert(
       'Join as a Player',
-      'You can join only as a player as this league has already started',
+      'You can join only as a player as this league is already full',
       [
         {
           text: 'Join',

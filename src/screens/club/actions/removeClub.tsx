@@ -10,11 +10,9 @@ const removeClub = async (
   const db = firestore();
   const batch = db.batch();
 
-  const clubRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('clubs')
-    .doc(clubId);
+  const leagueRef = db.collection('leagues').doc(leagueId);
+
+  const clubRef = leagueRef.collection('clubs').doc(clubId);
 
   for (const playerId of Object.keys(clubRoster)) {
     const playerRef = db.collection('users').doc(playerId);
@@ -31,6 +29,9 @@ const removeClub = async (
       });
     }
   }
+  batch.update(leagueRef, {
+    acceptedClubs: firestore.FieldValue.increment(-1),
+  });
   batch.delete(clubRef);
 
   await batch.commit();

@@ -89,6 +89,7 @@ export interface ILeague {
   discord: string;
   platform: 'ps' | 'xb';
   teamNum: number;
+  acceptedClubs: number;
   matchNum: number;
   adminId: string;
   private: boolean;

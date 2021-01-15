@@ -35,11 +35,8 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
-  // const scheduled = leagueContext.league.scheduled;
   const teamNum = leagueContext.league.teamNum;
-  const acceptedClubs = context.userLeagues[leagueId].clubs
-    ? Object.keys(context.userLeagues[leagueId].clubs).length
-    : 0;
+  const acceptedClubs = leagueContext.league.acceptedClubs;
   const leagueComplete = teamNum === acceptedClubs;
   const userClub = context.userData.leagues[leagueId];
   const newLeague = route.params.newLeague;
@@ -106,9 +103,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
     //setLoading(true);
     const functionRef = firFunc.httpsCallable('scheduleMatches');
     const league = leagueContext.league;
-    console.log('====================================');
-    console.log(leagueId);
-    console.log('====================================');
     await functionRef({
       matchNum: league.matchNum,
       leagueId: leagueId,

@@ -35,6 +35,7 @@ export default function CreateLeague({navigation}: Props) {
     discord: '',
     platform: 'ps',
     teamNum: 8,
+    acceptedClubs: 0,
     matchNum: 2,
     adminId: null,
     private: false,

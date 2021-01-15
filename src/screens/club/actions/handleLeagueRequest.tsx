@@ -10,11 +10,9 @@ const handleLeagueRequest = async (
   const db = firestore();
   const batch = db.batch();
 
-  const leagueClubsRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('clubs');
-  const clubRef = leagueClubsRef.doc(clubId);
+  const leagueRef = db.collection('leagues').doc(leagueId);
+
+  const clubRef = leagueRef.collection('clubs').doc(clubId);
   const managerRef = db.collection('users').doc(managerId);
 
   const sectionIndex = data.findIndex(
@@ -38,6 +36,10 @@ const handleLeagueRequest = async (
 
     batch.update(managerRef, {
       ['leagues.' + leagueId + '.accepted']: true,
+    });
+
+    batch.update(leagueRef, {
+      acceptedClubs: firestore.FieldValue.increment(1),
     });
   } else {
     batch.update(managerRef, {
