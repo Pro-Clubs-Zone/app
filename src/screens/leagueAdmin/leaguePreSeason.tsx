@@ -28,14 +28,19 @@ type Props = {
 const firFunc = functions();
 
 export default function LeaguePreSeason({navigation, route}: Props) {
-  const [loading, setLoading] = useState<boolean>(false);
+  //const [loading, setLoading] = useState<boolean>(false);
   const [clubRosterLength, setClubRosterLength] = useState(1);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
-  const scheduled = leagueContext.league.scheduled;
+  // const scheduled = leagueContext.league.scheduled;
+  const teamNum = leagueContext.league.teamNum;
+  const acceptedClubs = context.userLeagues[leagueId].clubs
+    ? Object.keys(context.userLeagues[leagueId].clubs).length
+    : 0;
+  const leagueComplete = teamNum === acceptedClubs;
   const userClub = context.userData.leagues[leagueId];
   const newLeague = route.params.newLeague;
 
@@ -64,26 +69,41 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   // }, [context]);
 
   const onScheduleMatches = () => {
-    Alert.alert(
-      'Schedule Matches',
-      'Are you sure you want to schedule matches and start the league?',
-      [
-        {
-          text: 'Schedule',
-          onPress: () => scheduleMatches(),
-        },
-        {
-          text: 'Close',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-      ],
-      {cancelable: false},
-    );
+    if (leagueComplete) {
+      Alert.alert(
+        'Schedule Matches',
+        'Are you sure you want to schedule matches and start the league?',
+        [
+          {
+            text: 'Schedule',
+            onPress: () => scheduleMatches(),
+          },
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    } else {
+      Alert.alert(
+        'Schedule Matches',
+        `You can schedule matches once the league has ${teamNum} teams`,
+        [
+          {
+            text: 'Close',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
   };
 
   const scheduleMatches = async () => {
-    setLoading(true);
+    //setLoading(true);
     const functionRef = firFunc.httpsCallable('scheduleMatches');
     const league = leagueContext.league;
     console.log('====================================');
@@ -93,10 +113,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       matchNum: league.matchNum,
       leagueId: leagueId,
     })
-      .then((response) => {
-        console.log('message from cloud', response);
-        setLoading(false);
-      })
       .then(() => {
         navigation.dispatch(
           CommonActions.reset({
@@ -120,7 +136,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         paddingBottom: verticalScale(16),
       }}
       showsVerticalScrollIndicator={false}>
-      <FullScreenLoading visible={loading} />
       {userClub.manager ? (
         <CardMedium
           onPress={() =>
@@ -158,9 +173,16 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           onPress={() => console.log('nothing yet')}
         />
       </CardSmallContainer>
-      {!scheduled && (
-        <CardMedium onPress={onScheduleMatches} title="Schedule Matches" />
-      )}
+
+      <CardMedium
+        onPress={onScheduleMatches}
+        title="Schedule Matches"
+        subTitle={
+          leagueComplete
+            ? 'League is full and matches can be scheduled'
+            : `${acceptedClubs}/${teamNum} Teams\nNot enough teams to schedule matches`
+        }
+      />
     </ScrollView>
   );
 }
