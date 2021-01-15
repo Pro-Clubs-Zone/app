@@ -241,7 +241,7 @@ export default function Home({navigation}: Props) {
       <View>
         <CardMedium
           title="My Requests"
-          subTitle="All your sent and received request"
+          subTitle="Manager your received and sent request"
           badgeNumber={requestContext.requestCount}
           onPress={() => navigation.navigate('Requests')}
         />

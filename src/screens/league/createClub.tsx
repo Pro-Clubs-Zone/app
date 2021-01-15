@@ -62,12 +62,9 @@ export default function CreateClub({route, navigation}: Props) {
       if (noErrors) {
         setLoading(true);
         const batch = db.batch();
+        const leagueRef = db.collection('leagues').doc(leagueId);
         const userRef = db.collection('users').doc(uid);
-        const clubRef = db
-          .collection('leagues')
-          .doc(leagueId)
-          .collection('clubs')
-          .doc();
+        const clubRef = leagueRef.collection('clubs').doc();
 
         const clubInfo: IClub = {
           name: clubName,
@@ -89,6 +86,11 @@ export default function CreateClub({route, navigation}: Props) {
           accepted: isAdmin ? true : false,
         };
 
+        if (isAdmin) {
+          batch.update(leagueRef, {
+            acceptedClubs: firestore.FieldValue.increment(1),
+          });
+        }
         batch.set(clubRef, clubInfo);
         batch.set(
           userRef,

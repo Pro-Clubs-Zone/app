@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, ImageBackground, View, Text, Dimensions} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
-import bgOverlay from '../assets/images/bg-overlay.png';
+// import bgOverlay from '../assets/images/bg-overlay.png';
 import {Badge} from './elements';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -29,9 +29,9 @@ export const CardSmall = ({onPress, title}: CardProps) => {
             paddingVertical: verticalScale(12),
           },
         ]}
-        source={bgOverlay}
+        source={{uri: 'bg-overlay'}}
         resizeMode="cover">
-        <View pointerEvents="none">
+        <View>
           <Text style={TEXT_STYLES.display5}>
             {title.replace('<br>', '\n').toUpperCase()}
           </Text>
@@ -57,7 +57,7 @@ export const CardMedium = ({
           height: verticalScale(104),
         },
       ]}
-      source={bgOverlay}>
+      source={{uri: 'bg-overlay'}}>
       {badgeNumber > 0 && <Badge number={badgeNumber} />}
       <View>
         <Text style={TEXT_STYLES.display5}>

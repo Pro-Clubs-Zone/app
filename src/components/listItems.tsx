@@ -23,8 +23,6 @@ interface OneLineProps {
 interface TwoLineProps extends OneLineProps {
   value?: string;
   sub: string;
-  iconCustomColor?: string;
-  iconCustom?: string;
   disabled?: boolean;
   rightDefaultIcon?: boolean;
 }
@@ -317,14 +315,13 @@ export const TwoLine = (props: TwoLineProps) => (
           {props.value}
         </Text>
       </View>
-      {props.rightDefaultIcon || props.iconCustom ? (
+      {props.rightDefaultIcon || props.rightIcon ? (
         <View style={styles.twoLineIcon}>
           <Icon
-            name={props.iconCustom ? props.iconCustom : 'chevron-right'}
+            name={props.rightIcon ? props.rightIcon : 'chevron-right'}
             size={verticalScale(24)}
-            color={
-              props.iconCustomColor ? props.iconCustomColor : APP_COLORS.Light
-            }
+            color={props.iconColor ? props.iconColor : APP_COLORS.Gray}
+            onPress={props.onIconPress}
           />
         </View>
       ) : null}

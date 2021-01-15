@@ -17,7 +17,7 @@ import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import screenBg from '../../assets/images/login-bg.jpg';
+// import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
@@ -219,7 +219,7 @@ function SignUp({navigation, route}: Props) {
   };
 
   return (
-    <ImageBackground source={screenBg} style={styles.backgroundImage}>
+    <ImageBackground source={{uri: 'login-bg'}} style={styles.backgroundImage}>
       <Toast message={toastMessage} visible={showToast} />
       <FullScreenLoading visible={loading} />
 

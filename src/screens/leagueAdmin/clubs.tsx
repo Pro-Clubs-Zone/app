@@ -130,6 +130,9 @@ export default function Clubs() {
       return club;
     });
     await onHandleLeagueRequest(selectedClub, true).then(() => {
+      const leagueData = {...leagueContext.league};
+      leagueData.acceptedClubs += 1;
+      leagueContext.setLeague(leagueData);
       setData(updatedList);
       sortClubs(updatedList);
       setLoading(false);
@@ -208,9 +211,9 @@ export default function Clubs() {
           <TwoLine
             title={item.name}
             sub={item.managerUsername}
-            onPress={() =>
-              item.accepted ? onAcceptedClub(item) : onUnacceptedClub(item)
-            }
+            rightIcon={item.accepted ? 'minus-circle' : null}
+            onIconPress={() => onAcceptedClub(item)}
+            onPress={() => !item.accepted && onUnacceptedClub(item)}
           />
         )}
         ItemSeparatorComponent={() => <ListSeparator />}

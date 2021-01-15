@@ -14,7 +14,6 @@ import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
-import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
@@ -131,7 +130,7 @@ export default function SignIn({navigation}: Props) {
   }
 
   return (
-    <ImageBackground source={screenBg} style={styles.backgroundImage}>
+    <ImageBackground source={{uri: 'login-bg'}} style={styles.backgroundImage}>
       <Toast message={toastMessage} visible={showToast} />
       <FullScreenLoading visible={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

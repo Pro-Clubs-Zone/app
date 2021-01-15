@@ -4,7 +4,6 @@ import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import {PrimaryButton} from './buttons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {IMatchNavData} from '../utils/interface';
-import scoreboardBg from '../assets/images/scoreboard-bg.png';
 import defaultLogo from '../assets/images/defaultLogo.png';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../utils/i18n';
@@ -37,7 +36,7 @@ const ScoreBoard = ({data, editable, onSubmit, children}: Props) => {
   );
 
   return (
-    <ImageBackground source={scoreboardBg} style={styles.bg}>
+    <ImageBackground source={{uri: 'scoreboard-bg'}} style={styles.bg}>
       <View style={styles.container}>
         <View style={styles.firstRow}>
           <Team teamName={data.homeTeamName} />

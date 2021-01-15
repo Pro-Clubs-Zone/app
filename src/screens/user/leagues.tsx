@@ -37,9 +37,10 @@ export default function Leagues({navigation}: Props) {
       const leagueList: IleagueData[] = [];
 
       for (const [leagueId, league] of Object.entries(userLeagues)) {
-        if (context.userData.leagues[leagueId]?.accepted) {
+        const accepted = context.userData.leagues[leagueId]?.accepted;
+        const isAdmin = context.userData.leagues[leagueId]?.admin;
+        if (accepted || isAdmin) {
           const userClubName = context.userData.leagues[leagueId].clubName;
-          const isAdmin = context.userData.leagues[leagueId].admin;
           const updatedData = {
             ...league,
             clubName: userClubName,
@@ -81,6 +82,7 @@ export default function Leagues({navigation}: Props) {
                   navigation.navigate('League', {
                     leagueId: item.id,
                     isAdmin: item.data.isAdmin,
+                    newLeague: false,
                   })
                 }
               />
