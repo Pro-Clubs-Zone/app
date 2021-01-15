@@ -163,27 +163,29 @@ function SignUp({navigation, route}: Props) {
           .then(async ({user}) => {
             console.log(user.uid, 'user');
             const onCreateLeague = async () => {
-              await createLeague(redirectedData, user.uid).then((leagueId) => {
-                console.log(leagueId);
+              await createLeague(redirectedData, user.uid, username).then(
+                (leagueId) => {
+                  console.log(leagueId);
 
-                context.setUserData({
-                  leagues: {
-                    [leagueId]: {
-                      admin: true,
-                      manager: false,
+                  context.setUserData({
+                    leagues: {
+                      [leagueId]: {
+                        admin: true,
+                        manager: false,
+                      },
                     },
-                  },
-                });
-                context.setUserLeagues({
-                  [leagueId]: redirectedData,
-                });
-                setLoading(false);
-                // navigation.navigate('League', {
-                //   leagueId: leagueId,
-                //   isAdmin: true,
-                //   newLeague: true,
-                // });
-              });
+                  });
+                  context.setUserLeagues({
+                    [leagueId]: redirectedData,
+                  });
+                  setLoading(false);
+                  // navigation.navigate('League', {
+                  //   leagueId: leagueId,
+                  //   isAdmin: true,
+                  //   newLeague: true,
+                  // });
+                },
+              );
             };
 
             switch (redirectedFrom) {

@@ -26,10 +26,12 @@ export default function CreateLeague({navigation}: Props) {
   const context = useContext(AppContext);
 
   const uid = user.uid;
+  const username = context.userData.username;
 
   //const userLeagues = context.userData.leagues;
 
   const leagueInfoDefault: ILeague = {
+    adminUsername: '',
     name: '',
     description: '',
     discord: '',
@@ -114,7 +116,7 @@ export default function CreateLeague({navigation}: Props) {
       if (noErrors) {
         if (uid) {
           setLoading(true);
-          await createLeague(data, uid).then((leagueId) => {
+          await createLeague(data, uid, username).then((leagueId) => {
             context.setUserData({
               leagues: {
                 [leagueId]: {

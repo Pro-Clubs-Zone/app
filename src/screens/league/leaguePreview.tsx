@@ -1,22 +1,30 @@
-import React, {useState, useContext} from 'react';
-import {Text, View, Alert, Button} from 'react-native';
+import React, {useState, useContext, useCallback} from 'react';
+import {Text, View, Alert, ScrollView, Linking} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import {LeagueStackType} from './league';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RouteProp} from '@react-navigation/native';
 import {LeagueContext} from '../../context/leagueContext';
 import {AppContext} from '../../context/appContext';
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import {BigButton} from '../../components/buttons';
+import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
+import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
   'League Preview'
 >;
 
+type ScreenRouteProp = RouteProp<LeagueStackType, 'League Preview'>;
+
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
-export default function LeaguePreview({navigation}: Props) {
+export default function LeaguePreview({navigation, route}: Props) {
   const [accepted, setAccepted] = useState<boolean>(false);
 
   const leagueContext = useContext(LeagueContext);
@@ -24,10 +32,12 @@ export default function LeaguePreview({navigation}: Props) {
   const context = useContext(AppContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
+  const league = leagueContext.league;
   const leagueId = leagueContext.leagueId;
-  const scheduled = leagueContext.league.scheduled;
-  const leagueComplete =
-    leagueContext.league.acceptedClubs === leagueContext.league.teamNum;
+  const scheduled = league.scheduled;
+  const leagueComplete = league.acceptedClubs === league.teamNum;
+
+  const infoMode = route.params?.infoMode;
 
   const onCheckUserInLeague = () => {
     const userLeague = context.userData?.leagues?.[leagueId];
@@ -123,18 +133,142 @@ export default function LeaguePreview({navigation}: Props) {
   };
 
   return (
-    <View>
-      <Text>{leagueId}</Text>
-      <Button
-        title="Join League"
-        onPress={() =>
-          user
-            ? onCheckUserInLeague()
-            : navigation.navigate('Home', {
-                screen: 'Sign Up',
-              })
-        }
-      />
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'space-between',
+      }}>
+      <ScrollView
+        contentContainerStyle={{
+          padding: verticalScale(16),
+        }}>
+        <View
+          style={{
+            paddingBottom: verticalScale(24),
+          }}>
+          <Text
+            style={[
+              TEXT_STYLES.body,
+              {
+                color: APP_COLORS.Gray,
+                paddingBottom: verticalScale(4),
+              },
+            ]}>
+            Name
+          </Text>
+          <Text style={TEXT_STYLES.display3}>{league.name}</Text>
+        </View>
+        <InfoItem
+          icon={
+            league.platform === 'xb' ? 'microsoft-xbox' : 'sony-playstation'
+          }
+          value={league.platform === 'xb' ? 'Xbox' : 'Playstation'}
+          label="Platform"
+        />
+        <InfoItem
+          icon="flag"
+          value={`${league.teamNum} clubs / ${league.matchNum} matches`}
+          label="Rules"
+        />
+        <InfoItem icon="account" value={league.adminUsername} label="Admin" />
+        {!!league.discord && (
+          <InfoItem icon="discord" url={league.discord} label="Communication" />
+        )}
+        <View>
+          <Text
+            style={[
+              TEXT_STYLES.small,
+              {
+                color: APP_COLORS.Gray,
+              },
+            ]}>
+            Description
+          </Text>
+
+          <Text style={TEXT_STYLES.body}>{league.description}</Text>
+        </View>
+      </ScrollView>
+      {!infoMode && (
+        <BigButton
+          title="Join League"
+          onPress={() =>
+            user
+              ? onCheckUserInLeague()
+              : navigation.navigate('Home', {
+                  screen: 'Sign Up',
+                })
+          }
+        />
+      )}
     </View>
   );
 }
+
+const OpenURLButton = ({url}: {url: string}) => {
+  const handlePress = useCallback(async () => {
+    // Checking if the link is supported for links with custom URL scheme.
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      // Opening the link with some app, if the URL scheme is "http" the web link should be opened
+      // by some browser in the mobile
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  }, [url]);
+
+  return (
+    <Text
+      style={[
+        TEXT_STYLES.display5,
+        {
+          textDecorationLine: 'underline',
+          color: APP_COLORS.Accent,
+        },
+      ]}
+      onPress={handlePress}>
+      Discord
+    </Text>
+  );
+};
+
+const InfoItem = (props) => (
+  <View
+    style={{
+      flexDirection: 'row',
+      paddingBottom: verticalScale(24),
+    }}>
+    <View
+      style={{
+        backgroundColor: APP_COLORS.Secondary,
+        borderRadius: 4,
+        marginRight: verticalScale(12),
+      }}>
+      <Icon
+        name={props.icon}
+        size={32}
+        style={{padding: 8}}
+        color={APP_COLORS.Accent}
+      />
+    </View>
+    <View>
+      <Text
+        style={[
+          TEXT_STYLES.small,
+          {
+            color: APP_COLORS.Gray,
+          },
+        ]}>
+        {props.label}
+      </Text>
+      {props.url ? (
+        <OpenURLButton url={props.url} />
+      ) : (
+        <Text style={TEXT_STYLES.display5}>{props.value}</Text>
+      )}
+    </View>
+  </View>
+);
+
+const styles = ScaledSheet.create({});

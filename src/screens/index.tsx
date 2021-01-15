@@ -22,6 +22,7 @@ import {ILeagueProps, IMatchNavData} from '../utils/interface';
 import Match from './match/match';
 import {RequestContext} from '../context/requestContext';
 import {AppContext} from '../context/appContext';
+import LeaguePreview from './league/leaguePreview';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
 
@@ -37,6 +38,9 @@ export type AppNavStack = {
   Match: {matchData: IMatchNavData; upcoming: boolean};
   'Create Club': ILeagueProps;
   'Join Club': undefined;
+  'League Preview': {
+    infoMode: boolean;
+  };
 };
 
 export default function AppIndex() {
@@ -76,6 +80,7 @@ export default function AppIndex() {
       />
       <Stack.Screen name="Create League" component={CreateLeague} />
       <Stack.Screen name="League Explorer" component={LeagueExplorer} />
+      <Stack.Screen name="League Preview" component={LeaguePreview} />
       <Stack.Screen
         name="League"
         component={LeagueStack}

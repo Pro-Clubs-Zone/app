@@ -103,6 +103,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         {
           text: 'Close',
           onPress: () => {
+            setLoading(false);
             navigation.goBack();
           },
         },
@@ -126,6 +127,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         onSubmit={() => {
           setLoading(true);
           onSubmitMatch(homeScore, awayScore, matchData).then((result) => {
+            //      setLoading(false);
             showAlert(result);
           });
         }}

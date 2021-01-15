@@ -52,6 +52,8 @@ export default function LeagueExplorer({navigation}: Props) {
             onPress={() =>
               navigation.navigate('League', {
                 leagueId: item.key,
+                isAdmin: false,
+                newLeague: false,
               })
             }
           />

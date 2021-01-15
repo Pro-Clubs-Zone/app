@@ -60,7 +60,7 @@ export default function Leagues({navigation}: Props) {
   }, [context]);
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       {data.length !== 0 && (
         <View style={styles.container}>
           <View style={styles.header}>

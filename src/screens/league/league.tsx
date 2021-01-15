@@ -3,7 +3,10 @@ import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {ILeague, ILeagueProps, IMatchNavData} from '../../utils/interface';
-import {createStackNavigator} from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackNavigationProp,
+} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppNavStack} from '../index';
 import {LeagueContext} from '../../context/leagueContext';
@@ -25,6 +28,7 @@ import ClubSettings from '../club/clubSettings';
 import SignUp from '../auth/signUp';
 import SignIn from '../auth/signIn';
 import LeagueExplorer from '../user/leagueExplorer';
+import {IconButton} from '../../components/buttons';
 
 interface ClubProps {
   clubId: string;
@@ -36,7 +40,9 @@ type SignIn = {data?: {}; redirectedFrom?: string | null};
 export type LeagueStackType = {
   'League Scheduled': ILeagueProps;
   Clubs: ILeagueProps;
-  'League Preview': ILeagueProps;
+  'League Preview': {
+    infoMode: boolean;
+  };
   'League Pre-Season': ILeagueProps;
   'Create Club': ILeagueProps;
   'Join Club': undefined;
@@ -57,14 +63,16 @@ export type LeagueStackType = {
 const Stack = createStackNavigator<LeagueStackType>();
 
 type ScreenRouteProp = RouteProp<AppNavStack, 'League'>;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'League'>;
 
 type Props = {
   route: ScreenRouteProp;
+  navigation: ScreenNavigationProp;
 };
 
 const db = firestore();
 
-export default function LeagueStack({route}: Props) {
+export default function LeagueStack({navigation, route}: Props) {
   const [league, setLeague] = useState<ILeague>();
   const [loading, setLoading] = useState<boolean>(true);
   const user = useContext(AuthContext);
@@ -121,7 +129,23 @@ export default function LeagueStack({route}: Props) {
           screenOptions={{
             headerBackTitleVisible: false,
           }}>
-          <Stack.Screen name="League Scheduled" component={LeagueScheduled} />
+          <Stack.Screen
+            name="League Scheduled"
+            component={LeagueScheduled}
+            options={{
+              animationTypeForReplace: 'pop',
+              headerRight: () => (
+                <IconButton
+                  name="information"
+                  onPress={() => {
+                    navigation.navigate('League Preview', {
+                      infoMode: true,
+                    });
+                  }}
+                />
+              ),
+            }}
+          />
           <Stack.Screen name="Standings" component={LeagueStandings} />
           <Stack.Screen name="Fixtures" component={Fixtures} />
           <Stack.Screen

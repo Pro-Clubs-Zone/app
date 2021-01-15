@@ -84,6 +84,7 @@ export interface IClubRequestData extends IClub {
 }
 
 export interface ILeague {
+  adminUsername: string;
   name: string;
   description: string;
   discord: string;

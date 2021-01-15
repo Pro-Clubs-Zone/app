@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, FlatList} from 'react-native';
+import {Text, View, FlatList, ScrollView} from 'react-native';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
@@ -198,7 +198,7 @@ export default function Home({navigation}: Props) {
   };
 
   return (
-    <>
+    <View style={{flex: 1}}>
       <FullScreenLoading visible={loading} />
       <View style={styles.container}>
         <View style={styles.header}>
@@ -238,7 +238,7 @@ export default function Home({navigation}: Props) {
           <Text>No Upcoming Matches</Text>
         )}
       </View>
-      <View>
+      <ScrollView>
         <CardMedium
           title="My Requests"
           subTitle="Manager your received and sent request"
@@ -246,8 +246,8 @@ export default function Home({navigation}: Props) {
           onPress={() => navigation.navigate('Requests')}
         />
         <Text>{context?.userData?.username}</Text>
-      </View>
-    </>
+      </ScrollView>
+    </View>
   );
 }
 

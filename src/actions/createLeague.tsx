@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../utils/interface';
 
-const createLeague = async (data: ILeague, uid: string) => {
+const createLeague = async (data: ILeague, uid: string, username: string) => {
   const db = firestore();
   const batch = db.batch();
   const leagueRef = db.collection('leagues').doc();
@@ -9,6 +9,7 @@ const createLeague = async (data: ILeague, uid: string) => {
   const dataWithTimestamp: ILeague = {
     ...data,
     adminId: uid,
+    adminUsername: username,
     created: firestore.Timestamp.now(),
   };
   batch.set(leagueRef, dataWithTimestamp);
