@@ -27,9 +27,9 @@ export default function LeaguePreview({navigation}: Props) {
   const leagueId = leagueContext.leagueId;
 
   const onCheckUserInLeague = () => {
-    const userLeague = context.userData.leagues?.[leagueId];
+    const userLeague = context.userData?.leagues?.[leagueId];
 
-    console.log(userLeague, 'userdata');
+    console.log('league preview render');
     if (userLeague) {
       setAccepted(userLeague.accepted);
       return userInLeague();
@@ -72,13 +72,32 @@ export default function LeaguePreview({navigation}: Props) {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            navigation.navigate('Create Club', {
-              isAdmin: false,
-              newLeague: false,
-            });
+            if (user.uid) {
+              navigation.navigate('Create Club', {
+                isAdmin: false,
+                newLeague: false,
+              });
+            } else {
+              navigation.navigate('Sign Up', {
+                redirectedFrom: 'createClub',
+                data: {
+                  leagueId: leagueId,
+                },
+              });
+            }
+
             break;
           case 1:
-            navigation.navigate('Join Club');
+            if (user.uid) {
+              navigation.navigate('Join Club');
+            } else {
+              navigation.navigate('Sign Up', {
+                redirectedFrom: 'joinClub',
+                data: {
+                  leagueId: leagueId,
+                },
+              });
+            }
             break;
         }
       },

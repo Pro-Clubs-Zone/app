@@ -22,24 +22,33 @@ import Clubs from '../leagueAdmin/clubs';
 import CreateClub from './createClub';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
+import SignUp from '../auth/signUp';
+import SignIn from '../auth/signIn';
+import LeagueExplorer from '../user/leagueExplorer';
 
 interface ClubProps {
   clubId: string;
   manager?: boolean;
 }
+
+type SignIn = {data?: {}; redirectedFrom?: string | null};
+
 export type LeagueStackType = {
   'League Scheduled': ILeagueProps;
   Clubs: ILeagueProps;
   'League Preview': ILeagueProps;
   'League Pre-Season': ILeagueProps;
   'Create Club': ILeagueProps;
+  'Join Club': undefined;
   Standings: ILeagueProps;
   Fixtures: ILeagueProps;
   Match: {matchData: IMatchNavData; upcoming: boolean};
   'My Club': ClubProps;
   'Club Settings': ClubProps;
   'Report Center': ILeagueProps;
-  'Join Club': undefined;
+  'Sign Up': SignIn;
+  'Sign In': SignIn;
+  'League Explorer': undefined;
   Home: {
     screen: string;
   };
@@ -66,7 +75,8 @@ export default function LeagueStack({route}: Props) {
   const newLeague = route.params.newLeague;
   const leagueContext = useContext(LeagueContext);
 
-  const userInLeague = userData.leagues && userData.leagues[leagueId]?.accepted;
+  const userInLeague =
+    userData?.leagues && userData.leagues[leagueId]?.accepted;
   const leagueScheduled = league?.scheduled;
   const userAdmin = league?.adminId === uid;
 
@@ -92,6 +102,7 @@ export default function LeagueStack({route}: Props) {
 
   const commonStack = (
     <>
+      <Stack.Screen name="League Explorer" component={LeagueExplorer} />
       <Stack.Screen name="Create Club" component={CreateClub} />
       <Stack.Screen name="Clubs" component={Clubs} />
       <Stack.Screen name="My Club" component={Club} />
@@ -129,7 +140,8 @@ export default function LeagueStack({route}: Props) {
             headerBackTitleVisible: false,
           }}>
           <Stack.Screen name="League Preview" component={LeaguePreview} />
-
+          <Stack.Screen name="Sign Up" component={SignUp} />
+          <Stack.Screen name="Sign In" component={SignIn} />
           <Stack.Screen name="Join Club" component={JoinClub} />
         </Stack.Navigator>
       );
@@ -158,6 +170,8 @@ export default function LeagueStack({route}: Props) {
           <Stack.Screen name="League Preview" component={LeaguePreview} />
           <Stack.Screen name="Create Club" component={CreateClub} />
           <Stack.Screen name="Join Club" component={JoinClub} />
+          <Stack.Screen name="Sign Up" component={SignUp} />
+          <Stack.Screen name="Sign In" component={SignIn} />
         </Stack.Navigator>
       );
     }

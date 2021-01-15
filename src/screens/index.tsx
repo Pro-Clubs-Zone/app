@@ -23,19 +23,20 @@ import Match from './match/match';
 import {RequestContext} from '../context/requestContext';
 import {AppContext} from '../context/appContext';
 
+type SignIn = {data?: {}; redirectedFrom?: string | null};
+
 export type AppNavStack = {
   Home: undefined;
-  'Sign Up': {
-    data?: {};
-    redirectedFrom?: string | null;
-  };
-  'Sign In': undefined;
+  'Sign Up': SignIn;
+  'Sign In': SignIn;
   Requests: undefined;
   'Create League': undefined;
   'League Explorer': undefined;
   Leagues: undefined;
   League: ILeagueProps & {leagueId: string};
   Match: {matchData: IMatchNavData; upcoming: boolean};
+  'Create Club': ILeagueProps;
+  'Join Club': undefined;
 };
 
 export default function AppIndex() {

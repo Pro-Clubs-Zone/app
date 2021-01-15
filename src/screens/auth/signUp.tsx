@@ -142,9 +142,15 @@ function SignUp({navigation, route}: Props) {
         setLoading(true);
 
         const createDbEntry = async (data: {user: {uid: string}}) => {
-          await db.collection('users').doc(data.user.uid).set({
-            username: username,
-          });
+          const uid = data.user.uid;
+          const userInitialData = {username: username};
+          await db
+            .collection('users')
+            .doc(uid)
+            .set(userInitialData)
+            .then(() => {
+              context.setUserData(userInitialData);
+            });
         };
 
         await firAuth
@@ -156,8 +162,7 @@ function SignUp({navigation, route}: Props) {
           })
           .then(async ({user}) => {
             console.log(user.uid, 'user');
-
-            if (redirectedFrom) {
+            const onCreateLeague = async () => {
               await createLeague(redirectedData, user.uid).then((leagueId) => {
                 console.log(leagueId);
 
@@ -172,12 +177,30 @@ function SignUp({navigation, route}: Props) {
                 context.setUserLeagues({
                   [leagueId]: redirectedData,
                 });
-                navigation.navigate('League', {
-                  leagueId: leagueId,
-                  isAdmin: true,
-                  newLeague: true,
-                });
+                setLoading(false);
+                // navigation.navigate('League', {
+                //   leagueId: leagueId,
+                //   isAdmin: true,
+                //   newLeague: true,
+                // });
               });
+            };
+
+            switch (redirectedFrom) {
+              case 'createLeague':
+                onCreateLeague();
+                break;
+              case 'createClub':
+                setLoading(false);
+                navigation.navigate('Create Club', {
+                  isAdmin: false,
+                  newLeague: false,
+                });
+                break;
+              case 'joinClub':
+                setLoading(false);
+                navigation.navigate('Join Club');
+                break;
             }
           })
           .catch((error) => {

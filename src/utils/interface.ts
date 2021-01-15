@@ -126,7 +126,7 @@ export interface IUserLeague {
 export interface IUser {
   username?: string;
   adminConflictCounts?: number;
-  leagues: {
+  leagues?: {
     [league: string]: IUserLeague;
   };
 }
