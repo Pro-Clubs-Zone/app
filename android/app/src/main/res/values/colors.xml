@@ -3,4 +3,5 @@
 <resources>
     <color name="dark">#292933</color>
     <color name="secondary">#4B4D5D</color>
+    <color name="accent">#FECD51</color>
 </resources>
