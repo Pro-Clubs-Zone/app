@@ -20,10 +20,10 @@ const AuthProvider = (props: any) => {
 
   useEffect(() => {
     if (__DEV__) {
-      firFunc.useFunctionsEmulator('http://localhost:5001');
-      firAuth.useEmulator('http://localhost:9099');
+      firFunc.useFunctionsEmulator('http://192.168.0.13:5001');
+      firAuth.useEmulator('http://192.168.0.13:9099');
       db.settings({
-        host: 'localhost:8080',
+        host: '192.168.0.13:8080',
         ssl: false,
         persistence: false,
         cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,

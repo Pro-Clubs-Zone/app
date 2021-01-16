@@ -2,4 +2,5 @@
 
 <resources>
     <color name="dark">#292933</color>
+    <color name="secondary">#4B4D5D</color>
 </resources>
