@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useLayoutEffect, useState} from 'react';
 import {
   Text,
   View,
@@ -13,11 +13,12 @@ import auth from '@react-native-firebase/auth';
 import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {StackNavigationProp, HeaderBackButton} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
+import {StackActions} from '@react-navigation/native';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
 
@@ -37,6 +38,16 @@ export default function SignIn({navigation}: Props) {
     email: null,
     password: null,
   });
+
+  useLayoutEffect(() => {
+    const popAction = StackActions.pop(2);
+
+    navigation.setOptions({
+      headerLeft: () => (
+        <HeaderBackButton onPress={() => navigation.dispatch(popAction)} />
+      ),
+    });
+  }, [navigation]);
 
   const onShowToast = (message: string) => {
     setShowToast(true);
