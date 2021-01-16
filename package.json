@@ -19,6 +19,7 @@
     "@react-native-firebase/auth": "^10.1.1",
     "@react-native-firebase/firestore": "^10.1.1",
     "@react-native-firebase/functions": "^10.1.1",
+    "@react-native-picker/picker": "^1.9.10",
     "@react-navigation/bottom-tabs": "^5.11.2",
     "@react-navigation/material-top-tabs": "^5.3.10",
     "@react-navigation/native": "^5.8.10",

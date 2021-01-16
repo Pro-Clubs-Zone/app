@@ -140,6 +140,9 @@ export default function CreateLeague({navigation}: Props) {
     });
   };
 
+  const pickerItemColor =
+    Platform.OS === 'ios' ? APP_COLORS.Light : APP_COLORS.Dark;
+
   return (
     <FormView>
       <FullScreenLoading visible={loading} />
@@ -162,10 +165,10 @@ export default function CreateLeague({navigation}: Props) {
             setData({...data, platform: tempData.platform});
           }}
           items={[
-            {label: 'Playstation', value: 'ps', color: APP_COLORS.Light},
-            {label: 'Xbox', value: 'xb', color: APP_COLORS.Light},
+            {label: 'Playstation', value: 'ps', color: pickerItemColor},
+            {label: 'Xbox', value: 'xb', color: pickerItemColor},
           ]}
-          value={tempData.platform}>
+          value={Platform.OS === 'ios' ? tempData.platform : data.platform}>
           <TextField
             value={data.platform === 'ps' ? 'Playstation' : 'Xbox'}
             placeholder="Select Platform"
@@ -193,15 +196,15 @@ export default function CreateLeague({navigation}: Props) {
                 setData({...data, teamNum: tempData.teamNum});
               }}
               items={[
-                {label: '4 Teams', value: 4, color: APP_COLORS.Light},
-                {label: '6 Teams', value: 6, color: APP_COLORS.Light},
-                {label: '8 Teams', value: 8, color: APP_COLORS.Light},
-                {label: '10 Teams', value: 10, color: APP_COLORS.Light},
-                {label: '12 Teams', value: 12, color: APP_COLORS.Light},
-                {label: '14 Teams', value: 14, color: APP_COLORS.Light},
-                {label: '16 Teams', value: 16, color: APP_COLORS.Light},
+                {label: '4 Teams', value: 4, color: pickerItemColor},
+                {label: '6 Teams', value: 6, color: pickerItemColor},
+                {label: '8 Teams', value: 8, color: pickerItemColor},
+                {label: '10 Teams', value: 10, color: pickerItemColor},
+                {label: '12 Teams', value: 12, color: pickerItemColor},
+                {label: '14 Teams', value: 14, color: pickerItemColor},
+                {label: '16 Teams', value: 16, color: pickerItemColor},
               ]}
-              value={tempData.teamNum}>
+              value={Platform.OS === 'ios' ? tempData.teamNum : data.teamNum}>
               <TextField
                 placeholder="Teams"
                 label="Teams"
@@ -225,12 +228,12 @@ export default function CreateLeague({navigation}: Props) {
                 setData({...data, matchNum: tempData.matchNum});
               }}
               items={[
-                {label: '1 Match', value: 1, color: APP_COLORS.Light},
-                {label: '2 Matches', value: 2, color: APP_COLORS.Light},
-                {label: '3 Matches', value: 3, color: APP_COLORS.Light},
-                {label: '4 Matches', value: 4, color: APP_COLORS.Light},
+                {label: '1 Match', value: 1, color: pickerItemColor},
+                {label: '2 Matches', value: 2, color: pickerItemColor},
+                {label: '3 Matches', value: 3, color: pickerItemColor},
+                {label: '4 Matches', value: 4, color: pickerItemColor},
               ]}
-              value={tempData.matchNum}>
+              value={Platform.OS === 'ios' ? tempData.matchNum : data.matchNum}>
               <TextField
                 value={`${data.matchNum} Matches`}
                 placeholder="Matches"

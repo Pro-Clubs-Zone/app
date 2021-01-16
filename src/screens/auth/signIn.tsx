@@ -170,7 +170,7 @@ export default function SignIn({navigation}: Props) {
               />
               <BigButtonOutlined
                 onPress={onSignIn}
-                title={i18n._(t`Log in`)}
+                title={i18n._(t`Sign In`)}
                 // disabled={
                 //   !email ||
                 //   !emailIsValid(email) ||

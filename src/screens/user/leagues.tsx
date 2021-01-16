@@ -99,7 +99,7 @@ export default function Leagues({navigation}: Props) {
         <CardSmallContainer>
           <CardSmall
             onPress={() => navigation.navigate('Create League')}
-            title="Create League"
+            title={`Create\nLeague`}
           />
           <CardSmall
             onPress={() => navigation.navigate('Create League')}

@@ -5,6 +5,7 @@ import RNPickerSelect, {PickerSelectProps} from 'react-native-picker-select';
 const Picker = ({children, ...props}: Readonly<PickerSelectProps>) => (
   <RNPickerSelect
     placeholder={{}}
+    fixAndroidTouchableBug={true}
     doneText="Select"
     modalProps={{animationType: 'fade'}}
     style={{
