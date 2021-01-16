@@ -108,6 +108,9 @@ const TextField = ({
                   );
                 }}
                 keyboardAppearance="dark"
+                editable={
+                  onPress ? false : props.editable ? props.editable : true
+                }
               />
             </View>
           </View>

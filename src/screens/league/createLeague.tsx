@@ -9,10 +9,9 @@ import {BigButton} from '../../components/buttons';
 import {FormView, FormContent} from '../../components/templates';
 import {AppContext} from '../../context/appContext';
 import FullScreenLoading from '../../components/loading';
-import {Alert, View} from 'react-native';
-import PickerContainer from '../../components/pickerContainer';
+import {Alert, Platform, View} from 'react-native';
+import Picker from '../../components/picker';
 import {APP_COLORS} from '../../utils/designSystem';
-import {Picker} from '@react-native-picker/picker';
 import createLeague from '../../actions/createLeague';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
@@ -59,11 +58,6 @@ export default function CreateLeague({navigation}: Props) {
     platform: data.platform,
     teamNum: data.teamNum,
     matchNum: data.matchNum,
-  });
-  const [showPicker, setShowPicker] = useState<PickerProps>({
-    platform: false,
-    teamNum: false,
-    matchNum: false,
   });
   const [error, setError] = useState({
     name: null,
@@ -150,68 +144,6 @@ export default function CreateLeague({navigation}: Props) {
     <FormView>
       <FullScreenLoading visible={loading} />
       <FormContent>
-        <PickerContainer
-          selectedValue={tempData.platform}
-          onValueChange={(itemValue) =>
-            setTempData({...tempData, platform: itemValue})
-          }
-          visible={showPicker.platform}
-          onCancel={() => {
-            setTempData({...tempData, platform: data.platform});
-            setShowPicker({...showPicker, platform: false});
-          }}
-          onApply={() => {
-            setData({...data, platform: tempData.platform});
-            setShowPicker({...showPicker, platform: false});
-          }}>
-          <Picker.Item
-            label="Playstation"
-            value="ps"
-            color={APP_COLORS.Light}
-          />
-          <Picker.Item label="Xbox" value="xb" color={APP_COLORS.Light} />
-        </PickerContainer>
-        <PickerContainer
-          selectedValue={tempData.teamNum}
-          onValueChange={(itemValue) =>
-            setTempData({...tempData, teamNum: itemValue})
-          }
-          visible={showPicker.teamNum}
-          onCancel={() => {
-            setTempData({...tempData, teamNum: data.teamNum});
-            setShowPicker({...showPicker, teamNum: false});
-          }}
-          onApply={() => {
-            setData({...data, teamNum: tempData.teamNum});
-            setShowPicker({...showPicker, teamNum: false});
-          }}>
-          <Picker.Item label="4 Teams" value={4} color={APP_COLORS.Light} />
-          <Picker.Item label="6 Teams" value={6} color={APP_COLORS.Light} />
-          <Picker.Item label="8 Teams" value={8} color={APP_COLORS.Light} />
-          <Picker.Item label="10 Teams" value={10} color={APP_COLORS.Light} />
-          <Picker.Item label="12 Teams" value={12} color={APP_COLORS.Light} />
-          <Picker.Item label="14 Teams" value={14} color={APP_COLORS.Light} />
-          <Picker.Item label="16 Teams" value={16} color={APP_COLORS.Light} />
-        </PickerContainer>
-        <PickerContainer
-          selectedValue={tempData.matchNum}
-          onValueChange={(itemValue) =>
-            setTempData({...tempData, matchNum: itemValue})
-          }
-          visible={showPicker.matchNum}
-          onCancel={() => {
-            setTempData({...tempData, matchNum: data.matchNum});
-            setShowPicker({...showPicker, matchNum: false});
-          }}
-          onApply={() => {
-            setData({...data, matchNum: tempData.matchNum});
-            setShowPicker({...showPicker, matchNum: false});
-          }}>
-          <Picker.Item label="1 Match" value={1} color={APP_COLORS.Light} />
-          <Picker.Item label="2 Matches" value={2} color={APP_COLORS.Light} />
-          <Picker.Item label="3 Matches" value={3} color={APP_COLORS.Light} />
-          <Picker.Item label="4 Matches" value={4} color={APP_COLORS.Light} />
-        </PickerContainer>
         <TextField
           onChangeText={(text) => setData({...data, name: text})}
           value={data.name}
@@ -220,13 +152,28 @@ export default function CreateLeague({navigation}: Props) {
           error={error.name}
           helper="Minimum 4 letters, no profanity"
         />
-        <TextField
-          value={data.platform === 'ps' ? 'Playstation' : 'Xbox'}
-          placeholder="Select Platform"
-          label="Platform"
-          onPress={() => setShowPicker({...showPicker, platform: true})}
-          fieldIco="chevron-down"
-        />
+        <Picker
+          onValueChange={(itemValue) =>
+            Platform.OS === 'ios'
+              ? setTempData({...tempData, platform: itemValue})
+              : setData({...data, platform: itemValue})
+          }
+          onDonePress={() => {
+            setData({...data, platform: tempData.platform});
+          }}
+          items={[
+            {label: 'Playstation', value: 'ps', color: APP_COLORS.Light},
+            {label: 'Xbox', value: 'xb', color: APP_COLORS.Light},
+          ]}
+          value={tempData.platform}>
+          <TextField
+            value={data.platform === 'ps' ? 'Playstation' : 'Xbox'}
+            placeholder="Select Platform"
+            label="Platform"
+            fieldIco="chevron-down"
+            editable={false}
+          />
+        </Picker>
         <View
           style={{
             flexDirection: 'row',
@@ -236,25 +183,62 @@ export default function CreateLeague({navigation}: Props) {
               flex: 1,
               marginRight: 24,
             }}>
-            <TextField
-              placeholder="Teams"
-              label="Teams"
-              value={`${data.teamNum} Teams`}
-              onPress={() => setShowPicker({...showPicker, teamNum: true})}
-              fieldIco="chevron-down"
-            />
+            <Picker
+              onValueChange={(itemValue) =>
+                Platform.OS === 'ios'
+                  ? setTempData({...tempData, teamNum: itemValue})
+                  : setData({...data, teamNum: itemValue})
+              }
+              onDonePress={() => {
+                setData({...data, teamNum: tempData.teamNum});
+              }}
+              items={[
+                {label: '4 Teams', value: 4, color: APP_COLORS.Light},
+                {label: '6 Teams', value: 6, color: APP_COLORS.Light},
+                {label: '8 Teams', value: 8, color: APP_COLORS.Light},
+                {label: '10 Teams', value: 10, color: APP_COLORS.Light},
+                {label: '12 Teams', value: 12, color: APP_COLORS.Light},
+                {label: '14 Teams', value: 14, color: APP_COLORS.Light},
+                {label: '16 Teams', value: 16, color: APP_COLORS.Light},
+              ]}
+              value={tempData.teamNum}>
+              <TextField
+                placeholder="Teams"
+                label="Teams"
+                value={`${data.teamNum} Teams`}
+                fieldIco="chevron-down"
+                editable={false}
+              />
+            </Picker>
           </View>
           <View
             style={{
               flex: 1,
             }}>
-            <TextField
-              value={`${data.matchNum} Matches`}
-              placeholder="Matches"
-              label="Matches"
-              onPress={() => setShowPicker({...showPicker, matchNum: true})}
-              fieldIco="chevron-down"
-            />
+            <Picker
+              onValueChange={(itemValue) =>
+                Platform.OS === 'ios'
+                  ? setTempData({...tempData, matchNum: itemValue})
+                  : setData({...data, matchNum: itemValue})
+              }
+              onDonePress={() => {
+                setData({...data, matchNum: tempData.matchNum});
+              }}
+              items={[
+                {label: '1 Match', value: 1, color: APP_COLORS.Light},
+                {label: '2 Matches', value: 2, color: APP_COLORS.Light},
+                {label: '3 Matches', value: 3, color: APP_COLORS.Light},
+                {label: '4 Matches', value: 4, color: APP_COLORS.Light},
+              ]}
+              value={tempData.matchNum}>
+              <TextField
+                value={`${data.matchNum} Matches`}
+                placeholder="Matches"
+                label="Matches"
+                fieldIco="chevron-down"
+                editable={false}
+              />
+            </Picker>
           </View>
         </View>
         <TextField
