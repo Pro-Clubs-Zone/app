@@ -24,6 +24,7 @@ import RNBootSplash from 'react-native-bootsplash';
 const App = () => {
   useEffect(() => {
     RNBootSplash.hide({fade: true});
+    console.log('splash off');
   }, []);
   return (
     <>
