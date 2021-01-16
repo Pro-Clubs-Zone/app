@@ -29,7 +29,7 @@ export const CardSmall = ({onPress, title}: CardProps) => {
             paddingVertical: verticalScale(12),
           },
         ]}
-        source={{uri: 'bg-overlay'}}
+        source={{uri: 'card_overlay'}}
         resizeMode="cover">
         <View>
           <Text style={TEXT_STYLES.display5}>
@@ -57,7 +57,7 @@ export const CardMedium = ({
           height: verticalScale(104),
         },
       ]}
-      source={{uri: 'bg-overlay'}}>
+      source={{uri: 'card_overlay'}}>
       {badgeNumber > 0 && <Badge number={badgeNumber} />}
       <View>
         <Text style={TEXT_STYLES.display5}>

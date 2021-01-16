@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "login-bg.jpg",
+      "filename" : "main_bg@1x.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "main_bg@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "main_bg@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

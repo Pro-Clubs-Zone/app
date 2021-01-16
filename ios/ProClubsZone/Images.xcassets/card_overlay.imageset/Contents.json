@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "bg-overlay.png",
+      "filename" : "card_overlay@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "card_overlay@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "card_overlay@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

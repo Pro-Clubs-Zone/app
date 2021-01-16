@@ -221,7 +221,7 @@ function SignUp({navigation, route}: Props) {
   };
 
   return (
-    <ImageBackground source={{uri: 'login-bg'}} style={styles.backgroundImage}>
+    <ImageBackground source={{uri: 'main_bg'}} style={styles.backgroundImage}>
       <Toast message={toastMessage} visible={showToast} />
       <FullScreenLoading visible={loading} />
 

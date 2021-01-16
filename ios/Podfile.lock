@@ -230,23 +230,23 @@ PODS:
     - React-Core (= 0.63.3)
     - React-jsi (= 0.63.3)
     - ReactCommon/turbomodule/core (= 0.63.3)
-  - Firebase/Auth (7.1.0):
+  - Firebase/Auth (7.3.0):
     - Firebase/CoreOnly
-    - FirebaseAuth (~> 7.1.0)
-  - Firebase/CoreOnly (7.1.0):
-    - FirebaseCore (= 7.1.0)
-  - Firebase/Firestore (7.1.0):
+    - FirebaseAuth (~> 7.3.0)
+  - Firebase/CoreOnly (7.3.0):
+    - FirebaseCore (= 7.3.0)
+  - Firebase/Firestore (7.3.0):
     - Firebase/CoreOnly
-    - FirebaseFirestore (~> 7.1.0)
-  - Firebase/Functions (7.1.0):
+    - FirebaseFirestore (~> 7.3.0)
+  - Firebase/Functions (7.3.0):
     - Firebase/CoreOnly
-    - FirebaseFunctions (~> 7.1.0)
-  - FirebaseAuth (7.1.0):
+    - FirebaseFunctions (~> 7.3.0)
+  - FirebaseAuth (7.3.0):
     - FirebaseCore (~> 7.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
     - GTMSessionFetcher/Core (~> 1.4)
-  - FirebaseCore (7.1.0):
+  - FirebaseCore (7.3.0):
     - FirebaseCoreDiagnostics (~> 7.0)
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/Logger (~> 7.0)
@@ -255,7 +255,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.0)
     - GoogleUtilities/Logger (~> 7.0)
     - nanopb (~> 2.30906.0)
-  - FirebaseFirestore (7.1.0):
+  - FirebaseFirestore (7.3.0):
     - abseil/algorithm (= 0.20200225.0)
     - abseil/base (= 0.20200225.0)
     - abseil/memory (= 0.20200225.0)
@@ -267,7 +267,7 @@ PODS:
     - "gRPC-C++ (~> 1.28.0)"
     - leveldb-library (~> 1.22)
     - nanopb (~> 2.30906.0)
-  - FirebaseFunctions (7.1.0):
+  - FirebaseFunctions (7.3.0):
     - FirebaseCore (~> 7.0)
     - GTMSessionFetcher/Core (~> 1.4)
   - Flipper (0.54.0):
@@ -328,20 +328,20 @@ PODS:
   - glog (0.3.5)
   - GoogleDataTransport (8.1.0):
     - nanopb (~> 2.30906.0)
-  - GoogleUtilities/AppDelegateSwizzler (7.1.1):
+  - GoogleUtilities/AppDelegateSwizzler (7.2.0):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
-  - GoogleUtilities/Environment (7.1.1):
+  - GoogleUtilities/Environment (7.2.0):
     - PromisesObjC (~> 1.2)
-  - GoogleUtilities/Logger (7.1.1):
+  - GoogleUtilities/Logger (7.2.0):
     - GoogleUtilities/Environment
-  - GoogleUtilities/Network (7.1.1):
+  - GoogleUtilities/Network (7.2.0):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.1.1)"
-  - GoogleUtilities/Reachability (7.1.1):
+  - "GoogleUtilities/NSData+zlib (7.2.0)"
+  - GoogleUtilities/Reachability (7.2.0):
     - GoogleUtilities/Logger
   - "gRPC-C++ (1.28.2)":
     - "gRPC-C++/Implementation (= 1.28.2)"
@@ -377,7 +377,7 @@ PODS:
   - OpenSSL-Universal (1.0.2.20):
     - OpenSSL-Universal/Static (= 1.0.2.20)
   - OpenSSL-Universal/Static (1.0.2.20)
-  - PromisesObjC (1.2.11)
+  - PromisesObjC (1.2.12)
   - RCTRequired (0.63.3)
   - RCTTypeSafety (0.63.3):
     - FBLazyVector (= 0.63.3)
@@ -608,30 +608,32 @@ PODS:
     - React-Core (= 0.63.3)
     - React-cxxreact (= 0.63.3)
     - React-jsi (= 0.63.3)
+  - RNBootSplash (3.1.2):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
-  - RNCPicker (1.9.8):
+  - RNCPicker (1.9.10):
     - React-Core
-  - RNFBApp (10.1.0):
-    - Firebase/CoreOnly (~> 7.1.0)
+  - RNFBApp (10.4.0):
+    - Firebase/CoreOnly (~> 7.3.0)
     - React-Core
-  - RNFBAuth (10.1.1):
-    - Firebase/Auth (~> 7.1.0)
-    - React-Core
-    - RNFBApp
-  - RNFBFirestore (10.1.1):
-    - Firebase/Firestore (~> 7.1.0)
+  - RNFBAuth (10.4.1):
+    - Firebase/Auth (~> 7.3.0)
     - React-Core
     - RNFBApp
-  - RNFBFunctions (10.1.1):
-    - Firebase/Functions (~> 7.1.0)
+  - RNFBFirestore (10.4.1):
+    - Firebase/Firestore (~> 7.3.0)
+    - React-Core
+    - RNFBApp
+  - RNFBFunctions (10.4.1):
+    - Firebase/Functions (~> 7.3.0)
     - React-Core
     - RNFBApp
   - RNGestureHandler (1.9.0):
     - React-Core
   - RNReanimated (1.13.2):
     - React-Core
-  - RNScreens (2.15.0):
+  - RNScreens (2.16.1):
     - React-Core
   - RNVectorIcons (7.1.0):
     - React
@@ -688,6 +690,7 @@ DEPENDENCIES:
   - React-RCTText (from `../node_modules/react-native/Libraries/Text`)
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNBootSplash (from `../node_modules/react-native-bootsplash`)
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
@@ -786,6 +789,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/Libraries/Vibration"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNBootSplash:
+    :path: "../node_modules/react-native-bootsplash"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
@@ -818,12 +823,12 @@ SPEC CHECKSUMS:
   DoubleConversion: cde416483dac037923206447da6e1454df403714
   FBLazyVector: 878b59e31113e289e275165efbe4b54fa614d43d
   FBReactNativeSpec: 7da9338acfb98d4ef9e5536805a0704572d33c2f
-  Firebase: 78e8dd2e39d653de6270432ad84fe8b59f7bf4e8
-  FirebaseAuth: f82c2cfcc1c107bb0a97735cdbce4eb2a601f710
-  FirebaseCore: 20046127eef0fcb8fa25df7fc12f7b97d4e48611
+  Firebase: 26223c695fe322633274198cb19dca8cb7e54416
+  FirebaseAuth: c224a0cf1afa0949bd5c7bfcf154b4f5ce8ddef2
+  FirebaseCore: 4d3c72622ce0e2106aaa07bb4b2935ba2c370972
   FirebaseCoreDiagnostics: d50e11039e5984d92c8a512be2395f13df747350
-  FirebaseFirestore: bbf303f0638a93e6ecb38433aad283cebdfece5f
-  FirebaseFunctions: c163794cd4a2b5f4901d0df6d9f7709f2e993686
+  FirebaseFirestore: 1906bf163afdb7c432d2e3b5c40ceb9dd2df5820
+  FirebaseFunctions: 56b7275ad46d936b77b64ecacd306e77db7be251
   Flipper: be611d4b742d8c87fbae2ca5f44603a02539e365
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: e4493b013c02d9347d5e0cb4d128680239f6c78a
@@ -834,14 +839,14 @@ SPEC CHECKSUMS:
   Folly: b73c3869541e86821df3c387eb0af5f65addfab4
   glog: 40a13f7840415b9a77023fbcae0f1e6f43192af3
   GoogleDataTransport: 116c84c4bdeb76be2a7a46de51244368f9794eab
-  GoogleUtilities: 3dc4ff0d5e4840e2fa8eef0889620e8c33d4218c
+  GoogleUtilities: d866834472f1324d080496bc67ab3ce5d0d46027
   "gRPC-C++": 13d8ccef97d5c3c441b7e3c529ef28ebee86fad2
   gRPC-Core: 4afa11bfbedf7cdecd04de535a9e046893404ed5
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
-  PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
   RCTRequired: 48884c74035a0b5b76dbb7a998bd93bcfc5f2047
   RCTTypeSafety: edf4b618033c2f1c5b7bc3d90d8e085ed95ba2ab
   React: f36e90f3ceb976546e97df3403e37d226f79d0e3
@@ -864,15 +869,16 @@ SPEC CHECKSUMS:
   React-RCTText: 65a6de06a7389098ce24340d1d3556015c38f746
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
+  RNBootSplash: 8bb01ddbcb6c65f7271f15a5c6e61397166503a5
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNCPicker: cdeab10edac8f14ed6839fdf922a789f80c72ec1
-  RNFBApp: 2b4e07dfca4cf780b9e2d61bcc21e34d890cd654
-  RNFBAuth: 349a8d96d6ecc91d690c65ec0425cbb21b5831ed
-  RNFBFirestore: 316c7a1ffa979dba7d1e940c51dcf3d3860e8a91
-  RNFBFunctions: bac3e48330cd8367541caa643f89b326e80b69d4
+  RNCPicker: 77183d9b1cd80ae55505322f8ad09ba0036e29ba
+  RNFBApp: a9af8372c9c2b2135ffa78817fd2d8baf3ee632e
+  RNFBAuth: 45d680dd8f6648927517c6ba1eb9cbef657296d5
+  RNFBFirestore: 0b8011f328214e0cf4fce1a92d3339d4b464fe92
+  RNFBFunctions: 377cfc2fa6e1e5210f5dceab48d69b392ee2484b
   RNGestureHandler: 9b7e605a741412e20e13c512738a31bd1611759b
   RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
-  RNScreens: 2ad555d4d9fa10b91bb765ca07fe9b29d59573f0
+  RNScreens: 45c457af3d2ee9e08fc01e70da87e653d46b1198
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a

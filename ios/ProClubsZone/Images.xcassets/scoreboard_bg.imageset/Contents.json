@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "scoreboard-bg.png",
+      "filename" : "scoreboard_bg@1x.jpg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "scoreboard_bg@2x.jpg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "scoreboard_bg@3x.jpg",
       "idiom" : "universal",
       "scale" : "3x"
     }

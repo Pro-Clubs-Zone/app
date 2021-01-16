@@ -8,7 +8,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {AppProvider} from './src/context/appContext';
 import {AuthProvider} from './src/context/authContext';
@@ -19,8 +19,12 @@ import {NavTheme} from './src/utils/designSystem';
 import {I18nProvider} from '@lingui/react';
 import i18n from './src/utils/i18n';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
+import RNBootSplash from 'react-native-bootsplash';
 
 const App = () => {
+  useEffect(() => {
+    RNBootSplash.hide({fade: true});
+  }, []);
   return (
     <>
       <I18nProvider i18n={i18n}>

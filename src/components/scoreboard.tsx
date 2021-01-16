@@ -36,7 +36,7 @@ const ScoreBoard = ({data, editable, onSubmit, children}: Props) => {
   );
 
   return (
-    <ImageBackground source={{uri: 'scoreboard-bg'}} style={styles.bg}>
+    <ImageBackground source={{uri: 'scoreboard_bg'}} style={styles.bg}>
       <View style={styles.container}>
         <View style={styles.firstRow}>
           <Team teamName={data.homeTeamName} />
