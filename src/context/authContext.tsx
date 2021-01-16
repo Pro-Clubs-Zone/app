@@ -3,7 +3,7 @@ import React, {useEffect, useState, createContext} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
-import {LogBox} from 'react-native';
+import {LogBox, Platform} from 'react-native';
 
 const db = firestore();
 const firAuth = auth();
@@ -18,12 +18,14 @@ const AuthProvider = (props: any) => {
   const [uid, setUid] = useState<string | null>(null);
   const [authInit, setAuthInit] = useState<boolean>(false);
 
+  const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
+
   useEffect(() => {
     if (__DEV__) {
-      firFunc.useFunctionsEmulator('http://192.168.0.13:5001');
-      firAuth.useEmulator('http://192.168.0.13:9099');
+      firFunc.useFunctionsEmulator(`http://${localAddress}:5001`);
+      firAuth.useEmulator(`http://${localAddress}:9099`);
       db.settings({
-        host: '192.168.0.13:8080',
+        host: `${localAddress}:8080`,
         ssl: false,
         persistence: false,
         cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
@@ -62,7 +64,7 @@ const AuthProvider = (props: any) => {
     }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-  }, [authInit, uid]);
+  }, [authInit, uid, localAddress]);
 
   return (
     <AuthContext.Provider value={{uid, authInit}}>
