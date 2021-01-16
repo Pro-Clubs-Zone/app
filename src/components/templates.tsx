@@ -3,20 +3,21 @@ import {View, ScrollView} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 
 export const FormView = ({children}) => (
-  <View style={styles.container}>{children}</View>
+  <ScrollView bounces={false} contentContainerStyle={styles.container}>
+    {children}
+  </ScrollView>
 );
 
 export const FormContent = ({children}) => (
-  <ScrollView contentContainerStyle={styles.form}>{children}</ScrollView>
+  <View style={styles.form}>{children}</View>
 );
 
 const styles = ScaledSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'space-between',
+    minHeight: '100%',
   },
   form: {
-    paddingHorizontal: '16@vs',
-    paddingTop: '16@vs',
+    padding: '16@vs',
+    flex: 1,
   },
 });

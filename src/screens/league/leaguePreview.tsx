@@ -172,7 +172,20 @@ export default function LeaguePreview({navigation, route}: Props) {
         />
         <InfoItem icon="account" value={league.adminUsername} label="Admin" />
         {!!league.discord && (
-          <InfoItem icon="discord" url={league.discord} label="Communication" />
+          <InfoItem
+            icon="discord"
+            url={league.discord}
+            label="Communication"
+            value="Discord"
+          />
+        )}
+        {!!league.twitter && (
+          <InfoItem
+            icon="twitter"
+            url={league.twitter}
+            label="Social"
+            value="Twitter"
+          />
         )}
         <View>
           <Text
@@ -204,7 +217,7 @@ export default function LeaguePreview({navigation, route}: Props) {
   );
 }
 
-const OpenURLButton = ({url}: {url: string}) => {
+const OpenURLButton = ({url, value}: {url: string; value: string}) => {
   const handlePress = useCallback(async () => {
     // Checking if the link is supported for links with custom URL scheme.
     const supported = await Linking.canOpenURL(url);
@@ -228,7 +241,7 @@ const OpenURLButton = ({url}: {url: string}) => {
         },
       ]}
       onPress={handlePress}>
-      Discord
+      {value}
     </Text>
   );
 };
@@ -263,12 +276,10 @@ const InfoItem = (props) => (
         {props.label}
       </Text>
       {props.url ? (
-        <OpenURLButton url={props.url} />
+        <OpenURLButton url={props.url} value={props.value} />
       ) : (
         <Text style={TEXT_STYLES.display5}>{props.value}</Text>
       )}
     </View>
   </View>
 );
-
-const styles = ScaledSheet.create({});

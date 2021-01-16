@@ -35,6 +35,7 @@ export default function CreateLeague({navigation}: Props) {
     name: '',
     description: '',
     discord: '',
+    twitter: '',
     platform: 'ps',
     teamNum: 8,
     acceptedClubs: 0,
@@ -185,7 +186,12 @@ export default function CreateLeague({navigation}: Props) {
             setShowPicker({...showPicker, teamNum: false});
           }}>
           <Picker.Item label="4 Teams" value={4} color={APP_COLORS.Light} />
+          <Picker.Item label="6 Teams" value={6} color={APP_COLORS.Light} />
           <Picker.Item label="8 Teams" value={8} color={APP_COLORS.Light} />
+          <Picker.Item label="10 Teams" value={10} color={APP_COLORS.Light} />
+          <Picker.Item label="12 Teams" value={12} color={APP_COLORS.Light} />
+          <Picker.Item label="14 Teams" value={14} color={APP_COLORS.Light} />
+          <Picker.Item label="16 Teams" value={16} color={APP_COLORS.Light} />
         </PickerContainer>
         <PickerContainer
           selectedValue={tempData.matchNum}
@@ -203,14 +209,16 @@ export default function CreateLeague({navigation}: Props) {
           }}>
           <Picker.Item label="1 Match" value={1} color={APP_COLORS.Light} />
           <Picker.Item label="2 Matches" value={2} color={APP_COLORS.Light} />
+          <Picker.Item label="3 Matches" value={3} color={APP_COLORS.Light} />
+          <Picker.Item label="4 Matches" value={4} color={APP_COLORS.Light} />
         </PickerContainer>
         <TextField
           onChangeText={(text) => setData({...data, name: text})}
           value={data.name}
-          placeholder="League Name"
+          placeholder="i.e. La Liga"
           label="League Name"
           error={error.name}
-          helper="test"
+          helper="Minimum 4 letters, no profanity"
         />
         <TextField
           value={data.platform === 'ps' ? 'Playstation' : 'Xbox'}
@@ -251,7 +259,7 @@ export default function CreateLeague({navigation}: Props) {
         </View>
         <TextField
           value={data.description}
-          placeholder="Description"
+          placeholder="Describe your league in a few sentences..."
           label="Description"
           multiline={true}
           onChangeText={(text) => setData({...data, description: text})}
@@ -262,6 +270,13 @@ export default function CreateLeague({navigation}: Props) {
           placeholder="Discord URL"
           label="Discord"
           onChangeText={(text) => setData({...data, discord: text})}
+          autoCapitalize="none"
+        />
+        <TextField
+          value={data.twitter}
+          placeholder="Twitter URL"
+          label="Twitter"
+          onChangeText={(text) => setData({...data, twitter: text})}
           autoCapitalize="none"
         />
       </FormContent>

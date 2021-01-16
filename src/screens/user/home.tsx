@@ -46,6 +46,7 @@ export default function Home({navigation}: Props) {
   const requestContext = useContext(RequestContext);
 
   const uid = user?.uid;
+  const username = context.userData?.username;
 
   const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
     let requests: IClubRequest[] = [];
@@ -205,7 +206,15 @@ export default function Home({navigation}: Props) {
           <Text style={TEXT_STYLES.caption}>
             <Trans>Next Matches</Trans>
           </Text>
-          <Text style={TEXT_STYLES.small}>Club Fixtures</Text>
+          <Text
+            style={[
+              TEXT_STYLES.small,
+              {
+                textAlign: 'right',
+              },
+            ]}>
+            {username}
+          </Text>
         </View>
         {upcomingMatches.length !== 0 ? (
           <FlatList
@@ -235,7 +244,20 @@ export default function Home({navigation}: Props) {
             keyExtractor={(item) => item.id}
           />
         ) : (
-          <Text>No Upcoming Matches</Text>
+          <View
+            style={{
+              paddingTop: verticalScale(16),
+            }}>
+            <Text
+              style={[
+                TEXT_STYLES.small,
+                {
+                  textAlign: 'center',
+                },
+              ]}>
+              No Upcoming Matches
+            </Text>
+          </View>
         )}
       </View>
       <ScrollView>
@@ -245,7 +267,6 @@ export default function Home({navigation}: Props) {
           badgeNumber={requestContext.requestCount}
           onPress={() => navigation.navigate('Requests')}
         />
-        <Text>{context?.userData?.username}</Text>
       </ScrollView>
     </View>
   );

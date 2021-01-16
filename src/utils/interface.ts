@@ -88,6 +88,7 @@ export interface ILeague {
   name: string;
   description: string;
   discord: string;
+  twitter: string;
   platform: 'ps' | 'xb';
   teamNum: number;
   acceptedClubs: number;
