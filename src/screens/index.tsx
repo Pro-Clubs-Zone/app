@@ -99,6 +99,7 @@ export default function AppIndex() {
         initialRouteName="Home"
         screenOptions={{
           headerBackTitleVisible: false,
+          animationEnabled: false,
         }}>
         <Stack.Screen
           name="Home"
@@ -124,6 +125,7 @@ export default function AppIndex() {
         initialRouteName="Leagues"
         screenOptions={{
           headerBackTitleVisible: false,
+          animationEnabled: false,
         }}>
         <Stack.Screen
           name="Leagues"

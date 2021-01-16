@@ -128,6 +128,7 @@ export default function LeagueStack({navigation, route}: Props) {
         <Stack.Navigator
           screenOptions={{
             headerBackTitleVisible: false,
+            animationEnabled: false,
           }}>
           <Stack.Screen
             name="League Scheduled"
@@ -162,6 +163,7 @@ export default function LeagueStack({navigation, route}: Props) {
         <Stack.Navigator
           screenOptions={{
             headerBackTitleVisible: false,
+            animationEnabled: false,
           }}>
           <Stack.Screen name="League Preview" component={LeaguePreview} />
           <Stack.Screen name="Sign Up" component={SignUp} />
@@ -176,6 +178,7 @@ export default function LeagueStack({navigation, route}: Props) {
         <Stack.Navigator
           screenOptions={{
             headerBackTitleVisible: false,
+            animationEnabled: false,
           }}>
           <Stack.Screen
             name="League Pre-Season"
@@ -190,6 +193,7 @@ export default function LeagueStack({navigation, route}: Props) {
         <Stack.Navigator
           screenOptions={{
             headerBackTitleVisible: false,
+            animationEnabled: false,
           }}>
           <Stack.Screen name="League Preview" component={LeaguePreview} />
           <Stack.Screen name="Create Club" component={CreateClub} />

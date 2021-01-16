@@ -36,6 +36,7 @@ export default function Match({route}: Props) {
       }
       screenOptions={{
         headerBackTitleVisible: false,
+        animationEnabled: false,
       }}>
       <Stack.Screen
         name="Upcoming Match"
