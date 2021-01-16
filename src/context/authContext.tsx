@@ -18,9 +18,9 @@ const AuthProvider = (props: any) => {
   const [uid, setUid] = useState<string | null>(null);
   const [authInit, setAuthInit] = useState<boolean>(false);
 
-  const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
-
   useEffect(() => {
+    const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
+
     if (__DEV__) {
       firFunc.useFunctionsEmulator(`http://${localAddress}:5001`);
       firAuth.useEmulator(`http://${localAddress}:9099`);
@@ -64,7 +64,7 @@ const AuthProvider = (props: any) => {
     }
     const subscriber = firAuth.onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-  }, [authInit, uid, localAddress]);
+  }, [authInit, uid]);
 
   return (
     <AuthContext.Provider value={{uid, authInit}}>

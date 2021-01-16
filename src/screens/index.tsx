@@ -89,9 +89,9 @@ export default function AppIndex() {
     </>
   );
 
-  if (loading) {
-    return <FullScreenLoading visible={true} />;
-  }
+  // if (loading) {
+  //   return <FullScreenLoading visible={true} />;
+  // }
 
   if (uid) {
     return (
