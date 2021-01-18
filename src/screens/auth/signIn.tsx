@@ -44,7 +44,10 @@ export default function SignIn({navigation}: Props) {
 
     navigation.setOptions({
       headerLeft: () => (
-        <HeaderBackButton onPress={() => navigation.dispatch(popAction)} />
+        <HeaderBackButton
+          onPress={() => navigation.dispatch(popAction)}
+          labelVisible={false}
+        />
       ),
     });
   }, [navigation]);

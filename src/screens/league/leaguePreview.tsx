@@ -1,4 +1,4 @@
-import React, {useState, useContext, useCallback} from 'react';
+import React, {useState, useContext, useCallback, useEffect} from 'react';
 import {Text, View, Alert, ScrollView, Linking} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import {LeagueStackType} from './league';
@@ -25,7 +25,7 @@ type Props = {
 };
 
 export default function LeaguePreview({navigation, route}: Props) {
-  const [accepted, setAccepted] = useState<boolean>(false);
+  const [joined, setJoined] = useState<boolean>(false);
 
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
@@ -39,20 +39,29 @@ export default function LeaguePreview({navigation, route}: Props) {
 
   const infoMode = route.params?.infoMode;
 
-  const onCheckUserInLeague = () => {
-    const userLeague = context.userData?.leagues?.[leagueId];
+  useEffect(() => {
+    const userLeagues = context.userData?.leagues;
+    const inLeague =
+      typeof userLeagues !== 'undefined'
+        ? userLeagues.hasOwnProperty(leagueId)
+        : false;
 
-    console.log('league preview render');
-    if (userLeague) {
-      setAccepted(userLeague.accepted);
-      return userInLeague();
+    setJoined(inLeague);
+  }, [context, leagueId]);
+
+  const onCheckUserInLeague = () => {
+    // const userLeague = context.userData?.leagues?.[leagueId];
+
+    // if (userLeague) {
+    //   setAccepted(userLeague.accepted);
+    //   return userInLeague();
+    // } else {
+    if (scheduled || leagueComplete) {
+      return showJoinAsPlayer();
     } else {
-      if (scheduled || leagueComplete) {
-        return showJoinAsPlayer();
-      } else {
-        return showUserTypeSelection();
-      }
+      return showUserTypeSelection();
     }
+    // }
   };
 
   const showJoinAsPlayer = () => {
@@ -117,20 +126,20 @@ export default function LeaguePreview({navigation, route}: Props) {
     );
   };
 
-  const userInLeague = () => {
-    Alert.alert(
-      'Join League',
-      accepted ? 'League not started' : 'Request already sent',
-      [
-        {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-      ],
-      {cancelable: false},
-    );
-  };
+  // const userInLeague = () => {
+  //   Alert.alert(
+  //     'Join League',
+  //     accepted ? 'League not started' : 'Request already sent',
+  //     [
+  //       {
+  //         text: 'Cancel',
+  //         onPress: () => console.log('Cancel Pressed'),
+  //         style: 'cancel',
+  //       },
+  //     ],
+  //     {cancelable: false},
+  //   );
+  // };
 
   return (
     <View
@@ -203,7 +212,8 @@ export default function LeaguePreview({navigation, route}: Props) {
       </ScrollView>
       {!infoMode && (
         <BigButton
-          title="Join League"
+          title={joined ? 'Request Sent' : 'Join League'}
+          disabled={joined}
           onPress={() =>
             user
               ? onCheckUserInLeague()

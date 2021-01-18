@@ -104,7 +104,6 @@ export default function UpcomingMatch({navigation, route}: Props) {
         {
           text: 'Close',
           onPress: () => {
-            setLoading(false);
             navigation.goBack();
           },
         },

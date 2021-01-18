@@ -120,6 +120,7 @@ export default function CreateClub({route, navigation}: Props) {
           autoCorrect={false}
           label="Club Name"
           error={error.clubName}
+          helper="Minimum 4 letters, no profanity"
         />
       </FormContent>
       <BigButton onPress={onCreateClub} title="Create Club" />

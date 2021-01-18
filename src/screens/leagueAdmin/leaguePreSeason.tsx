@@ -28,7 +28,7 @@ type Props = {
 const firFunc = functions();
 
 export default function LeaguePreSeason({navigation, route}: Props) {
-  //const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [clubRosterLength, setClubRosterLength] = useState(1);
 
   const context = useContext(AppContext);
@@ -100,7 +100,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   };
 
   const scheduleMatches = async () => {
-    //setLoading(true);
+    setLoading(true);
     const functionRef = firFunc.httpsCallable('scheduleMatches');
     const league = leagueContext.league;
     await functionRef({
@@ -123,6 +123,10 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         console.log(error);
       });
   };
+
+  if (loading) {
+    return <FullScreenLoading visible={true} />;
+  }
 
   return (
     <ScrollView

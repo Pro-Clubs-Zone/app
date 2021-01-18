@@ -332,7 +332,8 @@ function MySentRequests() {
       renderItem={({item, section}) => (
         <OneLine
           title={item.clubName}
-          onPress={() => onCancelRequest(item, section.title)}
+          onIconPress={() => onCancelRequest(item, section.title)}
+          rightIcon="minus-circle"
         />
       )}
       ItemSeparatorComponent={() => <ListSeparator />}
