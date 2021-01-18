@@ -6,8 +6,8 @@ import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 
 interface OneLineProps {
   title: string;
-  key1?: string;
-  key2?: string;
+  key1?: string | number;
+  key2?: string | number;
   // img,
   // flag,
   onPress?: () => void;
@@ -333,7 +333,7 @@ export const TwoLine = (props: TwoLineProps) => (
 
 const styles = ScaledSheet.create({
   listBg: {
-    flex: 1,
+    //    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: '16@vs',

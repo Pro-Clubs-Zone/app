@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, Text, View, FlatList, Alert} from 'react-native';
+import {ScrollView, View, FlatList, Alert} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import onSubmitMatch from './functions/onSubmitMatch';
 import onConflictResolve from './functions/onConflictResolve';
@@ -8,7 +8,7 @@ import {MatchStackType} from './match';
 import {RouteProp} from '@react-navigation/native';
 import ScoreBoard from '../../components/scoreboard';
 import {MatchTextField} from '../../components/textField';
-import {ScaledSheet} from 'react-native-size-matters';
+import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
 import firestore from '@react-native-firebase/firestore';
 import FixtureItem from '../../components/fixtureItems';
@@ -19,6 +19,7 @@ import {t} from '@lingui/macro';
 import FullScreenLoading from '../../components/loading';
 import {StackNavigationProp} from '@react-navigation/stack';
 import useGetMatches from '../league/functions/useGetMatches';
+import MatchConflictItem from '../../components/matchConflictItem';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -120,7 +121,10 @@ export default function UpcomingMatch({navigation, route}: Props) {
   };
 
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+      }}>
       <FullScreenLoading visible={loading} />
       <ScoreBoard
         data={matchData}
@@ -207,33 +211,27 @@ const MatchConflict = ({
   data: IMatchNavData;
 }) => {
   return (
-    <View>
-      <Text>This is conflict match</Text>
-      <View>
-        <Text>Home Team: {data.homeTeamName}</Text>
-        <View>
-          <Text>Home Team: {data.homeTeamName}</Text>
-          <Text>{data.submissions[data.homeTeamId][data.homeTeamId]}</Text>
-        </View>
-        <View>
-          <Text>Away Team: {data.awayTeamName}</Text>
-          <Text>{data.submissions[data.awayTeamId][data.awayTeamId]}</Text>
-        </View>
-        <Button title="select home" onPress={onSelectHome} />
-      </View>
-      <View>
-        <Text>Away Team: {data.awayTeamName}</Text>
-        <View>
-          <Text>Home Team: {data.homeTeamName}</Text>
-          <Text>{data.submissions[data.awayTeamId][data.homeTeamId]}</Text>
-        </View>
-        <View>
-          <Text>Away Team: {data.awayTeamName}</Text>
-          <Text>{data.submissions[data.awayTeamId][data.awayTeamId]}</Text>
-        </View>
-        <Button title="select away" onPress={onSelectAway} />
-      </View>
-    </View>
+    <ScrollView
+      stickyHeaderIndices={[0]}
+      contentContainerStyle={{paddingBottom: verticalScale(32)}}>
+      <ListHeading col1="Conflict Match" />
+      <MatchConflictItem
+        header={`${data.homeTeamName} Submission`}
+        homeTeam={data.homeTeamName}
+        awayTeam={data.awayTeamName}
+        homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
+        awayScore={data.submissions[data.homeTeamId][data.awayTeamId]}
+        onPickResult={onSelectHome}
+      />
+      <MatchConflictItem
+        header={`${data.awayTeamName} Submission`}
+        homeTeam={data.homeTeamName}
+        awayTeam={data.awayTeamName}
+        homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}
+        awayScore={data.submissions[data.awayTeamId][data.awayTeamId]}
+        onPickResult={onSelectAway}
+      />
+    </ScrollView>
   );
 };
 

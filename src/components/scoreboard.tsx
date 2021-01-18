@@ -6,7 +6,7 @@ import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {IMatchNavData} from '../utils/interface';
 import defaultLogo from '../assets/images/defaultLogo.png';
 import {t, Trans} from '@lingui/macro';
-import i18n from '../utils/i18n';
+//import i18n from '../utils/i18n';
 
 type Props = {
   editable: boolean;

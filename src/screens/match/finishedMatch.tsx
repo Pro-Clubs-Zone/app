@@ -7,6 +7,7 @@ import ScoreBoard from '../../components/scoreboard';
 //import {LeagueContext} from '../../context/leagueContext';
 //import firestore from '@react-native-firebase/firestore';
 import {StackNavigationProp} from '@react-navigation/stack';
+import EmptyState from '../../components/emptyState';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -23,9 +24,9 @@ export default function FinishedMatch({route}: Props) {
   const matchData: IMatchNavData = route.params.matchData;
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <ScoreBoard data={matchData} editable={false} />
-      <Text>GoalScorers</Text>
+      <EmptyState title="Match Stats & Info" body="Coming Soon" />
     </View>
   );
 }
