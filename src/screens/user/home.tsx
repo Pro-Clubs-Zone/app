@@ -28,6 +28,7 @@ import FullScreenLoading from '../../components/loading';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import UpcomingMatchCard from '../../components/upcomingMatchCard';
 import {CardMedium} from '../../components/cards';
+import {MatchContext} from '../../context/matchContext';
 
 const db = firestore();
 
@@ -39,11 +40,12 @@ type Props = {
 
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>();
-  const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
+  // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const requestContext = useContext(RequestContext);
+  const matchContext = useContext(MatchContext);
 
   const uid = user?.uid;
   const username = context.userData?.username;
@@ -173,7 +175,8 @@ export default function Home({navigation}: Props) {
             context.setUserLeagues(userLeagues);
             getUserMatches(updatedUserData, userLeagues)
               .then((matchesData) => {
-                setUpcomingMatches(matchesData);
+                matchContext.setMatches(matchesData);
+                //  setUpcomingMatches(matchesData);
               })
               .then(() => {
                 getClubRequests(userLeagues);
@@ -216,9 +219,9 @@ export default function Home({navigation}: Props) {
             {username}
           </Text>
         </View>
-        {upcomingMatches.length !== 0 ? (
+        {matchContext.matches?.length !== 0 ? (
           <FlatList
-            data={upcomingMatches}
+            data={matchContext.matches}
             horizontal={true}
             contentContainerStyle={styles.scrollContainer}
             showsHorizontalScrollIndicator={false}

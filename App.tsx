@@ -22,12 +22,13 @@ import {I18nProvider} from '@lingui/react';
 import i18n from './src/utils/i18n';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import RNBootSplash from 'react-native-bootsplash';
+import {MatchProvider} from './src/context/matchContext';
 
 const App = () => {
   useEffect(() => {
     RNBootSplash.hide({fade: true});
-    console.log('splash off');
   }, []);
+
   return (
     <>
       <StatusBar
@@ -38,15 +39,17 @@ const App = () => {
       <I18nProvider i18n={i18n}>
         <AuthProvider>
           <AppProvider>
-            <RequestProvider>
-              <LeagueProvider>
-                <NavigationContainer theme={NavTheme}>
-                  <ActionSheetProvider>
-                    <AppIndex />
-                  </ActionSheetProvider>
-                </NavigationContainer>
-              </LeagueProvider>
-            </RequestProvider>
+            <MatchProvider>
+              <RequestProvider>
+                <LeagueProvider>
+                  <NavigationContainer theme={NavTheme}>
+                    <ActionSheetProvider>
+                      <AppIndex />
+                    </ActionSheetProvider>
+                  </NavigationContainer>
+                </LeagueProvider>
+              </RequestProvider>
+            </MatchProvider>
           </AppProvider>
         </AuthProvider>
       </I18nProvider>

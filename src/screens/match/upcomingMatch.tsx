@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {ScrollView, View, FlatList, Alert} from 'react-native';
-import {IMatchNavData} from '../../utils/interface';
+import {FixtureList, IMatchNavData} from '../../utils/interface';
 import onSubmitMatch from './functions/onSubmitMatch';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
@@ -10,7 +10,7 @@ import ScoreBoard from '../../components/scoreboard';
 import {MatchTextField} from '../../components/textField';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
-import firestore from '@react-native-firebase/firestore';
+//import firestore from '@react-native-firebase/firestore';
 import FixtureItem from '../../components/fixtureItems';
 import EmptyState from '../../components/emptyState';
 import i18n from '../../utils/i18n';
@@ -18,13 +18,14 @@ import {ListHeading, ListSeparator} from '../../components/listItems';
 import {t} from '@lingui/macro';
 import FullScreenLoading from '../../components/loading';
 import {StackNavigationProp} from '@react-navigation/stack';
-import useGetMatches from '../league/functions/useGetMatches';
+//import useGetMatches from '../league/functions/useGetMatches';
 import MatchConflictItem from '../../components/matchConflictItem';
+import {MatchContext} from '../../context/matchContext';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
-  'Finished Match'
+  'Upcoming Match'
 >;
 
 type Props = {
@@ -32,7 +33,7 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-const db = firestore();
+//const db = firestore();
 
 export default function UpcomingMatch({navigation, route}: Props) {
   const [homeScore, setHomeScore] = useState<string>();
@@ -41,30 +42,31 @@ export default function UpcomingMatch({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const context = useContext(AppContext);
+  const matchContext = useContext(MatchContext);
 
   const leagueId = route.params.matchData.leagueId;
   const matchData: IMatchNavData = route.params.matchData;
+  // const leagueRef = db
+  //   .collection('leagues')
+  //   .doc(leagueId)
+  //   .collection('matches');
 
-  const leagueRef = db
-    .collection('leagues')
-    .doc(leagueId)
-    .collection('matches');
+  // const query = leagueRef
+  //   .where('homeTeamId', 'in', matchData.teams)
+  //   .where('teams', 'array-contains', '')
+  //   .where('published', '==', true);
 
-  const query = leagueRef
-    .where('teams', 'in', [matchData.teams, matchData.teams.reverse()])
-    .where('published', '==', true);
-
-  const getMatches = useGetMatches(leagueId, query);
+  // const getMatches = useGetMatches(leagueId, query);
 
   useEffect(() => {
     console.log('====================================');
     console.log(matchData);
     console.log('====================================');
+
     const userClub = context.userData.leagues[leagueId].clubId;
     const isManager = matchData.teams.includes(userClub) && matchData.manager;
     const hasSubmitted = !!matchData.submissions?.[userClub];
     const canSubmit = isManager && !hasSubmitted;
-
     setEditable(canSubmit);
   }, [leagueId]);
 
@@ -78,6 +80,8 @@ export default function UpcomingMatch({navigation, route}: Props) {
     let title: string;
     let body: string;
 
+    let conflict: boolean = false;
+
     switch (submissionResult) {
       case 'Success':
         title = 'Results Published';
@@ -86,6 +90,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
       case 'Conflict':
         title = 'Submission Conflict';
         body = 'Conflict Message';
+        conflict = true;
         break;
       case 'First Submission':
         title = 'Submission Succesfull';
@@ -97,6 +102,38 @@ export default function UpcomingMatch({navigation, route}: Props) {
         break;
     }
 
+    let foundUserMatch = matchContext.matches.filter(
+      (match) => match.id === matchData.matchId,
+    );
+
+    if (foundUserMatch.length !== 0) {
+      let notPublishedMatches = matchContext.matches.filter(
+        (match) => match.id !== matchData.matchId,
+      );
+
+      if (
+        submissionResult === 'Success' ||
+        submissionResult === 'Conflict Resolved'
+      ) {
+        matchContext.setMatches(notPublishedMatches);
+      }
+      if (
+        submissionResult === 'First Submission' ||
+        submissionResult === 'Conflict'
+      ) {
+        let userUpcomingMatch = {...foundUserMatch[0]};
+        userUpcomingMatch.data.conflict = conflict;
+        userUpcomingMatch.data.submissions = {
+          [matchData.clubId]: {
+            [matchData.homeTeamId]: Number(homeScore),
+            [matchData.awayTeamId]: Number(awayScore),
+          },
+        };
+        const updatedMatchList = [userUpcomingMatch, ...notPublishedMatches];
+        matchContext.setMatches(updatedMatchList);
+      }
+    }
+
     Alert.alert(
       title,
       body,
@@ -104,6 +141,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         {
           text: 'Close',
           onPress: () => {
+            setLoading(false);
             navigation.goBack();
           },
         },
@@ -113,8 +151,9 @@ export default function UpcomingMatch({navigation, route}: Props) {
   };
 
   const onSelectResult = (id: string) => {
+    setLoading(true);
     onConflictResolve(matchData, id).then((result) => {
-      decrementConflictCounter;
+      decrementConflictCounter();
       showAlert(result);
     });
   };
@@ -130,7 +169,6 @@ export default function UpcomingMatch({navigation, route}: Props) {
         onSubmit={() => {
           setLoading(true);
           onSubmitMatch(homeScore, awayScore, matchData).then((result) => {
-            //      setLoading(false);
             showAlert(result);
           });
         }}
@@ -166,35 +204,36 @@ export default function UpcomingMatch({navigation, route}: Props) {
           }}
         />
       ) : (
-        <FlatList
-          data={getMatches.data}
-          ListHeaderComponent={() => <ListHeading col1="Past Fixtures" />}
-          renderItem={({item}) => (
-            <FixtureItem
-              matchId={item.data.id}
-              homeTeamName={item.data.homeTeamName}
-              awayTeamName={item.data.awayTeamName}
-              homeTeamScore={item.data.result[item.data.homeTeamId]}
-              awayTeamScore={item.data.result[item.data.awayTeamId]}
-              conflict={false}
-              onPress={() =>
-                navigation.navigate('Finished Match', {
-                  matchData: item.data,
-                })
-              }
-            />
-          )}
-          keyExtractor={(item) => item.data.matchId}
-          ItemSeparatorComponent={() => <ListSeparator />}
-          ListEmptyComponent={() => (
-            <EmptyState title={i18n._(t`No Fixtures`)} />
-          )}
-          contentContainerStyle={{
-            justifyContent: getMatches.data.length === 0 ? 'center' : null,
-            flexGrow: 1,
-          }}
-          stickyHeaderIndices={[0]}
-        />
+        // <FlatList
+        //   data={getMatches.data}
+        //   ListHeaderComponent={() => <ListHeading col1="Past Fixtures" />}
+        //   renderItem={({item}) => (
+        //     <FixtureItem
+        //       matchId={item.data.id}
+        //       homeTeamName={item.data.homeTeamName}
+        //       awayTeamName={item.data.awayTeamName}
+        //       homeTeamScore={item.data.result[item.data.homeTeamId]}
+        //       awayTeamScore={item.data.result[item.data.awayTeamId]}
+        //       conflict={false}
+        //       onPress={() =>
+        //         navigation.navigate('Finished Match', {
+        //           matchData: item.data,
+        //         })
+        //       }
+        //     />
+        //   )}
+        //   keyExtractor={(item) => item.data.matchId}
+        //   ItemSeparatorComponent={() => <ListSeparator />}
+        //   ListEmptyComponent={() => (
+        //     <EmptyState title={i18n._(t`No Fixtures`)} />
+        //   )}
+        //   contentContainerStyle={{
+        //     justifyContent: getMatches.data.length === 0 ? 'center' : null,
+        //     flexGrow: 1,
+        //   }}
+        //   stickyHeaderIndices={[0]}
+        // />
+        <EmptyState title={i18n._(t`Past Fixtures`)} body="Coming Soon" />
       )}
     </View>
   );
