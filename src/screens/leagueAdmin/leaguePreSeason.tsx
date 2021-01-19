@@ -108,6 +108,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       leagueId: leagueId,
     })
       .then(() => {
+        setLoading(false);
         navigation.dispatch(
           CommonActions.reset({
             index: 2,

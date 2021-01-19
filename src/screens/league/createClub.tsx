@@ -102,6 +102,9 @@ export default function CreateClub({route, navigation}: Props) {
           {merge: true},
         );
         await batch.commit().then(() => {
+          let updateLeagueInfo = {...leagueContext.league};
+          updateLeagueInfo.acceptedClubs += 1;
+          leagueContext.setLeague(updateLeagueInfo);
           setLoading(false);
           navigation.goBack();
         });

@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, View, FlatList, Alert} from 'react-native';
-import {FixtureList, IMatchNavData} from '../../utils/interface';
+import {ScrollView, View, Alert} from 'react-native';
+import {IMatchNavData} from '../../utils/interface';
 import onSubmitMatch from './functions/onSubmitMatch';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
@@ -11,16 +11,14 @@ import {MatchTextField} from '../../components/textField';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
 //import firestore from '@react-native-firebase/firestore';
-import FixtureItem from '../../components/fixtureItems';
 import EmptyState from '../../components/emptyState';
 import i18n from '../../utils/i18n';
-import {ListHeading, ListSeparator} from '../../components/listItems';
+import {ListHeading} from '../../components/listItems';
 import {t} from '@lingui/macro';
 import FullScreenLoading from '../../components/loading';
 import {StackNavigationProp} from '@react-navigation/stack';
 //import useGetMatches from '../league/functions/useGetMatches';
 import MatchConflictItem from '../../components/matchConflictItem';
-import {MatchContext} from '../../context/matchContext';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -42,7 +40,6 @@ export default function UpcomingMatch({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const context = useContext(AppContext);
-  const matchContext = useContext(MatchContext);
 
   const leagueId = route.params.matchData.leagueId;
   const matchData: IMatchNavData = route.params.matchData;
@@ -102,12 +99,12 @@ export default function UpcomingMatch({navigation, route}: Props) {
         break;
     }
 
-    let foundUserMatch = matchContext.matches.filter(
+    let foundUserMatch = context.userMatches.filter(
       (match) => match.id === matchData.matchId,
     );
 
     if (foundUserMatch.length !== 0) {
-      let notPublishedMatches = matchContext.matches.filter(
+      let notPublishedMatches = context.userMatches.filter(
         (match) => match.id !== matchData.matchId,
       );
 
@@ -115,7 +112,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         submissionResult === 'Success' ||
         submissionResult === 'Conflict Resolved'
       ) {
-        matchContext.setMatches(notPublishedMatches);
+        context.setUserMatches(notPublishedMatches);
       }
       if (
         submissionResult === 'First Submission' ||
@@ -130,7 +127,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
           },
         };
         const updatedMatchList = [userUpcomingMatch, ...notPublishedMatches];
-        matchContext.setMatches(updatedMatchList);
+        context.setUserMatches(updatedMatchList);
       }
     }
 

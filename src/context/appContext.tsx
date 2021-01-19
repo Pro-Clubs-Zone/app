@@ -1,9 +1,11 @@
 import React, {useState, createContext, Dispatch, SetStateAction} from 'react';
-import {IUser, ILeague} from '../utils/interface';
+import {IUser, ILeague, FixtureList} from '../utils/interface';
 
 const AppContext = createContext<{
   userData: IUser | null;
   setUserData: Dispatch<SetStateAction<IUser | null>>;
+  userMatches: FixtureList[] | null;
+  setUserMatches: Dispatch<SetStateAction<FixtureList[] | null>>;
   userLeagues: {
     [league: string]: ILeague;
   } | null;
@@ -19,10 +21,18 @@ const AppProvider = (props: any) => {
   const [userLeagues, setUserLeagues] = useState<{
     [league: string]: ILeague;
   } | null>(null);
+  const [userMatches, setUserMatches] = useState<FixtureList[]>([]);
 
   return (
     <AppContext.Provider
-      value={{userData, setUserData, userLeagues, setUserLeagues}}>
+      value={{
+        userData,
+        setUserData,
+        userLeagues,
+        setUserLeagues,
+        userMatches,
+        setUserMatches,
+      }}>
       {props.children}
     </AppContext.Provider>
   );
