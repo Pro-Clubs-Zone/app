@@ -1,4 +1,10 @@
-import React, {useState, useContext, useCallback, useEffect} from 'react';
+import React, {
+  useState,
+  useContext,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+} from 'react';
 import {Text, View, Alert, ScrollView, Linking} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import {LeagueStackType} from './league';
@@ -7,10 +13,12 @@ import {RouteProp} from '@react-navigation/native';
 import {LeagueContext} from '../../context/leagueContext';
 import {AppContext} from '../../context/appContext';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import {BigButton} from '../../components/buttons';
+import {BigButton, IconButton} from '../../components/buttons';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import firestore from '@react-native-firebase/firestore';
+import RNRestart from 'react-native-restart';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -23,6 +31,8 @@ type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
+
+const db = firestore();
 
 export default function LeaguePreview({navigation, route}: Props) {
   const [joined, setJoined] = useState<boolean>(false);
@@ -38,6 +48,43 @@ export default function LeaguePreview({navigation, route}: Props) {
   const leagueComplete = league.acceptedClubs === league.teamNum;
 
   const infoMode = route.params?.infoMode;
+
+  const onDeleteLeague = () => {
+    const deleteLeague = () => {
+      db.collection('leagues')
+        .doc(leagueId)
+        .delete()
+        .then(() => {
+          RNRestart.Restart();
+        });
+    };
+
+    Alert.alert(
+      'Delete League?',
+      'It is impossible to recover deleted league. After removal the app will restart',
+      [
+        {
+          text: 'Delete',
+          onPress: () => deleteLeague(),
+        },
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  useLayoutEffect(() => {
+    if (league.adminId === user.uid) {
+      navigation.setOptions({
+        headerRight: () => (
+          <IconButton name="delete-forever" onPress={onDeleteLeague} />
+        ),
+      });
+    }
+  });
 
   useEffect(() => {
     const userLeagues = context.userData?.leagues;

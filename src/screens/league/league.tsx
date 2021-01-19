@@ -184,6 +184,18 @@ export default function LeagueStack({navigation, route}: Props) {
             name="League Pre-Season"
             component={LeaguePreSeason}
             initialParams={{newLeague: newLeague}}
+            options={{
+              headerRight: () => (
+                <IconButton
+                  name="information"
+                  onPress={() => {
+                    navigation.navigate('League Preview', {
+                      infoMode: true,
+                    });
+                  }}
+                />
+              ),
+            }}
           />
           {commonStack}
         </Stack.Navigator>
