@@ -37,7 +37,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(true);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
   const context = useContext(AppContext);
@@ -159,7 +159,7 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
-      setLoading(true);
+      //  setLoading(true);
       const userRef = db.collection('users').doc(uid);
       let userInfo: IUser;
       const subscriber = userRef.onSnapshot((doc) => {
@@ -185,7 +185,6 @@ export default function Home({navigation}: Props) {
           context.setUserData(userInfo);
         }
       });
-
       setLoading(false);
       return subscriber;
     }
@@ -198,9 +197,12 @@ export default function Home({navigation}: Props) {
     return rivalName;
   };
 
+  if (loading) {
+    return <FullScreenLoading visible={true} />;
+  }
+
   return (
     <View style={{flex: 1}}>
-      <FullScreenLoading visible={loading} />
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={TEXT_STYLES.caption}>
