@@ -73,7 +73,10 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         [
           {
             text: 'Schedule',
-            onPress: () => scheduleMatches(),
+            onPress: () => {
+              setLoading(true);
+              scheduleMatches();
+            },
           },
           {
             text: 'Cancel',
@@ -100,15 +103,14 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   };
 
   const scheduleMatches = async () => {
-    setLoading(true);
     const functionRef = firFunc.httpsCallable('scheduleMatches');
     const league = leagueContext.league;
     await functionRef({
       matchNum: league.matchNum,
       leagueId: leagueId,
     })
+      .then(() => setLoading(false))
       .then(() => {
-        setLoading(false);
         navigation.dispatch(
           CommonActions.reset({
             index: 2,

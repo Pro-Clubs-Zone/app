@@ -49,7 +49,7 @@ export default function LeagueScheduled({navigation}: Props) {
     }
     setClubReqests(requests);
     setClubRosterLength(roster);
-  }, [context, userClub.clubId, leagueId]);
+  }, []);
 
   return (
     <ScrollView
