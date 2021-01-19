@@ -22,10 +22,12 @@ const getLeaguesClubs = async (
       .doc(leagueId)
       .get()
       .then((doc) => {
-        const league = doc.data() as ILeague;
-        userLeagues = {...userLeagues, [doc.id]: league};
-        if (userData.leagues[leagueId].admin) {
-          adminConflictCounts += league.conflictMatchesCount;
+        if (doc.exists) {
+          const league = doc.data() as ILeague;
+          userLeagues = {...userLeagues, [doc.id]: league};
+          if (userData.leagues[leagueId].admin) {
+            adminConflictCounts += league.conflictMatchesCount;
+          }
         }
       })
       .then(async () => {

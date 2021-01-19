@@ -17,8 +17,8 @@ import {BigButton, IconButton} from '../../components/buttons';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import firestore from '@react-native-firebase/firestore';
 import RNRestart from 'react-native-restart';
+import functions from '@react-native-firebase/functions';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -31,8 +31,6 @@ type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
-
-const db = firestore();
 
 export default function LeaguePreview({navigation, route}: Props) {
   const [joined, setJoined] = useState<boolean>(false);
@@ -51,12 +49,12 @@ export default function LeaguePreview({navigation, route}: Props) {
 
   const onDeleteLeague = () => {
     const deleteLeague = () => {
-      db.collection('leagues')
-        .doc(leagueId)
-        .delete()
-        .then(() => {
-          RNRestart.Restart();
-        });
+      const deleteUserLeague = functions().httpsCallable('deleteLeague');
+      deleteUserLeague({
+        leagueId,
+        leagueAdminId: leagueContext.league.adminId,
+      });
+      RNRestart.Restart();
     };
 
     Alert.alert(
