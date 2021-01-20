@@ -122,13 +122,13 @@ export default function AppIndex() {
   } else {
     return (
       <Stack.Navigator
-        initialRouteName="Leagues"
+        initialRouteName="Home"
         screenOptions={{
           headerBackTitleVisible: false,
           animationEnabled: false,
         }}>
         <Stack.Screen
-          name="Leagues"
+          name="Home"
           component={Leagues}
           options={({navigation}) => ({
             headerRight: () => (

@@ -8,8 +8,8 @@
  * @format
  */
 
-import React, {useEffect, useState} from 'react';
-import {StatusBar, Linking} from 'react-native';
+import React, {useEffect} from 'react';
+import {StatusBar} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {AppProvider} from './src/context/appContext';
@@ -37,10 +37,12 @@ const App = () => {
       // }
       const firUrl = await dynamicLinks()
         .getInitialLink()
-        .then((link) => link.url);
+        .then((link) => link);
       console.log(firUrl);
 
-      return firUrl;
+      if (firUrl) {
+        return firUrl.url;
+      }
     },
     // subscribe(listener) {
     //   console.log(listener);
@@ -71,7 +73,7 @@ const App = () => {
     //   };
     // },
     config: {
-      initialRouteName: 'Leagues',
+      initialRouteName: 'Home',
       screens: {
         League: 'l/:leagueId',
       },
