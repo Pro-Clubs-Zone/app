@@ -17,7 +17,6 @@ import Requests from './user/requests';
 import CreateLeague from './league/createLeague';
 import LeagueExplorer from './user/leagueExplorer';
 import LeagueStack from './league/league';
-import FullScreenLoading from '../components/loading';
 import {ILeagueProps, IMatchNavData} from '../utils/interface';
 import Match from './match/match';
 import {RequestContext} from '../context/requestContext';
@@ -46,7 +45,6 @@ export type AppNavStack = {
 export default function AppIndex() {
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
-  const [loading, setLoading] = useState(true);
   const [uid, setUid] = useState<string | undefined | null>(null);
 
   const firAuth = auth();
@@ -54,7 +52,6 @@ export default function AppIndex() {
   useEffect(() => {
     if (user.authInit) {
       setUid(user.uid);
-      setLoading(false);
     }
   }, [user]);
 

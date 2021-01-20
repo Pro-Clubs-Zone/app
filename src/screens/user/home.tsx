@@ -37,7 +37,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(() => true);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
   const context = useContext(AppContext);
@@ -165,7 +165,7 @@ export default function Home({navigation}: Props) {
       const subscriber = userRef.onSnapshot((doc) => {
         userInfo = doc.data() as IUser;
 
-        if (userInfo.leagues) {
+        if (userInfo?.leagues) {
           getLeaguesClubs(userInfo).then(async (data) => {
             const {updatedUserData, userLeagues} = data;
             context.setUserData(updatedUserData);
@@ -178,14 +178,18 @@ export default function Home({navigation}: Props) {
               .then(() => {
                 getClubRequests(userLeagues);
                 getLeagueRequests(userLeagues);
+              })
+              .then(() => {
+                setLoading(false);
               });
           });
         } else {
           console.log('no leagues');
+
+          setLoading(false);
           context.setUserData(userInfo);
         }
       });
-      setLoading(false);
       return subscriber;
     }
   }, [user]);

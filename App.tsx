@@ -37,8 +37,9 @@ const App = () => {
     prefixes: ['https://proclubs.zone', 'proclubs://'],
     async getInitialURL() {
       const link = await getFirUrl();
-
-      return link.url;
+      if (link) {
+        return link.url;
+      }
     },
     subscribe(listener) {
       const firUrl = async () => {
