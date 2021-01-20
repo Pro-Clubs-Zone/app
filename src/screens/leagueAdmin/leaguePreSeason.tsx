@@ -1,5 +1,5 @@
 import React, {useContext, useLayoutEffect, useState} from 'react';
-import {Alert, ScrollView} from 'react-native';
+import {Alert, ScrollView, Share, Platform} from 'react-native';
 import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
@@ -14,6 +14,7 @@ import {verticalScale} from 'react-native-size-matters';
 import FullScreenLoading from '../../components/loading';
 import {RouteProp} from '@react-navigation/native';
 import {StackActions, CommonActions} from '@react-navigation/native';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -127,6 +128,52 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       });
   };
 
+  const shareLeagueLink = () => {
+    const linkBuilder = async () => {
+      const link = await dynamicLinks().buildLink({
+        link: `https://proclubs.zone/l/${leagueId}`,
+        // domainUriPrefix is created in your Firebase console
+        domainUriPrefix: 'https://proclubs.zone/l',
+        // optional setup which updates Firebase analytics campaign
+        // "banner". This also needs setting up before hand
+        // analytics: {
+        //   campaign: 'banner',
+        // },
+      });
+
+      return link;
+    };
+
+    linkBuilder().then(async (link) => {
+      console.log(link);
+
+      const message = `Join ${leagueContext.league.name} on Pro Clubs Zone!`;
+      try {
+        await Share.share(
+          {
+            message: Platform.OS === 'ios' ? message : link,
+            url: link,
+            title: message,
+          },
+          {
+            dialogTitle: 'Invite people',
+          },
+        );
+        // if (result.action === Share.sharedAction) {
+        //   if (result.activityType) {
+        //     // shared with activity type of result.activityType
+        //   } else {
+        //     // shared
+        //   }
+        // } else if (result.action === Share.dismissedAction) {
+        //   // dismissed
+        // }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
+
   if (loading) {
     return <FullScreenLoading visible={true} />;
   }
@@ -169,10 +216,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           title={'League\nClubs'}
           onPress={() => navigation.navigate('Clubs')}
         />
-        <CardSmall
-          title={'Invite\nClubs'}
-          onPress={() => console.log('nothing yet')}
-        />
+        <CardSmall title={'Invite\nClubs'} onPress={shareLeagueLink} />
       </CardSmallContainer>
 
       <CardMedium

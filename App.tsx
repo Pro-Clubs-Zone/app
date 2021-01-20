@@ -8,8 +8,8 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
-import {StatusBar} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {StatusBar, Linking} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {AppProvider} from './src/context/appContext';
@@ -22,8 +22,83 @@ import {I18nProvider} from '@lingui/react';
 import i18n from './src/utils/i18n';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import RNBootSplash from 'react-native-bootsplash';
+import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 const App = () => {
+  //  const [incomingLinkId, setIncomingLinkId] = useState(null);
+
+  const linking = {
+    prefixes: ['https://proclubs.zone', 'proclubs://'],
+    async getInitialURL() {
+      //  const url = await Linking.getInitialURL();
+
+      // if (url != null) {
+      //   return url;
+      // }
+      const firUrl = await dynamicLinks()
+        .getInitialLink()
+        .then((link) => link.url);
+      console.log(firUrl);
+
+      return firUrl;
+    },
+    // subscribe(listener) {
+    //   console.log(listener);
+
+    //   // First, you may want to do the default deep link handling
+    //   const onReceiveURL = ({url}: {url: string}) => listener(url);
+
+    //   // Listen to incoming links from deep linking
+    //   Linking.addEventListener('url', onReceiveURL);
+
+    //   const getInitialURL = async () => {
+    //     const url = await dynamicLinks()
+    //       .getInitialLink()
+    //       .then((link) => link);
+
+    //     if (url != null) {
+    //       console.log(url);
+    //       listener(url.url);
+    //       return url;
+    //     }
+    //   };
+
+    //   const unsubscribe = dynamicLinks().onLink(getInitialURL);
+
+    //   return () => {
+    //     Linking.removeEventListener('url', onReceiveURL);
+    //     unsubscribe();
+    //   };
+    // },
+    config: {
+      initialRouteName: 'Leagues',
+      screens: {
+        League: 'l/:leagueId',
+      },
+      // League: {
+      //   path: 'l/:leagueId',
+      //   parse: {
+      //     leagueId: (leagueId) => leagueId,
+      //   },
+      // },
+    },
+    // routes: [
+    //   {
+    //     name: 'Leagues',
+    //     state: {
+    //       routes: [
+    //         {
+    //           name: 'League',
+    //           params: {
+    //             leagueId: incomingLinkId,
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   },
+    // ],
+  };
+
   useEffect(() => {
     RNBootSplash.hide({fade: true});
   }, []);
@@ -40,7 +115,7 @@ const App = () => {
           <AppProvider>
             <RequestProvider>
               <LeagueProvider>
-                <NavigationContainer theme={NavTheme}>
+                <NavigationContainer theme={NavTheme} linking={linking}>
                   <ActionSheetProvider>
                     <AppIndex />
                   </ActionSheetProvider>
