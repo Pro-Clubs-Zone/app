@@ -131,6 +131,7 @@ export default function AppIndex() {
           name="Home"
           component={Leagues}
           options={({navigation}) => ({
+            title: 'Leagues',
             headerRight: () => (
               <IconButton
                 name="account"

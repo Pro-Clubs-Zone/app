@@ -25,80 +25,40 @@ import RNBootSplash from 'react-native-bootsplash';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 const App = () => {
-  //  const [incomingLinkId, setIncomingLinkId] = useState(null);
+  const getFirUrl = async () => {
+    const firUrl = await dynamicLinks()
+      .getInitialLink()
+      .then((link) => link);
+
+    return firUrl;
+  };
 
   const linking = {
     prefixes: ['https://proclubs.zone', 'proclubs://'],
     async getInitialURL() {
-      //  const url = await Linking.getInitialURL();
+      const link = await getFirUrl();
 
-      // if (url != null) {
-      //   return url;
-      // }
-      const firUrl = await dynamicLinks()
-        .getInitialLink()
-        .then((link) => link);
-      console.log(firUrl);
-
-      if (firUrl) {
-        return firUrl.url;
-      }
+      return link.url;
     },
-    // subscribe(listener) {
-    //   console.log(listener);
+    subscribe(listener) {
+      const firUrl = async () => {
+        const link = await getFirUrl();
+        if (link) {
+          listener(link.url);
+          return link;
+        }
+      };
 
-    //   // First, you may want to do the default deep link handling
-    //   const onReceiveURL = ({url}: {url: string}) => listener(url);
+      const unsubscribe = dynamicLinks().onLink(firUrl);
 
-    //   // Listen to incoming links from deep linking
-    //   Linking.addEventListener('url', onReceiveURL);
-
-    //   const getInitialURL = async () => {
-    //     const url = await dynamicLinks()
-    //       .getInitialLink()
-    //       .then((link) => link);
-
-    //     if (url != null) {
-    //       console.log(url);
-    //       listener(url.url);
-    //       return url;
-    //     }
-    //   };
-
-    //   const unsubscribe = dynamicLinks().onLink(getInitialURL);
-
-    //   return () => {
-    //     Linking.removeEventListener('url', onReceiveURL);
-    //     unsubscribe();
-    //   };
-    // },
+      return () => unsubscribe();
+    },
     config: {
       initialRouteName: 'Home',
       screens: {
         League: 'l/:leagueId',
       },
-      // League: {
-      //   path: 'l/:leagueId',
-      //   parse: {
-      //     leagueId: (leagueId) => leagueId,
-      //   },
-      // },
     },
-    // routes: [
-    //   {
-    //     name: 'Leagues',
-    //     state: {
-    //       routes: [
-    //         {
-    //           name: 'League',
-    //           params: {
-    //             leagueId: incomingLinkId,
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   },
-    // ],
   };
 
   useEffect(() => {

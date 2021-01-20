@@ -86,10 +86,11 @@ export default function LeagueStack({navigation, route}: Props) {
   const userInLeague =
     userData?.leagues && userData.leagues[leagueId]?.accepted;
   const leagueScheduled = league?.scheduled;
-  const userAdmin = league?.adminId === uid;
+  const userAdmin = userData ? league?.adminId === uid : false;
 
   useLayoutEffect(() => {
     console.log('effect on league', route);
+
     //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
     let leagueInfo: ILeague;
