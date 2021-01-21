@@ -15,6 +15,7 @@ import FullScreenLoading from '../../components/loading';
 import {RouteProp} from '@react-navigation/native';
 import {StackActions, CommonActions} from '@react-navigation/native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -145,11 +146,9 @@ export default function LeaguePreSeason({navigation, route}: Props) {
     };
 
     linkBuilder().then(async (link) => {
-      console.log(link);
-
       const message = `Join ${leagueContext.league.name} on Pro Clubs Zone!`;
       try {
-        await Share.share(
+        const result = await Share.share(
           {
             message: Platform.OS === 'ios' ? message : link,
             url: link,
@@ -159,15 +158,13 @@ export default function LeaguePreSeason({navigation, route}: Props) {
             dialogTitle: 'Invite people',
           },
         );
-        // if (result.action === Share.sharedAction) {
-        //   if (result.activityType) {
-        //     // shared with activity type of result.activityType
-        //   } else {
-        //     // shared
-        //   }
-        // } else if (result.action === Share.dismissedAction) {
-        //   // dismissed
-        // }
+        if (result.action === Share.sharedAction) {
+          await analytics().logShare({
+            content_type: 'league_invite',
+            item_id: leagueId,
+            method: result.activityType,
+          });
+        }
       } catch (error) {
         console.log(error);
       }

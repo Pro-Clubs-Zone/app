@@ -8,9 +8,9 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {StatusBar} from 'react-native';
-
+import analytics from '@react-native-firebase/analytics';
 import {NavigationContainer} from '@react-navigation/native';
 import {AppProvider} from './src/context/appContext';
 import {AuthProvider} from './src/context/authContext';
@@ -25,6 +25,9 @@ import RNBootSplash from 'react-native-bootsplash';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 
 const App = () => {
+  const routeNameRef = useRef();
+  const navigationRef = useRef();
+
   const getFirUrl = async () => {
     const firUrl = await dynamicLinks()
       .getInitialLink()
@@ -78,7 +81,25 @@ const App = () => {
           <AppProvider>
             <RequestProvider>
               <LeagueProvider>
-                <NavigationContainer theme={NavTheme} linking={linking}>
+                <NavigationContainer
+                  theme={NavTheme}
+                  linking={linking}
+                  ref={navigationRef}
+                  onReady={() =>
+                    (routeNameRef.current = navigationRef.current.getCurrentRoute().name)
+                  }
+                  onStateChange={async () => {
+                    const previousRouteName = routeNameRef.current;
+                    const currentRouteName = navigationRef.current.getCurrentRoute()
+                      .name;
+
+                    if (previousRouteName !== currentRouteName) {
+                      await analytics().logScreenView({
+                        screen_name: currentRouteName,
+                        screen_class: currentRouteName,
+                      });
+                    }
+                  }}>
                   <ActionSheetProvider>
                     <AppIndex />
                   </ActionSheetProvider>

@@ -19,6 +19,7 @@ import FullScreenLoading from '../../components/loading';
 import {StackNavigationProp} from '@react-navigation/stack';
 //import useGetMatches from '../league/functions/useGetMatches';
 import MatchConflictItem from '../../components/matchConflictItem';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -147,9 +148,10 @@ export default function UpcomingMatch({navigation, route}: Props) {
     );
   };
 
-  const onSelectResult = (id: string) => {
+  const onSelectResult = async (id: string) => {
     setLoading(true);
-    onConflictResolve(matchData, id).then((result) => {
+    await onConflictResolve(matchData, id).then(async (result) => {
+      await analytics().logEvent('match_resolve_conflict');
       decrementConflictCounter();
       showAlert(result);
     });
@@ -163,11 +165,14 @@ export default function UpcomingMatch({navigation, route}: Props) {
       <FullScreenLoading visible={loading} />
       <ScoreBoard
         data={matchData}
-        onSubmit={() => {
+        onSubmit={async () => {
           setLoading(true);
-          onSubmitMatch(homeScore, awayScore, matchData).then((result) => {
-            showAlert(result);
-          });
+          await onSubmitMatch(homeScore, awayScore, matchData).then(
+            async (result) => {
+              await analytics().logEvent('match_submit_score');
+              showAlert(result);
+            },
+          );
         }}
         editable={editable}>
         <MatchTextField

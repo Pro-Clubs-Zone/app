@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../utils/interface';
+import analytics from '@react-native-firebase/analytics';
 
 const createLeague = async (data: ILeague, uid: string, username: string) => {
   const db = firestore();
@@ -24,7 +25,12 @@ const createLeague = async (data: ILeague, uid: string, username: string) => {
     },
     {merge: true},
   );
-  await batch.commit();
+  await batch.commit().then(async () => {
+    await analytics().logEvent('create_league', {
+      platform: data.platform,
+      private: data.private,
+    });
+  });
   return leagueRef.id;
 };
 

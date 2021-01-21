@@ -12,6 +12,7 @@ import {verticalScale} from 'react-native-size-matters';
 import EmptyState from '../../components/emptyState';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueContext} from '../../context/leagueContext';
+import analytics from '@react-native-firebase/analytics';
 
 // type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Join Club'>;
@@ -86,8 +87,12 @@ export default function JoinClub({navigation}: Props) {
       },
       {merge: true},
     );
-    await batch.commit();
-    return setLoading(false);
+    await batch.commit().then(async () => {
+      await analytics().logJoinGroup({
+        group_id: leagueContext.leagueId,
+      });
+      setLoading(false);
+    });
   };
 
   const onSendRequest = (club: ClubListItem) => {

@@ -11,6 +11,7 @@ import {BigButton} from '../../components/buttons';
 import TextField from '../../components/textField';
 import FullScreenLoading from '../../components/loading';
 import {LeagueContext} from '../../context/leagueContext';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Create Club'>;
 
@@ -101,7 +102,10 @@ export default function CreateClub({route, navigation}: Props) {
           },
           {merge: true},
         );
-        await batch.commit().then(() => {
+        await batch.commit().then(async () => {
+          await analytics().logJoinGroup({
+            group_id: leagueContext.leagueId,
+          });
           let updateLeagueInfo = {...leagueContext.league};
           updateLeagueInfo.acceptedClubs += 1;
           leagueContext.setLeague(updateLeagueInfo);
