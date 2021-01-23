@@ -332,7 +332,12 @@ function SignUp({navigation, route}: Props) {
       </TouchableWithoutFeedback>
       <Pressable
         style={{width: '100%'}}
-        onPress={() => navigation.navigate('Sign In')}>
+        onPress={() =>
+          navigation.navigate('Sign In', {
+            data: redirectedData,
+            redirectedFrom: redirectedFrom,
+          })
+        }>
         <View style={styles.footer}>
           <Trans>
             <Text style={TEXT_STYLES.small}>

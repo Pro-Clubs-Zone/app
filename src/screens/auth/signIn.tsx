@@ -13,22 +13,29 @@ import auth from '@react-native-firebase/auth';
 import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
+import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp, HeaderBackButton} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
 import {StackActions} from '@react-navigation/native';
+import {ILeague} from '../../utils/interface';
 
-type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Home'>;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign In'>;
+type ScreenRouteProp = RouteProp<AppNavStack, 'Sign In'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
 const firAuth = auth();
 
-export default function SignIn({navigation}: Props) {
+export default function SignIn({navigation, route}: Props) {
+  const redirectedFrom: string = route.params?.redirectedFrom;
+  const redirectedData = route.params?.data as ILeague;
+
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -123,6 +130,13 @@ export default function SignIn({navigation}: Props) {
         setLoading(true);
         await firAuth
           .signInWithEmailAndPassword(email, password)
+          .then(() => {
+            if (redirectedFrom) {
+              const popAction = StackActions.pop(2);
+
+              navigation.dispatch(popAction);
+            }
+          })
           .catch((error) => {
             setLoading(false);
 
