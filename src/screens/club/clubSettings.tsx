@@ -11,14 +11,10 @@ import RNRestart from 'react-native-restart';
 import {CardMedium} from '../../components/cards';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
-// type ScreenNavigationProp = StackNavigationProp<
-//   LeagueStackType,
-//   'Club Settings'
-// >;
+
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Club Settings'>;
 
 type Props = {
-  //  navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
 

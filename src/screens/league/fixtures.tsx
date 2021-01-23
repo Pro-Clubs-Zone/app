@@ -92,7 +92,10 @@ function UpcomingFixtures({navigation}: Props) {
         ListFooterComponent={() =>
           getMatches.data.length !== 0 &&
           !getMatches.allLoaded && (
-            <MinButton title="load more" onPress={getMatches.onLoadMore} />
+            <MinButton
+              title={i18n._(t`Load more`)}
+              onPress={getMatches.onLoadMore}
+            />
           )
         }
       />
@@ -149,7 +152,10 @@ export function PastFixtures({navigation}: Props) {
       ListFooterComponent={() =>
         getMatches.data.length !== 0 &&
         !getMatches.allLoaded && (
-          <MinButton title="load more" onPress={getMatches.onLoadMore} />
+          <MinButton
+            title={i18n._(t`Load more`)}
+            onPress={getMatches.onLoadMore}
+          />
         )
       }
     />

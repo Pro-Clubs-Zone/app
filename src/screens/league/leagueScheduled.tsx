@@ -10,6 +10,8 @@ import {
   CardSmallContainer,
 } from '../../components/cards';
 import {verticalScale} from 'react-native-size-matters';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -59,8 +61,8 @@ export default function LeagueScheduled({navigation}: Props) {
       showsVerticalScrollIndicator={false}>
       {isAdmin && (
         <CardMedium
-          title="Report Center"
-          subTitle="Review and resolve all conflicted matches"
+          title={i18n._(t`Report Center`)}
+          subTitle={i18n._(t`Review and resolve all conflicted matches`)}
           badgeNumber={conflictMatchesCount}
           onPress={() => navigation.navigate('Report Center')}
         />

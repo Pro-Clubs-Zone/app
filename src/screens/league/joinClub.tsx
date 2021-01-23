@@ -4,7 +4,6 @@ import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
-// import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from './league';
 import FullScreenLoading from '../../components/loading';
 import {ListHeading, TwoLine, ListSeparator} from '../../components/listItems';
@@ -13,13 +12,13 @@ import EmptyState from '../../components/emptyState';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueContext} from '../../context/leagueContext';
 import analytics from '@react-native-firebase/analytics';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
-// type ScreenRouteProp = RouteProp<LeagueStackType, 'Join Club'>;
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Join Club'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  //  route: ScreenRouteProp;
 };
 
 const db = firestore();
@@ -101,17 +100,17 @@ export default function JoinClub({navigation}: Props) {
 
   const onSendRequest = (club: ClubListItem) => {
     Alert.alert(
-      'Join Club',
-      `Send request to ${club.name} to join?`,
+      i18n._(t`Join Club`),
+      i18n._(t`Send request to ${club.name} to join?`),
       [
         {
-          text: 'Send Request',
+          text: i18n._(t`Send Request`),
           onPress: () => {
             onSendRequestConfirm(club);
           },
         },
         {
-          text: 'Cancel',
+          text: i18n._(t`Cancel`),
           style: 'cancel',
         },
       ],
@@ -134,11 +133,14 @@ export default function JoinClub({navigation}: Props) {
           />
         )}
         ListHeaderComponent={() =>
-          data.length !== 0 && <ListHeading col1="Clubs" />
+          data.length !== 0 && <ListHeading col1={i18n._(t`Clubs`)} />
         }
         ItemSeparatorComponent={() => <ListSeparator />}
         ListEmptyComponent={() => (
-          <EmptyState title="No Public Leagues" body="Check out later" />
+          <EmptyState
+            title={i18n._(t`No Public Leagues`)}
+            body={i18n._(t`Check out later`)}
+          />
         )}
         getItemLayout={(item, index) => ({
           length: verticalScale(56),

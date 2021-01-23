@@ -13,6 +13,8 @@ import {Alert, Platform, View} from 'react-native';
 import Picker from '../../components/picker';
 import {APP_COLORS} from '../../utils/designSystem';
 import createLeague from '../../actions/createLeague';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -26,7 +28,7 @@ export default function CreateLeague({navigation}: Props) {
 
   const uid = user.uid;
 
-  //const userLeagues = context.userData.leagues;
+  const userLeagues = context.userData.leagues;
 
   const leagueInfoDefault: ILeague = {
     adminUsername: '',
@@ -63,15 +65,15 @@ export default function CreateLeague({navigation}: Props) {
     name: null,
   });
 
-  // useEffect(() => {
-  //   if (userLeagues) {
-  //     for (const league of Object.values(userLeagues)) {
-  //       if (league.admin) {
-  //         return setHasLeague(true);
-  //       }
-  //     }
-  //   }
-  // }, [userLeagues]);
+  useEffect(() => {
+    if (userLeagues) {
+      for (const league of Object.values(userLeagues)) {
+        if (league.admin) {
+          return setHasLeague(true);
+        }
+      }
+    }
+  }, [userLeagues]);
 
   useEffect(() => {
     if (error.name && data.name !== '') {
@@ -81,11 +83,11 @@ export default function CreateLeague({navigation}: Props) {
 
   const fieldValidation = async () => {
     if (data.name === '') {
-      setError({...error, name: "Field can't be empty"});
+      setError({...error, name: i18n._(t`Field can't be empty`)});
       return false;
     }
     if (data.name.length < 4 && data.name !== '') {
-      setError({...error, name: 'At least 4 letters'});
+      setError({...error, name: i18n._(t`At least ${4} letters`)});
       return false;
     }
     return true;
@@ -93,11 +95,11 @@ export default function CreateLeague({navigation}: Props) {
 
   const showLimitAlert = () => {
     Alert.alert(
-      'League Limit Reached',
-      'You cannot create more than one league',
+      i18n._(t`League Limit Reached`),
+      i18n._(t`You cannot create more than one league`),
       [
         {
-          text: 'Close',
+          text: i18n._(t`Close`),
           style: 'cancel',
         },
       ],
@@ -150,10 +152,10 @@ export default function CreateLeague({navigation}: Props) {
         <TextField
           onChangeText={(text) => setData({...data, name: text})}
           value={data.name}
-          placeholder="i.e. La Liga"
-          label="League Name"
+          placeholder={i18n._(t`i.e. La Liga`)}
+          label={i18n._(t`League Name`)}
           error={error.name}
-          helper="Minimum 4 letters, no profanity"
+          helper={i18n._(t`Minimum ${4} letters, no profanity`)}
         />
         <Picker
           onValueChange={(itemValue) =>
@@ -171,8 +173,8 @@ export default function CreateLeague({navigation}: Props) {
           value={Platform.OS === 'ios' ? tempData.platform : data.platform}>
           <TextField
             value={data.platform === 'ps' ? 'Playstation' : 'Xbox'}
-            placeholder="Select Platform"
-            label="Platform"
+            placeholder={i18n._(t`Select Platform`)}
+            label={i18n._(t`Platform`)}
             fieldIco="chevron-down"
             editable={false}
           />
@@ -196,19 +198,47 @@ export default function CreateLeague({navigation}: Props) {
                 setData({...data, teamNum: tempData.teamNum});
               }}
               items={[
-                {label: '4 Teams', value: 4, color: pickerItemColor},
-                {label: '6 Teams', value: 6, color: pickerItemColor},
-                {label: '8 Teams', value: 8, color: pickerItemColor},
-                {label: '10 Teams', value: 10, color: pickerItemColor},
-                {label: '12 Teams', value: 12, color: pickerItemColor},
-                {label: '14 Teams', value: 14, color: pickerItemColor},
-                {label: '16 Teams', value: 16, color: pickerItemColor},
+                {
+                  label: i18n._(t`${4} Teams`),
+                  value: 4,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${6} Teams`),
+                  value: 6,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${8} Teams`),
+                  value: 8,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${10} Teams`),
+                  value: 10,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${12} Teams`),
+                  value: 12,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${14} Teams`),
+                  value: 14,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${16} Teams`),
+                  value: 16,
+                  color: pickerItemColor,
+                },
               ]}
               value={Platform.OS === 'ios' ? tempData.teamNum : data.teamNum}>
               <TextField
-                placeholder="Teams"
-                label="Teams"
-                value={`${data.teamNum} Teams`}
+                placeholder={i18n._(t`Teams`)}
+                label={i18n._(t`Teams`)}
+                value={i18n._(t`${data.teamNum} Teams`)}
                 fieldIco="chevron-down"
                 editable={false}
               />
@@ -228,16 +258,32 @@ export default function CreateLeague({navigation}: Props) {
                 setData({...data, matchNum: tempData.matchNum});
               }}
               items={[
-                {label: '1 Match', value: 1, color: pickerItemColor},
-                {label: '2 Matches', value: 2, color: pickerItemColor},
-                {label: '3 Matches', value: 3, color: pickerItemColor},
-                {label: '4 Matches', value: 4, color: pickerItemColor},
+                {
+                  label: i18n._(t`${1} Match`),
+                  value: 1,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${2} Matches`),
+                  value: 2,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${3} Matches`),
+                  value: 3,
+                  color: pickerItemColor,
+                },
+                {
+                  label: i18n._(t`${4} Matches`),
+                  value: 4,
+                  color: pickerItemColor,
+                },
               ]}
               value={Platform.OS === 'ios' ? tempData.matchNum : data.matchNum}>
               <TextField
-                value={`${data.matchNum} Matches`}
-                placeholder="Matches"
-                label="Matches"
+                value={i18n._(t`${data.matchNum} Matches`)}
+                placeholder={i18n._(t`Matches`)}
+                label={i18n._(t`Matches`)}
                 fieldIco="chevron-down"
                 editable={false}
               />
@@ -246,8 +292,8 @@ export default function CreateLeague({navigation}: Props) {
         </View>
         <TextField
           value={data.description}
-          placeholder="Describe your league in a few sentences..."
-          label="Description"
+          placeholder={i18n._(t`Describe your league in a few sentences...`)}
+          label={i18n._(t`Description`)}
           multiline={true}
           onChangeText={(text) => setData({...data, description: text})}
           autoCapitalize="sentences"
@@ -269,7 +315,7 @@ export default function CreateLeague({navigation}: Props) {
       </FormContent>
       <BigButton
         onPress={hasLeague ? showLimitAlert : onCreateLeague}
-        title="Create League"
+        title={i18n._(t`Create League`)}
       />
     </FormView>
   );

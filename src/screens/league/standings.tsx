@@ -2,16 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {FlatList} from 'react-native';
 import {IClubStanding} from '../../utils/interface';
-// import {RouteProp} from '@react-navigation/native';
-// import {LeagueStackType} from './league';
 import {LeagueContext} from '../../context/leagueContext';
 import {TableHeader, TableRow} from '../../components/standingItems';
 import {ListSeparator} from '../../components/listItems';
 import {verticalScale} from 'react-native-size-matters';
-
-// import {StackNavigationProp} from '@react-navigation/stack';
-
-// type ScreenRouteProp = RouteProp<LeagueStackType, 'Standings'>;
 
 const db = firestore();
 
@@ -20,12 +14,7 @@ type StandingsList = {
   data: IClubStanding;
 };
 
-// type Props = {
-//   // navigation: ScreenNavigationProp;
-//   route: ScreenRouteProp;
-// };
-
-export default function LeagueStandings(/* {route}: Props */) {
+export default function LeagueStandings() {
   const [data, setData] = useState<{[id: string]: IClubStanding}>({});
   const [standings, setStandings] = useState<StandingsList[]>([]);
 

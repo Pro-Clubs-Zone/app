@@ -15,21 +15,13 @@ import FixtureItem from '../../components/fixtureItems';
 import useGetMatches from '../league/functions/useGetMatches';
 import {MinButton} from '../../components/buttons';
 
-// type FixtureList = {
-//   key: string;
-//   data: IMatchNavData;
-// };
-
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
   'Report Center'
 >;
 
-// type ScreenRouteProp = RouteProp<LeagueStackType, 'Report Center'>;
-
 type Props = {
   navigation: ScreenNavigationProp;
-  // route: ScreenRouteProp;
 };
 
 const db = firestore();
@@ -77,7 +69,10 @@ export default function ReportCenter({navigation}: Props) {
       ListFooterComponent={() =>
         getMatches.data.length !== 0 &&
         !getMatches.allLoaded && (
-          <MinButton title="load more" onPress={getMatches.onLoadMore} />
+          <MinButton
+            title={i18n._(t`Load more`)}
+            onPress={getMatches.onLoadMore}
+          />
         )
       }
     />

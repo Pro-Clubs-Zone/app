@@ -94,6 +94,12 @@ export default function LeagueStack({navigation, route}: Props) {
 
     //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
+    const userDataLeague = userData.leagues?.[leagueId];
+    const role = userDataLeague.admin
+      ? 'admin'
+      : userDataLeague.manager
+      ? 'manager'
+      : 'player';
     let leagueInfo: ILeague;
     leagueRef
       .get()
@@ -103,7 +109,10 @@ export default function LeagueStack({navigation, route}: Props) {
         leagueContext.setLeagueId(leagueId);
         leagueContext.setLeague(leagueInfo);
         setLeague(leagueInfo);
-        crashlytics().setAttribute('leagueId', leagueId);
+        crashlytics().setAttributes({
+          leagueId: leagueId,
+          role: role,
+        });
         console.log(leagueInfo, 'League info');
       })
       .then(() => {
@@ -138,6 +147,7 @@ export default function LeagueStack({navigation, route}: Props) {
             component={LeagueScheduled}
             options={{
               animationTypeForReplace: 'pop',
+              title: league.name,
               headerRight: () => (
                 <IconButton
                   name="information"
@@ -188,6 +198,7 @@ export default function LeagueStack({navigation, route}: Props) {
             component={LeaguePreSeason}
             initialParams={{newLeague: newLeague}}
             options={{
+              title: league.name,
               headerRight: () => (
                 <IconButton
                   name="information"

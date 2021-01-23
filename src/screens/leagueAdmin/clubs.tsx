@@ -14,6 +14,8 @@ import {LeagueContext} from '../../context/leagueContext';
 import removeClub from '../club/actions/removeClub';
 import EmptyState from '../../components/emptyState';
 import RNRestart from 'react-native-restart';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 // type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 // type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -39,12 +41,12 @@ export default function Clubs() {
 
   const sortClubs = (clubs: IClubRequestData[]) => {
     const acceptedClubList: ILeagueRequest = {
-      title: 'Accepted',
+      title: i18n._(t`Accepted`),
       data: [],
     };
 
     const clubRequestList: ILeagueRequest = {
-      title: 'New requests',
+      title: i18n._(t`requests`),
       data: [],
     };
 
@@ -153,7 +155,7 @@ export default function Clubs() {
   };
 
   const onUnacceptedClub = (club: IClubRequestData) => {
-    const options = ['Accept', 'Decline', 'Cancel'];
+    const options = [i18n._(t`Accept`), i18n._(t`Decline`), i18n._(t`Cancel`)];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
 
@@ -180,11 +182,11 @@ export default function Clubs() {
     const clubRoster = context.userLeagues[leagueId].clubs[club.clubId].roster;
 
     Alert.alert(
-      'Remove Club',
-      'After removal, you will be to moved the home screen',
+      i18n._(t`Remove Club`),
+      i18n._(t`After removal, you will be to moved the home screen`),
       [
         {
-          text: 'Remove',
+          text: i18n._(t`Remove`),
           onPress: () => {
             setLoading(true);
             removeClub(leagueId, club.clubId, adminId, clubRoster).then(() => {
@@ -193,7 +195,7 @@ export default function Clubs() {
           },
         },
         {
-          text: 'Cancel',
+          text: i18n._(t`Cancel`),
           style: 'cancel',
         },
       ],
@@ -222,8 +224,8 @@ export default function Clubs() {
         )}
         ListEmptyComponent={() => (
           <EmptyState
-            title="No Clubs in League"
-            body="You can invite clubs from league page"
+            title={i18n._(t`No Clubs in League`)}
+            body={i18n._(t`You can invite clubs from league page`)}
           />
         )}
         contentContainerStyle={{

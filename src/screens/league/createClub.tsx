@@ -12,6 +12,8 @@ import TextField from '../../components/textField';
 import FullScreenLoading from '../../components/loading';
 import {LeagueContext} from '../../context/leagueContext';
 import analytics from '@react-native-firebase/analytics';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Create Club'>;
 
@@ -48,11 +50,11 @@ export default function CreateClub({route, navigation}: Props) {
 
   const fieldValidation = async () => {
     if (clubName === '') {
-      setError({...error, clubName: "Field can't be empty"});
+      setError({...error, clubName: i18n._(t`Field can't be empty`)});
       return false;
     }
     if (clubName.length < 4 && clubName !== '') {
-      setError({...error, clubName: 'At least 4 letters'});
+      setError({...error, clubName: i18n._(t`At least ${4} letters`)});
       return false;
     }
     return true;
@@ -129,14 +131,14 @@ export default function CreateClub({route, navigation}: Props) {
         <TextField
           onChangeText={(text) => setClubName(text)}
           value={clubName}
-          placeholder="Club Name"
+          placeholder={i18n._(t`Club Name`)}
           autoCorrect={false}
-          label="Club Name"
+          label={i18n._(t`Club Name`)}
           error={error.clubName}
-          helper="Minimum 4 letters, no profanity"
+          helper={i18n._(t`Minimum ${4} letters, no profanity`)}
         />
       </FormContent>
-      <BigButton onPress={onCreateClub} title="Create Club" />
+      <BigButton onPress={onCreateClub} title={i18n._(t`Create Club`)} />
     </FormView>
   );
 }

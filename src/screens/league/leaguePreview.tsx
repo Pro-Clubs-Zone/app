@@ -20,6 +20,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNRestart from 'react-native-restart';
 import functions from '@react-native-firebase/functions';
 import FullScreenLoading from '../../components/loading';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -60,8 +62,10 @@ export default function LeaguePreview({navigation, route}: Props) {
     };
 
     Alert.alert(
-      'Delete League?',
-      'It is impossible to recover deleted league. After removal the app will restart',
+      i18n._(t`Delete League?`),
+      i18n._(
+        t`It is impossible to recover deleted league. After removal the app will restart`,
+      ),
       [
         {
           text: 'Delete',
@@ -73,7 +77,7 @@ export default function LeaguePreview({navigation, route}: Props) {
           },
         },
         {
-          text: 'Cancel',
+          text: i18n._(t`Cancel`),
           style: 'cancel',
         },
       ],
@@ -139,15 +143,15 @@ export default function LeaguePreview({navigation, route}: Props) {
 
   const showJoinAsPlayer = () => {
     Alert.alert(
-      'Join as a Player',
-      'You can join only as a player as this league is already full',
+      i18n._(t`Join as a Player`),
+      i18n._(t`You can join only as a player as this league is already full`),
       [
         {
-          text: 'Join',
+          text: i18n._(t`Join`),
           onPress: () => navigation.navigate('Join Club'),
         },
         {
-          text: 'Cancel',
+          text: i18n._(t`Cancel`),
           style: 'cancel',
         },
       ],
@@ -156,7 +160,7 @@ export default function LeaguePreview({navigation, route}: Props) {
   };
 
   const showUserTypeSelection = () => {
-    const options = ['Manager', 'Player', 'Cancel'];
+    const options = [i18n._(t`Manager`), i18n._(t`Player`), i18n._(t`Cancel`)];
     const cancelButtonIndex = 2;
 
     showActionSheetWithOptions(
@@ -253,15 +257,21 @@ export default function LeaguePreview({navigation, route}: Props) {
         />
         <InfoItem
           icon="flag"
-          value={`${league.teamNum} clubs / ${league.matchNum} matches`}
+          value={i18n._(
+            t`${league.teamNum} clubs / ${league.matchNum} matches`,
+          )}
           label="Rules"
         />
-        <InfoItem icon="account" value={league.adminUsername} label="Admin" />
+        <InfoItem
+          icon="account"
+          value={league.adminUsername}
+          label={i18n._(t`Admin`)}
+        />
         {!!league.discord && (
           <InfoItem
             icon="discord"
             url={league.discord}
-            label="Communication"
+            label={i18n._(t`Communication`)}
             value="Discord"
           />
         )}
@@ -269,7 +279,7 @@ export default function LeaguePreview({navigation, route}: Props) {
           <InfoItem
             icon="twitter"
             url={league.twitter}
-            label="Social"
+            label={i18n._(t`Social`)}
             value="Twitter"
           />
         )}
@@ -292,9 +302,9 @@ export default function LeaguePreview({navigation, route}: Props) {
           title={
             joined
               ? accepted
-                ? 'League not started'
-                : 'Request Sent'
-              : 'Join League'
+                ? i18n._(t`League not started`)
+                : i18n._(t`Request Sent`)
+              : i18n._(t`Join League`)
           }
           disabled={joined}
           onPress={() =>
@@ -354,7 +364,7 @@ const InfoItem = (props) => (
       <Icon
         name={props.icon}
         size={32}
-        style={{padding: 8}}
+        style={{padding: verticalScale(8)}}
         color={APP_COLORS.Accent}
       />
     </View>

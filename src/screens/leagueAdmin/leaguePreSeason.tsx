@@ -16,6 +16,8 @@ import {RouteProp} from '@react-navigation/native';
 import {StackActions, CommonActions} from '@react-navigation/native';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import analytics from '@react-native-firebase/analytics';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -70,19 +72,20 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const onScheduleMatches = () => {
     if (leagueComplete) {
       Alert.alert(
-        'Schedule Matches',
-        'Are you sure you want to schedule matches and start the league?',
+        i18n._(t`Schedule Matches`),
+        i18n._(
+          t`Are you sure you want to schedule matches and start the league?`,
+        ),
         [
           {
-            text: 'Schedule',
+            text: i18n._(t`Schedule`),
             onPress: () => {
               setLoading(true);
               scheduleMatches();
             },
           },
           {
-            text: 'Cancel',
-            onPress: () => console.log('Cancel Pressed'),
+            text: i18n._(t`Cancel`),
             style: 'cancel',
           },
         ],
@@ -90,12 +93,13 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       );
     } else {
       Alert.alert(
-        'Schedule Matches',
-        `You can schedule matches once the league has ${teamNum} teams`,
+        i18n._(t`Schedule Matches`),
+        i18n._(
+          t`You can schedule matches once the league has ${teamNum} teams`,
+        ),
         [
           {
-            text: 'Close',
-            onPress: () => console.log('Cancel Pressed'),
+            text: i18n._(t`Close`),
             style: 'cancel',
           },
         ],
@@ -146,7 +150,9 @@ export default function LeaguePreSeason({navigation, route}: Props) {
     };
 
     linkBuilder().then(async (link) => {
-      const message = `Join ${leagueContext.league.name} on Pro Clubs Zone!`;
+      const message = i18n._(
+        t`Join ${leagueContext.league.name} on Pro Clubs Zone!`,
+      );
       try {
         const result = await Share.share(
           {
@@ -155,7 +161,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
             title: message,
           },
           {
-            dialogTitle: 'Invite people',
+            dialogTitle: i18n._(t`Invite people`),
           },
         );
         if (result.action === Share.sharedAction) {
@@ -192,8 +198,8 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           title={userClub.clubName}
           subTitle={
             clubRosterLength > 1
-              ? clubRosterLength + ' Players'
-              : 'No members except you'
+              ? i18n._(t`${clubRosterLength} Players`)
+              : i18n._(t`No members except you`)
           }
         />
       ) : (
@@ -204,25 +210,27 @@ export default function LeaguePreSeason({navigation, route}: Props) {
               newLeague: false,
             })
           }
-          title="Create My Club"
-          subTitle="fdf"
+          title={i18n._(t`Create Your Club`)}
+          subTitle={i18n._(t`If you want to participate in your own league`)}
         />
       )}
       <CardSmallContainer>
         <CardSmall
-          title={'League\nClubs'}
+          title={i18n._(t`League\nClubs`)}
           onPress={() => navigation.navigate('Clubs')}
         />
-        <CardSmall title={'Invite\nClubs'} onPress={shareLeagueLink} />
+        <CardSmall title={i18n._(t`Invite\nClubs`)} onPress={shareLeagueLink} />
       </CardSmallContainer>
 
       <CardMedium
         onPress={onScheduleMatches}
-        title="Schedule Matches"
+        title={i18n._(t`Schedule Matches`)}
         subTitle={
           leagueComplete
-            ? 'League is full and matches can be scheduled'
-            : `${acceptedClubs}/${teamNum} Teams\nNot enough teams to schedule matches`
+            ? i18n._(t`League is full and matches can be scheduled`)
+            : i18n._(
+                t`${acceptedClubs}/${teamNum} Teams\nNot enough teams to schedule matches`,
+              )
         }
       />
     </ScrollView>

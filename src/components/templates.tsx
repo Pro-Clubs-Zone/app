@@ -8,9 +8,11 @@ export const FormView = ({children}: {children: JSX.Element[]}) => (
   </ScrollView>
 );
 
-export const FormContent = ({children}: {children: JSX.Element}) => (
-  <View style={styles.form}>{children}</View>
-);
+export const FormContent = ({
+  children,
+}: {
+  children: JSX.Element[] | JSX.Element;
+}) => <View style={styles.form}>{children}</View>;
 
 const styles = ScaledSheet.create({
   container: {
