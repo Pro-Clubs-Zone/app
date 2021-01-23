@@ -15,10 +15,11 @@ import {AppContext} from '../../context/appContext';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import {BigButton, IconButton} from '../../components/buttons';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
-import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import {verticalScale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNRestart from 'react-native-restart';
 import functions from '@react-native-firebase/functions';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -35,6 +36,7 @@ type Props = {
 export default function LeaguePreview({navigation, route}: Props) {
   const [joined, setJoined] = useState<boolean>(false);
   const [accepted, setAccepted] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
@@ -49,13 +51,12 @@ export default function LeaguePreview({navigation, route}: Props) {
   const infoMode = route.params?.infoMode;
 
   const onDeleteLeague = () => {
-    const deleteLeague = () => {
+    const deleteLeague = async () => {
       const deleteUserLeague = functions().httpsCallable('deleteLeague');
-      deleteUserLeague({
+      await deleteUserLeague({
         leagueId,
         leagueAdminId: leagueContext.league.adminId,
       });
-      RNRestart.Restart();
     };
 
     Alert.alert(
@@ -64,7 +65,12 @@ export default function LeaguePreview({navigation, route}: Props) {
       [
         {
           text: 'Delete',
-          onPress: () => deleteLeague(),
+          onPress: () => {
+            setLoading(true);
+            deleteLeague().then(() => {
+              RNRestart.Restart();
+            });
+          },
         },
         {
           text: 'Cancel',
@@ -207,6 +213,10 @@ export default function LeaguePreview({navigation, route}: Props) {
   //     {cancelable: false},
   //   );
   // };
+
+  if (loading) {
+    return <FullScreenLoading visible={true} />;
+  }
 
   return (
     <View
