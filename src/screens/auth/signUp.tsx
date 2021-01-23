@@ -17,7 +17,6 @@ import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-// import screenBg from '../../assets/images/login-bg.jpg';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
@@ -161,7 +160,6 @@ function SignUp({navigation, route}: Props) {
             return data;
           })
           .then(async ({user}) => {
-            console.log(user.uid, 'user');
             const onCreateLeague = async () => {
               await createLeague(redirectedData, user.uid, username).then(
                 (leagueId) => {
@@ -178,12 +176,12 @@ function SignUp({navigation, route}: Props) {
                   context.setUserLeagues({
                     [leagueId]: redirectedData,
                   });
-                  setLoading(false);
-                  // navigation.navigate('League', {
-                  //   leagueId: leagueId,
-                  //   isAdmin: true,
-                  //   newLeague: true,
-                  // });
+
+                  navigation.navigate('League', {
+                    leagueId: leagueId,
+                    isAdmin: true,
+                    newLeague: true,
+                  });
                 },
               );
             };
@@ -194,14 +192,11 @@ function SignUp({navigation, route}: Props) {
                 break;
               case 'createClub':
                 setLoading(false);
-                navigation.navigate('Create Club', {
-                  isAdmin: false,
-                  newLeague: false,
-                });
+                navigation.goBack();
                 break;
               case 'joinClub':
                 setLoading(false);
-                navigation.navigate('Join Club');
+                navigation.goBack();
                 break;
             }
           })
