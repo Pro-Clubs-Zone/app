@@ -8,7 +8,8 @@ import FullScreenLoading from '../../components/loading';
 import {ListHeading, OneLine, ListSeparator} from '../../components/listItems';
 import {verticalScale} from 'react-native-size-matters';
 import EmptyState from '../../components/emptyState';
-
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'League Explorer'>;
 
 type Props = {
@@ -59,11 +60,16 @@ export default function LeagueExplorer({navigation}: Props) {
           />
         )}
         ListHeaderComponent={() =>
-          data.length !== 0 && <ListHeading col1="League" col4="Teams" />
+          data.length !== 0 && (
+            <ListHeading col1={i18n._(t`League`)} col4={i18n._(t`Teams`)} />
+          )
         }
         ItemSeparatorComponent={() => <ListSeparator />}
         ListEmptyComponent={() => (
-          <EmptyState title="No Public Leagues" body="Check out later" />
+          <EmptyState
+            title={i18n._(t`No Public Leagues`)}
+            body={i18n._(t`Check out later`)}
+          />
         )}
         getItemLayout={(item, index) => ({
           length: verticalScale(56),

@@ -8,6 +8,8 @@ import ScoreBoard from '../../components/scoreboard';
 //import firestore from '@react-native-firebase/firestore';
 import {StackNavigationProp} from '@react-navigation/stack';
 import EmptyState from '../../components/emptyState';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -26,7 +28,10 @@ export default function FinishedMatch({route}: Props) {
   return (
     <View style={{flex: 1}}>
       <ScoreBoard data={matchData} editable={false} />
-      <EmptyState title="Match Stats & Info" body="Coming Soon" />
+      <EmptyState
+        title={i18n._(t`Match Stats & Info`)}
+        body={i18n._(t`Coming Soon`)}
+      />
     </View>
   );
 }

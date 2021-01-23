@@ -216,7 +216,7 @@ export default function Club({navigation, route}: Props) {
   };
 
   const onUnacceptedPlayer = (player: IPlayerRequestData) => {
-    const options = ['Accept', 'Decline', 'Cancel'];
+    const options = [i18n._(t`Remove`), i18n._(t`Decline`), i18n._(t`Cancel`)];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
 

@@ -24,6 +24,8 @@ import handleClubRequest from '../club/actions/handleClubRequest';
 import {AppContext} from '../../context/appContext';
 import handleLeagueRequest from '../club/actions/handleLeagueRequest';
 import FullScreenLoading from '../../components/loading';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -77,7 +79,7 @@ function ClubRequests() {
   };
 
   const onOpenActionSheet = (item: IPlayerRequestData, title: string) => {
-    const options = ['Accept', 'Decline', 'Cancel'];
+    const options = [i18n._(t`Accept`), i18n._(t`Decline`), i18n._(t`Cancel`)];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
 
@@ -118,7 +120,10 @@ function ClubRequests() {
           <ListHeading col1={title} />
         )}
         ListEmptyComponent={() => (
-          <EmptyState title="No Public Leagues" body="Check out later" />
+          <EmptyState
+            title={i18n._(t`Club Requests`)}
+            body={i18n._(t`Receive club requests will appear here`)}
+          />
         )}
         contentContainerStyle={{
           flexGrow: 1,
@@ -171,7 +176,7 @@ function LeagueRequests() {
   };
 
   const onOpenActionSheet = (item: IClubRequestData, title: string) => {
-    const options = ['Accept', 'Decline', 'Cancel'];
+    const options = [i18n._(t`Accept`), i18n._(t`Decline`), i18n._(t`Cancel`)];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
 
@@ -214,7 +219,10 @@ function LeagueRequests() {
           <ListHeading col1={title} />
         )}
         ListEmptyComponent={() => (
-          <EmptyState title="No Public Leagues" body="Check out later" />
+          <EmptyState
+            title={i18n._(t`League Requests`)}
+            body={i18n._(t`Receive league requests will appear here`)}
+          />
         )}
         contentContainerStyle={{
           flexGrow: 1,
@@ -306,17 +314,17 @@ function MySentRequests() {
 
   const onCancelRequest = (item: ISentRequest, title: string) => {
     Alert.alert(
-      'Cancel Request',
-      'Are you sure you want to cancel your sent request?',
+      i18n._(t`Cancel Request`),
+      i18n._(t`Are you sure you want to cancel your sent request?`),
       [
         {
-          text: 'Remove',
+          text: i18n._(t`Cancel`),
           onPress: () => {
             onCancelRequestConfirm(item, title);
           },
         },
         {
-          text: 'Cancel',
+          text: i18n._(t`Close`),
           style: 'cancel',
         },
       ],
@@ -341,7 +349,10 @@ function MySentRequests() {
         <ListHeading key={key} col1={title} />
       )}
       ListEmptyComponent={() => (
-        <EmptyState title="No Public Leagues" body="Check out later" />
+        <EmptyState
+          title={i18n._(t`Sent Requests`)}
+          body={i18n._(t`All your sent requests will appear here`)}
+        />
       )}
       contentContainerStyle={{
         flexGrow: 1,

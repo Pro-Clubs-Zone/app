@@ -21,7 +21,7 @@ import getUserMatches from './functions/getUserMatches';
 import getLeaguesClubs from './functions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
-import {t, plural, Trans} from '@lingui/macro';
+import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FullScreenLoading from '../../components/loading';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
@@ -66,7 +66,7 @@ export default function Home({navigation}: Props) {
           const roster: {[uid: string]: IClubRosterMember} = club.roster;
           for (const [playerId, player] of Object.entries(roster)) {
             if (playerId === uid && player.accepted === false) {
-              myClubRequests.title = 'Club Requests';
+              myClubRequests.title = i18n._(t`Club Requests`);
 
               let myClubRequestData: ISentRequest = {
                 accepted: player.accepted,
@@ -121,7 +121,7 @@ export default function Home({navigation}: Props) {
       if (league.clubs) {
         for (const [clubId, club] of Object.entries(league.clubs)) {
           if (club.managerId === uid && club.accepted === false) {
-            myLeagueRequests.title = 'League Requests';
+            myLeagueRequests.title = i18n._(t`League Requests`);
 
             let myLeagueRequestData: ISentRequest = {
               accepted: club.accepted,
@@ -263,15 +263,15 @@ export default function Home({navigation}: Props) {
                   textAlign: 'center',
                 },
               ]}>
-              No Upcoming Matches
+              <Trans>No Upcoming Matches</Trans>
             </Text>
           </View>
         )}
       </View>
       <ScrollView>
         <CardMedium
-          title="My Requests"
-          subTitle="Manager your received and sent request"
+          title={i18n._(t`My Requests`)}
+          subTitle={i18n._(t`Manager your received and sent request`)}
           badgeNumber={requestContext.requestCount}
           onPress={() => navigation.navigate('Requests')}
         />

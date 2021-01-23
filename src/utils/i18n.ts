@@ -4,10 +4,13 @@ import enTranslation from '../locales/en/messages.js';
 import {en, ru} from 'make-plural';
 
 const i18n = setupI18n({
-  locale: 'ru',
+  locale: 'en',
   localeData: {
     ru: {
       plurals: ru,
+    },
+    en: {
+      plurals: en,
     },
   },
   messages: {
@@ -16,11 +19,11 @@ const i18n = setupI18n({
   },
 });
 
-i18n.load('ru', ruTranslation.messages);
+i18n.load('en', enTranslation.messages);
 // i18n.loadLocaleData('ru', {
 //   plurals: ru,
 // });
-i18n.activate('ru');
+i18n.activate('en');
 
 export default i18n;
 

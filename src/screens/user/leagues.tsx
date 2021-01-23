@@ -3,11 +3,7 @@ import {View, FlatList, ScrollView, Text} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
-import {
-  CardSmall,
-  CardMedium,
-  CardSmallContainer,
-} from '../../components/cards';
+import {CardMedium} from '../../components/cards';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
@@ -96,20 +92,15 @@ export default function Leagues({navigation}: Props) {
           paddingBottom: verticalScale(16),
         }}
         showsVerticalScrollIndicator={false}>
-        <CardSmallContainer>
-          <CardSmall
-            onPress={() => navigation.navigate('Create League')}
-            title={`Create\nLeague`}
-          />
-          <CardSmall
-            onPress={() => navigation.navigate('Create League')}
-            title={'Join\nLeague'}
-          />
-        </CardSmallContainer>
+        <CardMedium
+          onPress={() => navigation.navigate('Create League')}
+          title={i18n._(t`Create League`)}
+          subTitle={i18n._(t`Set up the league and invite players`)}
+        />
         <CardMedium
           onPress={() => navigation.navigate('League Explorer')}
           title={i18n._(t`League Explorer`)}
-          subTitle="Find a league in world"
+          subTitle={i18n._(t`Join leagues that are open to public`)}
         />
       </ScrollView>
     </View>

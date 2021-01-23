@@ -82,21 +82,23 @@ export default function UpcomingMatch({navigation, route}: Props) {
 
     switch (submissionResult) {
       case 'Success':
-        title = 'Results Published';
-        body = 'Publish Message';
+        title = i18n._(t`Result Submitted`);
+        body = i18n._(t`Match was published with the selected result`);
         break;
       case 'Conflict':
-        title = 'Submission Conflict';
-        body = 'Conflict Message';
+        title = i18n._(t`Match will be reviewed`);
+        body = i18n._(t`Match cannot be published due to conflict.`);
         conflict = true;
         break;
       case 'First Submission':
-        title = 'Submission Succesfull';
-        body = 'Success Message';
+        title = i18n._(t`Result Submitted`);
+        body = i18n._(
+          t`Match will be published once opponent submits their result`,
+        );
         break;
       case 'Conflict Resolved':
-        title = 'Conflict Resolved';
-        body = 'Match was published with the selected result';
+        title = i18n._(t`Conflict Resolved`);
+        body = i18n._(t`Match was published with the selected result`);
         break;
     }
 
@@ -137,7 +139,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
       body,
       [
         {
-          text: 'Close',
+          text: i18n._(t`Close`),
           onPress: () => {
             setLoading(false);
             navigation.goBack();
@@ -235,7 +237,10 @@ export default function UpcomingMatch({navigation, route}: Props) {
         //   }}
         //   stickyHeaderIndices={[0]}
         // />
-        <EmptyState title={i18n._(t`Past Fixtures`)} body="Coming Soon" />
+        <EmptyState
+          title={i18n._(t`Past Fixtures`)}
+          body={i18n._(t`Coming Soon`)}
+        />
       )}
     </View>
   );
@@ -254,9 +259,9 @@ const MatchConflict = ({
     <ScrollView
       stickyHeaderIndices={[0]}
       contentContainerStyle={{paddingBottom: verticalScale(32)}}>
-      <ListHeading col1="Conflict Match" />
+      <ListHeading col1={i18n._(t`Conflict Match`)} />
       <MatchConflictItem
-        header={`${data.homeTeamName} Submission`}
+        header={i18n._(t`${data.homeTeamName} Submission`)}
         homeTeam={data.homeTeamName}
         awayTeam={data.awayTeamName}
         homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
@@ -264,7 +269,7 @@ const MatchConflict = ({
         onPickResult={onSelectHome}
       />
       <MatchConflictItem
-        header={`${data.awayTeamName} Submission`}
+        header={i18n._(t`${data.awayTeamName} Submission`)}
         homeTeam={data.homeTeamName}
         awayTeam={data.awayTeamName}
         homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}

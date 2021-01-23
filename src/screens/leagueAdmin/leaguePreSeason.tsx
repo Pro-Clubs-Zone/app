@@ -216,10 +216,10 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       )}
       <CardSmallContainer>
         <CardSmall
-          title={i18n._(t`League\nClubs`)}
+          title={i18n._(t`League Clubs`)}
           onPress={() => navigation.navigate('Clubs')}
         />
-        <CardSmall title={i18n._(t`Invite\nClubs`)} onPress={shareLeagueLink} />
+        <CardSmall title={i18n._(t`Invite Clubs`)} onPress={shareLeagueLink} />
       </CardSmallContainer>
 
       <CardMedium

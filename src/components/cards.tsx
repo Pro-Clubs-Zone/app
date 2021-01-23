@@ -32,7 +32,7 @@ export const CardSmall = ({onPress, title}: CardProps) => {
         resizeMode="cover">
         <View>
           <Text style={TEXT_STYLES.display5}>
-            {title.replace('<br>', '\n').toUpperCase()}
+            {title.replace(' ', '\n').toUpperCase()}
           </Text>
         </View>
       </ImageBackground>
