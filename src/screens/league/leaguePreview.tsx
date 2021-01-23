@@ -34,6 +34,7 @@ type Props = {
 
 export default function LeaguePreview({navigation, route}: Props) {
   const [joined, setJoined] = useState<boolean>(false);
+  const [accepted, setAccepted] = useState<boolean>(false);
 
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
@@ -82,6 +83,21 @@ export default function LeaguePreview({navigation, route}: Props) {
         ),
       });
     }
+
+    if (accepted) {
+      navigation.setOptions({
+        headerRight: () => (
+          <IconButton
+            name="cog"
+            onPress={() =>
+              navigation.navigate('Club Settings', {
+                clubId: context.userData.leagues[leagueId].clubId,
+              })
+            }
+          />
+        ),
+      });
+    }
   });
 
   useEffect(() => {
@@ -90,6 +106,12 @@ export default function LeaguePreview({navigation, route}: Props) {
       typeof userLeagues !== 'undefined'
         ? userLeagues.hasOwnProperty(leagueId)
         : false;
+
+    setJoined(inLeague);
+    if (inLeague) {
+      const acceptedToLeague = userLeagues[leagueId].accepted;
+      setAccepted(acceptedToLeague);
+    }
 
     setJoined(inLeague);
   }, [context, leagueId]);
@@ -257,7 +279,13 @@ export default function LeaguePreview({navigation, route}: Props) {
       </ScrollView>
       {!infoMode && (
         <BigButton
-          title={joined ? 'Request Sent' : 'Join League'}
+          title={
+            joined
+              ? accepted
+                ? 'League not started'
+                : 'Request Sent'
+              : 'Join League'
+          }
           disabled={joined}
           onPress={() =>
             user

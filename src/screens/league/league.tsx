@@ -215,6 +215,7 @@ export default function LeagueStack({navigation, route}: Props) {
           <Stack.Screen name="Join Club" component={JoinClub} />
           <Stack.Screen name="Sign Up" component={SignUp} />
           <Stack.Screen name="Sign In" component={SignIn} />
+          <Stack.Screen name="Club Settings" component={ClubSettings} />
         </Stack.Navigator>
       );
     }
