@@ -29,6 +29,7 @@ import SignUp from '../auth/signUp';
 import SignIn from '../auth/signIn';
 import LeagueExplorer from '../user/leagueExplorer';
 import {IconButton} from '../../components/buttons';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 interface ClubProps {
   clubId: string;
@@ -102,6 +103,7 @@ export default function LeagueStack({navigation, route}: Props) {
         leagueContext.setLeagueId(leagueId);
         leagueContext.setLeague(leagueInfo);
         setLeague(leagueInfo);
+        crashlytics().setAttribute('leagueId', leagueId);
         console.log(leagueInfo, 'League info');
       })
       .then(() => {

@@ -1,8 +1,8 @@
 import React, {useEffect, useState, createContext} from 'react';
-
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import functions from '@react-native-firebase/functions';
+import crashlytics from '@react-native-firebase/crashlytics';
 import {LogBox, Platform} from 'react-native';
 
 const db = firestore();
@@ -41,10 +41,9 @@ const AuthProvider = (props: any) => {
       const initWithOutUser = !authInit && firUser === null;
       const signIn = authInit && firUser !== null && uid === null;
       const signOut = authInit && firUser === null && uid !== null;
-
+      crashlytics().log('App mounted.');
       if (initWithUser) {
         console.log('write uid');
-
         setUid(firUser.uid);
         setAuthInit(true);
       }

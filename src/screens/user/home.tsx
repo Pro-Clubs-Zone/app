@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {Text, View, FlatList, ScrollView} from 'react-native';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
@@ -27,6 +27,7 @@ import FullScreenLoading from '../../components/loading';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import UpcomingMatchCard from '../../components/upcomingMatchCard';
 import {CardMedium} from '../../components/cards';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 const db = firestore();
 
@@ -37,7 +38,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>(() => true);
+  const [loading, setLoading] = useState<boolean>(true);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
   const context = useContext(AppContext);
@@ -161,28 +162,30 @@ export default function Home({navigation}: Props) {
     if (user) {
       //  setLoading(true);
       const userRef = db.collection('users').doc(uid);
+      crashlytics().setUserId(uid);
       let userInfo: IUser;
-      const subscriber = userRef.onSnapshot((doc) => {
-        userInfo = doc.data() as IUser;
 
+      userRef.get().then(async (doc) => {
+        userInfo = doc.data() as IUser;
         if (userInfo?.leagues) {
-          getLeaguesClubs(userInfo).then(async (data) => {
-            const {updatedUserData, userLeagues} = data;
-            context.setUserData(updatedUserData);
-            context.setUserLeagues(userLeagues);
-            getUserMatches(updatedUserData, userLeagues)
-              .then((matchesData) => {
-                context.setUserMatches(matchesData);
-                //  setUpcomingMatches(matchesData);
-              })
-              .then(() => {
-                getClubRequests(userLeagues);
-                getLeagueRequests(userLeagues);
-              })
-              .then(() => {
-                setLoading(false);
-              });
-          });
+          await getLeaguesClubs(userInfo)
+            .then(async (data) => {
+              const {updatedUserData, userLeagues} = data;
+              context.setUserData(updatedUserData);
+              context.setUserLeagues(userLeagues);
+              await getUserMatches(updatedUserData, userLeagues)
+                .then((matchesData) => {
+                  context.setUserMatches(matchesData);
+                  //  setUpcomingMatches(matchesData);
+                })
+                .then(() => {
+                  getClubRequests(userLeagues);
+                  getLeagueRequests(userLeagues);
+                });
+            })
+            .then(() => {
+              setLoading(false);
+            });
         } else {
           console.log('no leagues');
 
@@ -190,7 +193,6 @@ export default function Home({navigation}: Props) {
           context.setUserData(userInfo);
         }
       });
-      return subscriber;
     }
   }, [user]);
 
@@ -202,9 +204,8 @@ export default function Home({navigation}: Props) {
   };
 
   if (loading) {
-    return <FullScreenLoading visible={true} />;
+    return <FullScreenLoading visible={loading} />;
   }
-
   return (
     <View style={{flex: 1}}>
       <View style={styles.container}>
