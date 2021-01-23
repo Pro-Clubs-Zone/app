@@ -5,13 +5,16 @@ import {ScaledSheet} from 'react-native-size-matters';
 import {t} from '@lingui/macro';
 import i18n from '../utils/i18n';
 
-export default function FullScreenLoading(props: ModalProps) {
+export default function FullScreenLoading({
+  label,
+  ...props
+}: {label?: string} & ModalProps) {
   return (
     <Modal presentationStyle="fullScreen" {...props}>
       <View style={styles.container}>
         <ActivityIndicator size="large" color={APP_COLORS.Accent} />
         <Text style={[TEXT_STYLES.title, styles.text]}>
-          {props.title ? props.label : i18n._(t`Loading`)}
+          {label ? label : i18n._(t`Loading`)}
         </Text>
       </View>
     </Modal>

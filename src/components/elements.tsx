@@ -22,8 +22,8 @@ export const Badge = ({number}: {number: number}) => (
 const styles = ScaledSheet.create({
   badge: {
     position: 'absolute',
-    right: 16,
-    top: 16,
+    right: '16@vs',
+    top: '16@vs',
     height: '20@vs',
     width: '20@vs',
     borderRadius: '20@vs',

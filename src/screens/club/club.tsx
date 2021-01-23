@@ -13,6 +13,8 @@ import {RequestContext} from '../../context/requestContext';
 import {IconButton} from '../../components/buttons';
 import {LeagueContext} from '../../context/leagueContext';
 import removePlayer from './actions/removePlayer';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'My Club'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'My Club'>;
@@ -58,12 +60,12 @@ export default function Club({navigation, route}: Props) {
   }, [navigation]);
 
   const roster: IClubRequest = {
-    title: 'Roster',
+    title: i18n._(t`Roster`),
     data: [],
   };
 
   const playerRequests: IClubRequest = {
-    title: 'New requests',
+    title: i18n._(t`New requests`),
     data: [],
   };
 
@@ -195,17 +197,17 @@ export default function Club({navigation, route}: Props) {
 
   const onAcceptedPlayer = (player: IPlayerRequestData) => {
     Alert.alert(
-      'Remove Player',
-      'Are you sure you want to remove this player?',
+      i18n._(t`Remove Player`),
+      i18n._(t`Are you sure you want to remove this player?`),
       [
         {
-          text: 'Remove',
+          text: i18n._(t`Remove`),
           onPress: () => {
             onRemovePlayer(player);
           },
         },
         {
-          text: 'Cancel',
+          text: i18n._(t`Cancel`),
           style: 'cancel',
         },
       ],

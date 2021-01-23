@@ -38,7 +38,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(() => true);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
   const context = useContext(AppContext);
@@ -187,12 +187,13 @@ export default function Home({navigation}: Props) {
               setLoading(false);
             });
         } else {
-          console.log('no leagues');
-
+          console.log('no leagues', loading);
           setLoading(false);
           context.setUserData(userInfo);
         }
       });
+
+      setLoading(false);
     }
   }, [user]);
 
@@ -204,7 +205,7 @@ export default function Home({navigation}: Props) {
   };
 
   if (loading) {
-    return <FullScreenLoading visible={loading} />;
+    return <FullScreenLoading visible={true} />;
   }
   return (
     <View style={{flex: 1}}>

@@ -3,6 +3,8 @@ import {Pressable, View, Text} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
 import {Badge} from './elements';
+import {t} from '@lingui/macro';
+import i18n from '../utils/i18n';
 
 const UserLeagueCard = ({
   teamName,
@@ -36,7 +38,9 @@ const UserLeagueCard = ({
             {leagueName}
           </Text>
         </View>
-        <Text style={TEXT_STYLES.small}>{teamName ? teamName : 'No Club'}</Text>
+        <Text style={TEXT_STYLES.small}>
+          {teamName ? teamName : i18n._(t`No Club`)}
+        </Text>
       </View>
     </View>
   </Pressable>

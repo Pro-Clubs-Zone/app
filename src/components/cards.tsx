@@ -2,7 +2,6 @@ import React from 'react';
 import {Pressable, ImageBackground, View, Text, Dimensions} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
-// import bgOverlay from '../assets/images/bg-overlay.png';
 import {Badge} from './elements';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -86,7 +85,7 @@ const styles = ScaledSheet.create({
     padding: '16@vs',
     marginTop: '8@vs',
     marginHorizontal: '4@vs',
-    borderRadius: '2@vs',
+    borderRadius: 2,
     elevation: 2,
     shadowColor: '#000000',
     shadowOffset: {
@@ -147,8 +146,8 @@ const styles = ScaledSheet.create({
   },
   badge: {
     position: 'absolute',
-    right: 16,
-    top: 16,
+    right: '16@vs',
+    top: '16@vs',
     height: '20@vs',
     width: '20@vs',
     borderRadius: '20@vs',

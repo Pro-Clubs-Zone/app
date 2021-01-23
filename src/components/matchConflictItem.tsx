@@ -1,11 +1,11 @@
 import React from 'react';
-import {Text, View, Pressable} from 'react-native';
-import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
+import {View} from 'react-native';
+import {APP_COLORS} from '../utils/designSystem';
 import {MinButton} from './buttons';
-import i18n from '../utils/i18n';
 import {ListHeading, OneLine} from './listItems';
-import {verticalScale, ScaledSheet} from 'react-native-size-matters';
+import {ScaledSheet} from 'react-native-size-matters';
 import {t} from '@lingui/macro';
+import i18n from '../utils/i18n';
 
 type Props = {
   player?: string;

@@ -58,13 +58,11 @@ export default function JoinClub({navigation}: Props) {
     setLoading(true);
     const batch = db.batch();
     const clubRef = leagueClubs.doc(club.clubId);
-    const userInfo: {[leagueId: string]: IUserLeague} = {
-      [leagueId]: {
-        clubId: club.clubId,
-        accepted: false,
-        manager: false,
-        clubName: club.name,
-      },
+    const userInfo: IUserLeague = {
+      clubId: club.clubId,
+      accepted: false,
+      manager: false,
+      clubName: club.name,
     };
     const rosterMember: {[uid: string]: IClubRosterMember} = {
       [uid]: {
@@ -83,7 +81,9 @@ export default function JoinClub({navigation}: Props) {
     batch.set(
       userRef,
       {
-        leagues: userInfo,
+        leagues: {
+          [leagueId]: userInfo,
+        },
       },
       {merge: true},
     );
@@ -91,7 +91,11 @@ export default function JoinClub({navigation}: Props) {
       await analytics().logJoinGroup({
         group_id: leagueContext.leagueId,
       });
+      const userData = {...context.userData};
+      userData.leagues[leagueId] = userInfo;
+      context.setUserData(userData);
       setLoading(false);
+      navigation.goBack();
     });
   };
 
@@ -103,9 +107,7 @@ export default function JoinClub({navigation}: Props) {
         {
           text: 'Send Request',
           onPress: () => {
-            onSendRequestConfirm(club).then(() => {
-              navigation.goBack();
-            });
+            onSendRequestConfirm(club);
           },
         },
         {

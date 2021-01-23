@@ -99,31 +99,31 @@ function SignUp({navigation, route}: Props) {
     let noErrors = true;
 
     if (!emailValid && email !== '') {
-      errorStatus.email = 'email is badly formatted';
+      errorStatus.email = i18n._(t`Email is badly formatted`);
       noErrors = false;
     }
     if (email === '') {
-      errorStatus.email = "Field can't be empty";
+      errorStatus.email = i18n._(t`Field can't be empty`);
       noErrors = false;
     }
 
     if (password === '') {
-      errorStatus.password = "Field can't be empty";
+      errorStatus.password = i18n._(t`Field can't be empty`);
       noErrors = false;
     }
 
     if (password.length < 6 && password !== '') {
-      errorStatus.password = 'at least 6 characters';
+      errorStatus.password = i18n._(t`At least ${6} characters`);
       noErrors = false;
     }
 
     if (username === '') {
-      errorStatus.username = "Field can't be empty";
+      errorStatus.username = i18n._(t`Field can't be empty`);
       noErrors = false;
     }
 
     if (username !== '' && username.length < 4) {
-      errorStatus.username = 'At least 4 letters';
+      errorStatus.username = i18n._(t`At least ${4} characters`);
       noErrors = false;
     }
 
@@ -254,7 +254,7 @@ function SignUp({navigation, route}: Props) {
                 onChangeText={(text) => onChangeText(text, 'password')}
                 autoCorrect={false}
                 label={i18n._(t`Password`)}
-                helper="at least 6 characters"
+                helper={i18n._(t`At least ${6} characters`)}
                 //      onBlur={checkPasswordFormat}
                 // textContentType="newPassword"
                 //  fieldIco={visibility}
@@ -280,7 +280,7 @@ function SignUp({navigation, route}: Props) {
               />
               <BigButtonOutlined
                 onPress={onSignUp}
-                title="Sign Up"
+                title={i18n._(t`Sign Up`)}
                 // disabled={
                 //   !props.email || !emailIsValid(props.email) || !props.password
                 // }

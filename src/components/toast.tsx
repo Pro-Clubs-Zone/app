@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {Animated, Text, View} from 'react-native';
+import {Animated, Text} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 

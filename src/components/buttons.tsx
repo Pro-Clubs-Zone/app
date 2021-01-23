@@ -93,13 +93,7 @@ export const IconButton = ({
   onPress: () => void;
   name: string;
 }) => (
-  <View
-    style={{
-      width: 48,
-      alignItems: 'center',
-      height: '100%',
-      justifyContent: 'center',
-    }}>
+  <View style={styles.iconContainer}>
     <Icon
       name={name}
       size={FONT_SIZES.M}
@@ -170,23 +164,11 @@ const styles = ScaledSheet.create({
     shadowRadius: 0,
     shadowOpacity: 0,
   },
-  extContainer: {
-    height: '48@vs',
-    elevation: 4,
-    borderRadius: '2@vs',
-    justifyContent: 'center',
-    shadowOffset: {
-      width: 0,
-      height: 3,
-    },
-    shadowRadius: 3,
-    shadowOpacity: 0.4,
-  },
-  extContent: {
-    flexDirection: 'row',
+  iconContainer: {
+    width: 48,
     alignItems: 'center',
-    flex: 1,
-    paddingHorizontal: '24@vs',
+    height: '100%',
+    justifyContent: 'center',
   },
   bigButtonOutlined: {
     height: '48@vs',

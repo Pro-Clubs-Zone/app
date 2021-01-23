@@ -9,6 +9,8 @@ import removePlayer from './actions/removePlayer';
 import {AuthContext} from '../../context/authContext';
 import RNRestart from 'react-native-restart';
 import {CardMedium} from '../../components/cards';
+import {t} from '@lingui/macro';
+import i18n from '../../utils/i18n';
 // type ScreenNavigationProp = StackNavigationProp<
 //   LeagueStackType,
 //   'Club Settings'
@@ -38,11 +40,11 @@ export default function ClubSettings({route}: Props) {
   const onRemoveClub = async () => {
     if (leagueScheduled) {
       Alert.alert(
-        'Remove Club',
-        'You cannot remove club when league is scheduled',
+        i18n._(t`Remove Club`),
+        i18n._(t`You cannot remove club when league is scheduled`),
         [
           {
-            text: 'Close',
+            text: i18n._(t`Close`),
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
@@ -51,11 +53,13 @@ export default function ClubSettings({route}: Props) {
       );
     } else {
       Alert.alert(
-        'Remove Club',
-        'Remove club?',
+        i18n._(t`Remove Club`),
+        i18n._(
+          t`Are you sure you want to remove your club? This action can't be undone`,
+        ),
         [
           {
-            text: 'Remove',
+            text: i18n._(t`Remove`),
             onPress: () => {
               removeClub(leagueId, clubId, adminId, clubRoster).then(() => {
                 RNRestart.Restart();
@@ -63,7 +67,7 @@ export default function ClubSettings({route}: Props) {
             },
           },
           {
-            text: 'Cancel',
+            text: i18n._(t`Cancel`),
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
@@ -76,10 +80,12 @@ export default function ClubSettings({route}: Props) {
   const onRemovePlayer = async () => {
     Alert.alert(
       'Leave Club',
-      "Are you sure you want to leavue this club? This can't be undone",
+      i18n._(
+        t`Are you sure you want to leave this club? This action can't be undone`,
+      ),
       [
         {
-          text: 'Remove',
+          text: i18n._(t`Leave`),
           onPress: () => {
             removePlayer({leagueId, playerId, clubId}).then(() => {
               RNRestart.Restart();
@@ -87,8 +93,7 @@ export default function ClubSettings({route}: Props) {
           },
         },
         {
-          text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
+          text: i18n._(t`Cancel`),
           style: 'cancel',
         },
       ],
@@ -99,9 +104,9 @@ export default function ClubSettings({route}: Props) {
   return (
     <View>
       {isManager ? (
-        <CardMedium title="Remove Club" onPress={onRemoveClub} />
+        <CardMedium title={i18n._(t`Remove Club`)} onPress={onRemoveClub} />
       ) : (
-        <CardMedium title="Leave Club" onPress={onRemovePlayer} />
+        <CardMedium title={i18n._(t`Leave Club`)} onPress={onRemovePlayer} />
       )}
     </View>
   );

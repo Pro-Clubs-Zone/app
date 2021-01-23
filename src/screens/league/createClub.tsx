@@ -109,6 +109,9 @@ export default function CreateClub({route, navigation}: Props) {
           let updateLeagueInfo = {...leagueContext.league};
           updateLeagueInfo.acceptedClubs += 1;
           leagueContext.setLeague(updateLeagueInfo);
+          const userData = {...context.userData};
+          userData.leagues[leagueId] = userInfo;
+          context.setUserData(userData);
           setLoading(false);
           navigation.goBack();
         });
@@ -116,9 +119,12 @@ export default function CreateClub({route, navigation}: Props) {
     });
   };
 
+  if (loading) {
+    return <FullScreenLoading visible={loading} />;
+  }
+
   return (
     <FormView>
-      <FullScreenLoading visible={loading} />
       <FormContent>
         <TextField
           onChangeText={(text) => setClubName(text)}

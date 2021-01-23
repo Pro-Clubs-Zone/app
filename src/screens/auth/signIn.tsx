@@ -12,7 +12,7 @@ import i18n from '../../utils/i18n';
 import auth from '@react-native-firebase/auth';
 import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
-import {ScaledSheet, verticalScale} from 'react-native-size-matters';
+import {ScaledSheet} from 'react-native-size-matters';
 import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp, HeaderBackButton} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
@@ -98,21 +98,21 @@ export default function SignIn({navigation, route}: Props) {
     let noErrors = true;
 
     if (!emailValid && email !== '') {
-      errorStatus.email = 'email is badly formatted';
+      errorStatus.email = i18n._(t`Email is badly formatted`);
       noErrors = false;
     }
     if (email === '') {
-      errorStatus.email = "Field can't be empty";
+      errorStatus.email = i18n._(t`Field can't be empty`);
       noErrors = false;
     }
 
     if (password === '') {
-      errorStatus.password = "Field can't be empty";
+      errorStatus.password = i18n._(t`Field can't be empty`);
       noErrors = false;
     }
 
     if (password.length < 6 && password !== '') {
-      errorStatus.password = 'at least 6 characters';
+      errorStatus.password = i18n._(t`At least ${6} characters`);
       noErrors = false;
     }
 
@@ -141,14 +141,16 @@ export default function SignIn({navigation, route}: Props) {
             setLoading(false);
 
             if (error.code === 'auth/invalid-email') {
-              onShowToast('That email address is invalid');
+              onShowToast(i18n._(t`That email address is invalid`));
             }
             if (error.code === 'auth/user-not-found') {
-              onShowToast('There is no user with this email');
+              onShowToast(i18n._(t`There is no user with this email`));
             }
             if (error.code === 'auth/wrong-password') {
               onShowToast(
-                'The password is invalid or the user does not have a password.',
+                i18n._(
+                  t`The password is invalid or the user does not have a password.`,
+                ),
               );
             }
             console.error(error);
@@ -205,18 +207,18 @@ export default function SignIn({navigation, route}: Props) {
                 //   !password
                 // }
               />
-              <Pressable>
+              {/* <Pressable>
                 <View style={styles.resetPass}>
                   <Trans>
                     <Text style={TEXT_STYLES.small}>
-                      Forgot login details?{' '}
+                      <Trans>Forgot login details?</Trans>{' '}
                       <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
-                        Get help recovering it.
+                        <Trans> Get help recovering it.</Trans>
                       </Text>
                     </Text>
                   </Trans>
                 </View>
-              </Pressable>
+              </Pressable> */}
               {/* <View
                 style={{
                   marginTop: verticalScale(24)
@@ -253,9 +255,9 @@ export default function SignIn({navigation, route}: Props) {
         <View style={styles.footer}>
           <Trans>
             <Text style={TEXT_STYLES.small}>
-              Don’t have an account?{' '}
+              <Trans>Don’t have an account?</Trans>{' '}
               <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
-                Sign up now.
+                <Trans>Sign up now.</Trans>
               </Text>
             </Text>
           </Trans>
