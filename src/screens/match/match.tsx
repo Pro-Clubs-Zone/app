@@ -44,12 +44,22 @@ export default function Match({route}: Props) {
         initialParams={{
           matchData: data,
         }}
+        options={{
+          headerStyle: {
+            elevation: 0,
+          },
+        }}
       />
       <Stack.Screen
         name="Finished Match"
         component={FinishedMatch}
         initialParams={{
           matchData: data,
+        }}
+        options={{
+          headerStyle: {
+            elevation: 0,
+          },
         }}
       />
     </Stack.Navigator>

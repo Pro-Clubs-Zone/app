@@ -83,7 +83,7 @@ export const TEXT_STYLES: FontStyles = {
   display3: {
     fontSize: moderateVerticalScale(FONT_SIZES.L, 0.4),
     fontFamily: fontFamilies.display,
-    lineHeight: verticalScale(24),
+    lineHeight: verticalScale(28),
     color: APP_COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.5),
@@ -99,7 +99,7 @@ export const TEXT_STYLES: FontStyles = {
   display5: {
     fontSize: moderateVerticalScale(FONT_SIZES.XS, 0.6),
     fontFamily: fontFamilies.display,
-    lineHeight: verticalScale(17),
+    lineHeight: verticalScale(20),
     color: APP_COLORS.Light,
     backgroundColor: 'transparent',
     letterSpacing: verticalScale(0.4),
@@ -153,7 +153,6 @@ export const TEXT_STYLES: FontStyles = {
     fontWeight: 'bold',
     textAlign: 'center',
     letterSpacing: verticalScale(0.5),
-    lineHeight: verticalScale(16),
   },
   // playerBold: {
   //   color: COLORS.Dark,

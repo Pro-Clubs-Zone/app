@@ -70,7 +70,7 @@ export default function CreateClub({route, navigation}: Props) {
         const clubRef = leagueRef.collection('clubs').doc();
 
         const clubInfo: IClub = {
-          name: clubName,
+          name: clubName.trim(),
           managerId: uid,
           managerUsername: username,
           accepted: isAdmin ? true : false,
@@ -85,7 +85,7 @@ export default function CreateClub({route, navigation}: Props) {
         const userInfo: IUserLeague = {
           clubId: clubRef.id,
           manager: true,
-          clubName: clubName,
+          clubName: clubName.trim(),
           accepted: isAdmin ? true : false,
         };
 

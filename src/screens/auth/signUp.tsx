@@ -71,7 +71,7 @@ function SignUp({navigation, route}: Props) {
         setEmail(text);
         break;
       case 'username':
-        setUsername(text);
+        setUsername(text.trim());
         break;
       case 'password':
         setPassword(text);
@@ -124,6 +124,11 @@ function SignUp({navigation, route}: Props) {
 
     if (username !== '' && username.length < 4) {
       errorStatus.username = i18n._(t`At least ${4} characters`);
+      noErrors = false;
+    }
+
+    if (username.includes(' ')) {
+      errorStatus.username = i18n._(t`No space character`);
       noErrors = false;
     }
 

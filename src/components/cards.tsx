@@ -1,10 +1,18 @@
 import React from 'react';
-import {Pressable, ImageBackground, View, Text, Dimensions} from 'react-native';
+import {
+  Pressable,
+  ImageBackground,
+  View,
+  Text,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
 import {Badge} from './elements';
 
 const deviceWidth = Dimensions.get('window').width;
+const isIos: boolean = Platform.OS === 'ios';
 
 type CardProps = {
   onPress: () => void;
@@ -24,8 +32,7 @@ export const CardSmall = ({onPress, title}: CardProps) => {
         style={[
           styles.card,
           {
-            height: verticalScale(64),
-            paddingVertical: verticalScale(12),
+            height: verticalScale(72),
           },
         ]}
         source={{uri: 'card_overlay'}}
@@ -48,12 +55,12 @@ export const CardMedium = ({
   onPress,
   badgeNumber,
 }: CardProps) => (
-  <Pressable onPress={onPress} style={{height: verticalScale(128)}}>
+  <Pressable onPress={onPress}>
     <ImageBackground
       style={[
         styles.card,
         {
-          height: verticalScale(104),
+          height: isIos ? verticalScale(128) : verticalScale(140),
         },
       ]}
       source={{uri: 'card_overlay'}}>

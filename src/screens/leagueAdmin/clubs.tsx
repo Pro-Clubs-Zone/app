@@ -27,7 +27,7 @@ import i18n from '../../utils/i18n';
 
 export default function Clubs() {
   const [data, setData] = useState<IClubRequestData[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [sectionedData, setSectionedData] = useState<ILeagueRequest[]>([]);
 
   const context = useContext(AppContext);
@@ -41,12 +41,12 @@ export default function Clubs() {
 
   const sortClubs = (clubs: IClubRequestData[]) => {
     const acceptedClubList: ILeagueRequest = {
-      title: i18n._(t`Accepted`),
+      title: i18n._(t`Accepted Clubs`),
       data: [],
     };
 
     const clubRequestList: ILeagueRequest = {
-      title: i18n._(t`requests`),
+      title: i18n._(t`New Requests`),
       data: [],
     };
 
@@ -88,6 +88,7 @@ export default function Clubs() {
       console.log(clubList, 'clublist');
       setData(clubList);
       sortClubs(clubList);
+      setLoading(false);
     }
   }, [context]);
 

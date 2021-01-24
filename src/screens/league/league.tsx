@@ -166,7 +166,15 @@ export default function LeagueStack({navigation, route}: Props) {
             }}
           />
           <Stack.Screen name="Standings" component={LeagueStandings} />
-          <Stack.Screen name="Fixtures" component={Fixtures} />
+          <Stack.Screen
+            name="Fixtures"
+            component={Fixtures}
+            options={{
+              headerStyle: {
+                elevation: 0,
+              },
+            }}
+          />
           <Stack.Screen
             name="Match"
             component={Match}

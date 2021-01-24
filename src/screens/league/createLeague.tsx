@@ -47,12 +47,6 @@ export default function CreateLeague({navigation}: Props) {
     conflictMatchesCount: 0,
   };
 
-  type PickerProps = {
-    platform: boolean;
-    teamNum: boolean;
-    matchNum: boolean;
-  };
-
   const [data, setData] = useState(leagueInfoDefault);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasLeague, setHasLeague] = useState<boolean>(false);

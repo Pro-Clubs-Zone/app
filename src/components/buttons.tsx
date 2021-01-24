@@ -93,14 +93,11 @@ export const IconButton = ({
   onPress: () => void;
   name: string;
 }) => (
-  <View style={styles.iconContainer}>
-    <Icon
-      name={name}
-      size={FONT_SIZES.M}
-      onPress={onPress}
-      color={APP_COLORS.Dark}
-    />
-  </View>
+  <Pressable onPress={onPress}>
+    <View style={styles.iconContainer}>
+      <Icon name={name} size={FONT_SIZES.M} color={APP_COLORS.Dark} />
+    </View>
+  </Pressable>
 );
 
 //---------- Minimal Button ----------//
@@ -165,7 +162,7 @@ const styles = ScaledSheet.create({
     shadowOpacity: 0,
   },
   iconContainer: {
-    width: 48,
+    width: '48@vs',
     alignItems: 'center',
     height: '100%',
     justifyContent: 'center',

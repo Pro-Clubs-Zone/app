@@ -185,16 +185,17 @@ export default function Home({navigation}: Props) {
                 });
             })
             .then(() => {
-              setLoading(false);
+              return setLoading(false);
             });
         } else {
           console.log('no leagues', loading);
-          setLoading(false);
+
           context.setUserData(userInfo);
+          return setLoading(false);
         }
       });
 
-      setLoading(false);
+      //   setLoading(false);
     }
   }, [user]);
 

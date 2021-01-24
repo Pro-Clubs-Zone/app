@@ -117,7 +117,7 @@ const styles = ScaledSheet.create({
     height: '16@vs',
     borderTopLeftRadius: '16@vs',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-end',
   },
   loading: {
     flex: 1,

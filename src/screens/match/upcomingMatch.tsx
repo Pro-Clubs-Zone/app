@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
-import onSubmitMatch from './functions/onSubmitMatch';
+import submitMatch from './functions/onSubmitMatch';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
@@ -35,10 +35,14 @@ type Props = {
 //const db = firestore();
 
 export default function UpcomingMatch({navigation, route}: Props) {
-  const [homeScore, setHomeScore] = useState<string>();
-  const [awayScore, setAwayScore] = useState<string>();
+  const [homeScore, setHomeScore] = useState<string>('');
+  const [awayScore, setAwayScore] = useState<string>('');
   const [editable, setEditable] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
+  const [errorStates, setErrorStates] = useState({
+    homeScore: null,
+    awayScore: null,
+  });
 
   const context = useContext(AppContext);
 
@@ -159,41 +163,70 @@ export default function UpcomingMatch({navigation, route}: Props) {
     });
   };
 
+  const fieldValidation = async (): Promise<boolean> => {
+    const regex = new RegExp('^[0-9]*$');
+
+    if (!regex.test(homeScore) || !regex.test(awayScore)) {
+      setErrorStates({
+        awayScore: !regex.test(awayScore),
+        homeScore: !regex.test(homeScore),
+      });
+      return false;
+    }
+
+    if (!homeScore || !awayScore) {
+      setErrorStates({awayScore: !awayScore, homeScore: !homeScore});
+      return false;
+    }
+
+    return true;
+  };
+
+  const onChangeText = (text: string, field: 'homeScore' | 'awayScore') => {
+    switch (field) {
+      case 'homeScore':
+        setHomeScore(text);
+        break;
+      case 'awayScore':
+        setAwayScore(text);
+        break;
+    }
+
+    if (errorStates[field]) {
+      setErrorStates({...errorStates, [field]: null});
+    }
+  };
+
+  const onSubmitMatch = async () => {
+    fieldValidation().then(async (noErrors) => {
+      if (noErrors) {
+        setLoading(true);
+        await submitMatch(homeScore, awayScore, matchData).then(
+          async (result) => {
+            await analytics().logEvent('match_submit_score');
+            showAlert(result);
+          },
+        );
+      }
+    });
+  };
+
   return (
     <View
       style={{
         flex: 1,
       }}>
       <FullScreenLoading visible={loading} />
-      <ScoreBoard
-        data={matchData}
-        onSubmit={async () => {
-          setLoading(true);
-          await onSubmitMatch(homeScore, awayScore, matchData).then(
-            async (result) => {
-              await analytics().logEvent('match_submit_score');
-              showAlert(result);
-            },
-          );
-        }}
-        editable={editable}>
+      <ScoreBoard data={matchData} onSubmit={onSubmitMatch} editable={editable}>
         <MatchTextField
-          // error={
-          //   data.scoresErrors && data.scoresErrors[data.team1]
-          //     ? true
-          //     : false
-          // }
-          onChangeText={(score: string) => setHomeScore(score)}
+          error={errorStates.homeScore}
+          onChangeText={(score: string) => onChangeText(score, 'homeScore')}
           value={homeScore}
         />
         <View style={styles.divider} />
         <MatchTextField
-          // error={
-          //   data.scoresErrors && data.scoresErrors[data.team2]
-          //     ? true
-          //     : false
-          // }
-          onChangeText={(score: string) => setAwayScore(score)}
+          error={errorStates.awayScore}
+          onChangeText={(score: string) => onChangeText(score, 'awayScore')}
           value={awayScore}
         />
       </ScoreBoard>

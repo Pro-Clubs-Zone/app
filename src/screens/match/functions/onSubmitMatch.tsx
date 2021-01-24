@@ -5,7 +5,7 @@ import {IMatchNavData} from '../../../utils/interface';
 const db = firestore();
 const firFunc = functions();
 
-const onSubmitMatch = async (
+const submitMatch = async (
   homeScore: string,
   awayScore: string,
   matchData: IMatchNavData,
@@ -57,4 +57,4 @@ const onSubmitMatch = async (
     });
 };
 
-export default onSubmitMatch;
+export default submitMatch;

@@ -182,7 +182,7 @@ export const MatchTextField = ({
           style={[
             TEXT_STYLES.body,
             {
-              lineHeight: 0,
+              textAlign: 'center',
             },
           ]}
           placeholder="0"
@@ -192,7 +192,7 @@ export const MatchTextField = ({
           underlineColorAndroid="transparent"
           autoCorrect={false}
           keyboardAppearance="dark"
-          keyboardType={'number-pad'}
+          keyboardType="number-pad"
           maxLength={2}
         />
       </View>
@@ -212,7 +212,7 @@ const styles = ScaledSheet.create({
   },
   matchField: {
     height: '40@vs',
-    width: '36@vs',
+    width: '44@vs',
     justifyContent: 'center',
     alignItems: 'center',
   },

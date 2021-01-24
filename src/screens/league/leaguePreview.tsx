@@ -92,9 +92,7 @@ export default function LeaguePreview({navigation, route}: Props) {
           <IconButton name="delete-forever" onPress={onDeleteLeague} />
         ),
       });
-    }
-
-    if (accepted) {
+    } else if (accepted) {
       navigation.setOptions({
         headerRight: () => (
           <IconButton
@@ -219,7 +217,9 @@ export default function LeaguePreview({navigation, route}: Props) {
   // };
 
   if (loading) {
-    return <FullScreenLoading visible={true} />;
+    return (
+      <FullScreenLoading visible={true} label={i18n._(t`Removing League...`)} />
+    );
   }
 
   return (
@@ -363,7 +363,7 @@ const InfoItem = (props) => (
       }}>
       <Icon
         name={props.icon}
-        size={32}
+        size={verticalScale(32)}
         style={{padding: verticalScale(8)}}
         color={APP_COLORS.Accent}
       />

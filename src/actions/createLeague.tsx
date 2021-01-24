@@ -9,6 +9,7 @@ const createLeague = async (data: ILeague, uid: string, username: string) => {
   const userRef = db.collection('users').doc(uid);
   const dataWithTimestamp: ILeague = {
     ...data,
+    name: data.name.trim(),
     adminId: uid,
     adminUsername: username,
     created: firestore.Timestamp.now(),
