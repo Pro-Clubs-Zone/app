@@ -60,6 +60,10 @@ const useGetMatches = (
         setLastVisible(lastVisibleDoc);
         setAllLoaded(matches.length < 2);
         setLoading(false);
+      } else {
+        setData([]);
+        setLoading(false);
+        setAllLoaded(true);
       }
     });
     return subscriber;
