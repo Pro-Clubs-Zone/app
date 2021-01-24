@@ -30,11 +30,33 @@ import i18n from '../../utils/i18n';
 const Tab = createMaterialTopTabNavigator();
 
 export default function Requests() {
+  const requestContext = useContext(RequestContext);
+  const myClubReq = requestContext.myClubRequests?.data.length ?? 0;
+  const myLeagueReq = requestContext.myLeagueRequests?.data.length ?? 0;
+  const mySentRequests = myClubReq + myLeagueReq;
   return (
     <Tab.Navigator>
-      <Tab.Screen name="Club" component={ClubRequests} />
-      <Tab.Screen name="League" component={LeagueRequests} />
-      <Tab.Screen name="Sent" component={MySentRequests} />
+      <Tab.Screen
+        name="Club"
+        component={ClubRequests}
+        options={{
+          title: i18n._(t`Club - ${requestContext.clubs.length}`),
+        }}
+      />
+      <Tab.Screen
+        name="League"
+        component={LeagueRequests}
+        options={{
+          title: i18n._(t`League - ${requestContext.leagues.length}`),
+        }}
+      />
+      <Tab.Screen
+        name="Sent"
+        component={MySentRequests}
+        options={{
+          title: i18n._(t`Sent - ${mySentRequests}`),
+        }}
+      />
     </Tab.Navigator>
   );
 }
@@ -314,17 +336,17 @@ function MySentRequests() {
 
   const onCancelRequest = (item: ISentRequest, title: string) => {
     Alert.alert(
-      i18n._(t`Cancel Request`),
-      i18n._(t`Are you sure you want to cancel your sent request?`),
+      i18n._(t`Remove Request`),
+      i18n._(t`Are you sure you want to remove your sent request?`),
       [
         {
-          text: i18n._(t`Cancel`),
+          text: i18n._(t`Remove`),
           onPress: () => {
             onCancelRequestConfirm(item, title);
           },
         },
         {
-          text: i18n._(t`Close`),
+          text: i18n._(t`Cancel`),
           style: 'cancel',
         },
       ],

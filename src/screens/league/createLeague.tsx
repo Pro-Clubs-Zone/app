@@ -28,7 +28,7 @@ export default function CreateLeague({navigation}: Props) {
 
   const uid = user.uid;
 
-  const userLeagues = context.userData.leagues;
+  const userLeagues = context.userData?.leagues;
 
   const leagueInfoDefault: ILeague = {
     adminUsername: '',
@@ -114,17 +114,24 @@ export default function CreateLeague({navigation}: Props) {
           setLoading(true);
           const username = context.userData.username;
           await createLeague(data, uid, username).then((leagueId) => {
-            context.setUserData({
-              leagues: {
-                [leagueId]: {
-                  admin: true,
-                  manager: false,
-                },
+            let updatedUserData = {...context.userData};
+            let updatedUserLeagues = {...context.userLeagues};
+
+            updatedUserData.leagues = {
+              ...updatedUserData.leagues,
+              [leagueId]: {
+                admin: true,
+                manager: false,
               },
-            });
-            context.setUserLeagues({
+            };
+
+            updatedUserLeagues = {
+              ...updatedUserLeagues,
               [leagueId]: data,
-            });
+            };
+
+            context.setUserData(updatedUserData);
+            context.setUserLeagues(updatedUserLeagues);
             setLoading(false);
             navigation.navigate('League', {
               leagueId: leagueId,

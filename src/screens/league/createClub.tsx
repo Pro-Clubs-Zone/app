@@ -111,9 +111,24 @@ export default function CreateClub({route, navigation}: Props) {
           let updateLeagueInfo = {...leagueContext.league};
           updateLeagueInfo.acceptedClubs += 1;
           leagueContext.setLeague(updateLeagueInfo);
-          const userData = {...context.userData};
-          userData.leagues[leagueId] = userInfo;
+
+          let userData = {...context.userData};
+          userData.leagues = {
+            ...userData.leagues,
+            [leagueId]: userInfo,
+          };
+
+          let userLeagues = {...context.userLeagues};
+
+          userLeagues[leagueId] = {
+            ...userLeagues[leagueId],
+            clubs: {
+              [clubRef.id]: clubInfo,
+            },
+          };
+
           context.setUserData(userData);
+          context.setUserLeagues(userLeagues);
           setLoading(false);
           navigation.goBack();
         });

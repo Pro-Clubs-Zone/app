@@ -41,7 +41,6 @@ export default function ClubSettings({route}: Props) {
         [
           {
             text: i18n._(t`Close`),
-            onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
         ],

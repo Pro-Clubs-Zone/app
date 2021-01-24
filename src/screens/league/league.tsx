@@ -94,12 +94,17 @@ export default function LeagueStack({navigation, route}: Props) {
 
     //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
-    const userDataLeague = userData.leagues?.[leagueId];
-    const role = userDataLeague.admin
-      ? 'admin'
-      : userDataLeague.manager
-      ? 'manager'
-      : 'player';
+
+    let role: string = 'guest';
+    if (userData?.leagues) {
+      const userDataLeague = userData.leagues?.[leagueId];
+      role = userDataLeague?.admin
+        ? 'admin'
+        : userDataLeague?.manager
+        ? 'manager'
+        : 'player';
+    }
+
     let leagueInfo: ILeague;
     leagueRef
       .get()

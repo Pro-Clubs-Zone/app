@@ -90,9 +90,20 @@ export default function JoinClub({navigation}: Props) {
       await analytics().logJoinGroup({
         group_id: leagueContext.leagueId,
       });
-      const userData = {...context.userData};
-      userData.leagues[leagueId] = userInfo;
+      let userData = {...context.userData};
+      userData.leagues = {
+        ...userData.leagues,
+        [leagueId]: userInfo,
+      };
+
+      // const userLeagues = {...context.userLeagues};
+      // userLeagues[leagueId].clubs[club.clubId] = {
+      //   ...userLeagues[leagueId].clubs[club.clubId],
+      //   roster: rosterMember,
+      // };
+
       context.setUserData(userData);
+      //  context.setUserLeagues(userLeagues);
       setLoading(false);
       navigation.goBack();
     });
