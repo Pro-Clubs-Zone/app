@@ -22,7 +22,7 @@ import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
 import createLeague from '../../actions/createLeague';
-import {ILeague} from '../../utils/interface';
+import {ILeague, IUser} from '../../utils/interface';
 import {AppContext} from '../../context/appContext';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign Up'>;
@@ -142,7 +142,7 @@ function SignUp({navigation, route}: Props) {
 
         const createDbEntry = async (data: {user: {uid: string}}) => {
           const uid = data.user.uid;
-          const userInitialData = {username: username};
+          const userInitialData: IUser = {username: username, premium: false};
           await db
             .collection('users')
             .doc(uid)
@@ -168,6 +168,7 @@ function SignUp({navigation, route}: Props) {
 
                   updatedUserData = {
                     username: username,
+                    premium: false,
                     leagues: {
                       [leagueId]: {
                         admin: true,

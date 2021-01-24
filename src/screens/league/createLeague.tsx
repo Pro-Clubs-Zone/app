@@ -321,7 +321,13 @@ export default function CreateLeague({navigation}: Props) {
         />
       </FormContent>
       <BigButton
-        onPress={hasLeague ? showLimitAlert : onCreateLeague}
+        onPress={
+          hasLeague
+            ? !context?.userData.premium
+              ? showLimitAlert
+              : onCreateLeague
+            : onCreateLeague
+        }
         title={i18n._(t`Create League`)}
       />
     </FormView>
