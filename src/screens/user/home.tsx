@@ -39,6 +39,7 @@ type Props = {
 
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(() => true);
+  const [userRequestCount, setUserRequestCount] = useState<number>(0);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
   const context = useContext(AppContext);
@@ -197,6 +198,10 @@ export default function Home({navigation}: Props) {
     }
   }, [user]);
 
+  useEffect(() => {
+    setUserRequestCount(requestContext.requestCount);
+  }, [requestContext]);
+
   const getRivalsName = (match: IMatchNavData) => {
     const rivalId = match.teams.filter((teamId) => teamId !== match.clubId);
     const rivalName =
@@ -272,7 +277,7 @@ export default function Home({navigation}: Props) {
         <CardMedium
           title={i18n._(t`My Requests`)}
           subTitle={i18n._(t`Manager your received and sent request`)}
-          badgeNumber={requestContext.requestCount}
+          badgeNumber={userRequestCount}
           onPress={() => navigation.navigate('Requests')}
         />
       </ScrollView>

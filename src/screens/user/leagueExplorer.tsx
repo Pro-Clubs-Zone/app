@@ -80,6 +80,7 @@ export default function LeagueExplorer({navigation}: Props) {
           flexGrow: 1,
           justifyContent: data.length === 0 ? 'center' : null,
         }}
+        stickyHeaderIndices={[0]}
       />
     </>
   );
