@@ -55,15 +55,12 @@ export const CardMedium = ({
   onPress,
   badgeNumber,
 }: CardProps) => (
-  <Pressable onPress={onPress}>
-    <ImageBackground
-      style={[
-        styles.card,
-        {
-          height: isIos ? verticalScale(128) : verticalScale(140),
-        },
-      ]}
-      source={{uri: 'card_overlay'}}>
+  <Pressable
+    onPress={onPress}
+    style={{
+      height: isIos ? verticalScale(128) : verticalScale(140),
+    }}>
+    <ImageBackground style={[styles.card]} source={{uri: 'card_overlay'}}>
       {badgeNumber > 0 && <Badge number={badgeNumber} />}
       <View>
         <Text style={TEXT_STYLES.display5}>

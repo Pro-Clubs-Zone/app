@@ -74,8 +74,12 @@ export default function UpcomingMatch({navigation, route}: Props) {
 
   const decrementConflictCounter = () => {
     const leagueData = {...context.userLeagues};
+    const userData = {...context.userData};
     leagueData[matchData.leagueId].conflictMatchesCount -= 1;
+    userData.adminConflictCounts -= 1;
+
     context.setUserLeagues(leagueData);
+    context.setUserData(userData);
   };
 
   const showAlert = (submissionResult: string) => {

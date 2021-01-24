@@ -96,7 +96,10 @@ export default function ClubSettings({route}: Props) {
   };
 
   return (
-    <View>
+    <View
+      style={{
+        flex: 1,
+      }}>
       {isManager ? (
         <CardMedium title={i18n._(t`Remove Club`)} onPress={onRemoveClub} />
       ) : (
