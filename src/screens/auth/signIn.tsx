@@ -20,7 +20,6 @@ import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
 import {StackActions} from '@react-navigation/native';
-import {ILeague} from '../../utils/interface';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign In'>;
 type ScreenRouteProp = RouteProp<AppNavStack, 'Sign In'>;
@@ -34,7 +33,6 @@ const firAuth = auth();
 
 export default function SignIn({navigation, route}: Props) {
   const redirectedFrom: string = route.params?.redirectedFrom;
-  const redirectedData = route.params?.data as ILeague;
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -207,18 +205,19 @@ export default function SignIn({navigation, route}: Props) {
                 //   !password
                 // }
               />
-              {/* <Pressable>
+              <Pressable
+                onPress={() => navigation.navigate('Password Recovery')}>
                 <View style={styles.resetPass}>
                   <Trans>
                     <Text style={TEXT_STYLES.small}>
                       <Trans>Forgot login details?</Trans>{' '}
                       <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
-                        <Trans> Get help recovering it.</Trans>
+                        <Trans>Get help recovering it.</Trans>
                       </Text>
                     </Text>
                   </Trans>
                 </View>
-              </Pressable> */}
+              </Pressable>
               {/* <View
                 style={{
                   marginTop: verticalScale(24)

@@ -22,6 +22,8 @@ import Match from './match/match';
 import {RequestContext} from '../context/requestContext';
 import {AppContext} from '../context/appContext';
 import LeaguePreview from './league/leaguePreview';
+import PasswordRecovery from './auth/passwordRecovery';
+import ResetPassword from './auth/resetPassword';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
 
@@ -29,6 +31,10 @@ export type AppNavStack = {
   Home: undefined;
   'Sign Up': SignIn;
   'Sign In': SignIn;
+  'Password Recovery': undefined;
+  'Reset Password': {
+    oobCode: string;
+  };
   Requests: undefined;
   'Create League': undefined;
   'League Explorer': undefined;
@@ -146,6 +152,8 @@ export default function AppIndex() {
           }}
         />
         <Stack.Screen name="Sign In" component={SignIn} />
+        <Stack.Screen name="Password Recovery" component={PasswordRecovery} />
+        <Stack.Screen name="Reset Password" component={ResetPassword} />
         {commonStack}
       </Stack.Navigator>
     );
