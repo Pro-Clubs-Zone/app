@@ -271,12 +271,9 @@ function SignUp({navigation, route}: Props) {
                 // textContentType="newPassword"
                 //  fieldIco={visibility}
                 //  onPressIco={changePwdType}
-                // error={
-                //   !props.password &&
-                //   passwordTouched &&
-                //   i18n._(t`Password field cant't be empty`)
-                // }
                 error={errorStates.password}
+                textContentType="newPassword"
+                secureTextEntry={true}
               />
               <TextField
                 value={username}

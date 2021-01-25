@@ -185,16 +185,13 @@ export default function SignIn({navigation, route}: Props) {
                 autoCapitalize="none"
                 label={i18n._(t`Password`)}
                 error={errorStates.password}
+                textContentType="password"
+                secureTextEntry={true}
                 //  blurOnSubmit={false}
                 //   secureTextEntry={true}
                 //  textContentType="password"
                 // fieldIco={visibility}
                 // onPressIco={changePwdType}
-                // error={
-                //   !password &&
-                //   passwordTouched &&
-                //   i18n._(t`Password field cant't be empty`)
-                // }
               />
               <BigButtonOutlined
                 onPress={onSignIn}

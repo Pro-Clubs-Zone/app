@@ -127,6 +127,8 @@ export default function ResetPassword({navigation, route}: Props) {
                 autoCapitalize="none"
                 label={i18n._(t`Password`)}
                 error={error}
+                textContentType="newPassword"
+                secureTextEntry={true}
                 //  blurOnSubmit={false}
                 //   secureTextEntry={true}
                 //  textContentType="password"
