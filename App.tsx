@@ -9,7 +9,7 @@
  */
 
 import React, {useEffect, useRef} from 'react';
-import {StatusBar} from 'react-native';
+import {StatusBar, Linking} from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import {NavigationContainer} from '@react-navigation/native';
 import {AppProvider} from './src/context/appContext';
@@ -39,28 +39,35 @@ const App = () => {
   const linking = {
     prefixes: ['https://l.proclubs.zone', 'proclubs://'],
     async getInitialURL() {
-      const link = await getFirUrl();
-      if (link) {
-        return link.url;
+      const firUrl = await getFirUrl();
+      const getLink = await Linking.getInitialURL();
+
+      if (firUrl) {
+        return firUrl.url;
+      }
+
+      if (getLink) {
+        return getLink;
       }
     },
     subscribe(listener) {
-      const firUrl = async () => {
-        const link = await getFirUrl();
-        if (link) {
-          listener(link.url);
-          return link;
-        }
+      const onReceiveURL = ({url}: {url: string}) => {
+        listener(url);
       };
 
-      const unsubscribe = dynamicLinks().onLink(firUrl);
+      Linking.addEventListener('url', onReceiveURL);
+      const unsubscribe = dynamicLinks().onLink(onReceiveURL);
 
-      return () => unsubscribe();
+      return () => {
+        unsubscribe();
+        Linking.removeEventListener('url', onReceiveURL);
+      };
     },
     config: {
       initialRouteName: 'Home',
       screens: {
         League: 'lgu/:leagueId',
+        'Reset Password': 'eml/',
       },
     },
   };
@@ -68,6 +75,13 @@ const App = () => {
   useEffect(() => {
     RNBootSplash.hide({fade: true});
   }, []);
+
+  // useEffect(() => {
+  //   console.log('use');
+
+  //   Linking.addEventListener('url', (url) => console.log(url));
+  //   return Linking.removeAllListeners('url');
+  // }, []);
 
   return (
     <>
