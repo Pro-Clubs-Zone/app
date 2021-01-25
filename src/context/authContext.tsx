@@ -20,7 +20,7 @@ const AuthProvider = (props: any) => {
 
   useEffect(() => {
     const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
-    const devEnv = false;
+    const devEnv = true;
 
     if (__DEV__ && devEnv) {
       console.log('dev');

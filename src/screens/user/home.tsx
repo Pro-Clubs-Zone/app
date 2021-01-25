@@ -38,7 +38,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>(() => true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [userRequestCount, setUserRequestCount] = useState<number>(0);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
 
@@ -161,12 +161,12 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
-      //  setLoading(true);
       const userRef = db.collection('users').doc(uid);
       crashlytics().setUserId(uid);
       let userInfo: IUser;
 
       userRef.get().then(async (doc) => {
+        setLoading(true);
         userInfo = doc.data() as IUser;
         if (userInfo?.leagues) {
           await getLeaguesClubs(userInfo)
@@ -185,17 +185,13 @@ export default function Home({navigation}: Props) {
                 });
             })
             .then(() => {
-              return setLoading(false);
+              setLoading(false);
             });
-        } else {
-          console.log('no leagues', loading);
-
-          context.setUserData(userInfo);
-          return setLoading(false);
         }
+        console.log('no leagues', loading);
+        context.setUserData(userInfo);
+        setLoading(false);
       });
-
-      //   setLoading(false);
     }
   }, [user]);
 
