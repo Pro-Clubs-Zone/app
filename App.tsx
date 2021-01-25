@@ -37,7 +37,7 @@ const App = () => {
   };
 
   const linking = {
-    prefixes: ['https://proclubs.zone', 'proclubs://'],
+    prefixes: ['https://l.proclubs.zone', 'proclubs://'],
     async getInitialURL() {
       const link = await getFirUrl();
       if (link) {
@@ -60,7 +60,7 @@ const App = () => {
     config: {
       initialRouteName: 'Home',
       screens: {
-        League: 'l/:leagueId',
+        League: 'lgu/:leagueId',
       },
     },
   };

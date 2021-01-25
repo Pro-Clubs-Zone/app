@@ -136,14 +136,8 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const shareLeagueLink = () => {
     const linkBuilder = async () => {
       const link = await dynamicLinks().buildLink({
-        link: `https://proclubs.zone/l/${leagueId}`,
-        // domainUriPrefix is created in your Firebase console
-        domainUriPrefix: 'https://proclubs.zone/l',
-        // optional setup which updates Firebase analytics campaign
-        // "banner". This also needs setting up before hand
-        // analytics: {
-        //   campaign: 'banner',
-        // },
+        link: `https://l.proclubs.zone/lgu/${leagueId}`,
+        domainUriPrefix: 'https://l.proclubs.zone/lgu',
       });
 
       return link;

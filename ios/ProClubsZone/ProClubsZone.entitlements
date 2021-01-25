@@ -4,7 +4,7 @@
 <dict>
 	<key>com.apple.developer.associated-domains</key>
 	<array>
-		<string>applinks:proclubs.zone</string>
+		<string>applinks:l.proclubs.zone</string>
 	</array>
 </dict>
 </plist>

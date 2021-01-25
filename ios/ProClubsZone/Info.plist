@@ -77,7 +77,8 @@
 	<false/>
   <key>FirebaseDynamicLinksCustomDomains</key>
    <array>
-     <string>https://proclubs.zone/l</string>
+     <string>https://l.proclubs.zone/lgu</string>
+     <string>https://l.proclubs.zone/eml</string>
    </array>
 </dict>
 </plist>

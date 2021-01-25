@@ -29,7 +29,7 @@
     <category android:name="android.intent.category.DEFAULT"/>
     <category android:name="android.intent.category.BROWSABLE"/>
     <data
-        android:host="proclubs.zone"
+        android:host="l.proclubs.zone"
         android:scheme="https"/>
             </intent-filter>
         </activity>
