@@ -205,6 +205,7 @@ export default function Club({navigation, route}: Props) {
           onPress: () => {
             onRemovePlayer(player);
           },
+          style: 'destructive',
         },
         {
           text: i18n._(t`Cancel`),

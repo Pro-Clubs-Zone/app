@@ -60,6 +60,7 @@ export default function ClubSettings({route}: Props) {
                 RNRestart.Restart();
               });
             },
+            style: 'destructive',
           },
           {
             text: i18n._(t`Cancel`),
@@ -85,6 +86,7 @@ export default function ClubSettings({route}: Props) {
               RNRestart.Restart();
             });
           },
+          style: 'destructive',
         },
         {
           text: i18n._(t`Cancel`),

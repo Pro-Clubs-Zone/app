@@ -194,6 +194,7 @@ export default function Clubs() {
               RNRestart.Restart();
             });
           },
+          style: 'destructive',
         },
         {
           text: i18n._(t`Cancel`),

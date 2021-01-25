@@ -344,6 +344,7 @@ function MySentRequests() {
           onPress: () => {
             onCancelRequestConfirm(item, title);
           },
+          style: 'destructive',
         },
         {
           text: i18n._(t`Cancel`),

@@ -75,6 +75,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               RNRestart.Restart();
             });
           },
+          style: 'destructive',
         },
         {
           text: i18n._(t`Cancel`),
