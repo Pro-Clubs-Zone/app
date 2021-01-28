@@ -41,6 +41,7 @@ export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [userRequestCount, setUserRequestCount] = useState<number>(0);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
+  const [allLoaded, setAllLoaded] = useState<boolean>(false);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -161,12 +162,11 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
+      setLoading(true);
       const userRef = db.collection('users').doc(uid);
       crashlytics().setUserId(uid);
       let userInfo: IUser;
-
       userRef.get().then(async (doc) => {
-        setLoading(true);
         userInfo = doc.data() as IUser;
         if (userInfo?.leagues) {
           await getLeaguesClubs(userInfo)
@@ -185,12 +185,13 @@ export default function Home({navigation}: Props) {
                 });
             })
             .then(() => {
-              setLoading(false);
+              setAllLoaded(true);
             });
+        } else {
+          console.log('no leagues', loading);
+          context.setUserData(userInfo);
+          setAllLoaded(true);
         }
-        console.log('no leagues', loading);
-        context.setUserData(userInfo);
-        setLoading(false);
       });
     }
   }, [user]);
@@ -198,6 +199,10 @@ export default function Home({navigation}: Props) {
   useEffect(() => {
     setUserRequestCount(requestContext.requestCount);
   }, [requestContext]);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [allLoaded]);
 
   const getRivalsName = (match: IMatchNavData) => {
     const rivalId = match.teams.filter((teamId) => teamId !== match.clubId);

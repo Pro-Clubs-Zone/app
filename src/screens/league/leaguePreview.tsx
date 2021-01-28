@@ -369,7 +369,10 @@ const InfoItem = (props) => (
         color={APP_COLORS.Accent}
       />
     </View>
-    <View>
+    <View
+      style={{
+        paddingVertical: verticalScale(4),
+      }}>
       <Text
         style={[
           TEXT_STYLES.small,

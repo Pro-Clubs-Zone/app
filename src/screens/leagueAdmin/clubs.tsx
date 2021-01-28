@@ -88,8 +88,9 @@ export default function Clubs() {
       console.log(clubList, 'clublist');
       setData(clubList);
       sortClubs(clubList);
-      setLoading(false);
     }
+
+    setLoading(false);
   }, [context]);
 
   const onHandleLeagueRequest = async (

@@ -140,7 +140,7 @@ export const TEXT_STYLES: FontStyles = {
     backgroundColor: 'transparent',
   },
   small: {
-    fontSize: moderateVerticalScale(FONT_SIZES.XXS, 0.2),
+    fontSize: moderateVerticalScale(FONT_SIZES.XXS, 0.3),
     fontFamily: fontFamilies.body,
     lineHeight: verticalScale(16),
     color: APP_COLORS.Light,
