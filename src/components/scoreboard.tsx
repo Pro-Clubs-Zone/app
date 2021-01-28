@@ -67,7 +67,15 @@ const ScoreBoard = ({data, editable, onSubmit, children}: Props) => {
                     },
                   ]}>
                   {`${data.leagueName} \n`}
-                  <Text style={TEXT_STYLES.small}>Division One</Text>
+                  <Text
+                    style={[
+                      TEXT_STYLES.small,
+                      {
+                        textAlign: 'center',
+                      },
+                    ]}>
+                    Division One
+                  </Text>
                 </Text>
                 {/*   <Text
                 style={[
@@ -136,7 +144,7 @@ const styles = ScaledSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-around',
-    width: '80@vs',
+    width: '96@vs',
   },
   teamLogo: {
     height: '56@vs',

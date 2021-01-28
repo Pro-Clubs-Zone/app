@@ -25,6 +25,7 @@ const UserLeagueCard = ({
           style={{
             flexDirection: 'row',
             alignItems: 'flex-end',
+            paddingBottom: verticalScale(4),
           }}>
           <Text
             style={[
@@ -49,6 +50,7 @@ const UserLeagueCard = ({
 const styles = ScaledSheet.create({
   card: {
     backgroundColor: APP_COLORS.Secondary,
+    overflow: 'hidden',
     padding: '12@vs',
     borderRadius: '2@vs',
     width: '142@vs',

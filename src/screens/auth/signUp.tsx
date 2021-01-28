@@ -258,6 +258,7 @@ function SignUp({navigation, route}: Props) {
 
                 helper="example@gmail.com"
                 error={errorStates.email}
+                maxLength={320}
               />
               <TextField
                 value={password}
@@ -272,6 +273,7 @@ function SignUp({navigation, route}: Props) {
                 //  fieldIco={visibility}
                 //  onPressIco={changePwdType}
                 error={errorStates.password}
+                maxLength={128}
                 textContentType="newPassword"
                 secureTextEntry={true}
               />
@@ -286,6 +288,7 @@ function SignUp({navigation, route}: Props) {
                 returnKeyType="next"
                 error={errorStates.username}
                 helper={i18n._(t`PSN or Xbox Username`)}
+                maxLength={16}
               />
               <BigButtonOutlined
                 onPress={onSignUp}

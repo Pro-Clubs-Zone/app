@@ -49,8 +49,9 @@ const UpcomingMatchCard = ({
           style={{
             flexDirection: 'row',
             alignItems: 'flex-end',
+            paddingBottom: verticalScale(4),
           }}>
-          <Text style={TEXT_STYLES.small}>{clubName}</Text>
+          <Text style={TEXT_STYLES.small}>{clubName.slice(0, 7)}</Text>
           <Text style={TEXT_STYLES.small}> vs. </Text>
           <Text
             style={[
@@ -61,7 +62,7 @@ const UpcomingMatchCard = ({
                 fontWeight: 'bold',
               },
             ]}>
-            {rivalName}
+            {rivalName.slice(0, 7)}
           </Text>
         </View>
         <Text style={TEXT_STYLES.small}>{leagueName}</Text>
@@ -73,6 +74,7 @@ const UpcomingMatchCard = ({
 const styles = ScaledSheet.create({
   card: {
     backgroundColor: APP_COLORS.Secondary,
+    overflow: 'hidden',
     padding: '12@vs',
     borderRadius: '2@vs',
     width: '142@vs',
