@@ -157,6 +157,7 @@ export default function CreateLeague({navigation}: Props) {
           label={i18n._(t`League Name`)}
           error={error.name}
           helper={i18n._(t`Minimum ${4} letters, no profanity`)}
+          maxLength={30}
         />
         <Picker
           onValueChange={(itemValue) =>
@@ -298,6 +299,7 @@ export default function CreateLeague({navigation}: Props) {
           multiline={true}
           onChangeText={(text) => setData({...data, description: text})}
           autoCapitalize="sentences"
+          maxLength={1000}
         />
         <TextField
           value={data.discord}

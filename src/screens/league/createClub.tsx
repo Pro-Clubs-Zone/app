@@ -151,6 +151,7 @@ export default function CreateClub({route, navigation}: Props) {
           label={i18n._(t`Club Name`)}
           error={error.clubName}
           helper={i18n._(t`Minimum ${4} letters, no profanity`)}
+          maxLength={15}
         />
       </FormContent>
       <BigButton onPress={onCreateClub} title={i18n._(t`Create Club`)} />

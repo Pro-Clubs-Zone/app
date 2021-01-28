@@ -25,15 +25,18 @@ export default function LeagueExplorer({navigation}: Props) {
 
   useEffect(() => {
     const leagueCollection = db.collection('leagues');
-    const subscriber = leagueCollection.onSnapshot((querySnapshot) => {
-      let retrievedLeagues: LeagueListItem[] = [];
-      querySnapshot.forEach((doc) => {
-        const leagueData = doc.data() as ILeague;
-        retrievedLeagues.push({...leagueData, key: doc.id});
+    const subscriber = leagueCollection
+      .where('private', '==', false)
+      .where('scheduled', '==', false)
+      .onSnapshot((querySnapshot) => {
+        let retrievedLeagues: LeagueListItem[] = [];
+        querySnapshot.forEach((doc) => {
+          const leagueData = doc.data() as ILeague;
+          retrievedLeagues.push({...leagueData, key: doc.id});
+        });
+        setData(retrievedLeagues);
+        setLoading(false);
       });
-      setData(retrievedLeagues);
-      setLoading(false);
-    });
 
     return subscriber;
   }, []);

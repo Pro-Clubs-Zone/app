@@ -284,19 +284,21 @@ export default function LeaguePreview({navigation, route}: Props) {
             value="Twitter"
           />
         )}
-        <View>
-          <Text
-            style={[
-              TEXT_STYLES.small,
-              {
-                color: APP_COLORS.Gray,
-              },
-            ]}>
-            Description
-          </Text>
+        {league.description !== '' && (
+          <View>
+            <Text
+              style={[
+                TEXT_STYLES.small,
+                {
+                  color: APP_COLORS.Gray,
+                },
+              ]}>
+              Description
+            </Text>
 
-          <Text style={TEXT_STYLES.body}>{league.description}</Text>
-        </View>
+            <Text style={TEXT_STYLES.body}>{league.description}</Text>
+          </View>
+        )}
       </ScrollView>
       {!infoMode && (
         <BigButton
