@@ -126,6 +126,21 @@ export default function Clubs() {
   };
 
   const onAcceptClub = async (selectedClub: IClubRequestData) => {
+    if (leagueContext.league.acceptedClubs === leagueContext.league.teamNum) {
+      return Alert.alert(
+        i18n._(t`Team Limit Reached`),
+        i18n._(
+          t`Can't accept club due to league team limit. Either remove accepted teams or decline this request.`,
+        ),
+        [
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
     setLoading(true);
     const updatedList: IClubRequestData[] = data.map((club) => {
       if (club.clubId === selectedClub.clubId) {

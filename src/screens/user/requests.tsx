@@ -170,6 +170,23 @@ function LeagueRequests() {
     sectionTitle: string,
     acceptRequest: boolean,
   ) => {
+    const userLeague = context.userLeagues[selectedClub.leagueId];
+    if (userLeague.acceptedClubs === userLeague.teamNum) {
+      return Alert.alert(
+        i18n._(t`Team Limit Reached`),
+        i18n._(
+          t`Can't accept club due to league team limit. Either remove accepted teams or decline this request.`,
+        ),
+        [
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+
     setLoading(true);
 
     await handleLeagueRequest(data, selectedClub, sectionTitle, acceptRequest)
