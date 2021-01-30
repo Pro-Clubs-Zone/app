@@ -38,7 +38,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [userRequestCount, setUserRequestCount] = useState<number>(0);
   // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
   const [allLoaded, setAllLoaded] = useState<boolean>(false);
@@ -162,7 +162,6 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
-      setLoading(true);
       const userRef = db.collection('users').doc(uid);
       crashlytics().setUserId(uid);
       let userInfo: IUser;
@@ -193,6 +192,8 @@ export default function Home({navigation}: Props) {
           setAllLoaded(true);
         }
       });
+    } else {
+      setAllLoaded(true);
     }
   }, [user]);
 
@@ -201,7 +202,9 @@ export default function Home({navigation}: Props) {
   }, [requestContext]);
 
   useEffect(() => {
-    setLoading(false);
+    if (allLoaded) {
+      setLoading(false);
+    }
   }, [allLoaded]);
 
   const getRivalsName = (match: IMatchNavData) => {

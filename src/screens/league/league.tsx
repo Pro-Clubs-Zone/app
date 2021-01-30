@@ -40,7 +40,7 @@ type SignIn = {data?: {}; redirectedFrom?: string | null};
 
 export type LeagueStackType = {
   'League Scheduled': ILeagueProps;
-  Clubs: ILeagueProps;
+  Clubs: undefined;
   'League Preview': {
     infoMode: boolean;
   };

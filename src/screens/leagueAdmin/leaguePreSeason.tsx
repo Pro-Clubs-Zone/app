@@ -33,7 +33,7 @@ const firFunc = functions();
 
 export default function LeaguePreSeason({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [clubRosterLength, setClubRosterLength] = useState(1);
+  // const [clubRosterLength, setClubRosterLength] = useState(1);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
@@ -189,7 +189,12 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   };
 
   if (loading) {
-    return <FullScreenLoading visible={true} />;
+    return (
+      <FullScreenLoading
+        visible={true}
+        label={i18n._(t`Scheduling Matches...`)}
+      />
+    );
   }
 
   return (
@@ -207,11 +212,12 @@ export default function LeaguePreSeason({navigation, route}: Props) {
             })
           }
           title={userClub.clubName}
-          subTitle={
-            clubRosterLength > 1
-              ? i18n._(t`${clubRosterLength} Players`)
-              : i18n._(t`No members except you`)
-          }
+          // subTitle={
+          //   clubRosterLength > 1
+          //     ? i18n._(t`${clubRosterLength} Players`)
+          //     : i18n._(t`No members except you`)
+          // }
+          subTitle="Manage your current roster"
         />
       ) : (
         <CardMedium

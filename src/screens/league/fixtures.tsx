@@ -36,7 +36,7 @@ const db = firestore();
 
 export default function Fixtures(/*{route}: Props*/) {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator lazy={true}>
       <Tab.Screen name="Upcoming" component={UpcomingFixtures} />
       <Tab.Screen name="Past" component={PastFixtures} />
     </Tab.Navigator>

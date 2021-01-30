@@ -167,7 +167,7 @@ msgstr ""
 msgid "Create Club"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:229
+#: src/screens/league/createLeague.tsx:230
 #: src/screens/user/leagues.tsx:48
 msgid "Create League"
 msgstr ""
@@ -191,11 +191,11 @@ msgstr ""
 msgid "Delete League?"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:221
+#: src/screens/league/createLeague.tsx:222
 msgid "Describe your league in a few sentences..."
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:221
+#: src/screens/league/createLeague.tsx:222
 msgid "Description"
 msgstr ""
 
@@ -321,7 +321,7 @@ msgstr "Лиги Мира"
 msgid "League Limit Reached"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:126
+#: src/screens/league/createLeague.tsx:127
 msgid "League Name"
 msgstr ""
 
@@ -360,7 +360,7 @@ msgstr ""
 msgid "Manager"
 msgstr ""
 
-#: src/screens/user/home.tsx:214
+#: src/screens/user/home.tsx:218
 msgid "Manager your received and sent request"
 msgstr ""
 
@@ -385,17 +385,17 @@ msgstr ""
 msgid "Match will be reviewed"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:217
-#: src/screens/league/createLeague.tsx:217
+#: src/screens/league/createLeague.tsx:218
+#: src/screens/league/createLeague.tsx:218
 msgid "Matches"
 msgstr ""
 
 #: src/screens/league/createClub.tsx:117
-#: src/screens/league/createLeague.tsx:126
+#: src/screens/league/createLeague.tsx:127
 msgid "Minimum {0} letters, no profanity"
 msgstr ""
 
-#: src/screens/user/home.tsx:214
+#: src/screens/user/home.tsx:218
 msgid "My Requests"
 msgstr ""
 
@@ -412,7 +412,7 @@ msgstr ""
 msgid "New requests"
 msgstr ""
 
-#: src/screens/user/home.tsx:183
+#: src/screens/user/home.tsx:187
 msgid "Next Matches"
 msgstr ""
 
@@ -435,7 +435,7 @@ msgstr ""
 msgid "No Public Leagues"
 msgstr ""
 
-#: src/screens/user/home.tsx:209
+#: src/screens/user/home.tsx:213
 msgid "No Upcoming Matches"
 msgstr ""
 
@@ -497,7 +497,7 @@ msgstr ""
 msgid "Pick Result"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:135
+#: src/screens/league/createLeague.tsx:136
 msgid "Platform"
 msgstr ""
 
@@ -575,11 +575,15 @@ msgstr ""
 msgid "Schedule Matches"
 msgstr ""
 
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:147
+msgid "Scheduling Matches..."
+msgstr ""
+
 #: src/components/picker.tsx:19
 msgid "Select"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:135
+#: src/screens/league/createLeague.tsx:136
 msgid "Select Platform"
 msgstr ""
 
@@ -626,8 +630,8 @@ msgstr ""
 msgid "Team Limit Reached"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:185
-#: src/screens/league/createLeague.tsx:185
+#: src/screens/league/createLeague.tsx:186
+#: src/screens/league/createLeague.tsx:186
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "Teams"
 msgstr ""
@@ -684,18 +688,18 @@ msgstr ""
 msgid "You cannot remove club when league is scheduled"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:126
+#: src/screens/league/createLeague.tsx:127
 msgid "i.e. La Liga"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:197
+#: src/screens/league/createLeague.tsx:198
 msgid "{0} Match"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:202
-#: src/screens/league/createLeague.tsx:207
-#: src/screens/league/createLeague.tsx:212
-#: src/screens/league/createLeague.tsx:217
+#: src/screens/league/createLeague.tsx:203
+#: src/screens/league/createLeague.tsx:208
+#: src/screens/league/createLeague.tsx:213
+#: src/screens/league/createLeague.tsx:218
 msgid "{0} Matches"
 msgstr ""
 
@@ -704,14 +708,14 @@ msgstr ""
 msgid "{0} Submission"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:150
-#: src/screens/league/createLeague.tsx:155
-#: src/screens/league/createLeague.tsx:160
-#: src/screens/league/createLeague.tsx:165
-#: src/screens/league/createLeague.tsx:170
-#: src/screens/league/createLeague.tsx:175
-#: src/screens/league/createLeague.tsx:180
-#: src/screens/league/createLeague.tsx:185
+#: src/screens/league/createLeague.tsx:151
+#: src/screens/league/createLeague.tsx:156
+#: src/screens/league/createLeague.tsx:161
+#: src/screens/league/createLeague.tsx:166
+#: src/screens/league/createLeague.tsx:171
+#: src/screens/league/createLeague.tsx:176
+#: src/screens/league/createLeague.tsx:181
+#: src/screens/league/createLeague.tsx:186
 msgid "{0} Teams"
 msgstr ""
 

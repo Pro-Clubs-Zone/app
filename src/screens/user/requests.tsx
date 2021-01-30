@@ -35,7 +35,7 @@ export default function Requests() {
   const myLeagueReq = requestContext.myLeagueRequests?.data.length ?? 0;
   const mySentRequests = myClubReq + myLeagueReq;
   return (
-    <Tab.Navigator>
+    <Tab.Navigator lazy={true}>
       <Tab.Screen
         name="Club"
         component={ClubRequests}

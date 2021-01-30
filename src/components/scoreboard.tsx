@@ -144,7 +144,7 @@ const styles = ScaledSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-around',
-    width: '96@vs',
+    width: '72@vs',
   },
   teamLogo: {
     height: '56@vs',
