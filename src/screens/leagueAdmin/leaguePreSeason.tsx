@@ -138,6 +138,23 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       const link = await dynamicLinks().buildLink({
         link: `https://l.proclubs.zone/lgu/${leagueId}`,
         domainUriPrefix: 'https://l.proclubs.zone/lgu',
+        ios: {
+          bundleId: 'com.proclubszone',
+          //  appStoreId: '123456789',
+          minimumVersion: '1',
+          fallbackUrl: 'https://proclubs.zone',
+        },
+        android: {
+          packageName: 'com.proclubszone',
+          minimumVersion: '1',
+          fallbackUrl: 'https://proclubs.zone',
+        },
+        social: {
+          title: leagueContext.league.name,
+          descriptionText: `Join ${leagueContext.league.name} on Pro Clubs Zone!`,
+          imageUrl:
+            'https://firebasestorage.googleapis.com/v0/b/pro-clubs-zone-v2.appspot.com/o/web%2Fdynamic-share.jpg?alt=media&token=ee895dcf-ba49-41e6-bc12-51aa3142f6b7',
+        },
       });
 
       return link;
@@ -155,7 +172,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
             title: message,
           },
           {
-            dialogTitle: i18n._(t`Invite people`),
+            dialogTitle: i18n._(t`Invite clubs`),
           },
         );
         if (result.action === Share.sharedAction) {
