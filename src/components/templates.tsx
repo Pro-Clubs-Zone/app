@@ -1,11 +1,13 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
+import {View, ScrollView, KeyboardAvoidingView, Platform} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 
 export const FormView = ({children}: {children: JSX.Element[]}) => (
-  <ScrollView bounces={false} contentContainerStyle={styles.container}>
-    {children}
-  </ScrollView>
+  <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <ScrollView bounces={false} contentContainerStyle={styles.container}>
+      {children}
+    </ScrollView>
+  </KeyboardAvoidingView>
 );
 
 export const FormContent = ({

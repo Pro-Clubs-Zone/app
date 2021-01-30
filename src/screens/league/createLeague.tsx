@@ -307,6 +307,8 @@ export default function CreateLeague({navigation}: Props) {
           label="Discord"
           onChangeText={(text) => setData({...data, discord: text})}
           autoCapitalize="none"
+          keyboardType="url"
+          autoCorrect={false}
         />
         <TextField
           value={data.twitter}
@@ -314,6 +316,8 @@ export default function CreateLeague({navigation}: Props) {
           label="Twitter"
           onChangeText={(text) => setData({...data, twitter: text})}
           autoCapitalize="none"
+          keyboardType="url"
+          autoCorrect={false}
         />
       </FormContent>
       <BigButton

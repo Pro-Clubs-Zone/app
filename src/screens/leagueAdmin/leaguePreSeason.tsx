@@ -153,7 +153,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           title: leagueContext.league.name,
           descriptionText: `Join ${leagueContext.league.name} on Pro Clubs Zone!`,
           imageUrl:
-            'https://firebasestorage.googleapis.com/v0/b/pro-clubs-zone-v2.appspot.com/o/web%2Fdynamic-share.jpg?alt=media&token=ee895dcf-ba49-41e6-bc12-51aa3142f6b7',
+            'https://storage.googleapis.com/pro-clubs-zone-v2.appspot.com/web/dynamic-share.jpg',
         },
       });
 
