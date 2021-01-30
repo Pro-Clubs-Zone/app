@@ -172,7 +172,7 @@ msgstr ""
 msgid "Create League"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:160
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:164
 msgid "Create Your Club"
 msgstr ""
 
@@ -251,11 +251,11 @@ msgstr ""
 msgid "Get Reset Link"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:160
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:164
 msgid "If you want to participate in your own league"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:163
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:167
 msgid "Invite Clubs"
 msgstr ""
 
@@ -309,7 +309,7 @@ msgstr ""
 msgid "League - {0}"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:162
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:166
 msgid "League Clubs"
 msgstr ""
 
@@ -330,7 +330,7 @@ msgstr ""
 msgid "League Requests"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:167
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:171
 msgid "League is full and matches can be scheduled"
 msgstr ""
 
@@ -440,8 +440,8 @@ msgid "No Upcoming Matches"
 msgstr ""
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:157
-msgid "No members except you"
-msgstr ""
+#~ msgid "No members except you"
+#~ msgstr ""
 
 #: src/screens/auth/signUp.tsx:99
 msgid "No space character"
@@ -571,7 +571,7 @@ msgstr ""
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:54
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:69
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:166
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:170
 msgid "Schedule Matches"
 msgstr ""
 
@@ -723,12 +723,12 @@ msgstr ""
 msgid "{0} clubs / {1} matches"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:168
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:172
 msgid ""
 "{acceptedClubs}/{teamNum} Teams. \n"
 "Not enough teams to schedule matches"
 msgstr ""
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:156
-msgid "{clubRosterLength} Players"
-msgstr ""
+#~ msgid "{clubRosterLength} Players"
+#~ msgstr ""
