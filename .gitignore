@@ -72,3 +72,4 @@ buck-out/
 # Lingui messages
 src/locales/_build/
 src/locales/**/*.js
+messages.js
