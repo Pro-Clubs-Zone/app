@@ -68,6 +68,8 @@ buck-out/
 
 GoogleService-Info.plist
 GoogleService-Info.*.plist
+firGoogleService.dev.plist
+firGoogleService.plist
 google-services.json
 
 # Lingui messages
