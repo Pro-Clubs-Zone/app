@@ -67,6 +67,7 @@ buck-out/
 # Firebase Credentials
 
 GoogleService-Info.plist
+GoogleService-Info.*.plist
 google-services.json
 
 # Lingui messages

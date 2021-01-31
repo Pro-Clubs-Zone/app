@@ -80,10 +80,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-  <key>FirebaseDynamicLinksCustomDomains</key>
-   <array>
-     <string>https://l.proclubs.zone/lgu</string>
-     <string>https://l.proclubs.zone/eml</string>
-   </array>
 </dict>
 </plist>
