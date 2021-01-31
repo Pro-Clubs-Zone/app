@@ -6,8 +6,8 @@ platform :ios, '10.0'
 project 'ProClubsZone',
         'Dev.Debug' => :debug,
         'Dev.Release' => :release,
-        'Prod.Debug' => :debug,
-        'Prod.Release' => :release
+        'Debug' => :debug,
+        'Release' => :release
 
 target 'ProClubsZone' do
   config = use_native_modules!
@@ -29,11 +29,11 @@ target 'ProClubsZone' do
   end
 end
 
-target 'ProClubsZone-tvOS' do
-  # Pods for ProClubsZone-tvOS
+# target 'ProClubsZone-tvOS' do
+#   # Pods for ProClubsZone-tvOS
 
-  target 'ProClubsZone-tvOSTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-end
+#   target 'ProClubsZone-tvOSTests' do
+#     inherit! :search_paths
+#     # Pods for testing
+#   end
+# end

@@ -369,7 +369,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -r \"firGoogleService$BUNDLE_ID_SUFFIX.plist\" \"GoogleService-Info.plist\"\necho \"$BUNDLE_ID_SUFFIX Firebase plist copied\"\n";
+			shellScript = "cp -r \"firGoogleService$BUNDLE_ID_SUFFIX.plist\" \"GoogleService-Info.plist\"\n";
 		};
 		18E763A525C6C8F2005BA4C9 /* Clean GoogleService-Info.plist */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -779,7 +779,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.proclubszone.dev;
-				PRODUCT_NAME = "PRZ Dev";
+				PRODUCT_NAME = ProClubsZone;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -884,7 +884,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.proclubszone.dev;
-				PRODUCT_NAME = "PRZ Dev";
+				PRODUCT_NAME = ProClubsZone;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
