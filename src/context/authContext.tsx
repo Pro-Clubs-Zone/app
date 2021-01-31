@@ -20,9 +20,9 @@ const AuthProvider = (props: any) => {
 
   useEffect(() => {
     const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
-    const devEnv = true;
+    // const devEnv = false;
 
-    if (__DEV__ && devEnv) {
+    if (__DEV__) {
       console.log('dev');
 
       firFunc.useFunctionsEmulator(`http://${localAddress}:5001`);
