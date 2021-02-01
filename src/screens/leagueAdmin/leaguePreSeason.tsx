@@ -135,27 +135,30 @@ export default function LeaguePreSeason({navigation, route}: Props) {
 
   const shareLeagueLink = () => {
     const linkBuilder = async () => {
-      const link = await dynamicLinks().buildLink({
-        link: `https://l.proclubs.zone/lgu/${leagueId}`,
-        domainUriPrefix: 'https://l.proclubs.zone/lgu',
-        ios: {
-          bundleId: 'com.proclubszone',
-          //  appStoreId: '123456789',
-          minimumVersion: '1',
-          fallbackUrl: 'https://proclubs.zone',
+      const link = await dynamicLinks().buildShortLink(
+        {
+          link: `https://l.proclubs.zone/lgu/${leagueId}`,
+          domainUriPrefix: 'https://l.proclubs.zone/lgu',
+          ios: {
+            bundleId: 'com.proclubszone',
+            appStoreId: '1551138800',
+            minimumVersion: '1',
+            fallbackUrl: 'https://proclubs.zone',
+          },
+          android: {
+            packageName: 'com.proclubszone',
+            minimumVersion: '1',
+            fallbackUrl: 'https://proclubs.zone',
+          },
+          social: {
+            title: leagueContext.league.name,
+            descriptionText: `Join ${leagueContext.league.name} on Pro Clubs Zone!`,
+            imageUrl:
+              'https://storage.googleapis.com/pro-clubs-zone-v2.appspot.com/web/dynamic-share.jpg',
+          },
         },
-        android: {
-          packageName: 'com.proclubszone',
-          minimumVersion: '1',
-          fallbackUrl: 'https://proclubs.zone',
-        },
-        social: {
-          title: leagueContext.league.name,
-          descriptionText: `Join ${leagueContext.league.name} on Pro Clubs Zone!`,
-          imageUrl:
-            'https://storage.googleapis.com/pro-clubs-zone-v2.appspot.com/web/dynamic-share.jpg',
-        },
-      });
+        dynamicLinks.ShortLinkType.SHORT,
+      );
 
       return link;
     };

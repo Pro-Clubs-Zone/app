@@ -52,7 +52,9 @@ const App = () => {
     },
     subscribe(listener) {
       const onReceiveURL = ({url}: {url: string}) => {
-        listener(url);
+        if (url.length > 34) {
+          listener(url);
+        }
       };
 
       Linking.addEventListener('url', onReceiveURL);
