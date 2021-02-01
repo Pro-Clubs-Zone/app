@@ -248,7 +248,6 @@
 				18E763A325C6C7B6005BA4C9 /* CopyFiles */,
 				18E763A425C6C84C005BA4C9 /* Select GoogleService-Info.plist */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
-				18E763A525C6C8F2005BA4C9 /* Clean GoogleService-Info.plist */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				557528A4F9E9590CE103ADE8 /* [CP] Copy Pods Resources */,
 				21B798E489FCB8FA6AD5DC44 /* [CP-User] [RNFB] Core Configuration */,
@@ -369,25 +368,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cp -r \"firGoogleService$BUNDLE_ID_SUFFIX.plist\" \"GoogleService-Info.plist\"\n";
-		};
-		18E763A525C6C8F2005BA4C9 /* Clean GoogleService-Info.plist */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Clean GoogleService-Info.plist";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nrm \"GoogleService-Info.plist\"\n";
+			shellScript = "yes | cp -rf \"firGoogleService$BUNDLE_ID_SUFFIX.plist\" \"GoogleService-Info.plist\"\n";
 		};
 		21B798E489FCB8FA6AD5DC44 /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
