@@ -40,7 +40,6 @@ export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [userRequestCount, setUserRequestCount] = useState<number>(0);
   const [username, setUsername] = useState<string>();
-  const [allLoaded, setAllLoaded] = useState<boolean>(false);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -97,10 +96,10 @@ export default function Home({navigation}: Props) {
         }
       }
     }
-    requestContext?.setClubCount(requestCount);
-    requestContext?.setClubs(requests);
+    requestContext.setClubCount(requestCount);
+    requestContext.setClubs(requests);
     if (myClubRequests.data.length !== 0) {
-      requestContext?.setMyClubRequests(myClubRequests);
+      requestContext.setMyClubRequests(myClubRequests);
     }
   };
 
@@ -151,26 +150,25 @@ export default function Home({navigation}: Props) {
       }
     }
 
-    requestContext?.setLeagueCount(requestCount);
-    requestContext?.setLeagues(requests);
+    requestContext.setLeagueCount(requestCount);
+    requestContext.setLeagues(requests);
     if (myLeagueRequests.data.length !== 0) {
-      requestContext?.setMyLeagueRequests(myLeagueRequests);
+      requestContext.setMyLeagueRequests(myLeagueRequests);
     }
   };
 
   useEffect(() => {
     if (user) {
-      console.log('user');
-
       const userRef = db.collection('users').doc(uid!);
       let userInfo: IUser;
-      userRef.get().then(async (doc) => {
-        userInfo = doc.data() as IUser;
-        console.log('get data', doc);
-        setUsername(userInfo.username);
-        if (doc.exists && userInfo.leagues) {
-          await getLeaguesClubs(userInfo)
-            .then(async (data) => {
+      userRef
+        .get()
+        .then(async (doc) => {
+          userInfo = doc.data() as IUser;
+          console.log('get data');
+          setUsername(userInfo.username);
+          if (doc.exists && userInfo.leagues) {
+            await getLeaguesClubs(userInfo).then(async (data) => {
               const {updatedUserData, userLeagues} = data;
               context.setUserData(updatedUserData);
               context.setUserLeagues(userLeagues);
@@ -183,18 +181,18 @@ export default function Home({navigation}: Props) {
                   getClubRequests(userLeagues);
                   getLeagueRequests(userLeagues);
                 });
-            })
-            .then(() => {
-              setAllLoaded(true);
             });
-        } else {
-          console.log('no leagues', loading);
-          context.setUserData(userInfo);
-          setAllLoaded(true);
-        }
-      });
+          } else {
+            console.log('no leagues', loading);
+            context.setUserData(userInfo);
+          }
+        })
+        .then(() => {
+          console.log('set loading ');
+          setLoading(false);
+        });
     } else {
-      setAllLoaded(true);
+      setLoading(false);
     }
   }, [user]);
 
@@ -202,23 +200,14 @@ export default function Home({navigation}: Props) {
     setUserRequestCount(requestContext.requestCount);
   }, [requestContext]);
 
-  useEffect(() => {
-    if (allLoaded) {
-      console.log('all loaded');
-
-      setLoading(false);
-    }
-  }, [allLoaded, loading]);
-
   const getRivalsName = (match: IMatchNavData) => {
     const rivalId = match.teams.filter((teamId) => teamId !== match.clubId);
     const rivalName =
       context.userLeagues[match.leagueId]?.clubs[rivalId[0]].name;
     return rivalName;
   };
-
-  if (allLoaded && loading) {
-    return <FullScreenLoading visible={true} />;
+  if (loading) {
+    return <FullScreenLoading visible={loading} />;
   }
   return (
     <View style={{flex: 1}}>

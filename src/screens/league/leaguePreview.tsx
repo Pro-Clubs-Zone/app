@@ -9,7 +9,7 @@ import {Text, View, Alert, ScrollView, Linking} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import {LeagueStackType} from './league';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, CommonActions} from '@react-navigation/native';
 import {LeagueContext} from '../../context/leagueContext';
 import {AppContext} from '../../context/appContext';
 import {useActionSheet} from '@expo/react-native-action-sheet';
@@ -17,7 +17,6 @@ import {BigButton, IconButton} from '../../components/buttons';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {verticalScale} from 'react-native-size-matters';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import RNRestart from 'react-native-restart';
 import functions from '@react-native-firebase/functions';
 import FullScreenLoading from '../../components/loading';
 import {t} from '@lingui/macro';
@@ -72,7 +71,24 @@ export default function LeaguePreview({navigation, route}: Props) {
           onPress: () => {
             setLoading(true);
             deleteLeague().then(() => {
-              RNRestart.Restart();
+              // const userData = {...context.userData};
+              // const userLeagues = {...context.userLeagues};
+              // //  const currentLeague = {...league};
+              // delete userData.leagues![leagueId];
+              // delete userLeagues[leagueId];
+
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Home'}],
+                }),
+              );
+              // console.log(context.userData, userData);
+              // console.log(context.userLeagues);
+              // context.setUserData(userData);
+              //context.setUserLeagues(userLeagues);
+
+              //setLoading(false);
             });
           },
           style: 'destructive',

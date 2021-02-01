@@ -117,10 +117,6 @@ export default function AppIndex() {
     </>
   );
 
-  // if (loading) {
-  //   return <FullScreenLoading visible={true} />;
-  // }
-
   if (uid) {
     return (
       <Stack.Navigator
