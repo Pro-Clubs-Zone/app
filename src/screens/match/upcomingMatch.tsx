@@ -37,7 +37,7 @@ type Props = {
 export default function UpcomingMatch({navigation, route}: Props) {
   const [homeScore, setHomeScore] = useState<string>('');
   const [awayScore, setAwayScore] = useState<string>('');
-  const [editable, setEditable] = useState<boolean>();
+  const [editable, setEditable] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [errorStates, setErrorStates] = useState({
     homeScore: null,
@@ -220,7 +220,10 @@ export default function UpcomingMatch({navigation, route}: Props) {
       style={{
         flex: 1,
       }}>
-      <FullScreenLoading visible={loading} />
+      <FullScreenLoading
+        visible={loading}
+        label={i18n._(t`Submitting Match...`)}
+      />
       <ScoreBoard data={matchData} onSubmit={onSubmitMatch} editable={editable}>
         <MatchTextField
           error={errorStates.homeScore}

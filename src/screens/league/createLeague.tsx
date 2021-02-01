@@ -30,20 +30,13 @@ export default function CreateLeague({navigation}: Props) {
 
   const userLeagues = context.userData?.leagues;
 
-  const leagueInfoDefault: ILeague = {
-    adminUsername: '',
-    name: '',
-    description: '',
-    discord: '',
-    twitter: '',
+  const leagueInfoDefault: Partial<ILeague> = {
     platform: 'ps',
     teamNum: 8,
     acceptedClubs: 0,
     matchNum: 2,
-    adminId: null,
-    private: false,
+    private: true,
     scheduled: false,
-    created: null,
     conflictMatchesCount: 0,
   };
 

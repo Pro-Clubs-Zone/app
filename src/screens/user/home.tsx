@@ -37,7 +37,7 @@ type Props = {
 };
 
 export default function Home({navigation}: Props) {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [userRequestCount, setUserRequestCount] = useState<number>(0);
   const [username, setUsername] = useState<string>();
 
@@ -159,6 +159,7 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
+      setLoading(true);
       const userRef = db.collection('users').doc(uid!);
       let userInfo: IUser;
       userRef
@@ -191,8 +192,6 @@ export default function Home({navigation}: Props) {
           console.log('set loading ');
           setLoading(false);
         });
-    } else {
-      setLoading(false);
     }
   }, [user]);
 
