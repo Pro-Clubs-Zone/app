@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, FlatList, ScrollView} from 'react-native';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
@@ -27,7 +27,6 @@ import FullScreenLoading from '../../components/loading';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import UpcomingMatchCard from '../../components/upcomingMatchCard';
 import {CardMedium} from '../../components/cards';
-import crashlytics from '@react-native-firebase/crashlytics';
 
 const db = firestore();
 
@@ -40,15 +39,14 @@ type Props = {
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(true);
   const [userRequestCount, setUserRequestCount] = useState<number>(0);
-  // const [upcomingMatches, setUpcomingMatches] = useState<FixtureList[]>([]);
+  const [username, setUsername] = useState<string>();
   const [allLoaded, setAllLoaded] = useState<boolean>(false);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const requestContext = useContext(RequestContext);
 
-  const uid = user?.uid;
-  const username = context.userData?.username;
+  const uid = user.uid;
 
   const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
     let requests: IClubRequest[] = [];
@@ -162,12 +160,15 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
-      const userRef = db.collection('users').doc(uid);
-      crashlytics().setUserId(uid);
+      console.log('user');
+
+      const userRef = db.collection('users').doc(uid!);
       let userInfo: IUser;
       userRef.get().then(async (doc) => {
         userInfo = doc.data() as IUser;
-        if (userInfo?.leagues) {
+        console.log('get data', doc);
+        setUsername(userInfo.username);
+        if (doc.exists && userInfo.leagues) {
           await getLeaguesClubs(userInfo)
             .then(async (data) => {
               const {updatedUserData, userLeagues} = data;
@@ -203,9 +204,11 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (allLoaded) {
+      console.log('all loaded');
+
       setLoading(false);
     }
-  }, [allLoaded]);
+  }, [allLoaded, loading]);
 
   const getRivalsName = (match: IMatchNavData) => {
     const rivalId = match.teams.filter((teamId) => teamId !== match.clubId);
@@ -214,7 +217,7 @@ export default function Home({navigation}: Props) {
     return rivalName;
   };
 
-  if (loading) {
+  if (allLoaded && loading) {
     return <FullScreenLoading visible={true} />;
   }
   return (
@@ -234,7 +237,7 @@ export default function Home({navigation}: Props) {
             {username}
           </Text>
         </View>
-        {context.userMatches?.length !== 0 ? (
+        {context?.userMatches.length !== 0 ? (
           <FlatList
             data={context.userMatches}
             horizontal={true}
@@ -243,7 +246,7 @@ export default function Home({navigation}: Props) {
             renderItem={({item}) => (
               <UpcomingMatchCard
                 clubName={
-                  context.userLeagues[item.data.leagueId]?.clubs[
+                  context.userLeagues[item.data.leagueId].clubs[
                     item.data.clubId
                   ].name
                 }

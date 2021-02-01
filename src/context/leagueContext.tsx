@@ -1,19 +1,19 @@
 import React, {useState, createContext, Dispatch, SetStateAction} from 'react';
 import {ILeague} from '../utils/interface';
 
-const LeagueContext = createContext<{
-  league: ILeague | null;
-  setLeague: Dispatch<SetStateAction<ILeague>>;
-  // isAdmin: boolean;
-  // setIsAdmin: Dispatch<SetStateAction<boolean>>;
-  leagueId: string | null;
-  setLeagueId: Dispatch<SetStateAction<string>>;
-}>(null);
+type LeagueContextType = {
+  league: ILeague | undefined;
+  setLeague: Dispatch<SetStateAction<ILeague | undefined>>;
+  leagueId: string | undefined;
+  setLeagueId: Dispatch<SetStateAction<string | undefined>>;
+};
+
+const LeagueContext = createContext<LeagueContextType>({} as LeagueContextType);
 
 const LeagueProvider = (props: any) => {
   // const [league, setLeague] = useState<ILeague>(null);
-  const [leagueId, setLeagueId] = useState<string>(null);
-  const [league, setLeague] = useState<ILeague>(null);
+  const [leagueId, setLeagueId] = useState<string>();
+  const [league, setLeague] = useState<ILeague>();
 
   return (
     <LeagueContext.Provider value={{leagueId, setLeagueId, league, setLeague}}>

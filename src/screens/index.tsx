@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -7,6 +7,10 @@ import {APP_COLORS, FONT_SIZES} from '../utils/designSystem';
 import {IconButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
 import RNRestart from 'react-native-restart';
+import crashlytics from '@react-native-firebase/crashlytics';
+import {LogBox, Platform} from 'react-native';
+import functions from '@react-native-firebase/functions';
+import firestore from '@react-native-firebase/firestore';
 
 // Screens
 import Home from './user/home';
@@ -51,13 +55,34 @@ export type AppNavStack = {
 export default function AppIndex() {
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
-  const [uid, setUid] = useState<string | undefined | null>(null);
 
+  const uid = user.uid;
+
+  const db = firestore();
   const firAuth = auth();
+  const firFunc = functions();
 
   useEffect(() => {
-    if (user.authInit) {
-      setUid(user.uid);
+    crashlytics().log('App mounted.');
+
+    if (__DEV__) {
+      const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
+      console.log('dev');
+
+      firFunc.useFunctionsEmulator(`http://${localAddress}:5001`);
+      firAuth.useEmulator(`http://${localAddress}:9099`);
+      db.settings({
+        host: `${localAddress}:8080`,
+        ssl: false,
+        persistence: false,
+        cacheSizeBytes: firestore.CACHE_SIZE_UNLIMITED,
+      });
+      LogBox.ignoreLogs(['Remote debugger is in a background']);
+      LogBox.ignoreLogs(['DevTools failed to load SourceMap:']); // Ignore log notification by message
+    }
+
+    if (user.uid) {
+      crashlytics().setUserId(uid!);
     }
   }, [user]);
 

@@ -1,8 +1,7 @@
 import React, {useState, createContext, Dispatch, SetStateAction} from 'react';
 import {IClubRequest, ILeagueRequest, IMyRequests} from '../utils/interface';
 
-// eslint-disable-next-line no-spaced-func
-const RequestContext = createContext<{
+type RequestContextType = {
   clubs: IClubRequest[];
   leagues: ILeagueRequest[];
   myClubRequests: IMyRequests | null;
@@ -15,7 +14,11 @@ const RequestContext = createContext<{
   setClubCount: Dispatch<SetStateAction<number>>;
   requestCount: number;
   resetRequests: () => void;
-} | null>(null);
+};
+
+const RequestContext = createContext<RequestContextType>(
+  {} as RequestContextType,
+);
 
 const RequestProvider = (props: any) => {
   const [myClubRequests, setMyClubRequests] = useState<IMyRequests | null>(
