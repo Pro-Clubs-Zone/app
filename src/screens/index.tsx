@@ -64,7 +64,6 @@ export default function AppIndex() {
 
   useEffect(() => {
     crashlytics().log('App mounted.');
-
     if (__DEV__) {
       const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
       console.log('dev');
@@ -186,8 +185,8 @@ const HomeTabs = () => {
   const requestContext = useContext(RequestContext);
   const context = useContext(AppContext);
 
-  const conflictsCount = context.userData?.adminConflictCounts;
-  const requestCount = requestContext?.requestCount;
+  const conflictsCount = context.userData!.adminConflictCounts;
+  const requestCount = requestContext.requestCount;
 
   return (
     <Tab.Navigator
@@ -227,7 +226,7 @@ const HomeTabs = () => {
         name="Leagues"
         component={Leagues}
         options={
-          conflictsCount > 0
+          conflictsCount && conflictsCount > 0
             ? {
                 tabBarIcon: ({color, size}) => (
                   <Icon name="trophy-variant" color={color} size={size} />

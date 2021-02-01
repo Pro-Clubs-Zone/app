@@ -143,12 +143,12 @@ export default function LeaguePreSeason({navigation, route}: Props) {
             bundleId: 'com.proclubszone',
             appStoreId: '1551138800',
             minimumVersion: '1',
-            fallbackUrl: 'https://proclubs.zone',
+            //      fallbackUrl: 'https://proclubs.zone',
           },
           android: {
             packageName: 'com.proclubszone',
             minimumVersion: '1',
-            fallbackUrl: 'https://proclubs.zone',
+            //      fallbackUrl: 'https://proclubs.zone',
           },
           social: {
             title: leagueContext.league.name,
