@@ -31,7 +31,7 @@ export default function JoinClub({navigation}: Props) {
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const leagueContext = useContext(LeagueContext);
-  const uid = user?.uid;
+  const uid = user.uid;
   const userRef = db.collection('users').doc(uid);
   const leagueId = leagueContext.leagueId;
   const leagueRef = db.collection('leagues').doc(leagueId);
@@ -64,9 +64,9 @@ export default function JoinClub({navigation}: Props) {
       clubName: club.name,
     };
     const rosterMember: {[uid: string]: IClubRosterMember} = {
-      [uid]: {
+      [uid as string]: {
         accepted: false,
-        username: context?.userData?.username,
+        username: context.userData!.username,
       },
     };
 
@@ -160,7 +160,7 @@ export default function JoinClub({navigation}: Props) {
         })}
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: data.length === 0 ? 'center' : null,
+          justifyContent: data.length === 0 ? 'center' : undefined,
         }}
       />
     </>

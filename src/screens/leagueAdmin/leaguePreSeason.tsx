@@ -1,4 +1,4 @@
-import React, {useContext, useLayoutEffect, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {Alert, ScrollView, Share, Platform} from 'react-native';
 import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
@@ -18,6 +18,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links';
 import analytics from '@react-native-firebase/analytics';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import {RequestContext} from '../../context/requestContext';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -33,16 +34,19 @@ const firFunc = functions();
 
 export default function LeaguePreSeason({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
+  const [leagueReqCount, setLeagueReqCount] = useState(0);
+  const [clubReqCount, setClubReqCount] = useState(0);
   // const [clubRosterLength, setClubRosterLength] = useState(1);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
+  const requestContext = useContext(RequestContext);
 
   const leagueId = leagueContext.leagueId;
   const teamNum = leagueContext.league.teamNum;
   const acceptedClubs = leagueContext.league.acceptedClubs;
   const leagueComplete = teamNum === acceptedClubs;
-  const userClub = context.userData.leagues[leagueId];
+  const userLeague = context.userData!.leagues![leagueId];
   const newLeague = route.params.newLeague;
 
   useLayoutEffect(() => {
@@ -59,6 +63,28 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       });
     }
   }, [navigation, newLeague]);
+
+  useEffect(() => {
+    const leagueRequests = requestContext.leagues.filter(
+      (league) => league.title === leagueContext.league.name,
+    );
+
+    if (userLeague.manager) {
+      const clubRequests = requestContext.clubs.filter(
+        (club) =>
+          club.title ===
+          `${userLeague.clubName} / ${leagueContext.league.name}`,
+      );
+
+      if (clubRequests.length !== 0) {
+        setClubReqCount(clubRequests[0].data.length);
+      }
+    }
+
+    if (leagueRequests.length !== 0) {
+      setLeagueReqCount(leagueRequests[0].data.length);
+    }
+  }, [requestContext]);
 
   //FIXME:
   // useEffect(() => {
@@ -206,21 +232,22 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         paddingBottom: verticalScale(16),
       }}
       showsVerticalScrollIndicator={false}>
-      {userClub.manager ? (
+      {userLeague.manager ? (
         <CardMedium
           onPress={() =>
             navigation.navigate('My Club', {
-              clubId: userClub.clubId,
-              manager: userClub.manager,
+              clubId: userLeague.clubId!,
+              manager: userLeague.manager,
             })
           }
-          title={userClub.clubName}
+          title={userLeague.clubName!}
           // subTitle={
           //   clubRosterLength > 1
           //     ? i18n._(t`${clubRosterLength} Players`)
           //     : i18n._(t`No members except you`)
           // }
           subTitle="Manage your current roster"
+          badgeNumber={clubReqCount}
         />
       ) : (
         <CardMedium
@@ -238,6 +265,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         <CardSmall
           title={i18n._(t`League Clubs`)}
           onPress={() => navigation.navigate('Clubs')}
+          badgeNumber={leagueReqCount}
         />
         <CardSmall title={i18n._(t`Invite Clubs`)} onPress={shareLeagueLink} />
       </CardSmallContainer>

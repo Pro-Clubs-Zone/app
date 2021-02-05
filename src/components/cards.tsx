@@ -25,7 +25,7 @@ export const CardSmallContainer = ({children}: {children: JSX.Element[]}) => (
   <View style={{flexDirection: 'row', flex: 1}}>{children}</View>
 );
 
-export const CardSmall = ({onPress, title}: CardProps) => {
+export const CardSmall = ({onPress, title, badgeNumber}: CardProps) => {
   return (
     <Pressable onPress={onPress} style={{flex: 0.5}}>
       <ImageBackground
@@ -37,6 +37,7 @@ export const CardSmall = ({onPress, title}: CardProps) => {
         ]}
         source={{uri: 'card_overlay'}}
         resizeMode="cover">
+        {badgeNumber > 0 && <Badge number={badgeNumber} />}
         <View>
           <Text style={TEXT_STYLES.display5}>
             {title.replace(' ', '\n').toUpperCase()}

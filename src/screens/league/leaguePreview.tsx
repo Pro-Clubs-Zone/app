@@ -163,7 +163,18 @@ export default function LeaguePreview({navigation, route}: Props) {
       [
         {
           text: i18n._(t`Join`),
-          onPress: () => navigation.navigate('Join Club'),
+          onPress: () => {
+            if (user.uid) {
+              navigation.navigate('Join Club');
+            } else {
+              navigation.navigate('Sign Up', {
+                redirectedFrom: 'joinClub',
+                data: {
+                  leagueId: leagueId,
+                },
+              });
+            }
+          },
         },
         {
           text: i18n._(t`Cancel`),
@@ -300,7 +311,7 @@ export default function LeaguePreview({navigation, route}: Props) {
             value="Twitter"
           />
         )}
-        {league.description !== '' && (
+        {league.description && (
           <View>
             <Text
               style={[
@@ -326,13 +337,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               : i18n._(t`Join League`)
           }
           disabled={joined}
-          onPress={() =>
-            user
-              ? onCheckUserInLeague()
-              : navigation.navigate('Home', {
-                  screen: 'Sign Up',
-                })
-          }
+          onPress={() => onCheckUserInLeague()}
         />
       )}
     </View>

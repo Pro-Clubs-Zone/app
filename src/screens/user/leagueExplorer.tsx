@@ -81,7 +81,7 @@ export default function LeagueExplorer({navigation}: Props) {
         })}
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: data.length === 0 ? 'center' : null,
+          justifyContent: data.length === 0 ? 'center' : undefined,
         }}
         stickyHeaderIndices={[0]}
       />

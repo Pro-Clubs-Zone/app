@@ -35,9 +35,10 @@ export default function Clubs() {
   const leagueContext = useContext(LeagueContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
-  const requests: ILeagueRequest[] = requestContext.leagues;
+  const requests = requestContext.leagues;
   const leagueId = leagueContext.leagueId;
   const adminId = leagueContext.league.adminId;
+  const userLeagues = context.userLeagues!;
 
   const sortClubs = (clubs: IClubRequestData[]) => {
     const acceptedClubList: ILeagueRequest = {
@@ -70,7 +71,7 @@ export default function Clubs() {
   };
 
   useEffect(() => {
-    const clubs = context.userLeagues[leagueId].clubs;
+    const clubs = userLeagues[leagueId].clubs;
 
     let clubList: IClubRequestData[] = [];
     let clubInfo: IClubRequestData;
@@ -100,7 +101,7 @@ export default function Clubs() {
     await handleLeagueRequest(
       requests,
       selectedClub,
-      context.userLeagues[leagueId].name,
+      userLeagues[leagueId].name,
       acceptRequest,
     )
       .then((newData) => {
@@ -111,13 +112,13 @@ export default function Clubs() {
         );
       })
       .then(() => {
-        const currentLeagueData = {...context.userLeagues};
+        const currentLeagueData = {...userLeagues};
         if (acceptRequest) {
-          currentLeagueData[selectedClub.leagueId].clubs[
+          currentLeagueData[selectedClub.leagueId].clubs![
             selectedClub.clubId
           ].accepted = true;
         } else {
-          delete currentLeagueData[selectedClub.leagueId].clubs[
+          delete currentLeagueData[selectedClub.leagueId].clubs![
             selectedClub.clubId
           ];
         }
@@ -196,7 +197,7 @@ export default function Clubs() {
   };
 
   const onAcceptedClub = (club: IClubRequestData) => {
-    const clubRoster = context.userLeagues[leagueId].clubs[club.clubId].roster;
+    const clubRoster = userLeagues[leagueId].clubs![club.clubId].roster;
 
     Alert.alert(
       i18n._(t`Remove Club`),
@@ -231,7 +232,7 @@ export default function Clubs() {
           <TwoLine
             title={item.name}
             sub={item.managerUsername}
-            rightIcon={item.accepted ? 'minus-circle' : null}
+            rightIcon={item.accepted ? 'minus-circle' : undefined}
             onIconPress={() => onAcceptedClub(item)}
             onPress={() => !item.accepted && onUnacceptedClub(item)}
           />
@@ -248,7 +249,7 @@ export default function Clubs() {
         )}
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: sectionedData.length === 0 ? 'center' : null,
+          justifyContent: sectionedData.length === 0 ? 'center' : undefined,
         }}
       />
     </>
