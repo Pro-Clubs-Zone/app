@@ -200,9 +200,9 @@ export default function Home({navigation}: Props) {
   }, [requestContext]);
 
   const getRivalsName = (match: IMatchNavData) => {
-    const rivalId = match.teams.filter((teamId) => teamId !== match.clubId);
-    const rivalName =
-      context.userLeagues[match.leagueId]?.clubs[rivalId[0]].name;
+    const rivalId = match.teams!.filter((teamId) => teamId !== match.clubId);
+    const rivalName = context.userLeagues![match.leagueId].clubs![rivalId[0]]
+      .name;
     return rivalName;
   };
   if (loading) {
@@ -234,7 +234,7 @@ export default function Home({navigation}: Props) {
             renderItem={({item}) => (
               <UpcomingMatchCard
                 clubName={
-                  context.userLeagues[item.data.leagueId].clubs[
+                  context.userLeagues![item.data.leagueId].clubs![
                     item.data.clubId
                   ].name
                 }
@@ -272,7 +272,7 @@ export default function Home({navigation}: Props) {
       <ScrollView>
         <CardMedium
           title={i18n._(t`My Requests`)}
-          subTitle={i18n._(t`Manager your received and sent request`)}
+          subTitle={i18n._(t`Manage your received and sent request`)}
           badgeNumber={userRequestCount}
           onPress={() => navigation.navigate('Requests')}
         />
