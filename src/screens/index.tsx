@@ -185,7 +185,7 @@ const HomeTabs = () => {
   const requestContext = useContext(RequestContext);
   const context = useContext(AppContext);
 
-  const conflictsCount = context.userData!.adminConflictCounts;
+  const conflictsCount = context.userData?.adminConflictCounts;
   const requestCount = requestContext.requestCount;
 
   return (

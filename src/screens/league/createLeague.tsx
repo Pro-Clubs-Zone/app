@@ -9,12 +9,20 @@ import {BigButton} from '../../components/buttons';
 import {FormView, FormContent} from '../../components/templates';
 import {AppContext} from '../../context/appContext';
 import FullScreenLoading from '../../components/loading';
-import {Alert, Platform, View, KeyboardAvoidingView} from 'react-native';
+import {
+  Alert,
+  Platform,
+  View,
+  KeyboardAvoidingView,
+  Switch,
+  Text,
+} from 'react-native';
 import Picker from '../../components/picker';
-import {APP_COLORS} from '../../utils/designSystem';
+import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import createLeague from '../../actions/createLeague';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import {verticalScale} from 'react-native-size-matters';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -27,8 +35,8 @@ export default function CreateLeague({navigation}: Props) {
   const context = useContext(AppContext);
 
   const uid = user.uid;
-
-  const userLeagues = context.userData?.leagues;
+  const userData = context.userData;
+  const userLeagues = userData?.leagues;
 
   const leagueInfoDefault: Partial<ILeague> = {
     platform: 'ps',
@@ -49,7 +57,7 @@ export default function CreateLeague({navigation}: Props) {
     matchNum: data.matchNum,
   });
   const [error, setError] = useState({
-    name: null,
+    name: '',
   });
 
   useEffect(() => {
@@ -63,8 +71,8 @@ export default function CreateLeague({navigation}: Props) {
   }, [userLeagues]);
 
   useEffect(() => {
-    if (error.name && data.name !== '') {
-      setError({...error, name: null});
+    if (error.name !== '' && data.name !== '') {
+      setError({...error, name: ''});
     }
   }, [data.name]);
 
@@ -73,7 +81,7 @@ export default function CreateLeague({navigation}: Props) {
       setError({...error, name: i18n._(t`Field can't be empty`)});
       return false;
     }
-    if (data.name.length < 4 && data.name !== '') {
+    if (data.name !== '' && data.name!.length < 4) {
       setError({...error, name: i18n._(t`At least ${4} letters`)});
       return false;
     }
@@ -99,7 +107,7 @@ export default function CreateLeague({navigation}: Props) {
       if (noErrors) {
         if (uid) {
           setLoading(true);
-          const username = context.userData.username;
+          const username = userData!.username;
           await createLeague(data, uid, username).then((leagueId) => {
             let updatedUserData = {...context.userData};
             let updatedUserLeagues = {...context.userLeagues};
@@ -183,7 +191,7 @@ export default function CreateLeague({navigation}: Props) {
             <View
               style={{
                 flex: 1,
-                marginRight: 24,
+                marginRight: verticalScale(24),
               }}>
               <Picker
                 onValueChange={(itemValue) =>
@@ -289,9 +297,38 @@ export default function CreateLeague({navigation}: Props) {
               </Picker>
             </View>
           </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignContent: 'center',
+              alignItems: 'center',
+              paddingBottom: verticalScale(16),
+            }}>
+            <View>
+              <Text style={TEXT_STYLES.body}>Public League</Text>
+              <Text
+                style={[
+                  TEXT_STYLES.small,
+                  {
+                    color: APP_COLORS.Gray,
+                  },
+                ]}>
+                Contact PRZ to enable this option
+              </Text>
+            </View>
+            <Switch
+              trackColor={{false: APP_COLORS.Dark, true: APP_COLORS.Accent}}
+              thumbColor={APP_COLORS.Primary}
+              ios_backgroundColor={APP_COLORS.Dark}
+              //  onValueChange={toggleSwitch}
+              disabled={true}
+              value={false}
+            />
+          </View>
           <TextField
             value={data.description}
-            placeholder={i18n._(t`Describe your league in a few sentences...`)}
+            placeholder={i18n._(t`Describe your league and its rules`)}
             label={i18n._(t`Description`)}
             multiline={true}
             onChangeText={(text) => setData({...data, description: text})}
@@ -320,7 +357,7 @@ export default function CreateLeague({navigation}: Props) {
         <BigButton
           onPress={
             hasLeague
-              ? !context?.userData.premium
+              ? !userData?.premium
                 ? showLimitAlert
                 : onCreateLeague
               : onCreateLeague
