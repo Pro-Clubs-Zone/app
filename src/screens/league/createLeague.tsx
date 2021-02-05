@@ -39,6 +39,7 @@ export default function CreateLeague({navigation}: Props) {
   const userLeagues = userData?.leagues;
 
   const leagueInfoDefault: Partial<ILeague> = {
+    name: '',
     platform: 'ps',
     teamNum: 8,
     acceptedClubs: 0,
@@ -56,8 +57,10 @@ export default function CreateLeague({navigation}: Props) {
     teamNum: data.teamNum,
     matchNum: data.matchNum,
   });
-  const [error, setError] = useState({
+  const [errorStates, setErrorStates] = useState({
     name: '',
+    discord: '',
+    twitter: '',
   });
 
   useEffect(() => {
@@ -70,21 +73,65 @@ export default function CreateLeague({navigation}: Props) {
     }
   }, [userLeagues]);
 
-  useEffect(() => {
-    if (error.name !== '' && data.name !== '') {
-      setError({...error, name: ''});
+  const onChangeText = (
+    text: string,
+    field: 'name' | 'discord' | 'twitter',
+  ) => {
+    switch (field) {
+      case 'name':
+        setData({...data, name: text});
+        break;
+      case 'discord':
+        setData({...data, discord: text});
+        break;
+      case 'twitter':
+        setData({...data, twitter: text});
+        break;
     }
-  }, [data.name]);
+
+    if (errorStates[field]) {
+      setErrorStates({...errorStates, [field]: ''});
+    }
+  };
 
   const fieldValidation = async () => {
-    if (data.name === '') {
-      setError({...error, name: i18n._(t`Field can't be empty`)});
-      return false;
+    const twitterUrlExp = /(?:https?:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/;
+    const discordUrlExp = /(?:https?:\/\/)?(?:www\.)?discord\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/;
+
+    let errorStatus: Record<'name' | 'discord' | 'twitter', string> = {
+      name: '',
+      discord: '',
+      twitter: '',
+    };
+
+    let noErrors = true;
+
+    if (!data.name) {
+      errorStatus.name = i18n._(t`Field can't be empty`);
+      noErrors = false;
     }
+
     if (data.name !== '' && data.name!.length < 4) {
-      setError({...error, name: i18n._(t`At least ${4} letters`)});
+      errorStatus.name = i18n._(t`At least ${4} letters`);
+      noErrors = false;
+    }
+
+    if (data.discord && !data.discord.match(new RegExp(discordUrlExp))) {
+      errorStatus.discord = i18n._(t`Invalid URL format`);
+      noErrors = false;
+    }
+
+    if (data.twitter && !data.twitter.match(new RegExp(twitterUrlExp))) {
+      errorStatus.twitter = i18n._(t`Invalid URL format`);
+      noErrors = false;
+    }
+
+    if (!noErrors) {
+      setErrorStates(errorStatus);
+
       return false;
     }
+
     return true;
   };
 
@@ -154,11 +201,11 @@ export default function CreateLeague({navigation}: Props) {
         <FullScreenLoading visible={loading} />
         <FormContent>
           <TextField
-            onChangeText={(text) => setData({...data, name: text})}
+            onChangeText={(text) => onChangeText(text, 'name')}
             value={data.name}
             placeholder={i18n._(t`i.e. La Liga`)}
-            label={i18n._(t`League Name`)}
-            error={error.name}
+            label={i18n._(t`League Name (required)`)}
+            error={errorStates.name}
             helper={i18n._(t`Minimum ${4} letters, no profanity`)}
             maxLength={30}
           />
@@ -339,19 +386,23 @@ export default function CreateLeague({navigation}: Props) {
             value={data.discord}
             placeholder="Discord URL"
             label="Discord"
-            onChangeText={(text) => setData({...data, discord: text})}
+            onChangeText={(text) => onChangeText(text, 'discord')}
             autoCapitalize="none"
             keyboardType="url"
             autoCorrect={false}
+            error={errorStates.discord}
+            helper={i18n._(t`discord.com/abcde123`)}
           />
           <TextField
             value={data.twitter}
             placeholder="Twitter URL"
             label="Twitter"
-            onChangeText={(text) => setData({...data, twitter: text})}
+            onChangeText={(text) => onChangeText(text, 'twitter')}
             autoCapitalize="none"
             keyboardType="url"
             autoCorrect={false}
+            error={errorStates.twitter}
+            helper={i18n._(t`twitter.com/proclubszone`)}
           />
         </FormContent>
         <BigButton
