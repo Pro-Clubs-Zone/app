@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import {FlatList} from 'react-native';
+import {FlatList, View} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import useGetMatches from './functions/useGetMatches';
 // import {RouteProp} from '@react-navigation/native';
@@ -14,6 +14,7 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FullScreenLoading from '../../components/loading';
 import firestore from '@react-native-firebase/firestore';
+import {verticalScale} from 'react-native-size-matters';
 
 // import {verticalScale} from 'react-native-size-matters';
 
@@ -81,7 +82,7 @@ function UpcomingFixtures({navigation}: Props) {
         ItemSeparatorComponent={() => <ListSeparator />}
         ListEmptyComponent={() => <EmptyState title={i18n._(t`No Fixtures`)} />}
         contentContainerStyle={{
-          justifyContent: getMatches.data.length === 0 ? 'center' : null,
+          justifyContent: getMatches.data.length === 0 ? 'center' : undefined,
           flexGrow: 1,
         }}
         // getItemLayout={(item, index) => ({
@@ -92,10 +93,15 @@ function UpcomingFixtures({navigation}: Props) {
         ListFooterComponent={() =>
           getMatches.data.length !== 0 &&
           !getMatches.allLoaded && (
-            <MinButton
-              title={i18n._(t`Load more`)}
-              onPress={getMatches.onLoadMore}
-            />
+            <View
+              style={{
+                paddingBottom: verticalScale(24),
+              }}>
+              <MinButton
+                title={i18n._(t`Load more`)}
+                onPress={getMatches.onLoadMore}
+              />
+            </View>
           )
         }
       />
@@ -126,8 +132,8 @@ export function PastFixtures({navigation}: Props) {
           matchId={item.data.id}
           homeTeamName={item.data.homeTeamName}
           awayTeamName={item.data.awayTeamName}
-          homeTeamScore={item.data.result[item.data.homeTeamId]}
-          awayTeamScore={item.data.result[item.data.awayTeamId]}
+          homeTeamScore={item.data.result![item.data.homeTeamId]}
+          awayTeamScore={item.data.result![item.data.awayTeamId]}
           conflict={false}
           onPress={() =>
             navigation.navigate('Match', {
@@ -141,7 +147,7 @@ export function PastFixtures({navigation}: Props) {
       ItemSeparatorComponent={() => <ListSeparator />}
       ListEmptyComponent={() => <EmptyState title={i18n._(t`No Fixtures`)} />}
       contentContainerStyle={{
-        justifyContent: getMatches.data.length === 0 ? 'center' : null,
+        justifyContent: getMatches.data.length === 0 ? 'center' : undefined,
         flexGrow: 1,
       }}
       // getItemLayout={(item, index) => ({
@@ -152,10 +158,15 @@ export function PastFixtures({navigation}: Props) {
       ListFooterComponent={() =>
         getMatches.data.length !== 0 &&
         !getMatches.allLoaded && (
-          <MinButton
-            title={i18n._(t`Load more`)}
-            onPress={getMatches.onLoadMore}
-          />
+          <View
+            style={{
+              paddingBottom: verticalScale(24),
+            }}>
+            <MinButton
+              title={i18n._(t`Load more`)}
+              onPress={getMatches.onLoadMore}
+            />
+          </View>
         )
       }
     />
