@@ -13,19 +13,21 @@ import {RequestContext} from '../../context/requestContext';
 import {LeagueContext} from '../../context/leagueContext';
 import removeClub from '../club/actions/removeClub';
 import EmptyState from '../../components/emptyState';
-import RNRestart from 'react-native-restart';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import {CommonActions} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {LeagueStackType} from '../league/league';
 
-// type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
-// type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
+type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
+//type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
 
-// type Props = {
-//   navigation: ScreenNavigationProp;
-//   route: ScreenRouteProp;
-// };
+type Props = {
+  navigation: ScreenNavigationProp;
+  //route: ScreenRouteProp;
+};
 
-export default function Clubs() {
+export default function Clubs({navigation}: Props) {
   const [data, setData] = useState<IClubRequestData[]>([]);
   const [loading, setLoading] = useState(true);
   const [sectionedData, setSectionedData] = useState<ILeagueRequest[]>([]);
@@ -208,7 +210,23 @@ export default function Clubs() {
           onPress: () => {
             setLoading(true);
             removeClub(leagueId, club.clubId, adminId, clubRoster).then(() => {
-              RNRestart.Restart();
+              // const userDataCopy = {...context.userData};
+              // const userLeaguesCopy = {...context.userLeagues};
+              // const userDataLeague = userDataCopy.leagues![leagueId];
+              // const userLeague = userLeaguesCopy[leagueId];
+
+              // delete userDataLeague.clubId;
+              // delete userDataLeague.accepted;
+              // delete userDataLeague.clubName;
+              // userDataLeague.manager = false;
+
+              // delete userLeague.clubs![club.clubId];
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Home'}],
+                }),
+              );
             });
           },
           style: 'destructive',

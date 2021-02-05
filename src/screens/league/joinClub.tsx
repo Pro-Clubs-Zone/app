@@ -149,8 +149,10 @@ export default function JoinClub({navigation}: Props) {
         ItemSeparatorComponent={() => <ListSeparator />}
         ListEmptyComponent={() => (
           <EmptyState
-            title={i18n._(t`No Public Leagues`)}
-            body={i18n._(t`Check out later`)}
+            title={i18n._(t`No Accepted Clubs`)}
+            body={i18n._(
+              t`Currently this league has no accepted clubs. Check out later`,
+            )}
           />
         )}
         getItemLayout={(item, index) => ({

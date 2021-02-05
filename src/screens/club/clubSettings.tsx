@@ -7,31 +7,35 @@ import {LeagueContext} from '../../context/leagueContext';
 import removeClub from './actions/removeClub';
 import removePlayer from './actions/removePlayer';
 import {AuthContext} from '../../context/authContext';
-import RNRestart from 'react-native-restart';
 import {CardMedium} from '../../components/cards';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import {CommonActions} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Club Settings'>;
+type ScreenNavigationProp = StackNavigationProp<
+  LeagueStackType,
+  'Club Settings'
+>;
 
 type Props = {
   route: ScreenRouteProp;
+  navigation: ScreenNavigationProp;
 };
 
-export default function ClubSettings({route}: Props) {
+export default function ClubSettings({route, navigation}: Props) {
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
 
-  const playerId = user.uid;
+  const playerId = user.uid!;
   const leagueId = leagueContext.leagueId;
   const clubId = route.params.clubId;
-  const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-  const isManager = context.userData.leagues[leagueId].manager;
+  const clubRoster = context.userLeagues![leagueId].clubs![clubId].roster;
+  const isManager = context.userData!.leagues![leagueId].manager;
   const adminId = leagueContext.league.adminId;
   const leagueScheduled = leagueContext.league.scheduled;
-
-  //TODO: if admin, do not restart.
 
   const onRemoveClub = async () => {
     if (leagueScheduled) {
@@ -57,7 +61,12 @@ export default function ClubSettings({route}: Props) {
             text: i18n._(t`Remove`),
             onPress: () => {
               removeClub(leagueId, clubId, adminId, clubRoster).then(() => {
-                RNRestart.Restart();
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 1,
+                    routes: [{name: 'Home'}],
+                  }),
+                );
               });
             },
             style: 'destructive',
@@ -83,7 +92,12 @@ export default function ClubSettings({route}: Props) {
           text: i18n._(t`Leave`),
           onPress: () => {
             removePlayer({leagueId, playerId, clubId}).then(() => {
-              RNRestart.Restart();
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Home'}],
+                }),
+              );
             });
           },
           style: 'destructive',

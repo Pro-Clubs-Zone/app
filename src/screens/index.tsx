@@ -6,7 +6,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {APP_COLORS, FONT_SIZES} from '../utils/designSystem';
 import {IconButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
-import RNRestart from 'react-native-restart';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {LogBox, Platform} from 'react-native';
 import functions from '@react-native-firebase/functions';
@@ -55,6 +54,10 @@ export type AppNavStack = {
 export default function AppIndex() {
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
+  const requests = useContext(RequestContext);
+  const context = useContext(AppContext);
+
+  const debug = true;
 
   const uid = user.uid;
 
@@ -64,7 +67,7 @@ export default function AppIndex() {
 
   useEffect(() => {
     crashlytics().log('App mounted.');
-    if (__DEV__) {
+    if (debug && __DEV__) {
       const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
       console.log('dev');
 
@@ -87,10 +90,10 @@ export default function AppIndex() {
 
   const onSignOut = () => {
     firAuth.signOut().then(() => {
-      // requestContext?.resetRequests();
-      // context?.setUserData(null);
-      // context?.setUserLeagues(null);
-      RNRestart.Restart();
+      context.setUserData(undefined);
+      context.setUserLeagues(undefined);
+      context.setUserMatches([]);
+      requests.resetRequests();
     });
   };
 

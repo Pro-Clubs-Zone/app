@@ -71,7 +71,9 @@ export default function LeagueExplorer({navigation}: Props) {
         ListEmptyComponent={() => (
           <EmptyState
             title={i18n._(t`No Public Leagues`)}
-            body={i18n._(t`Check out later`)}
+            body={i18n._(
+              t`All new leagues are private by default. You can join one if you have an invitation code.`,
+            )}
           />
         )}
         getItemLayout={(item, index) => ({
