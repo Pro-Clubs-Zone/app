@@ -6,6 +6,7 @@ import {
   ImageBackground,
   Pressable,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
@@ -20,6 +21,7 @@ import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
 import {StackActions} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign In'>;
 type ScreenRouteProp = RouteProp<AppNavStack, 'Sign In'>;
@@ -35,18 +37,16 @@ export default function SignIn({navigation, route}: Props) {
   const redirectedFrom: string = route.params?.redirectedFrom;
 
   const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [errorStates, setErrorStates] = useState({
-    email: null,
-    password: null,
+    email: '',
   });
 
-  useLayoutEffect(() => {
-    const popAction = StackActions.pop(2);
+  const popAction = StackActions.pop(2);
 
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
         <HeaderBackButton
@@ -65,18 +65,15 @@ export default function SignIn({navigation, route}: Props) {
     }, 1000);
   };
 
-  const onChangeText = (text: string, field: 'email' | 'password') => {
+  const onChangeText = (text: string, field: 'email') => {
     switch (field) {
       case 'email':
         setEmail(text);
         break;
-      case 'password':
-        setPassword(text);
-        break;
     }
 
     if (errorStates[field]) {
-      setErrorStates({...errorStates, [field]: null});
+      setErrorStates({...errorStates, [field]: ''});
     }
   };
 
@@ -84,13 +81,8 @@ export default function SignIn({navigation, route}: Props) {
     const re = /\S+@\S+\.\S+/;
     const emailValid = re.test(email);
 
-    let errorStatus: Record<
-      'email' | 'password' | 'username',
-      null | string
-    > = {
-      email: null,
-      password: null,
-      username: null,
+    let errorStatus: Record<'email', string> = {
+      email: '',
     };
 
     let noErrors = true;
@@ -101,16 +93,6 @@ export default function SignIn({navigation, route}: Props) {
     }
     if (email === '') {
       errorStatus.email = i18n._(t`Field can't be empty`);
-      noErrors = false;
-    }
-
-    if (password === '') {
-      errorStatus.password = i18n._(t`Field can't be empty`);
-      noErrors = false;
-    }
-
-    if (password.length < 6 && password !== '') {
-      errorStatus.password = i18n._(t`At least ${6} characters`);
       noErrors = false;
     }
 
@@ -127,13 +109,42 @@ export default function SignIn({navigation, route}: Props) {
       if (noErrors) {
         setLoading(true);
         await firAuth
-          .signInWithEmailAndPassword(email, password)
-          .then(() => {
-            if (redirectedFrom) {
-              const popAction = StackActions.pop(2);
-
-              navigation.dispatch(popAction);
+          .sendSignInLinkToEmail(email, {
+            android: {
+              packageName: 'com.proclubszone',
+              minimumVersion: '1',
+              installApp: true,
+            },
+            iOS: {
+              bundleId: 'com.proclubszone',
+            },
+            url: 'https://l.proclubs.zone/emu/',
+            dynamicLinkDomain: 'l.proclubs.zone',
+            handleCodeInApp: true,
+          })
+          .then(async () => {
+            //  console.log('User account created & signed in!', data);
+            try {
+              await AsyncStorage.setItem('@storage_Email', email);
+              Alert.alert(
+                i18n._(t`Check your email`),
+                i18n._(
+                  t`Use the link that you have received in your email to sign in`,
+                ),
+                [
+                  {
+                    text: i18n._(t`Close`),
+                    onPress: () => navigation.dispatch(popAction),
+                    style: 'cancel',
+                  },
+                ],
+                {cancelable: false},
+              );
+            } catch (e) {
+              console.log('problem creating user', e);
             }
+            //await createDbEntry(data);
+            // return data;
           })
           .catch((error) => {
             setLoading(false);
@@ -176,22 +187,6 @@ export default function SignIn({navigation, route}: Props) {
                 returnKeyType="next"
                 helper="example@gmail.com"
                 error={errorStates.email}
-              />
-              <TextField
-                value={password}
-                placeholder={i18n._(t`Enter Password`)}
-                onChangeText={(text) => onChangeText(text, 'password')}
-                autoCorrect={false}
-                autoCapitalize="none"
-                label={i18n._(t`Password`)}
-                error={errorStates.password}
-                textContentType="password"
-                secureTextEntry={true}
-                //  blurOnSubmit={false}
-                //   secureTextEntry={true}
-                //  textContentType="password"
-                // fieldIco={visibility}
-                // onPressIco={changePwdType}
               />
               <BigButtonOutlined
                 onPress={onSignIn}

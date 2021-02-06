@@ -40,15 +40,13 @@ const firAuth = auth();
 
 function SignUp({navigation, route}: Props) {
   const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [errorStates, setErrorStates] = useState({
-    email: null,
-    password: null,
-    username: null,
+    email: '',
+    username: '',
   });
 
   const context = useContext(AppContext);
@@ -64,19 +62,13 @@ function SignUp({navigation, route}: Props) {
     }, 1000);
   };
 
-  const onChangeText = (
-    text: string,
-    field: 'email' | 'password' | 'username',
-  ) => {
+  const onChangeText = (text: string, field: 'email' | 'username') => {
     switch (field) {
       case 'email':
         setEmail(text);
         break;
       case 'username':
         setUsername(text.trim());
-        break;
-      case 'password':
-        setPassword(text);
         break;
     }
 
@@ -89,13 +81,9 @@ function SignUp({navigation, route}: Props) {
     const re = /\S+@\S+\.\S+/;
     const emailValid = re.test(email);
 
-    let errorStatus: Record<
-      'email' | 'password' | 'username',
-      null | string
-    > = {
-      email: null,
-      password: null,
-      username: null,
+    let errorStatus: Record<'email' | 'username', string> = {
+      email: '',
+      username: '',
     };
 
     let noErrors = true;
@@ -106,16 +94,6 @@ function SignUp({navigation, route}: Props) {
     }
     if (email === '') {
       errorStatus.email = i18n._(t`Field can't be empty`);
-      noErrors = false;
-    }
-
-    if (password === '') {
-      errorStatus.password = i18n._(t`Field can't be empty`);
-      noErrors = false;
-    }
-
-    if (password.length < 6 && password !== '') {
-      errorStatus.password = i18n._(t`At least ${6} characters`);
       noErrors = false;
     }
 
@@ -280,23 +258,6 @@ function SignUp({navigation, route}: Props) {
                 helper="example@gmail.com"
                 error={errorStates.email}
                 maxLength={320}
-              />
-              <TextField
-                value={password}
-                //  secureTextEntry={true}
-                placeholder={i18n._(t`Enter Password`)}
-                onChangeText={(text) => onChangeText(text, 'password')}
-                autoCorrect={false}
-                label={i18n._(t`Password`)}
-                helper={i18n._(t`At least ${6} characters`)}
-                //      onBlur={checkPasswordFormat}
-                // textContentType="newPassword"
-                //  fieldIco={visibility}
-                //  onPressIco={changePwdType}
-                error={errorStates.password}
-                maxLength={128}
-                textContentType="newPassword"
-                secureTextEntry={true}
               />
               <TextField
                 value={username}

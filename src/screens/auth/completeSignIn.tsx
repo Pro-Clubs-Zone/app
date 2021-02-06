@@ -35,7 +35,7 @@ const CompleteSignIn = () => {
         const email = await AsyncStorage.getItem('@storage_Email');
         const username = await AsyncStorage.getItem('@storage_Username');
         const url = await AsyncStorage.getItem('@storage_Url');
-        if (email !== null && username !== null && url !== null) {
+        if (email !== null && url !== null) {
           if (firAuth.isSignInWithEmailLink(url)) {
             console.log('signed in with email');
 
@@ -81,13 +81,9 @@ const CompleteSignIn = () => {
 
   return (
     <>
-      <FullScreenLoading visible={true} />
+      <FullScreenLoading visible={true} label={i18n._(t`Signing you in`)} />
     </>
   );
 };
 
 export default CompleteSignIn;
-
-const styles = StyleSheet.create({
-  container: {},
-});
