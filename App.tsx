@@ -48,6 +48,9 @@ const App = () => {
       }
 
       if (getLink) {
+        if (getLink.includes('firebaseapp')) {
+          await AsyncStorage.setItem('@storage_Url', getLink);
+        }
         return getLink;
       }
     },
@@ -57,7 +60,6 @@ const App = () => {
           listener(url);
         }
         if (url.includes('firebaseapp')) {
-          console.log('receive', url);
           await AsyncStorage.setItem('@storage_Url', url);
         }
       };
@@ -82,13 +84,6 @@ const App = () => {
   useEffect(() => {
     RNBootSplash.hide({fade: true});
   }, []);
-
-  // useEffect(() => {
-  //   console.log('use');
-
-  //   Linking.addEventListener('url', (url) => console.log(url));
-  //   return Linking.removeAllListeners('url');
-  // }, []);
 
   return (
     <>

@@ -32,9 +32,9 @@ const CompleteSignIn = ({navigation}: Props) => {
           '@storage_Url',
           //  '@storage_RedirectedFrom',
         ]);
+
         const email = asyncData[0][1];
         const url = asyncData[1][1];
-        //     const redirectedFrom = asyncData[3][1];
 
         if (email !== null && url !== null) {
           if (firAuth.isSignInWithEmailLink(url)) {
@@ -71,20 +71,30 @@ const CompleteSignIn = ({navigation}: Props) => {
                 );
               });
           }
+        } else {
+          throw new Error('something wrong with data');
         }
       } catch (e) {
         console.log('error completing sign up', e);
+        Alert.alert(
+          i18n._(t`Wrong sign in link`),
+          i18n._(t`It seems you've used wrong sign in link, please try again.`),
+          [
+            {
+              text: i18n._(t`Close`),
+              onPress: () => navigation.goBack(),
+              style: 'cancel',
+            },
+          ],
+          {cancelable: false},
+        );
       }
     };
 
     getData();
   }, []);
 
-  return (
-    <>
-      <FullScreenLoading visible={true} label={i18n._(t`Signing you in`)} />
-    </>
-  );
+  return <FullScreenLoading visible={true} label={i18n._(t`Signing you in`)} />;
 };
 
 export default CompleteSignIn;
