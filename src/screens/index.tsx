@@ -126,7 +126,7 @@ export default function AppIndex() {
           headerBackTitleVisible: false,
           animationEnabled: false,
         }}>
-        <Stack.Screen name="Sign Up" component={SignUp} />
+        {!displayName && <Stack.Screen name="Sign Up" component={SignUp} />}
         {displayName && (
           <>
             <Stack.Screen
