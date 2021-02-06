@@ -31,8 +31,8 @@ type SignIn = {data?: {}; redirectedFrom?: string | null};
 
 export type AppNavStack = {
   Home: undefined;
-  'Sign Up': SignIn;
-  'Sign In': SignIn;
+  'Sign Up': undefined;
+  'Sign In': undefined;
   'Complete Sign In': undefined;
   Requests: undefined;
   'Create League': undefined;

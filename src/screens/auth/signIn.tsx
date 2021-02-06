@@ -15,7 +15,7 @@ import auth from '@react-native-firebase/auth';
 import TextField from '../../components/textField';
 import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet} from 'react-native-size-matters';
-import {RouteProp} from '@react-navigation/native';
+//import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp, HeaderBackButton} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
@@ -23,19 +23,21 @@ import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
 import {StackActions} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+//import {ILeague} from '../../utils/interface';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign In'>;
-type ScreenRouteProp = RouteProp<AppNavStack, 'Sign In'>;
+//type ScreenRouteProp = RouteProp<AppNavStack, 'Sign In'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
+  //  route: ScreenRouteProp;
 };
 
 const firAuth = auth();
 
-export default function SignIn({navigation, route}: Props) {
-  const redirectedFrom: string = route.params?.redirectedFrom ?? 'home';
+export default function SignIn({navigation}: Props) {
+  // const redirectedFrom = route.params?.redirectedFrom ?? 'home';
+  // const redirectedData = route.params?.data as ILeague;
 
   const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -45,9 +47,9 @@ export default function SignIn({navigation, route}: Props) {
     email: '',
   });
 
-  const popAction = StackActions.pop(2);
-
   useLayoutEffect(() => {
+    const popAction = StackActions.pop(2);
+
     navigation.setOptions({
       headerLeft: () => (
         <HeaderBackButton
@@ -124,24 +126,27 @@ export default function SignIn({navigation, route}: Props) {
             handleCodeInApp: true,
           })
           .then(async () => {
-            const asyncRedirect = ['@storage_RedirectedFrom', redirectedFrom];
-            const asyncEmail = ['@storage_Email', email];
+            //   const jsonLeagueData = JSON.stringify(redirectedData);
+            // const asyncLeagueData = ['@storage_LeagueData', jsonLeagueData];
+            //   const asyncRedirect = ['@storage_RedirectedFrom', redirectedFrom];
+            //            const asyncEmail = ['@storage_Email', email];
             try {
-              await AsyncStorage.multiSet([asyncEmail, asyncRedirect]);
-              Alert.alert(
-                i18n._(t`Check your email`),
-                i18n._(
-                  t`Use the link that you have received in your email to sign in`,
-                ),
-                [
-                  {
-                    text: i18n._(t`Close`),
-                    onPress: () => navigation.goBack(),
-                    style: 'cancel',
-                  },
-                ],
-                {cancelable: false},
-              );
+              await AsyncStorage.setItem('@storage_Email', email).then(() => {
+                Alert.alert(
+                  i18n._(t`Check your email`),
+                  i18n._(
+                    t`Use the link that you have received in your email to sign in`,
+                  ),
+                  [
+                    {
+                      text: i18n._(t`Close`),
+                      onPress: () => navigation.goBack(),
+                      style: 'cancel',
+                    },
+                  ],
+                  {cancelable: false},
+                );
+              });
             } catch (e) {
               console.log('problem creating user', e);
             }

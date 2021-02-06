@@ -4,42 +4,36 @@ import {
   Keyboard,
   ImageBackground,
   TouchableWithoutFeedback,
-  Alert,
 } from 'react-native';
-import {t, Trans} from '@lingui/macro';
+import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import auth from '@react-native-firebase/auth';
 import TextField from '../../components/textField';
-import {TEXT_STYLES, APP_COLORS} from '../../utils/designSystem';
+import {APP_COLORS} from '../../utils/designSystem';
 import {ScaledSheet} from 'react-native-size-matters';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp, CommonActions} from '@react-navigation/native';
+import {CommonActions} from '@react-navigation/native';
 import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
-import Toast from '../../components/toast';
-import {ILeague} from '../../utils/interface';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore from '@react-native-firebase/firestore';
 import {IUser} from '../../utils/interface';
 import {AppContext} from '../../context/appContext';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign Up'>;
-type ScreenRouteProp = RouteProp<AppNavStack, 'Sign Up'>;
+// type ScreenRouteProp = RouteProp<AppNavStack, 'Sign Up'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
+  //route: ScreenRouteProp;
 };
 
 const firAuth = auth();
 const db = firestore();
 
-function SignUp({navigation, route}: Props) {
+function SignUp({navigation}: Props) {
   const [username, setUsername] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
   const [errorStates, setErrorStates] = useState({
     username: '',
   });
@@ -49,14 +43,6 @@ function SignUp({navigation, route}: Props) {
 
   const uid = firAuth.currentUser!.uid;
   const context = useContext(AppContext);
-
-  const onShowToast = (message: string) => {
-    setShowToast(true);
-    setToastMessage(message);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 1000);
-  };
 
   const onChangeText = (text: string, field: 'username') => {
     switch (field) {
@@ -119,30 +105,18 @@ function SignUp({navigation, route}: Props) {
           .set(userInitialData)
           .then(async () => {
             context.setUserData(userInitialData);
-            try {
-              const redirectedFrom = await AsyncStorage.getItem(
-                '@storage_RedirectedFrom',
-              );
-              if (redirectedFrom === 'createLeague') {
-                navigation.navigate('Create League');
-              } else {
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 0,
-                    routes: [{name: 'Home'}],
-                  }),
-                );
-              }
-            } catch (e) {
-              // error reading value
-            }
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{name: 'Home'}],
+              }),
+            );
           });
       }
     });
   };
   return (
     <ImageBackground source={{uri: 'main_bg'}} style={styles.backgroundImage}>
-      <Toast message={toastMessage} visible={showToast} success={false} />
       <FullScreenLoading visible={loading} />
 
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>

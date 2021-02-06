@@ -46,9 +46,6 @@ const CompleteSignIn = ({navigation}: Props) => {
                 const keys = ['@storage_Email', '@storage_Url'];
                 try {
                   await AsyncStorage.multiRemove(keys);
-                  // if (redirectedFrom !== 'createLeague') {
-                  //   await AsyncStorage.removeItem('@storage_RedirectedFrom');
-                  // }
                 } catch (e) {
                   console.log('cache clear error', e);
                 }

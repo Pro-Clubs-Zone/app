@@ -23,8 +23,6 @@ import createLeague from '../../actions/createLeague';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {verticalScale} from 'react-native-size-matters';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from '../../components/toast';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Create League'>;
 
@@ -50,8 +48,6 @@ export default function CreateLeague({navigation}: Props) {
     scheduled: false,
     conflictMatchesCount: 0,
   };
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
   const [data, setData] = useState(leagueInfoDefault);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasLeague, setHasLeague] = useState<boolean>(false);
@@ -66,14 +62,6 @@ export default function CreateLeague({navigation}: Props) {
     twitter: '',
   });
 
-  const onShowToast = (message: string) => {
-    setShowToast(true);
-    setToastMessage(message);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 1000);
-  };
-
   useEffect(() => {
     if (userLeagues) {
       for (const league of Object.values(userLeagues)) {
@@ -85,33 +73,20 @@ export default function CreateLeague({navigation}: Props) {
   }, [userLeagues]);
 
   useEffect(() => {
-    const getMyStringValue = async () => {
-      try {
-        const redirectedFrom = await AsyncStorage.getItem(
-          '@storage_RedirectedFrom',
-        );
-        console.log('redirectedFrom', redirectedFrom);
-
-        if (redirectedFrom === 'createLeague') {
-          onShowToast(i18n._(t`Sign In Successfull. Create your league`));
-        }
-      } catch (e) {
-        console.log('problem handling redirect', e);
-      }
-    };
-
-    const unsubscribe = navigation.addListener('focus', () => {
-      getMyStringValue().then(async () => {
-        try {
-          await AsyncStorage.removeItem('@storage_RedirectedFrom');
-        } catch (e) {
-          console.log('problem handling storage remove', e);
-        }
-      });
-    });
-
-    return unsubscribe;
-  }, [navigation]);
+    if (!uid) {
+      Alert.alert(
+        i18n._(t`Sign in to continue`),
+        i18n._(t`Please sign in first to create a league`),
+        [
+          {
+            text: i18n._(t`Sign In`),
+            onPress: () => navigation.navigate('Sign In'),
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+  }, []);
 
   const onChangeText = (
     text: string,
@@ -192,41 +167,34 @@ export default function CreateLeague({navigation}: Props) {
   const onCreateLeague = () => {
     fieldValidation().then(async (noErrors) => {
       if (noErrors) {
-        if (uid) {
-          setLoading(true);
-          const username = userData!.username;
-          await createLeague(data, uid, username).then((leagueId) => {
-            let updatedUserData = {...context.userData};
-            let updatedUserLeagues = {...context.userLeagues};
+        setLoading(true);
+        const username = userData!.username;
+        await createLeague(data, uid, username).then((leagueId) => {
+          let updatedUserData = {...context.userData};
+          let updatedUserLeagues = {...context.userLeagues};
 
-            updatedUserData.leagues = {
-              ...updatedUserData.leagues,
-              [leagueId]: {
-                admin: true,
-                manager: false,
-              },
-            };
+          updatedUserData.leagues = {
+            ...updatedUserData.leagues,
+            [leagueId]: {
+              admin: true,
+              manager: false,
+            },
+          };
 
-            updatedUserLeagues = {
-              ...updatedUserLeagues,
-              [leagueId]: data,
-            };
+          updatedUserLeagues = {
+            ...updatedUserLeagues,
+            [leagueId]: data,
+          };
 
-            context.setUserData(updatedUserData);
-            context.setUserLeagues(updatedUserLeagues);
-            setLoading(false);
-            navigation.navigate('League', {
-              leagueId: leagueId,
-              isAdmin: true,
-              newLeague: true,
-            });
+          context.setUserData(updatedUserData);
+          context.setUserLeagues(updatedUserLeagues);
+          setLoading(false);
+          navigation.navigate('League', {
+            leagueId: leagueId,
+            isAdmin: true,
+            newLeague: true,
           });
-        } else {
-          navigation.navigate('Sign Up', {
-            data: data,
-            redirectedFrom: 'createLeague',
-          });
-        }
+        });
       }
     });
   };
@@ -237,8 +205,6 @@ export default function CreateLeague({navigation}: Props) {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-      <Toast message={toastMessage} visible={showToast} success={true} />
-
       <FormView>
         <FullScreenLoading visible={loading} />
         <FormContent>

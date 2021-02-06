@@ -53,8 +53,8 @@ export type LeagueStackType = {
   'My Club': ClubProps;
   'Club Settings': ClubProps;
   'Report Center': ILeagueProps;
-  'Sign Up': SignIn;
-  'Sign In': SignIn;
+  //  'Sign Up': SignIn;
+  'Sign In': undefined;
   'League Explorer': undefined;
   Home: {
     screen: string;

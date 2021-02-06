@@ -167,12 +167,7 @@ export default function LeaguePreview({navigation, route}: Props) {
             if (user.uid) {
               navigation.navigate('Join Club');
             } else {
-              navigation.navigate('Sign Up', {
-                redirectedFrom: 'joinClub',
-                data: {
-                  leagueId: leagueId,
-                },
-              });
+              navigation.navigate('Sign In');
             }
           },
         },
@@ -203,12 +198,7 @@ export default function LeaguePreview({navigation, route}: Props) {
                 newLeague: false,
               });
             } else {
-              navigation.navigate('Sign Up', {
-                redirectedFrom: 'createClub',
-                data: {
-                  leagueId: leagueId,
-                },
-              });
+              navigation.navigate('Sign In');
             }
 
             break;
@@ -216,12 +206,7 @@ export default function LeaguePreview({navigation, route}: Props) {
             if (user.uid) {
               navigation.navigate('Join Club');
             } else {
-              navigation.navigate('Sign Up', {
-                redirectedFrom: 'joinClub',
-                data: {
-                  leagueId: leagueId,
-                },
-              });
+              navigation.navigate('Sign In');
             }
             break;
         }
@@ -311,7 +296,7 @@ export default function LeaguePreview({navigation, route}: Props) {
             value="Twitter"
           />
         )}
-        {league.description && (
+        {!!league.description && (
           <View>
             <Text
               style={[
