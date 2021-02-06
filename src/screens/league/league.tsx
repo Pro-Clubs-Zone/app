@@ -7,11 +7,15 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, StackActions} from '@react-navigation/native';
 import {AppNavStack} from '../index';
 import {LeagueContext} from '../../context/leagueContext';
 import FullScreenLoading from '../../components/loading';
-
+import {Alert, View, Text} from 'react-native';
+import {IconButton} from '../../components/buttons';
+import crashlytics from '@react-native-firebase/crashlytics';
+import i18n from '../../utils/i18n';
+import {t, Trans} from '@lingui/macro';
 // Screens
 import LeaguePreview from './leaguePreview';
 import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
@@ -25,11 +29,8 @@ import Clubs from '../leagueAdmin/clubs';
 import CreateClub from './createClub';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
-import SignUp from '../auth/signUp';
 import SignIn from '../auth/signIn';
 import LeagueExplorer from '../user/leagueExplorer';
-import {IconButton} from '../../components/buttons';
-import crashlytics from '@react-native-firebase/crashlytics';
 
 interface ClubProps {
   clubId: string;
@@ -76,6 +77,7 @@ const db = firestore();
 export default function LeagueStack({navigation, route}: Props) {
   const [league, setLeague] = useState<ILeague>();
   const [loading, setLoading] = useState<boolean>(true);
+  const [notFound, setNotFound] = useState(false);
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
   const userData = context?.userData;
@@ -109,16 +111,34 @@ export default function LeagueStack({navigation, route}: Props) {
     leagueRef
       .get()
       .then((doc) => {
-        leagueInfo = doc.data() as ILeague;
-        // leagueContext.setLeague(leagueInfo);
-        leagueContext.setLeagueId(leagueId);
-        leagueContext.setLeague(leagueInfo);
-        setLeague(leagueInfo);
-        crashlytics().setAttributes({
-          leagueId: leagueId,
-          role: role,
-        });
-        console.log(leagueInfo, 'League info');
+        if (!doc.exists) {
+          console.log('League doesnt exists');
+          setNotFound(true);
+          Alert.alert(
+            i18n._(t`League not found`),
+            i18n._(t`League link has expired or wrong`),
+            [
+              {
+                text: i18n._(t`Close`),
+                onPress: () => navigation.dispatch(StackActions.popToTop()),
+
+                style: 'cancel',
+              },
+            ],
+            {cancelable: false},
+          );
+        } else {
+          leagueInfo = doc.data() as ILeague;
+          // leagueContext.setLeague(leagueInfo);
+          leagueContext.setLeagueId(leagueId);
+          leagueContext.setLeague(leagueInfo);
+          setLeague(leagueInfo);
+          crashlytics().setAttributes({
+            leagueId: leagueId,
+            role: role,
+          });
+          console.log(leagueInfo, 'League info');
+        }
       })
       .then(() => {
         setLoading(false);
@@ -139,7 +159,11 @@ export default function LeagueStack({navigation, route}: Props) {
     return <FullScreenLoading visible={true} />;
   }
 
-  if (leagueScheduled) {
+  if (notFound) {
+    return <FullScreenLoading visible={true} />;
+  }
+
+  if (!notFound && leagueScheduled) {
     if (userInLeague) {
       return (
         <Stack.Navigator
@@ -192,13 +216,14 @@ export default function LeagueStack({navigation, route}: Props) {
             animationEnabled: false,
           }}>
           <Stack.Screen name="League Preview" component={LeaguePreview} />
-          <Stack.Screen name="Sign Up" component={SignUp} />
           <Stack.Screen name="Sign In" component={SignIn} />
           <Stack.Screen name="Join Club" component={JoinClub} />
         </Stack.Navigator>
       );
     }
-  } else {
+  }
+
+  if (!notFound && !leagueScheduled) {
     if (userAdmin) {
       return (
         <Stack.Navigator
@@ -237,7 +262,6 @@ export default function LeagueStack({navigation, route}: Props) {
           <Stack.Screen name="League Preview" component={LeaguePreview} />
           <Stack.Screen name="Create Club" component={CreateClub} />
           <Stack.Screen name="Join Club" component={JoinClub} />
-          <Stack.Screen name="Sign Up" component={SignUp} />
           <Stack.Screen name="Sign In" component={SignIn} />
           <Stack.Screen name="Club Settings" component={ClubSettings} />
         </Stack.Navigator>
