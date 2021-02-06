@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useContext, useLayoutEffect} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -57,7 +57,7 @@ export default function AppIndex() {
   const requests = useContext(RequestContext);
   const context = useContext(AppContext);
 
-  const debug = false;
+  const debug = true;
 
   const uid = user.uid;
   const displayName = user.displayName;

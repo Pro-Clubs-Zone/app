@@ -155,11 +155,7 @@ export default function LeagueStack({navigation, route}: Props) {
     </>
   );
 
-  if (loading) {
-    return <FullScreenLoading visible={true} />;
-  }
-
-  if (notFound) {
+  if (loading || notFound) {
     return <FullScreenLoading visible={true} />;
   }
 
