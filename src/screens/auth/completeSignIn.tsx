@@ -1,73 +1,74 @@
-import React, {useContext, useEffect} from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {AppContext} from '../../context/appContext';
+import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FullScreenLoading from '../../components/loading';
-// import {StackNavigationProp} from '@react-navigation/stack';
-// import {RouteProp} from '@react-navigation/native';
-// import {AppNavStack} from '../index';
-import {t, Trans} from '@lingui/macro';
+import {Alert} from 'react-native';
+import {StackNavigationProp} from '@react-navigation/stack';
+//import {RouteProp} from '@react-navigation/native';
+import {AppNavStack} from '../index';
+import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import {IUser} from '../../utils/interface';
 
-// type ScreenNavigationProp = StackNavigationProp<
-//   AppNavStack,
-//   'Complete Sign In'
-// >;
-// type ScreenRouteProp = RouteProp<AppNavStack, 'Complete Sign In'>;
+type ScreenNavigationProp = StackNavigationProp<
+  AppNavStack,
+  'Complete Sign In'
+>;
+//type ScreenRouteProp = RouteProp<AppNavStack, 'Complete Sign In'>;
 
-// type Props = {
-//   navigation: ScreenNavigationProp;
-//   route: ScreenRouteProp;
-// };
+type Props = {
+  navigation: ScreenNavigationProp;
+  // route: ScreenRouteProp;
+};
 
-const db = firestore();
 const firAuth = auth();
 
-const CompleteSignIn = () => {
-  const context = useContext(AppContext);
-
+const CompleteSignIn = ({navigation}: Props) => {
   useEffect(() => {
     const getData = async () => {
+      let asyncData;
       try {
-        const email = await AsyncStorage.getItem('@storage_Email');
-        const username = await AsyncStorage.getItem('@storage_Username');
-        const url = await AsyncStorage.getItem('@storage_Url');
+        asyncData = await AsyncStorage.multiGet([
+          '@storage_Email',
+          '@storage_Url',
+          //  '@storage_RedirectedFrom',
+        ]);
+        const email = asyncData[0][1];
+        const url = asyncData[1][1];
+        //     const redirectedFrom = asyncData[3][1];
+
         if (email !== null && url !== null) {
           if (firAuth.isSignInWithEmailLink(url)) {
             console.log('signed in with email');
 
             firAuth
               .signInWithEmailLink(email, url)
-              .then(async (data) => {
-                const uid = data.user.uid;
-                const userInitialData: IUser = {
-                  username: username,
-                  premium: false,
-                };
-                await db
-                  .collection('users')
-                  .doc(uid)
-                  .set(userInitialData)
-                  .then(() => {
-                    context.setUserData(userInitialData);
-                  });
-              })
               .then(async () => {
-                const keys = [
-                  '@storage_Email',
-                  '@storage_Username',
-                  '@storage_Url',
-                ];
+                const keys = ['@storage_Email', '@storage_Url'];
                 try {
                   await AsyncStorage.multiRemove(keys);
+                  // if (redirectedFrom !== 'createLeague') {
+                  //   await AsyncStorage.removeItem('@storage_RedirectedFrom');
+                  // }
                 } catch (e) {
                   console.log('cache clear error', e);
                 }
-
-                console.log('Done');
+              })
+              .catch((e) => {
+                console.log('something wrong with the link', e);
+                Alert.alert(
+                  i18n._(t`Wrong sign in link`),
+                  i18n._(
+                    t`It seems you've used wrong sign in link, please try again.`,
+                  ),
+                  [
+                    {
+                      text: i18n._(t`Close`),
+                      onPress: () => navigation.goBack(),
+                      style: 'cancel',
+                    },
+                  ],
+                  {cancelable: false},
+                );
               });
           }
         }
@@ -77,7 +78,7 @@ const CompleteSignIn = () => {
     };
 
     getData();
-  }, [context]);
+  }, []);
 
   return (
     <>

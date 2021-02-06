@@ -3,7 +3,15 @@ import {Animated, Text} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 
-const Toast = ({message, visible}: {message: string; visible: boolean}) => {
+const Toast = ({
+  message,
+  visible,
+  success,
+}: {
+  message: string;
+  visible: boolean;
+  success: boolean;
+}) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(0)).current;
 
@@ -53,6 +61,7 @@ const Toast = ({message, visible}: {message: string; visible: boolean}) => {
       style={[
         styles.modalContainer,
         {
+          backgroundColor: success ? APP_COLORS.Green : APP_COLORS.Red,
           transform: [
             {
               translateY: slideAnim.interpolate({
@@ -75,12 +84,12 @@ const styles = ScaledSheet.create({
   modalContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: APP_COLORS.Red,
     position: 'absolute',
     padding: '16@vs',
     zIndex: 100,
     flex: 1,
     borderRadius: 3,
     bottom: '56@vs',
+    alignSelf: 'center',
   },
 });

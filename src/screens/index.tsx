@@ -1,4 +1,4 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -25,8 +25,6 @@ import Match from './match/match';
 import {RequestContext} from '../context/requestContext';
 import {AppContext} from '../context/appContext';
 import LeaguePreview from './league/leaguePreview';
-import PasswordRecovery from './auth/passwordRecovery';
-import ResetPassword from './auth/resetPassword';
 import CompleteSignIn from './auth/completeSignIn';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
@@ -36,10 +34,6 @@ export type AppNavStack = {
   'Sign Up': SignIn;
   'Sign In': SignIn;
   'Complete Sign In': undefined;
-  'Password Recovery': undefined;
-  'Reset Password': {
-    oobCode: string;
-  };
   Requests: undefined;
   'Create League': undefined;
   'League Explorer': undefined;
@@ -53,6 +47,10 @@ export type AppNavStack = {
   };
 };
 
+const db = firestore();
+const firAuth = auth();
+const firFunc = functions();
+
 export default function AppIndex() {
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
@@ -62,12 +60,9 @@ export default function AppIndex() {
   const debug = false;
 
   const uid = user.uid;
+  const displayName = user.displayName;
 
-  const db = firestore();
-  const firAuth = auth();
-  const firFunc = functions();
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     crashlytics().log('App mounted.');
     if (debug && __DEV__) {
       const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
@@ -84,6 +79,8 @@ export default function AppIndex() {
       LogBox.ignoreLogs(['Remote debugger is in a background']);
       LogBox.ignoreLogs(['DevTools failed to load SourceMap:']); // Ignore log notification by message
     }
+
+    console.log('use effect from index', user);
 
     if (user.uid) {
       crashlytics().setUserId(uid!);
@@ -129,61 +126,65 @@ export default function AppIndex() {
           headerBackTitleVisible: false,
           animationEnabled: false,
         }}>
-        <Stack.Screen
-          name="Home"
-          component={HomeTabs}
-          options={{
-            animationTypeForReplace: 'pop',
-            headerRight: () => (
-              <IconButton name="logout-variant" onPress={onSignOut} />
-            ),
-          }}
-        />
-        <Stack.Screen
-          name="Match"
-          component={Match}
-          options={{headerShown: false}}
-        />
-        {commonStack}
-      </Stack.Navigator>
-    );
-  } else {
-    return (
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerBackTitleVisible: false,
-          animationEnabled: false,
-        }}>
-        <Stack.Screen
-          name="Home"
-          component={Leagues}
-          options={({navigation}) => ({
-            title: 'Leagues',
-            headerRight: () => (
-              <IconButton
-                name="account"
-                onPress={() => navigation.navigate('Sign Up')}
-              />
-            ),
-            animationTypeForReplace: 'pop',
-          })}
-        />
-        <Stack.Screen
-          name="Sign Up"
-          component={SignUp}
-          options={{
-            animationTypeForReplace: 'pop',
-          }}
-        />
-        <Stack.Screen name="Sign In" component={SignIn} />
-        <Stack.Screen name="Password Recovery" component={PasswordRecovery} />
-        <Stack.Screen name="Reset Password" component={ResetPassword} />
-        <Stack.Screen name="Complete Sign In" component={CompleteSignIn} />
-        {commonStack}
+        <Stack.Screen name="Sign Up" component={SignUp} />
+        {displayName && (
+          <>
+            <Stack.Screen
+              name="Home"
+              component={HomeTabs}
+              options={{
+                animationTypeForReplace: 'pop',
+                headerRight: () => (
+                  <IconButton name="logout-variant" onPress={onSignOut} />
+                ),
+              }}
+            />
+
+            <Stack.Screen
+              name="Match"
+              component={Match}
+              options={{headerShown: false}}
+            />
+            {commonStack}
+          </>
+        )}
       </Stack.Navigator>
     );
   }
+
+  return (
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerBackTitleVisible: false,
+        animationEnabled: false,
+      }}>
+      <Stack.Screen
+        name="Home"
+        component={Leagues}
+        options={({navigation}) => ({
+          title: 'Leagues',
+          headerRight: () => (
+            <IconButton
+              name="account"
+              onPress={() => navigation.navigate('Sign In')}
+            />
+          ),
+          animationTypeForReplace: 'pop',
+        })}
+      />
+
+      <Stack.Screen
+        name="Sign In"
+        component={SignIn}
+        options={{
+          animationTypeForReplace: 'pop',
+        }}
+      />
+      <Stack.Screen name="Complete Sign In" component={CompleteSignIn} />
+      {commonStack}
+    </Stack.Navigator>
+  );
 }
 
 const HomeTabs = () => {

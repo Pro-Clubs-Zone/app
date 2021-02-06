@@ -7,6 +7,7 @@ import {
   Pressable,
   TouchableWithoutFeedback,
   Alert,
+  Linking,
 } from 'react-native';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
@@ -34,7 +35,7 @@ type Props = {
 const firAuth = auth();
 
 export default function SignIn({navigation, route}: Props) {
-  const redirectedFrom: string = route.params?.redirectedFrom;
+  const redirectedFrom: string = route.params?.redirectedFrom ?? 'home';
 
   const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -123,9 +124,10 @@ export default function SignIn({navigation, route}: Props) {
             handleCodeInApp: true,
           })
           .then(async () => {
-            //  console.log('User account created & signed in!', data);
+            const asyncRedirect = ['@storage_RedirectedFrom', redirectedFrom];
+            const asyncEmail = ['@storage_Email', email];
             try {
-              await AsyncStorage.setItem('@storage_Email', email);
+              await AsyncStorage.multiSet([asyncEmail, asyncRedirect]);
               Alert.alert(
                 i18n._(t`Check your email`),
                 i18n._(
@@ -134,7 +136,7 @@ export default function SignIn({navigation, route}: Props) {
                 [
                   {
                     text: i18n._(t`Close`),
-                    onPress: () => navigation.dispatch(popAction),
+                    onPress: () => navigation.goBack(),
                     style: 'cancel',
                   },
                 ],
@@ -143,8 +145,6 @@ export default function SignIn({navigation, route}: Props) {
             } catch (e) {
               console.log('problem creating user', e);
             }
-            //await createDbEntry(data);
-            // return data;
           })
           .catch((error) => {
             setLoading(false);
@@ -170,7 +170,7 @@ export default function SignIn({navigation, route}: Props) {
 
   return (
     <ImageBackground source={{uri: 'main_bg'}} style={styles.backgroundImage}>
-      <Toast message={toastMessage} visible={showToast} />
+      <Toast message={toastMessage} visible={showToast} success={false} />
       <FullScreenLoading visible={loading} />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
@@ -191,77 +191,26 @@ export default function SignIn({navigation, route}: Props) {
               <BigButtonOutlined
                 onPress={onSignIn}
                 title={i18n._(t`Sign In`)}
-                // disabled={
-                //   !email ||
-                //   !emailIsValid(email) ||
-                //   !password
-                // }
               />
               <Pressable
-                onPress={() => navigation.navigate('Password Recovery')}>
-                <View style={styles.resetPass}>
+                onPress={() => {
+                  Linking.openURL('https://proclubs.zone/privacy-policy');
+                }}>
+                <View style={styles.privacyPolicy}>
                   <Trans>
                     <Text style={TEXT_STYLES.small}>
-                      <Trans>Forgot login details?</Trans>{' '}
-                      <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
-                        <Trans>Get help recovering it.</Trans>
+                      By signing up you agree to our{' '}
+                      <Text style={{...TEXT_STYLES.small, fontWeight: 'bold'}}>
+                        Privacy Policy.
                       </Text>
                     </Text>
                   </Trans>
                 </View>
               </Pressable>
-              {/* <View
-                style={{
-                  marginTop: verticalScale(24)
-                }}
-              >
-                <View style={styles.sep}>
-                  <View style={styles.sepLine} />
-                  <Text style={[TEXT_STYLES.small.display4, styles.sepText]}>
-                    <Trans>OR</Trans>
-                  </Text>
-                  <View style={styles.sepLine} />
-                </View>
-                <View
-                  style={{
-                    marginTop: verticalScale(24)
-                  }}
-                >
-                  <ExternalLogin
-                    onPress={onFbLoginPress.bind(this)}
-                    label={i18n._(
-                      t`Log in with ${
-                        selectedPlatform == "PSN" ? "Facebook" : "XBOX"
-                      }`
-                    )}
-                    platform={selectedPlatform}
-                  />
-                </View>
-              </View> */}
             </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
-      <Pressable onPress={() => navigation.goBack()} style={{width: '100%'}}>
-        <View style={styles.footer}>
-          <Trans>
-            <Text style={TEXT_STYLES.small}>
-              <Trans>Don’t have an account?</Trans>{' '}
-              <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
-                <Trans>Sign up now.</Trans>
-              </Text>
-            </Text>
-          </Trans>
-        </View>
-      </Pressable>
-      {/* {openXBL && (
-        <XboxSignup
-          openModal={openXBL}
-          closeModal={() => setState({ openXBL: false })}
-          onSignInSuccess={createMicrosoftUser}
-          signupUrl={MS_OAUTH}
-        />
-      )} */}
     </ImageBackground>
   );
 }
@@ -297,26 +246,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     width: '100%',
   },
-  logoContainer: {
-    height: '112@vs',
-    alignItems: 'center',
-  },
-  sepLine: {
-    height: '3@vs',
-    width: '48@vs',
-    backgroundColor: APP_COLORS.Accent,
-  },
-  sep: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sepText: {
-    color: APP_COLORS.Accent,
-    textAlign: 'center',
-    marginHorizontal: '16@vs',
-  },
-  resetPass: {
+  privacyPolicy: {
     alignItems: 'center',
     marginTop: '16@vs',
   },

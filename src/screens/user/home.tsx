@@ -205,9 +205,7 @@ export default function Home({navigation}: Props) {
       .name;
     return rivalName;
   };
-  if (loading) {
-    return <FullScreenLoading visible={loading} />;
-  }
+
   return (
     <View style={{flex: 1}}>
       <View style={styles.container}>
