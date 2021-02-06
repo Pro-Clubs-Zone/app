@@ -27,6 +27,7 @@ import {AppContext} from '../context/appContext';
 import LeaguePreview from './league/leaguePreview';
 import PasswordRecovery from './auth/passwordRecovery';
 import ResetPassword from './auth/resetPassword';
+import CompleteSignIn from './auth/completeSignIn';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
 
@@ -34,6 +35,7 @@ export type AppNavStack = {
   Home: undefined;
   'Sign Up': SignIn;
   'Sign In': SignIn;
+  'Complete Sign In': undefined;
   'Password Recovery': undefined;
   'Reset Password': {
     oobCode: string;
@@ -57,7 +59,7 @@ export default function AppIndex() {
   const requests = useContext(RequestContext);
   const context = useContext(AppContext);
 
-  const debug = true;
+  const debug = false;
 
   const uid = user.uid;
 
@@ -177,6 +179,7 @@ export default function AppIndex() {
         <Stack.Screen name="Sign In" component={SignIn} />
         <Stack.Screen name="Password Recovery" component={PasswordRecovery} />
         <Stack.Screen name="Reset Password" component={ResetPassword} />
+        <Stack.Screen name="Complete Sign In" component={CompleteSignIn} />
         {commonStack}
       </Stack.Navigator>
     );

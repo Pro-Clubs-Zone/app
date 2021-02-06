@@ -651,6 +651,8 @@ PODS:
     - React-jsi (= 0.63.3)
   - RNBootSplash (3.1.2):
     - React-Core
+  - RNCAsyncStorage (1.13.4):
+    - React-Core
   - RNCMaskedView (0.1.10):
     - React
   - RNCPicker (1.9.10):
@@ -744,6 +746,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNBootSplash (from `../node_modules/react-native-bootsplash`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNFBAnalytics (from `../node_modules/@react-native-firebase/analytics`)"
@@ -850,6 +853,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNBootSplash:
     :path: "../node_modules/react-native-bootsplash"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
   RNCPicker:
@@ -939,6 +944,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: 8e9fb25724a0805107fc1acc9075e26f814df454
   ReactCommon: 4167844018c9ed375cc01a843e9ee564399e53c3
   RNBootSplash: 8bb01ddbcb6c65f7271f15a5c6e61397166503a5
+  RNCAsyncStorage: 0701cb7395f06d744184641241888a0eec0e2f2a
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNCPicker: 77183d9b1cd80ae55505322f8ad09ba0036e29ba
   RNFBAnalytics: 85804b152d3925cbfebe2571ba2c9ea3de9f0128

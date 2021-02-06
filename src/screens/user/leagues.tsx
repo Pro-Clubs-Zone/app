@@ -28,15 +28,16 @@ export default function Leagues({navigation}: Props) {
 
   useEffect(() => {
     const userLeagues = context.userLeagues;
+    const userData = context.userData;
 
-    if (userLeagues) {
+    if (userLeagues && userData) {
       const leagueList: IleagueData[] = [];
 
       for (const [leagueId, league] of Object.entries(userLeagues)) {
-        const accepted = context.userData.leagues[leagueId]?.accepted;
-        const isAdmin = context.userData.leagues[leagueId]?.admin;
+        const accepted = userData.leagues[leagueId]?.accepted;
+        const isAdmin = userData.leagues[leagueId]?.admin;
         if (accepted || isAdmin) {
-          const userClubName = context.userData.leagues[leagueId].clubName;
+          const userClubName = userData.leagues[leagueId].clubName;
           const updatedData = {
             ...league,
             clubName: userClubName,

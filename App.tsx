@@ -23,6 +23,7 @@ import i18n from './src/utils/i18n';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import RNBootSplash from 'react-native-bootsplash';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const routeNameRef = useRef();
@@ -51,9 +52,13 @@ const App = () => {
       }
     },
     subscribe(listener) {
-      const onReceiveURL = ({url}: {url: string}) => {
+      const onReceiveURL = async ({url}: {url: string}) => {
         if (url.length > 34) {
           listener(url);
+        }
+        if (url.includes('firebaseapp')) {
+          console.log('receive', url);
+          await AsyncStorage.setItem('@storage_Url', url);
         }
       };
 
@@ -69,7 +74,7 @@ const App = () => {
       initialRouteName: 'Home',
       screens: {
         League: 'lgu/:leagueId',
-        'Reset Password': 'eml/',
+        'Complete Sign In': '',
       },
     },
   };

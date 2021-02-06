@@ -7,6 +7,7 @@ import {
   Linking,
   Pressable,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
@@ -24,6 +25,7 @@ import Toast from '../../components/toast';
 import createLeague from '../../actions/createLeague';
 import {ILeague, IUser} from '../../utils/interface';
 import {AppContext} from '../../context/appContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign Up'>;
 type ScreenRouteProp = RouteProp<AppNavStack, 'Sign Up'>;
@@ -144,74 +146,93 @@ function SignUp({navigation, route}: Props) {
     fieldValidation().then(async (noErrors) => {
       if (noErrors) {
         setLoading(true);
-
-        const createDbEntry = async (data: {user: {uid: string}}) => {
-          const uid = data.user.uid;
-          const userInitialData: IUser = {username: username, premium: false};
-          await db
-            .collection('users')
-            .doc(uid)
-            .set(userInitialData)
-            .then(() => {
-              context.setUserData(userInitialData);
-            });
-        };
-
         await firAuth
-          .createUserWithEmailAndPassword(email, password)
-          .then(async (data) => {
+          .sendSignInLinkToEmail(email, {
+            android: {
+              packageName: 'com.proclubszone',
+              minimumVersion: '1',
+              installApp: true,
+            },
+            iOS: {
+              bundleId: 'com.proclubszone',
+            },
+            url: 'https://l.proclubs.zone/emu/',
+            dynamicLinkDomain: 'l.proclubs.zone',
+            handleCodeInApp: true,
+          })
+          .then(async () => {
             //  console.log('User account created & signed in!', data);
-            await createDbEntry(data);
-            return data;
-          })
-          .then(async ({user}) => {
-            const onCreateLeague = async () => {
-              await createLeague(redirectedData, user.uid, username).then(
-                (leagueId) => {
-                  let updatedUserData = {...context.userData};
-                  let updatedUserLeagues = {...context.userLeagues};
-
-                  updatedUserData = {
-                    username: username,
-                    premium: false,
-                    leagues: {
-                      [leagueId]: {
-                        admin: true,
-                        manager: false,
-                      },
-                    },
-                  };
-
-                  updatedUserLeagues = {
-                    [leagueId]: redirectedData,
-                  };
-
-                  context.setUserData(updatedUserData);
-                  context.setUserLeagues(updatedUserLeagues);
-
-                  navigation.navigate('League', {
-                    leagueId: leagueId,
-                    isAdmin: true,
-                    newLeague: true,
-                  });
-                },
+            try {
+              await AsyncStorage.setItem('@storage_Email', email);
+              await AsyncStorage.setItem('@storage_Username', username);
+              Alert.alert(
+                i18n._(t`Check your email`),
+                i18n._(
+                  t`Use link that you have received in your email to sign in`,
+                ),
+                [
+                  {
+                    text: i18n._(t`Close`),
+                    onPress: () => navigation.goBack(),
+                    style: 'cancel',
+                  },
+                ],
+                {cancelable: false},
               );
-            };
-
-            switch (redirectedFrom) {
-              case 'createLeague':
-                onCreateLeague();
-                break;
-              case 'createClub':
-                setLoading(false);
-                navigation.goBack();
-                break;
-              case 'joinClub':
-                setLoading(false);
-                navigation.goBack();
-                break;
+            } catch (e) {
+              console.log('problem creating user', e);
             }
+            //await createDbEntry(data);
+            // return data;
           })
+          // .then(async ({user}) => {
+          //   const onCreateLeague = async () => {
+          //     await createLeague(redirectedData, user.uid, username).then(
+          //       (leagueId) => {
+          //         let updatedUserData = {...context.userData};
+          //         let updatedUserLeagues = {...context.userLeagues};
+
+          //         updatedUserData = {
+          //           username: username,
+          //           premium: false,
+          //           leagues: {
+          //             [leagueId]: {
+          //               admin: true,
+          //               manager: false,
+          //             },
+          //           },
+          //         };
+
+          //         updatedUserLeagues = {
+          //           [leagueId]: redirectedData,
+          //         };
+
+          //         context.setUserData(updatedUserData);
+          //         context.setUserLeagues(updatedUserLeagues);
+
+          //         navigation.navigate('League', {
+          //           leagueId: leagueId,
+          //           isAdmin: true,
+          //           newLeague: true,
+          //         });
+          //       },
+          //     );
+          //   };
+
+          //   switch (redirectedFrom) {
+          //     case 'createLeague':
+          //       onCreateLeague();
+          //       break;
+          //     case 'createClub':
+          //       setLoading(false);
+          //       navigation.goBack();
+          //       break;
+          //     case 'joinClub':
+          //       setLoading(false);
+          //       navigation.goBack();
+          //       break;
+          //   }
+          // })
           .catch((error) => {
             setLoading(false);
             if (error.code === 'auth/email-already-in-use') {
