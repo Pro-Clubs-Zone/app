@@ -13,7 +13,7 @@
     "ios-debug": "npx react-native run-ios --scheme Dev --configuration Dev.Debug",
     "ios-release": "npx react-native run-ios --scheme Dev --configuration Dev.Release",
     "android-debug": "npx react-native run-android --variant=devDebug --appIdSuffix=dev",
-    "android-release": "npx react-native run-ios run-android --variant=devRelease --appIdSuffix=dev",
+    "android-release": "npx react-native run-android --variant=devRelease --appIdSuffix=dev",
     "version": "react-native-version"
   },
   "dependencies": {
