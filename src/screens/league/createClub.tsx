@@ -30,7 +30,7 @@ export default function CreateClub({route, navigation}: Props) {
   const [clubName, setClubName] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState({
-    clubName: null,
+    clubName: '',
   });
 
   const user = useContext(AuthContext);
@@ -38,13 +38,13 @@ export default function CreateClub({route, navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
-  const uid = user?.uid;
+  const uid = user.uid!;
   const isAdmin = route?.params?.isAdmin;
-  const username = context.userData.username;
+  const username = context.userData!.username;
 
   useEffect(() => {
     if (error.clubName && clubName !== '') {
-      setError({...error, clubName: null});
+      setError({...error, clubName: ''});
     }
   }, [clubName]);
 
@@ -112,7 +112,7 @@ export default function CreateClub({route, navigation}: Props) {
           updateLeagueInfo.acceptedClubs += 1;
           leagueContext.setLeague(updateLeagueInfo);
 
-          let userData = {...context.userData};
+          let userData = {...context.userData!};
           userData.leagues = {
             ...userData.leagues,
             [leagueId]: userInfo,

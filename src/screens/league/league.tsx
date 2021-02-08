@@ -154,9 +154,9 @@ export default function LeagueStack({navigation, route}: Props) {
       <Stack.Screen name="Club Settings" component={ClubSettings} />
     </>
   );
-
+  //TODO: test
   if (loading || notFound) {
-    return <FullScreenLoading visible={true} />;
+    return <FullScreenLoading visible={loading} />;
   }
 
   if (!notFound && leagueScheduled) {

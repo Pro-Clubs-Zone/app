@@ -31,8 +31,6 @@ export default function JoinClub({navigation}: Props) {
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const leagueContext = useContext(LeagueContext);
-  const uid = user.uid;
-  const userRef = db.collection('users').doc(uid);
   const leagueId = leagueContext.leagueId;
   const leagueRef = db.collection('leagues').doc(leagueId);
   const leagueClubs = leagueRef.collection('clubs');
@@ -55,6 +53,8 @@ export default function JoinClub({navigation}: Props) {
 
   const onSendRequestConfirm = async (club: ClubListItem) => {
     setLoading(true);
+    const uid = user.uid!;
+    const userRef = db.collection('users').doc(uid);
     const batch = db.batch();
     const clubRef = leagueClubs.doc(club.clubId);
     const userInfo: IUserLeague = {
@@ -90,7 +90,7 @@ export default function JoinClub({navigation}: Props) {
       await analytics().logJoinGroup({
         group_id: leagueContext.leagueId,
       });
-      let userData = {...context.userData};
+      let userData = {...context.userData!};
       userData.leagues = {
         ...userData.leagues,
         [leagueId]: userInfo,

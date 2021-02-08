@@ -48,10 +48,10 @@ export default function CreateLeague({navigation}: Props) {
     scheduled: false,
     conflictMatchesCount: 0,
   };
-  const [data, setData] = useState(leagueInfoDefault);
+  const [data, setData] = useState<ILeague>(leagueInfoDefault as ILeague);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasLeague, setHasLeague] = useState<boolean>(false);
-  const [tempData, setTempData] = useState<Partial<ILeague>>({
+  const [tempData, setTempData] = useState({
     platform: data.platform,
     teamNum: data.teamNum,
     matchNum: data.matchNum,
@@ -86,7 +86,7 @@ export default function CreateLeague({navigation}: Props) {
         {cancelable: false},
       );
     }
-  }, []);
+  }, [navigation, uid]);
 
   const onChangeText = (
     text: string,
@@ -169,8 +169,8 @@ export default function CreateLeague({navigation}: Props) {
       if (noErrors) {
         setLoading(true);
         const username = userData!.username;
-        await createLeague(data, uid, username).then((leagueId) => {
-          let updatedUserData = {...context.userData};
+        await createLeague(data, uid!, username).then((leagueId) => {
+          let updatedUserData = {...context.userData!};
           let updatedUserLeagues = {...context.userLeagues};
 
           updatedUserData.leagues = {

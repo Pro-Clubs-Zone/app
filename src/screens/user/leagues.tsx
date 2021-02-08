@@ -34,14 +34,15 @@ export default function Leagues({navigation}: Props) {
       const leagueList: IleagueData[] = [];
 
       for (const [leagueId, league] of Object.entries(userLeagues)) {
-        const accepted = userData.leagues[leagueId]?.accepted;
-        const isAdmin = userData.leagues[leagueId]?.admin;
+        const userLeague = userData.leagues![leagueId];
+        const accepted = userLeague.accepted;
+        const isAdmin = userLeague.admin;
         if (accepted || isAdmin) {
-          const userClubName = userData.leagues[leagueId].clubName;
+          const userClubName = userLeague.clubName;
           const updatedData = {
             ...league,
-            clubName: userClubName,
-            isAdmin: isAdmin,
+            clubName: userClubName!,
+            isAdmin: !!isAdmin,
           };
 
           const leagueData: IleagueData = {
@@ -53,6 +54,8 @@ export default function Leagues({navigation}: Props) {
       }
 
       setData(leagueList);
+    } else {
+      setData([]);
     }
   }, [context]);
 
@@ -73,7 +76,7 @@ export default function Leagues({navigation}: Props) {
                 teamName={item.data.clubName}
                 leagueName={item.data.name}
                 conflictsCount={
-                  item.data.isAdmin && item.data.conflictMatchesCount
+                  item.data.isAdmin ? item.data.conflictMatchesCount : 0
                 }
                 onPress={() =>
                   navigation.navigate('League', {

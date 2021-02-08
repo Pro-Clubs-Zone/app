@@ -39,7 +39,6 @@ type Props = {
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
   const [userRequestCount, setUserRequestCount] = useState<number>(0);
-  const [username, setUsername] = useState<string>();
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -167,7 +166,7 @@ export default function Home({navigation}: Props) {
         .then(async (doc) => {
           userInfo = doc.data() as IUser;
           console.log('get data');
-          setUsername(userInfo.username);
+          //  setUsername(userInfo.username);
           if (doc.exists && userInfo.leagues) {
             await getLeaguesClubs(userInfo).then(async (data) => {
               const {updatedUserData, userLeagues} = data;
@@ -222,7 +221,7 @@ export default function Home({navigation}: Props) {
                 textAlign: 'right',
               },
             ]}>
-            {username}
+            {user.displayName}
           </Text>
         </View>
         {context?.userMatches.length !== 0 ? (

@@ -2,18 +2,14 @@ import firestore from '@react-native-firebase/firestore';
 import {ILeague} from '../utils/interface';
 import analytics from '@react-native-firebase/analytics';
 
-const createLeague = async (
-  data: Partial<ILeague>,
-  uid: string,
-  username: string,
-) => {
+const createLeague = async (data: ILeague, uid: string, username: string) => {
   const db = firestore();
   const batch = db.batch();
   const leagueRef = db.collection('leagues').doc();
   const userRef = db.collection('users').doc(uid);
   const dataWithTimestamp: ILeague = {
     ...data,
-    name: data.name!.trim(),
+    name: data.name.trim(),
     adminId: uid,
     adminUsername: username,
     created: firestore.Timestamp.now(),

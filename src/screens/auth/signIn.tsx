@@ -197,6 +197,12 @@ export default function SignIn({navigation}: Props) {
                 onPress={onSignIn}
                 title={i18n._(t`Sign In`)}
               />
+              {__DEV__ && (
+                <BigButtonOutlined
+                  onPress={() => firAuth.signInAnonymously()}
+                  title="Sign Anon"
+                />
+              )}
               <Pressable
                 onPress={() => {
                   Linking.openURL('https://proclubs.zone/privacy-policy');
