@@ -82,7 +82,23 @@ export default function LeagueStack({navigation, route}: Props) {
   const leagueId = route.params.leagueId;
   const newLeague = route.params.newLeague;
 
-  useLayoutEffect(() => {
+  const showNotFound = () => {
+    Alert.alert(
+      i18n._(t`League not found`),
+      i18n._(t`League link has expired or wrong`),
+      [
+        {
+          text: i18n._(t`Close`),
+          onPress: () => navigation.dispatch(StackActions.popToTop()),
+
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  useEffect(() => {
     const leagueRef = db.collection('leagues').doc(leagueId);
 
     let leagueInfo: ILeague;
@@ -92,19 +108,7 @@ export default function LeagueStack({navigation, route}: Props) {
       .then((doc) => {
         if (!doc.exists) {
           setNotFound(true);
-          Alert.alert(
-            i18n._(t`League not found`),
-            i18n._(t`League link has expired or wrong`),
-            [
-              {
-                text: i18n._(t`Close`),
-                onPress: () => navigation.dispatch(StackActions.popToTop()),
-
-                style: 'cancel',
-              },
-            ],
-            {cancelable: false},
-          );
+          showNotFound();
         } else {
           leagueInfo = doc.data() as ILeague;
           leagueContext.setLeagueId(leagueId);
