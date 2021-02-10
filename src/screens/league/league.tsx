@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useContext} from 'react';
+import React, {useState, useLayoutEffect, useContext, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
@@ -10,7 +10,7 @@ import {
 import {RouteProp, StackActions} from '@react-navigation/native';
 import {AppNavStack} from '../index';
 import {LeagueContext} from '../../context/leagueContext';
-import FullScreenLoading from '../../components/loading';
+import {NonModalLoading} from '../../components/loading';
 import {Alert} from 'react-native';
 import {IconButton} from '../../components/buttons';
 import crashlytics from '@react-native-firebase/crashlytics';
@@ -30,7 +30,6 @@ import CreateClub from './createClub';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
 import SignIn from '../auth/signIn';
-import LeagueExplorer from '../user/leagueExplorer';
 
 interface ClubProps {
   clubId: string;
@@ -54,12 +53,7 @@ export type LeagueStackType = {
   'My Club': ClubProps;
   'Club Settings': ClubProps;
   'Report Center': ILeagueProps;
-  //  'Sign Up': SignIn;
   'Sign In': undefined;
-  'League Explorer': undefined;
-  Home: {
-    screen: string;
-  };
 };
 
 const Stack = createStackNavigator<LeagueStackType>();
@@ -78,39 +72,26 @@ export default function LeagueStack({navigation, route}: Props) {
   const [league, setLeague] = useState<ILeague>();
   const [loading, setLoading] = useState<boolean>(true);
   const [notFound, setNotFound] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [leagueScheduled, setLeagueScheduled] = useState(false);
+  const [inLeague, setInLeague] = useState(false);
   const user = useContext(AuthContext);
   const context = useContext(AppContext);
-  const userData = context?.userData;
-  const uid = user?.uid;
-  const leagueId = route.params.leagueId;
-  const newLeague = route.params.newLeague;
   const leagueContext = useContext(LeagueContext);
 
-  const userInLeague =
-    userData?.leagues && userData.leagues[leagueId]?.accepted;
-  const leagueScheduled = league?.scheduled;
-  const userAdmin = userData ? league?.adminId === uid : false;
+  const leagueId = route.params.leagueId;
+  const newLeague = route.params.newLeague;
 
   useLayoutEffect(() => {
-    console.log('effect on league', route);
-
-    //TODO: Check if league exists in context
     const leagueRef = db.collection('leagues').doc(leagueId);
 
-    let role: string = 'guest';
-    if (userData?.leagues) {
-      const userDataLeague = userData.leagues?.[leagueId];
-      role = userDataLeague?.admin
-        ? 'admin'
-        : userDataLeague?.manager
-        ? 'manager'
-        : 'player';
-    }
-
     let leagueInfo: ILeague;
+
     leagueRef
       .get()
       .then((doc) => {
+        console.count('reading league');
+
         if (!doc.exists) {
           console.log('League doesnt exists');
           setNotFound(true);
@@ -129,15 +110,9 @@ export default function LeagueStack({navigation, route}: Props) {
           );
         } else {
           leagueInfo = doc.data() as ILeague;
-          // leagueContext.setLeague(leagueInfo);
           leagueContext.setLeagueId(leagueId);
           leagueContext.setLeague(leagueInfo);
           setLeague(leagueInfo);
-          crashlytics().setAttributes({
-            leagueId: leagueId,
-            role: role,
-          });
-          console.log(leagueInfo, 'League info');
         }
       })
       .then(() => {
@@ -145,22 +120,57 @@ export default function LeagueStack({navigation, route}: Props) {
       });
   }, [leagueId]);
 
+  useEffect(() => {
+    const userData = context.userData;
+    const uid = user.uid;
+
+    let role: string = 'guest';
+
+    if (user) {
+      if (userData) {
+        const userDataLeague = userData.leagues?.[leagueId];
+        role = userDataLeague?.admin
+          ? 'admin'
+          : userDataLeague?.manager
+          ? 'manager'
+          : 'player';
+        crashlytics().setAttributes({
+          leagueId: leagueId,
+          role: role,
+        });
+      }
+    } else {
+      crashlytics().setAttributes({
+        leagueId: leagueId,
+        role: role,
+      });
+    }
+
+    const userInLeague =
+      (userData?.leagues && userData.leagues[leagueId]?.accepted) ?? false;
+    const scheduled = league?.scheduled ?? false;
+    const userAdmin = userData ? league?.adminId === uid : false;
+
+    setLeagueScheduled(scheduled);
+    setIsAdmin(userAdmin);
+    setInLeague(userInLeague);
+  }, [league, context]);
+
   const commonStack = (
     <>
-      <Stack.Screen name="League Explorer" component={LeagueExplorer} />
       <Stack.Screen name="Create Club" component={CreateClub} />
       <Stack.Screen name="Clubs" component={Clubs} />
       <Stack.Screen name="My Club" component={Club} />
       <Stack.Screen name="Club Settings" component={ClubSettings} />
     </>
   );
-  //TODO: test
+
   if (loading || notFound) {
-    return <FullScreenLoading visible={true} />;
+    return <NonModalLoading visible={true} />;
   }
 
   if (!notFound && leagueScheduled) {
-    if (userInLeague) {
+    if (inLeague) {
       return (
         <Stack.Navigator
           screenOptions={{
@@ -172,7 +182,7 @@ export default function LeagueStack({navigation, route}: Props) {
             component={LeagueScheduled}
             options={{
               animationTypeForReplace: 'pop',
-              title: league.name,
+              title: league!.name,
               headerRight: () => (
                 <IconButton
                   name="information"
@@ -219,49 +229,47 @@ export default function LeagueStack({navigation, route}: Props) {
     }
   }
 
-  if (!notFound && !leagueScheduled) {
-    if (userAdmin) {
-      return (
-        <Stack.Navigator
-          screenOptions={{
-            headerBackTitleVisible: false,
-            animationEnabled: false,
-          }}>
-          <Stack.Screen
-            name="League Pre-Season"
-            component={LeaguePreSeason}
-            initialParams={{newLeague: newLeague}}
-            options={{
-              title: league.name,
-              headerRight: () => (
-                <IconButton
-                  name="information"
-                  onPress={() => {
-                    navigation.navigate('League Preview', {
-                      infoMode: true,
-                    });
-                  }}
-                />
-              ),
-            }}
-          />
-          {commonStack}
-        </Stack.Navigator>
-      );
-    } else {
-      return (
-        <Stack.Navigator
-          screenOptions={{
-            headerBackTitleVisible: false,
-            animationEnabled: false,
-          }}>
-          <Stack.Screen name="League Preview" component={LeaguePreview} />
-          <Stack.Screen name="Create Club" component={CreateClub} />
-          <Stack.Screen name="Join Club" component={JoinClub} />
-          <Stack.Screen name="Sign In" component={SignIn} />
-          <Stack.Screen name="Club Settings" component={ClubSettings} />
-        </Stack.Navigator>
-      );
-    }
+  if (isAdmin) {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerBackTitleVisible: false,
+          animationEnabled: false,
+        }}>
+        <Stack.Screen
+          name="League Pre-Season"
+          component={LeaguePreSeason}
+          initialParams={{newLeague: newLeague}}
+          options={{
+            title: league!.name,
+            headerRight: () => (
+              <IconButton
+                name="information"
+                onPress={() => {
+                  navigation.navigate('League Preview', {
+                    infoMode: true,
+                  });
+                }}
+              />
+            ),
+          }}
+        />
+        {commonStack}
+      </Stack.Navigator>
+    );
+  } else {
+    return (
+      <Stack.Navigator
+        screenOptions={{
+          headerBackTitleVisible: false,
+          animationEnabled: false,
+        }}>
+        <Stack.Screen name="League Preview" component={LeaguePreview} />
+        <Stack.Screen name="Create Club" component={CreateClub} />
+        <Stack.Screen name="Join Club" component={JoinClub} />
+        <Stack.Screen name="Sign In" component={SignIn} />
+        <Stack.Screen name="Club Settings" component={ClubSettings} />
+      </Stack.Navigator>
+    );
   }
 }

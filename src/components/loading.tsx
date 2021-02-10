@@ -20,6 +20,28 @@ export default function FullScreenLoading({
     </Modal>
   );
 }
+export function NonModalLoading({
+  label,
+  visible,
+}: {
+  label?: string;
+  visible: boolean;
+}) {
+  return (
+    <View
+      style={[
+        styles.container,
+        {
+          display: visible ? 'flex' : 'none',
+        },
+      ]}>
+      <ActivityIndicator size="large" color={APP_COLORS.Accent} />
+      <Text style={[TEXT_STYLES.title, styles.text]}>
+        {label ? label : i18n._(t`Loading`)}
+      </Text>
+    </View>
+  );
+}
 
 const styles = ScaledSheet.create({
   container: {

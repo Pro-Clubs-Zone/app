@@ -123,7 +123,7 @@ export default function LeaguePreview({navigation, route}: Props) {
         ),
       });
     }
-  });
+  }, [navigation]);
 
   useEffect(() => {
     const userLeagues = context.userData?.leagues;

@@ -102,7 +102,9 @@ function SignUp({navigation}: Props) {
         await db
           .collection('users')
           .doc(uid)
-          .set(userInitialData)
+          .set(userInitialData, {
+            merge: true,
+          })
           .then(async () => {
             context.setUserData(userInitialData);
             navigation.dispatch(
