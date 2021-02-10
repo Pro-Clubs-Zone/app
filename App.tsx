@@ -38,7 +38,11 @@ const App = () => {
   };
 
   const linking = {
-    prefixes: ['https://l.proclubs.zone', 'proclubs://'],
+    prefixes: [
+      'https://l.proclubs.zone',
+      'proclubs://',
+      'https://pro-clubs-zone-v2.firebaseapp.com',
+    ],
     async getInitialURL() {
       const firUrl = await getFirUrl();
       const getLink = await Linking.getInitialURL();

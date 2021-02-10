@@ -158,12 +158,12 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     if (user) {
-      setLoading(true);
       const userRef = db.collection('users').doc(uid!);
       let userInfo: IUser;
       userRef
         .get()
         .then(async (doc) => {
+          setLoading(true);
           userInfo = doc.data() as IUser;
           console.log('get data');
           //  setUsername(userInfo.username);
@@ -205,7 +205,7 @@ export default function Home({navigation}: Props) {
     return rivalName;
   };
   if (loading) {
-    return <FullScreenLoading visible={loading} />;
+    return <FullScreenLoading visible={true} />;
   }
   return (
     <View style={{flex: 1}}>

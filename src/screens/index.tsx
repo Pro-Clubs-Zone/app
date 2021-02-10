@@ -64,7 +64,7 @@ export default function AppIndex() {
 
   useLayoutEffect(() => {
     crashlytics().log('App mounted.');
-    if (debug && __DEV__) {
+    if (__DEV__ && debug) {
       const localAddress = Platform.OS === 'ios' ? 'localhost' : '192.168.0.13';
       console.log('dev');
 

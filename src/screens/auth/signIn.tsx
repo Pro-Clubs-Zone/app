@@ -47,9 +47,9 @@ export default function SignIn({navigation}: Props) {
     email: '',
   });
 
-  useLayoutEffect(() => {
-    const popAction = StackActions.pop(2);
+  const popAction = StackActions.pop(2);
 
+  useLayoutEffect(() => {
     navigation.setOptions({
       headerLeft: () => (
         <HeaderBackButton
@@ -140,7 +140,7 @@ export default function SignIn({navigation}: Props) {
                   [
                     {
                       text: i18n._(t`Close`),
-                      onPress: () => navigation.goBack(),
+                      onPress: () => navigation.dispatch(popAction),
                       style: 'cancel',
                     },
                   ],

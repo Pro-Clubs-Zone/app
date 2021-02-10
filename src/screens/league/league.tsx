@@ -11,11 +11,11 @@ import {RouteProp, StackActions} from '@react-navigation/native';
 import {AppNavStack} from '../index';
 import {LeagueContext} from '../../context/leagueContext';
 import FullScreenLoading from '../../components/loading';
-import {Alert, View, Text} from 'react-native';
+import {Alert} from 'react-native';
 import {IconButton} from '../../components/buttons';
 import crashlytics from '@react-native-firebase/crashlytics';
 import i18n from '../../utils/i18n';
-import {t, Trans} from '@lingui/macro';
+import {t} from '@lingui/macro';
 // Screens
 import LeaguePreview from './leaguePreview';
 import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
@@ -156,7 +156,7 @@ export default function LeagueStack({navigation, route}: Props) {
   );
   //TODO: test
   if (loading || notFound) {
-    return <FullScreenLoading visible={loading} />;
+    return <FullScreenLoading visible={true} />;
   }
 
   if (!notFound && leagueScheduled) {
