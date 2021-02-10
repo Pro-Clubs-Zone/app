@@ -48,14 +48,18 @@ const App = () => {
       const getLink = await Linking.getInitialURL();
 
       if (firUrl) {
-        return firUrl.url;
+        if (firUrl.url.length > 34) {
+          return firUrl.url;
+        }
       }
 
       if (getLink) {
         if (getLink.includes('firebaseapp')) {
           await AsyncStorage.setItem('@storage_Url', getLink);
         }
-        return getLink;
+        if (getLink.length > 34) {
+          return getLink;
+        }
       }
     },
     subscribe(listener) {

@@ -23,7 +23,7 @@ import {AppNavStack} from '../index';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
-import FullScreenLoading from '../../components/loading';
+import {NonModalLoading} from '../../components/loading';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import UpcomingMatchCard from '../../components/upcomingMatchCard';
 import {CardMedium} from '../../components/cards';
@@ -205,7 +205,7 @@ export default function Home({navigation}: Props) {
     return rivalName;
   };
   if (loading) {
-    return <FullScreenLoading visible={true} />;
+    return <NonModalLoading visible={true} />;
   }
   return (
     <View style={{flex: 1}}>
