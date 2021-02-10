@@ -17,7 +17,7 @@ msgstr ""
 #~ msgid "<0>Already have an account? <1>Log in now.</1></0>"
 #~ msgstr ""
 
-#: src/screens/auth/signIn.tsx:147
+#: src/screens/auth/signIn.tsx:148
 msgid "<0>By signing up you agree to our <1>Privacy Policy.</1></0>"
 msgstr ""
 
@@ -76,7 +76,6 @@ msgstr ""
 msgid "Are you sure you want to schedule matches and start the league?"
 msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:51
 #: src/screens/auth/signUp.tsx:55
 msgid "At least {0} characters"
 msgstr ""
@@ -123,16 +122,12 @@ msgstr ""
 
 #: src/screens/auth/completeSignIn.tsx:47
 #: src/screens/auth/completeSignIn.tsx:63
-#: src/screens/auth/passwordRecovery.tsx:71
-#: src/screens/auth/passwordRecovery.tsx:71
-#: src/screens/auth/resetPassword.tsx:69
-#: src/screens/auth/resetPassword.tsx:69
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/club/clubSettings.tsx:36
 #: src/screens/league/createLeague.tsx:122
-#: src/screens/league/league.tsx:67
+#: src/screens/league/league.tsx:54
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:88
@@ -151,7 +146,7 @@ msgstr ""
 msgid "Club Name"
 msgstr ""
 
-#: src/screens/user/home.tsx:51
+#: src/screens/user/home.tsx:50
 #: src/screens/user/requests.tsx:93
 msgid "Club Requests"
 msgstr ""
@@ -182,7 +177,7 @@ msgid "Create Club"
 msgstr ""
 
 #: src/screens/league/createLeague.tsx:282
-#: src/screens/user/leagues.tsx:49
+#: src/screens/user/leagues.tsx:52
 msgid "Create League"
 msgstr ""
 
@@ -221,35 +216,30 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:97
 #: src/screens/auth/signIn.tsx:141
 msgid "E-mail"
 msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:48
 #: src/screens/auth/signIn.tsx:67
 msgid "Email is badly formatted"
 msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:97
 #: src/screens/auth/signIn.tsx:141
 msgid "Enter E-mail"
 msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:95
-msgid "Enter Password"
-msgstr ""
+#~ msgid "Enter Password"
+#~ msgstr ""
 
 #: src/components/scoreboard.tsx:66
 msgid "Enter Score"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:101
+#: src/screens/auth/signUp.tsx:103
 msgid "Enter Username"
 msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:52
-#: src/screens/auth/resetPassword.tsx:47
 #: src/screens/auth/signIn.tsx:71
 #: src/screens/auth/signUp.tsx:51
 #: src/screens/league/createClub.tsx:44
@@ -262,8 +252,8 @@ msgid "GD"
 msgstr ""
 
 #: src/screens/auth/passwordRecovery.tsx:98
-msgid "Get Reset Link"
-msgstr ""
+#~ msgid "Get Reset Link"
+#~ msgstr ""
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:179
 msgid "If you want to participate in your own league"
@@ -313,7 +303,7 @@ msgstr ""
 msgid "Join as a Player"
 msgstr ""
 
-#: src/screens/user/leagues.tsx:50
+#: src/screens/user/leagues.tsx:53
 msgid "Join leagues that are open to public"
 msgstr ""
 
@@ -337,7 +327,7 @@ msgstr ""
 msgid "League Clubs"
 msgstr ""
 
-#: src/screens/user/leagues.tsx:50
+#: src/screens/user/leagues.tsx:53
 msgid "League Explorer"
 msgstr ""
 
@@ -353,7 +343,7 @@ msgstr ""
 msgid "League Name (required)"
 msgstr ""
 
-#: src/screens/user/home.tsx:96
+#: src/screens/user/home.tsx:95
 #: src/screens/user/requests.tsx:157
 msgid "League Requests"
 msgstr ""
@@ -362,11 +352,11 @@ msgstr ""
 msgid "League is full and matches can be scheduled"
 msgstr ""
 
-#: src/screens/league/league.tsx:65
+#: src/screens/league/league.tsx:52
 msgid "League link has expired or wrong"
 msgstr ""
 
-#: src/screens/league/league.tsx:65
+#: src/screens/league/league.tsx:52
 msgid "League not found"
 msgstr ""
 
@@ -389,10 +379,11 @@ msgid "Load more"
 msgstr ""
 
 #: src/components/loading.tsx:24
+#: src/components/loading.tsx:38
 msgid "Loading"
 msgstr ""
 
-#: src/screens/user/home.tsx:209
+#: src/screens/user/home.tsx:208
 msgid "Manage your received and sent request"
 msgstr ""
 
@@ -435,7 +426,7 @@ msgstr ""
 msgid "Minimum {0} letters, no profanity"
 msgstr ""
 
-#: src/screens/user/home.tsx:209
+#: src/screens/user/home.tsx:208
 msgid "My Requests"
 msgstr ""
 
@@ -445,14 +436,14 @@ msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:80
 #: src/screens/auth/resetPassword.tsx:80
-msgid "New password is not strong enough."
-msgstr ""
+#~ msgid "New password is not strong enough."
+#~ msgstr ""
 
 #: src/screens/club/club.tsx:50
 msgid "New requests"
 msgstr ""
 
-#: src/screens/user/home.tsx:178
+#: src/screens/user/home.tsx:177
 msgid "Next Matches"
 msgstr ""
 
@@ -478,7 +469,7 @@ msgstr ""
 msgid "No Public Leagues"
 msgstr ""
 
-#: src/screens/user/home.tsx:204
+#: src/screens/user/home.tsx:203
 msgid "No Upcoming Matches"
 msgstr ""
 
@@ -494,7 +485,7 @@ msgstr ""
 msgid "PL"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:101
+#: src/screens/auth/signUp.tsx:103
 msgid "PSN or Xbox Username"
 msgstr ""
 
@@ -503,28 +494,28 @@ msgid "PTS"
 msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:95
-msgid "Password"
-msgstr ""
+#~ msgid "Password"
+#~ msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:67
 #: src/screens/auth/resetPassword.tsx:67
-msgid "Password Changed"
-msgstr ""
+#~ msgid "Password Changed"
+#~ msgstr ""
 
 #: src/screens/auth/passwordRecovery.tsx:69
 #: src/screens/auth/passwordRecovery.tsx:69
-msgid "Password Reset"
-msgstr ""
+#~ msgid "Password Reset"
+#~ msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:77
 #: src/screens/auth/resetPassword.tsx:77
-msgid "Password reset code has expired"
-msgstr ""
+#~ msgid "Password reset code has expired"
+#~ msgstr ""
 
 #: src/screens/auth/passwordRecovery.tsx:69
 #: src/screens/auth/passwordRecovery.tsx:69
-msgid "Password reset link was send to your email"
-msgstr ""
+#~ msgid "Password reset link was send to your email"
+#~ msgstr ""
 
 #: src/screens/match/upcomingMatch.tsx:213
 msgid "Past Fixtures"
@@ -593,8 +584,8 @@ msgid "Request Sent"
 msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:96
-msgid "Reset Password"
-msgstr ""
+#~ msgid "Reset Password"
+#~ msgstr ""
 
 #: src/screens/match/upcomingMatch.tsx:75
 #: src/screens/match/upcomingMatch.tsx:84
@@ -647,7 +638,7 @@ msgstr ""
 msgid "Sent Requests"
 msgstr ""
 
-#: src/screens/user/leagues.tsx:49
+#: src/screens/user/leagues.tsx:52
 msgid "Set up the league and invite players"
 msgstr ""
 
@@ -656,7 +647,7 @@ msgstr ""
 msgid "Sign In"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:102
+#: src/screens/auth/signUp.tsx:104
 msgid "Sign Up"
 msgstr ""
 
@@ -693,8 +684,6 @@ msgstr ""
 msgid "Teams"
 msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:80
-#: src/screens/auth/passwordRecovery.tsx:80
 #: src/screens/auth/signIn.tsx:121
 #: src/screens/auth/signIn.tsx:121
 msgid "That email address is invalid"
@@ -705,8 +694,6 @@ msgstr ""
 msgid "The password is invalid or the user does not have a password."
 msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:83
-#: src/screens/auth/passwordRecovery.tsx:83
 #: src/screens/auth/signIn.tsx:124
 #: src/screens/auth/signIn.tsx:124
 msgid "There is no user with this email"
@@ -718,7 +705,7 @@ msgstr ""
 msgid "Use the link that you have received in your email to sign in"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:101
+#: src/screens/auth/signUp.tsx:103
 msgid "Username"
 msgstr ""
 
@@ -745,8 +732,8 @@ msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:67
 #: src/screens/auth/resetPassword.tsx:67
-msgid "You can sign in with your new password"
-msgstr ""
+#~ msgid "You can sign in with your new password"
+#~ msgstr ""
 
 #: src/screens/league/createLeague.tsx:120
 msgid "You cannot create more than one league"
