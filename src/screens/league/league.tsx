@@ -90,10 +90,7 @@ export default function LeagueStack({navigation, route}: Props) {
     leagueRef
       .get()
       .then((doc) => {
-        console.count('reading league');
-
         if (!doc.exists) {
-          console.log('League doesnt exists');
           setNotFound(true);
           Alert.alert(
             i18n._(t`League not found`),

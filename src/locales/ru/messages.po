@@ -127,7 +127,7 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/club/clubSettings.tsx:36
 #: src/screens/league/createLeague.tsx:122
-#: src/screens/league/league.tsx:54
+#: src/screens/league/league.tsx:52
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:88
@@ -352,11 +352,11 @@ msgstr ""
 msgid "League is full and matches can be scheduled"
 msgstr ""
 
-#: src/screens/league/league.tsx:52
+#: src/screens/league/league.tsx:50
 msgid "League link has expired or wrong"
 msgstr ""
 
-#: src/screens/league/league.tsx:52
+#: src/screens/league/league.tsx:50
 msgid "League not found"
 msgstr ""
 
