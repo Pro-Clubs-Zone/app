@@ -24,6 +24,7 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import RNBootSplash from 'react-native-bootsplash';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {MatchProvider} from './src/context/matchContext';
 
 const App = () => {
   const routeNameRef = useRef();
@@ -105,29 +106,31 @@ const App = () => {
           <AppProvider>
             <RequestProvider>
               <LeagueProvider>
-                <NavigationContainer
-                  theme={NavTheme}
-                  linking={linking}
-                  ref={navigationRef}
-                  onReady={() =>
-                    (routeNameRef.current = navigationRef.current.getCurrentRoute().name)
-                  }
-                  onStateChange={async () => {
-                    const previousRouteName = routeNameRef.current;
-                    const currentRouteName = navigationRef.current.getCurrentRoute()
-                      .name;
-
-                    if (previousRouteName !== currentRouteName) {
-                      await analytics().logScreenView({
-                        screen_name: currentRouteName,
-                        screen_class: currentRouteName,
-                      });
+                <MatchProvider>
+                  <NavigationContainer
+                    theme={NavTheme}
+                    linking={linking}
+                    ref={navigationRef}
+                    onReady={() =>
+                      (routeNameRef.current = navigationRef.current.getCurrentRoute().name)
                     }
-                  }}>
-                  <ActionSheetProvider>
-                    <AppIndex />
-                  </ActionSheetProvider>
-                </NavigationContainer>
+                    onStateChange={async () => {
+                      const previousRouteName = routeNameRef.current;
+                      const currentRouteName = navigationRef.current.getCurrentRoute()
+                        .name;
+
+                      if (previousRouteName !== currentRouteName) {
+                        await analytics().logScreenView({
+                          screen_name: currentRouteName,
+                          screen_class: currentRouteName,
+                        });
+                      }
+                    }}>
+                    <ActionSheetProvider>
+                      <AppIndex />
+                    </ActionSheetProvider>
+                  </NavigationContainer>
+                </MatchProvider>
               </LeagueProvider>
             </RequestProvider>
           </AppProvider>

@@ -4,7 +4,6 @@ import {IMatchNavData} from '../../utils/interface';
 import submitMatch from './functions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
-import {RouteProp} from '@react-navigation/native';
 import ScoreBoard from '../../components/scoreboard';
 import {MatchTextField} from '../../components/textField';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
@@ -18,21 +17,19 @@ import FullScreenLoading from '../../components/loading';
 import {StackNavigationProp} from '@react-navigation/stack';
 //import useGetMatches from '../league/functions/useGetMatches';
 import analytics from '@react-native-firebase/analytics';
+import {MatchContext} from '../../context/matchContext';
+import {BigButton} from '../../components/buttons';
+import {StackActions, CommonActions} from '@react-navigation/native';
 
-type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
-type ScreenNavigationProp = StackNavigationProp<
-  MatchStackType,
-  'Upcoming Match'
->;
+type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
 };
 
 //const db = firestore();
 
-export default function UpcomingMatch({navigation, route}: Props) {
+export default function SubmitMatch({navigation, route}: Props) {
   const [homeScore, setHomeScore] = useState<string>('');
   const [awayScore, setAwayScore] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -42,9 +39,12 @@ export default function UpcomingMatch({navigation, route}: Props) {
   });
 
   const context = useContext(AppContext);
+  const matchContext = useContext(MatchContext);
 
-  const leagueId = route.params.matchData.leagueId;
-  const matchData: IMatchNavData = route.params!.matchData;
+  const matchData = matchContext.match;
+
+  console.log('nav', route);
+
   // const leagueRef = db
   //   .collection('leagues')
   //   .doc(leagueId)
@@ -109,6 +109,8 @@ export default function UpcomingMatch({navigation, route}: Props) {
         context.setUserMatches(updatedMatchList);
       }
     }
+
+    // const popAction = StackActions.popToTop();
 
     Alert.alert(
       title,
@@ -183,11 +185,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         visible={loading}
         label={i18n._(t`Submitting Match...`)}
       />
-      <ScoreBoard
-        data={matchData}
-        onSubmit={onSubmitMatch}
-        editable={true}
-        canSubmit={true}>
+      <ScoreBoard data={matchData} editable={true} showSubmit={false}>
         <MatchTextField
           error={errorStates.homeScore}
           onChangeText={(score: string) => onChangeText(score, 'homeScore')}
@@ -201,6 +199,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         />
       </ScoreBoard>
       <EmptyState title={i18n._(t`Match info`)} />
+      <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
     </View>
   );
 }

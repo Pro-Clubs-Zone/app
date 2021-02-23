@@ -4,7 +4,6 @@ import {IMatchNavData} from '../../utils/interface';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
-import {RouteProp} from '@react-navigation/native';
 import ScoreBoard from '../../components/scoreboard';
 import {verticalScale} from 'react-native-size-matters';
 //import firestore from '@react-native-firebase/firestore';
@@ -17,8 +16,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 //import useGetMatches from '../league/functions/useGetMatches';
 import MatchConflictItem from '../../components/matchConflictItem';
 import analytics from '@react-native-firebase/analytics';
+import {MatchContext} from '../../context/matchContext';
 
-type ScreenRouteProp = RouteProp<MatchStackType, 'Upcoming Match'>;
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
   'Upcoming Match'
@@ -26,7 +25,6 @@ type ScreenNavigationProp = StackNavigationProp<
 
 type Props = {
   navigation: ScreenNavigationProp;
-  route: ScreenRouteProp;
 };
 
 //const db = firestore();
@@ -36,9 +34,12 @@ export default function UpcomingMatch({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const context = useContext(AppContext);
+  const matchContext = useContext(MatchContext);
 
-  const leagueId = route.params.matchData.leagueId;
-  const matchData: IMatchNavData = route.params!.matchData;
+  const matchData: IMatchNavData = matchContext.match;
+  const leagueId = matchData.leagueId;
+  console.log('nav', route, navigation);
+
   // const leagueRef = db
   //   .collection('leagues')
   //   .doc(leagueId)
@@ -53,7 +54,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
 
   useEffect(() => {
     console.log('====================================');
-    console.log(matchData);
+    console.log('submit', matchData);
     console.log('====================================');
 
     const userClub = context.userData!.leagues![leagueId].clubId!;
@@ -123,7 +124,14 @@ export default function UpcomingMatch({navigation, route}: Props) {
         visible={loading}
         label={i18n._(t`Submitting Match...`)}
       />
-      <ScoreBoard data={matchData} editable={false} canSubmit={canSubmit} />
+      <ScoreBoard
+        data={matchData}
+        editable={false}
+        showSubmit={canSubmit}
+        onSubmit={() => {
+          navigation.navigate('Submit Match');
+        }}
+      />
       {matchData.conflict && matchData.admin ? (
         <MatchConflict
           data={matchData}

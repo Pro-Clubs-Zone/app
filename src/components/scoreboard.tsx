@@ -10,13 +10,19 @@ import i18n from '../utils/i18n';
 
 type Props = {
   editable: boolean;
-  canSubmit: boolean;
+  showSubmit: boolean;
   onSubmit?: () => void;
   data: IMatchNavData;
   children?: any;
 };
 
-const ScoreBoard = ({data, editable, canSubmit, onSubmit, children}: Props) => {
+const ScoreBoard = ({
+  data,
+  editable,
+  showSubmit,
+  onSubmit,
+  children,
+}: Props) => {
   const homeTeamScore = data.result?.[data.homeTeamId];
   const awayTeamScore = data.result?.[data.awayTeamId];
 
@@ -107,7 +113,7 @@ const ScoreBoard = ({data, editable, canSubmit, onSubmit, children}: Props) => {
         </View>
       </View>
       {
-        canSubmit && (
+        showSubmit && (
           // data.usertype === "manager" &&
           // !data.editable &&
           //   ((data.score1 == '' ||

@@ -193,6 +193,7 @@ export const MatchTextField = ({
           autoCorrect={false}
           keyboardAppearance="dark"
           keyboardType="number-pad"
+          returnKeyType="done"
           maxLength={2}
         />
       </View>
