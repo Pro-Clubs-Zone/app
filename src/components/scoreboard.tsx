@@ -5,17 +5,18 @@ import {PrimaryButton} from './buttons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {IMatchNavData} from '../utils/interface';
 import defaultLogo from '../assets/images/defaultLogo.png';
-import {Trans} from '@lingui/macro';
-//import i18n from '../utils/i18n';
+import {Trans, t} from '@lingui/macro';
+import i18n from '../utils/i18n';
 
 type Props = {
   editable: boolean;
+  canSubmit: boolean;
   onSubmit?: () => void;
   data: IMatchNavData;
   children?: any;
 };
 
-const ScoreBoard = ({data, editable, onSubmit, children}: Props) => {
+const ScoreBoard = ({data, editable, canSubmit, onSubmit, children}: Props) => {
   const homeTeamScore = data.result?.[data.homeTeamId];
   const awayTeamScore = data.result?.[data.awayTeamId];
 
@@ -106,7 +107,7 @@ const ScoreBoard = ({data, editable, onSubmit, children}: Props) => {
         </View>
       </View>
       {
-        editable && (
+        canSubmit && (
           // data.usertype === "manager" &&
           // !data.editable &&
           //   ((data.score1 == '' ||
@@ -115,7 +116,7 @@ const ScoreBoard = ({data, editable, onSubmit, children}: Props) => {
           //   data.showSubmit ? ( // To-Do - here we check if score is published or not
           <View style={styles.secondRow}>
             <PrimaryButton
-              title="Submit"
+              title={i18n._(t`Submit`)}
               onPress={onSubmit}
               // disabled={
               //   data.disabled || false // To-do - if score is submitted by one manager - disable button ONLY FOR HIM with label "Score Submitted"

@@ -1,15 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
-import submitMatch from './functions/onSubmitMatch';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
 import {RouteProp} from '@react-navigation/native';
 import ScoreBoard from '../../components/scoreboard';
-import {MatchTextField} from '../../components/textField';
-import {ScaledSheet, verticalScale} from 'react-native-size-matters';
-import {APP_COLORS} from '../../utils/designSystem';
+import {verticalScale} from 'react-native-size-matters';
 //import firestore from '@react-native-firebase/firestore';
 import EmptyState from '../../components/emptyState';
 import i18n from '../../utils/i18n';
@@ -35,19 +32,13 @@ type Props = {
 //const db = firestore();
 
 export default function UpcomingMatch({navigation, route}: Props) {
-  const [homeScore, setHomeScore] = useState<string>('');
-  const [awayScore, setAwayScore] = useState<string>('');
-  const [editable, setEditable] = useState<boolean>(false);
+  const [canSubmit, setCanSubmit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const [errorStates, setErrorStates] = useState({
-    homeScore: null,
-    awayScore: null,
-  });
 
   const context = useContext(AppContext);
 
   const leagueId = route.params.matchData.leagueId;
-  const matchData: IMatchNavData = route.params.matchData;
+  const matchData: IMatchNavData = route.params!.matchData;
   // const leagueRef = db
   //   .collection('leagues')
   //   .doc(leagueId)
@@ -65,11 +56,11 @@ export default function UpcomingMatch({navigation, route}: Props) {
     console.log(matchData);
     console.log('====================================');
 
-    const userClub = context.userData.leagues[leagueId].clubId;
-    const isManager = matchData.teams.includes(userClub) && matchData.manager;
+    const userClub = context.userData!.leagues![leagueId].clubId!;
+    const isManager = matchData.teams!.includes(userClub) && matchData.manager;
     const hasSubmitted = !!matchData.submissions?.[userClub];
-    const canSubmit = isManager && !hasSubmitted;
-    setEditable(canSubmit);
+    const managerCanSubmit = isManager && !hasSubmitted;
+    setCanSubmit(managerCanSubmit);
   }, [leagueId]);
 
   const decrementConflictCounter = () => {
@@ -82,33 +73,9 @@ export default function UpcomingMatch({navigation, route}: Props) {
     context.setUserData(userData);
   };
 
-  const showAlert = (submissionResult: string) => {
-    let title: string;
-    let body: string;
-
-    let conflict: boolean = false;
-
-    switch (submissionResult) {
-      case 'Success':
-        title = i18n._(t`Result Submitted`);
-        body = i18n._(t`Match was published with the selected result`);
-        break;
-      case 'Conflict':
-        title = i18n._(t`Match will be reviewed`);
-        body = i18n._(t`Match cannot be published due to conflict.`);
-        conflict = true;
-        break;
-      case 'First Submission':
-        title = i18n._(t`Result Submitted`);
-        body = i18n._(
-          t`Match will be published once opponent submits their result`,
-        );
-        break;
-      case 'Conflict Resolved':
-        title = i18n._(t`Conflict Resolved`);
-        body = i18n._(t`Match was published with the selected result`);
-        break;
-    }
+  const showAlert = () => {
+    const title = i18n._(t`Conflict Resolved`);
+    const body = i18n._(t`Match was published with the selected result`);
 
     let foundUserMatch = context.userMatches.filter(
       (match) => match.id === matchData.matchId,
@@ -119,27 +86,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         (match) => match.id !== matchData.matchId,
       );
 
-      if (
-        submissionResult === 'Success' ||
-        submissionResult === 'Conflict Resolved'
-      ) {
-        context.setUserMatches(notPublishedMatches);
-      }
-      if (
-        submissionResult === 'First Submission' ||
-        submissionResult === 'Conflict'
-      ) {
-        let userUpcomingMatch = {...foundUserMatch[0]};
-        userUpcomingMatch.data.conflict = conflict;
-        userUpcomingMatch.data.submissions = {
-          [matchData.clubId]: {
-            [matchData.homeTeamId]: Number(homeScore),
-            [matchData.awayTeamId]: Number(awayScore),
-          },
-        };
-        const updatedMatchList = [userUpcomingMatch, ...notPublishedMatches];
-        context.setUserMatches(updatedMatchList);
-      }
+      context.setUserMatches(notPublishedMatches);
     }
 
     Alert.alert(
@@ -163,55 +110,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
     await onConflictResolve(matchData, id).then(async (result) => {
       await analytics().logEvent('match_resolve_conflict');
       decrementConflictCounter();
-      showAlert(result);
-    });
-  };
-
-  const fieldValidation = async (): Promise<boolean> => {
-    const regex = new RegExp('^[0-9]*$');
-
-    if (!regex.test(homeScore) || !regex.test(awayScore)) {
-      setErrorStates({
-        awayScore: !regex.test(awayScore),
-        homeScore: !regex.test(homeScore),
-      });
-      return false;
-    }
-
-    if (!homeScore || !awayScore) {
-      setErrorStates({awayScore: !awayScore, homeScore: !homeScore});
-      return false;
-    }
-
-    return true;
-  };
-
-  const onChangeText = (text: string, field: 'homeScore' | 'awayScore') => {
-    switch (field) {
-      case 'homeScore':
-        setHomeScore(text);
-        break;
-      case 'awayScore':
-        setAwayScore(text);
-        break;
-    }
-
-    if (errorStates[field]) {
-      setErrorStates({...errorStates, [field]: null});
-    }
-  };
-
-  const onSubmitMatch = async () => {
-    fieldValidation().then(async (noErrors) => {
-      if (noErrors) {
-        setLoading(true);
-        await submitMatch(homeScore, awayScore, matchData).then(
-          async (result) => {
-            await analytics().logEvent('match_submit_score');
-            showAlert(result);
-          },
-        );
-      }
+      showAlert();
     });
   };
 
@@ -224,19 +123,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
         visible={loading}
         label={i18n._(t`Submitting Match...`)}
       />
-      <ScoreBoard data={matchData} onSubmit={onSubmitMatch} editable={editable}>
-        <MatchTextField
-          error={errorStates.homeScore}
-          onChangeText={(score: string) => onChangeText(score, 'homeScore')}
-          value={homeScore}
-        />
-        <View style={styles.divider} />
-        <MatchTextField
-          error={errorStates.awayScore}
-          onChangeText={(score: string) => onChangeText(score, 'awayScore')}
-          value={awayScore}
-        />
-      </ScoreBoard>
+      <ScoreBoard data={matchData} editable={false} canSubmit={canSubmit} />
       {matchData.conflict && matchData.admin ? (
         <MatchConflict
           data={matchData}
@@ -319,12 +206,3 @@ const MatchConflict = ({
     </ScrollView>
   );
 };
-
-const styles = ScaledSheet.create({
-  divider: {
-    height: '3@vs',
-    width: '8@vs',
-    backgroundColor: APP_COLORS.Accent,
-    marginHorizontal: '8@vs',
-  },
-});
