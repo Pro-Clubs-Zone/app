@@ -198,10 +198,24 @@ export default function SignIn({navigation}: Props) {
                 title={i18n._(t`Sign In`)}
               />
               {__DEV__ && (
-                <BigButtonOutlined
-                  onPress={() => firAuth.signInAnonymously()}
-                  title="Sign Anon"
-                />
+                <>
+                  <BigButtonOutlined
+                    onPress={() => firAuth.signInAnonymously()}
+                    title="Sign Anon"
+                  />
+                  <BigButtonOutlined
+                    onPress={() => {
+                      firAuth.createUserWithEmailAndPassword(email, '123456');
+                    }}
+                    title="Sign Up with email"
+                  />
+                  <BigButtonOutlined
+                    onPress={() => {
+                      firAuth.signInWithEmailAndPassword(email, '123456');
+                    }}
+                    title="Sign In with email"
+                  />
+                </>
               )}
               <Pressable
                 onPress={() => {
