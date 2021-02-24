@@ -15,18 +15,18 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {PrimaryButton} from './buttons';
 
-export default function ScreenshotUploader() {
+export default function ScreenshotUploader({onUpload}) {
   return (
     <View>
       {/* {thumbs === 'single'
         ? renderSingle()
         : renderMultiple()} */}
-      <MultipleThumbs />
+      <MultipleThumbs onUpload={onUpload} />
     </View>
   );
 }
 
-function MultipleThumbs() {
+function MultipleThumbs({onUpload}) {
   //   const showDefaultThumbs = (number, upload) => {
   //     var i = 0;
   //     var output = [];
@@ -75,9 +75,7 @@ function MultipleThumbs() {
         {
           //images && images.length > 0 ? (
           <View style={styles.thumbsContainer}>
-            <Thumbnail />
-            <Thumbnail />
-            <Thumbnail />
+            <Thumbnail onUpload={onUpload} />
           </View>
           // ) : (
           //   <View
@@ -120,13 +118,13 @@ function Thumbnail({
               name="magnify-plus-outline"
               size={verticalScale(24)}
               color={APP_COLORS.Light}
-              onPress={onZoom}
+              //     onPress={onZoom}
             />
             <Icon
               name="delete-forever"
               size={verticalScale(24)}
               color={APP_COLORS.Light}
-              onPress={onRemove}
+              //   onPress={onRemove}
             />
           </View>
         </ImageBackground>

@@ -21,6 +21,7 @@ import {MatchContext} from '../../context/matchContext';
 import {BigButton} from '../../components/buttons';
 import {StackActions, CommonActions} from '@react-navigation/native';
 import ScreenshotUploader from '../../components/screenshots';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -204,7 +205,18 @@ export default function SubmitMatch({navigation, route}: Props) {
           flex: 1,
           justifyContent: 'space-between',
         }}>
-        <ScreenshotUploader />
+        <ScreenshotUploader
+          onUpload={() =>
+            launchImageLibrary(
+              {
+                mediaType: 'photo',
+                maxWidth: 1920,
+                maxHeight: 1280,
+              },
+              (res) => console.log(res),
+            )
+          }
+        />
         <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
       </View>
     </View>
