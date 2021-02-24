@@ -15,18 +15,43 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {PrimaryButton} from './buttons';
 
-export default function ScreenshotUploader({onUpload}) {
+type ThumbnailProps = {
+  images: string[];
+  thumbsCount: number;
+  onUpload: () => void;
+  onRemove: (index: number) => void;
+};
+
+export default function ScreenshotUploader({
+  onUpload,
+  images,
+  multiple,
+  thumbsCount,
+  onRemove,
+}: ThumbnailProps & {
+  multiple: boolean;
+}) {
   return (
     <View>
       {/* {thumbs === 'single'
         ? renderSingle()
         : renderMultiple()} */}
-      <MultipleThumbs onUpload={onUpload} />
+      <MultipleThumbs
+        onUpload={onUpload}
+        images={images}
+        thumbsCount={thumbsCount}
+        onRemove={onRemove}
+      />
     </View>
   );
 }
 
-function MultipleThumbs({onUpload}) {
+function MultipleThumbs({
+  onUpload,
+  images,
+  thumbsCount,
+  onRemove,
+}: ThumbnailProps) {
   //   const showDefaultThumbs = (number, upload) => {
   //     var i = 0;
   //     var output = [];
@@ -52,6 +77,26 @@ function MultipleThumbs({onUpload}) {
   //     });
   //   };
 
+  let emptyThumbsIndex = 0;
+  let uploadedThumbsIndex = 0;
+  const emptyThumbs = [];
+  const uploadedThumbs = [];
+  while (emptyThumbsIndex < thumbsCount - images.length) {
+    emptyThumbs.push(<Thumbnail key={emptyThumbsIndex} onUpload={onUpload} />);
+    emptyThumbsIndex++;
+  }
+  while (uploadedThumbsIndex < images.length) {
+    uploadedThumbs.push(
+      <Thumbnail
+        key={uploadedThumbsIndex}
+        index={uploadedThumbsIndex}
+        source={images[uploadedThumbsIndex]}
+        onRemove={onRemove}
+      />,
+    );
+    uploadedThumbsIndex++;
+  }
+
   return (
     <View style={styles.uploader}>
       <View
@@ -75,7 +120,8 @@ function MultipleThumbs({onUpload}) {
         {
           //images && images.length > 0 ? (
           <View style={styles.thumbsContainer}>
-            <Thumbnail onUpload={onUpload} />
+            {uploadedThumbs}
+            {emptyThumbs}
           </View>
           // ) : (
           //   <View
@@ -100,17 +146,19 @@ function Thumbnail({
   onZoom,
   onRemove,
   onUpload,
+  index,
 }: {
-  source?: ImageSourcePropType;
+  source?: string;
   onZoom?: () => void;
-  onRemove?: () => void;
+  onRemove?: (index: number) => void;
   onUpload?: () => void;
+  index: number;
 }) {
   return (
     <View style={styles.thumbSize}>
       {source ? (
         <ImageBackground
-          source={source}
+          source={{uri: source}}
           resizeMode="cover"
           style={styles.thumbnail}>
           <View style={styles.thumbButtons}>
@@ -124,7 +172,7 @@ function Thumbnail({
               name="delete-forever"
               size={verticalScale(24)}
               color={APP_COLORS.Light}
-              //   onPress={onRemove}
+              onPress={() => onRemove!(index)}
             />
           </View>
         </ImageBackground>

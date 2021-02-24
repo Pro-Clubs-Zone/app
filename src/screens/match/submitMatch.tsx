@@ -39,6 +39,7 @@ export default function SubmitMatch({navigation, route}: Props) {
     homeScore: false,
     awayScore: false,
   });
+  const [images, setImages] = useState<string[]>([]);
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -178,6 +179,13 @@ export default function SubmitMatch({navigation, route}: Props) {
     });
   };
 
+  const onRemoveThumb = (seletectedThumbIndex: number) => {
+    const updatedImages = images.filter(
+      (image, i) => i !== seletectedThumbIndex,
+    );
+    setImages(updatedImages);
+  };
+
   return (
     <View
       style={{
@@ -206,6 +214,10 @@ export default function SubmitMatch({navigation, route}: Props) {
           justifyContent: 'space-between',
         }}>
         <ScreenshotUploader
+          thumbsCount={3}
+          images={images}
+          multiple={true}
+          onRemove={(i) => onRemoveThumb(i)}
           onUpload={() =>
             launchImageLibrary(
               {
@@ -213,7 +225,11 @@ export default function SubmitMatch({navigation, route}: Props) {
                 maxWidth: 1920,
                 maxHeight: 1280,
               },
-              (res) => console.log(res),
+              (res) => {
+                if (res.uri) {
+                  setImages([...images, res.uri]);
+                }
+              },
             )
           }
         />
