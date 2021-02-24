@@ -16,10 +16,11 @@ import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {PrimaryButton} from './buttons';
 
 type ThumbnailProps = {
-  images: string[];
+  images: ImageSourcePropType[];
   thumbsCount: number;
   onUpload: () => void;
   onRemove: (index: number) => void;
+  onZoom: (index: number) => void;
 };
 
 export default function ScreenshotUploader({
@@ -28,6 +29,7 @@ export default function ScreenshotUploader({
   multiple,
   thumbsCount,
   onRemove,
+  onZoom,
 }: ThumbnailProps & {
   multiple: boolean;
 }) {
@@ -41,6 +43,7 @@ export default function ScreenshotUploader({
         images={images}
         thumbsCount={thumbsCount}
         onRemove={onRemove}
+        onZoom={onZoom}
       />
     </View>
   );
@@ -51,6 +54,7 @@ function MultipleThumbs({
   images,
   thumbsCount,
   onRemove,
+  onZoom,
 }: ThumbnailProps) {
   //   const showDefaultThumbs = (number, upload) => {
   //     var i = 0;
@@ -82,7 +86,13 @@ function MultipleThumbs({
   const emptyThumbs = [];
   const uploadedThumbs = [];
   while (emptyThumbsIndex < thumbsCount - images.length) {
-    emptyThumbs.push(<Thumbnail key={emptyThumbsIndex} onUpload={onUpload} />);
+    emptyThumbs.push(
+      <Thumbnail
+        key={emptyThumbsIndex}
+        onUpload={onUpload}
+        index={emptyThumbsIndex}
+      />,
+    );
     emptyThumbsIndex++;
   }
   while (uploadedThumbsIndex < images.length) {
@@ -92,6 +102,7 @@ function MultipleThumbs({
         index={uploadedThumbsIndex}
         source={images[uploadedThumbsIndex]}
         onRemove={onRemove}
+        onZoom={onZoom}
       />,
     );
     uploadedThumbsIndex++;
@@ -147,18 +158,15 @@ function Thumbnail({
   onRemove,
   onUpload,
   index,
-}: {
-  source?: string;
-  onZoom?: () => void;
-  onRemove?: (index: number) => void;
-  onUpload?: () => void;
+}: ThumbnailProps & {
+  source?: ImageSourcePropType;
   index: number;
 }) {
   return (
     <View style={styles.thumbSize}>
       {source ? (
         <ImageBackground
-          source={{uri: source}}
+          source={source}
           resizeMode="cover"
           style={styles.thumbnail}>
           <View style={styles.thumbButtons}>
@@ -166,7 +174,7 @@ function Thumbnail({
               name="magnify-plus-outline"
               size={verticalScale(24)}
               color={APP_COLORS.Light}
-              //     onPress={onZoom}
+              onPress={() => onZoom!(index)}
             />
             <Icon
               name="delete-forever"

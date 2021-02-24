@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, View, Alert} from 'react-native';
+import {ScrollView, View, Alert, ImageSourcePropType} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import submitMatch from './functions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
@@ -22,6 +22,7 @@ import {BigButton} from '../../components/buttons';
 import {StackActions, CommonActions} from '@react-navigation/native';
 import ScreenshotUploader from '../../components/screenshots';
 import {launchImageLibrary} from 'react-native-image-picker';
+import ImageView from 'react-native-image-viewing';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -39,7 +40,9 @@ export default function SubmitMatch({navigation, route}: Props) {
     homeScore: false,
     awayScore: false,
   });
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<ImageSourcePropType[]>([]);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0);
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -195,6 +198,13 @@ export default function SubmitMatch({navigation, route}: Props) {
         visible={loading}
         label={i18n._(t`Submitting Match...`)}
       />
+      <ImageView
+        images={images}
+        imageIndex={currentImage}
+        visible={imageViewerVisible}
+        onRequestClose={() => setImageViewerVisible(false)}
+      />
+
       <ScoreBoard data={matchData} editable={true} showSubmit={false}>
         <MatchTextField
           error={errorStates.homeScore}
@@ -217,6 +227,10 @@ export default function SubmitMatch({navigation, route}: Props) {
           thumbsCount={3}
           images={images}
           multiple={true}
+          onZoom={(i) => {
+            setCurrentImage(i);
+            setImageViewerVisible(true);
+          }}
           onRemove={(i) => onRemoveThumb(i)}
           onUpload={() =>
             launchImageLibrary(
@@ -227,7 +241,7 @@ export default function SubmitMatch({navigation, route}: Props) {
               },
               (res) => {
                 if (res.uri) {
-                  setImages([...images, res.uri]);
+                  setImages([...images, {uri: res.uri}]);
                 }
               },
             )
