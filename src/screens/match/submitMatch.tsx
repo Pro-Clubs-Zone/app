@@ -20,6 +20,7 @@ import analytics from '@react-native-firebase/analytics';
 import {MatchContext} from '../../context/matchContext';
 import {BigButton} from '../../components/buttons';
 import {StackActions, CommonActions} from '@react-navigation/native';
+import ScreenshotUploader from '../../components/screenshots';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -198,8 +199,14 @@ export default function SubmitMatch({navigation, route}: Props) {
           value={awayScore}
         />
       </ScoreBoard>
-      <EmptyState title={i18n._(t`Match info`)} />
-      <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'space-between',
+        }}>
+        <ScreenshotUploader />
+        <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
+      </View>
     </View>
   );
 }
