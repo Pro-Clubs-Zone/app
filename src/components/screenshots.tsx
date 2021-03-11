@@ -8,7 +8,7 @@ import {
   Modal,
   Pressable,
   Platform,
-  ImageSourcePropType,
+  ImageURISource,
 } from 'react-native';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,7 +16,7 @@ import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {PrimaryButton} from './buttons';
 
 type ThumbnailProps = {
-  images: ImageSourcePropType[];
+  images: ImageURISource[];
   thumbsCount: number;
   onUpload: () => void;
   onRemove: (index: number) => void;
@@ -159,7 +159,7 @@ function Thumbnail({
   onUpload,
   index,
 }: ThumbnailProps & {
-  source?: ImageSourcePropType;
+  source?: ImageURISource;
   index: number;
 }) {
   return (

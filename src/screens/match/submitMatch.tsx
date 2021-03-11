@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {ScrollView, View, Alert, ImageSourcePropType} from 'react-native';
+import {ScrollView, View, Alert, ImageURISource} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import submitMatch from './functions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
@@ -23,6 +23,8 @@ import {StackActions, CommonActions} from '@react-navigation/native';
 import ScreenshotUploader from '../../components/screenshots';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageView from 'react-native-image-viewing';
+import storage, {firebase} from '@react-native-firebase/storage';
+import {utils} from '@react-native-firebase/app';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -40,7 +42,8 @@ export default function SubmitMatch({navigation, route}: Props) {
     homeScore: false,
     awayScore: false,
   });
-  const [images, setImages] = useState<ImageSourcePropType[]>([]);
+  const [imageNames, setImageNames] = useState<string[]>([]);
+  const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -48,8 +51,6 @@ export default function SubmitMatch({navigation, route}: Props) {
   const matchContext = useContext(MatchContext);
 
   const matchData = matchContext.match;
-
-  console.log('nav', route);
 
   // const leagueRef = db
   //   .collection('leagues')
@@ -168,16 +169,32 @@ export default function SubmitMatch({navigation, route}: Props) {
     }
   };
 
+  const uploadScreenshots = async () => {
+    images.forEach((image, index) => {
+      let reference = storage().ref(
+        '/' + matchData.leagueId + '/facts/' + imageNames[index],
+      );
+      const pathToFile = image.uri;
+      console.log(pathToFile);
+
+      reference.putFile(pathToFile).then((g) => console.log(g));
+    });
+  };
+
   const onSubmitMatch = async () => {
     fieldValidation().then(async (noErrors) => {
       if (noErrors) {
-        setLoading(true);
-        await submitMatch(homeScore, awayScore, matchData).then(
-          async (result) => {
-            await analytics().logEvent('match_submit_score');
-            showAlert(result);
-          },
-        );
+        // setLoading(true);
+        await uploadScreenshots();
+        // .then(
+        //   async () =>
+        //     await submitMatch(homeScore, awayScore, matchData).then(
+        //       async (result) => {
+        //         await analytics().logEvent('match_submit_score');
+        //         showAlert(result);
+        //       },
+        //     ),
+        // );
       }
     });
   };
@@ -242,6 +259,8 @@ export default function SubmitMatch({navigation, route}: Props) {
               (res) => {
                 if (res.uri) {
                   setImages([...images, {uri: res.uri}]);
+                  setImageNames([...imageNames, res.fileName!]);
+                  console.log(res);
                 }
               },
             )
