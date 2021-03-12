@@ -14,11 +14,11 @@ import {verticalScale} from 'react-native-size-matters';
 import FullScreenLoading from '../../components/loading';
 import {RouteProp} from '@react-navigation/native';
 import {StackActions, CommonActions} from '@react-navigation/native';
-import dynamicLinks from '@react-native-firebase/dynamic-links';
 import analytics from '@react-native-firebase/analytics';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {RequestContext} from '../../context/requestContext';
+import shareLeagueLink from '../league/functions/shareLink';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -159,64 +159,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       });
   };
 
-  const shareLeagueLink = () => {
-    const linkBuilder = async () => {
-      const link = await dynamicLinks().buildShortLink(
-        {
-          link: `https://l.proclubs.zone/lgu/${leagueId}`,
-          domainUriPrefix: 'https://l.proclubs.zone/lgu',
-          ios: {
-            bundleId: 'com.proclubszone',
-            appStoreId: '1551138800',
-            minimumVersion: '1',
-            //      fallbackUrl: 'https://proclubs.zone',
-          },
-          android: {
-            packageName: 'com.proclubszone',
-            minimumVersion: '1',
-            //      fallbackUrl: 'https://proclubs.zone',
-          },
-          social: {
-            title: leagueContext.league.name,
-            descriptionText: `Join ${leagueContext.league.name} on Pro Clubs Zone!`,
-            imageUrl:
-              'https://storage.googleapis.com/pro-clubs-zone-v2.appspot.com/web/dynamic-share.jpg',
-          },
-        },
-        dynamicLinks.ShortLinkType.SHORT,
-      );
-
-      return link;
-    };
-
-    linkBuilder().then(async (link) => {
-      const message = i18n._(
-        t`Join ${leagueContext.league.name} on Pro Clubs Zone!`,
-      );
-      try {
-        const result = await Share.share(
-          {
-            message: Platform.OS === 'ios' ? message : link,
-            url: link,
-            title: message,
-          },
-          {
-            dialogTitle: i18n._(t`Invite clubs`),
-          },
-        );
-        if (result.action === Share.sharedAction) {
-          await analytics().logShare({
-            content_type: 'league_invite',
-            item_id: leagueId,
-            method: result.activityType,
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  };
-
   if (loading) {
     return (
       <FullScreenLoading
@@ -267,7 +209,10 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           onPress={() => navigation.navigate('Clubs')}
           badgeNumber={leagueReqCount}
         />
-        <CardSmall title={i18n._(t`Invite Clubs`)} onPress={shareLeagueLink} />
+        <CardSmall
+          title={i18n._(t`Invite Clubs`)}
+          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+        />
       </CardSmallContainer>
 
       <CardMedium

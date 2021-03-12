@@ -40,7 +40,7 @@ msgstr ""
 msgid "Accepted Clubs"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:207
+#: src/screens/league/leaguePreview.tsx:206
 msgid "Admin"
 msgstr ""
 
@@ -72,7 +72,7 @@ msgstr ""
 msgid "Are you sure you want to remove your sent request?"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:71
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:70
 msgid "Are you sure you want to schedule matches and start the league?"
 msgstr ""
 
@@ -97,12 +97,12 @@ msgstr ""
 #: src/screens/club/clubSettings.tsx:56
 #: src/screens/club/clubSettings.tsx:77
 #: src/screens/league/joinClub.tsx:100
-#: src/screens/league/leaguePreview.tsx:72
-#: src/screens/league/leaguePreview.tsx:132
-#: src/screens/league/leaguePreview.tsx:138
+#: src/screens/league/leaguePreview.tsx:73
+#: src/screens/league/leaguePreview.tsx:131
+#: src/screens/league/leaguePreview.tsx:137
 #: src/screens/leagueAdmin/clubs.tsx:133
 #: src/screens/leagueAdmin/clubs.tsx:177
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:80
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:79
 #: src/screens/user/requests.tsx:73
 #: src/screens/user/requests.tsx:137
 #: src/screens/user/requests.tsx:228
@@ -127,10 +127,10 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/club/clubSettings.tsx:36
 #: src/screens/league/createLeague.tsx:122
-#: src/screens/league/league.tsx:52
+#: src/screens/league/league.tsx:45
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:88
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:87
 #: src/screens/match/upcomingMatch.tsx:115
 #: src/screens/user/requests.tsx:111
 #: src/screens/user/requests.tsx:111
@@ -160,7 +160,7 @@ msgstr ""
 msgid "Coming Soon"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:208
+#: src/screens/league/leaguePreview.tsx:207
 msgid "Communication"
 msgstr ""
 
@@ -181,7 +181,7 @@ msgstr ""
 msgid "Create League"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:179
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:133
 msgid "Create Your Club"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Decline"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:47
+#: src/screens/league/leaguePreview.tsx:48
 msgid "Delete League?"
 msgstr ""
 
@@ -255,7 +255,7 @@ msgstr ""
 #~ msgid "Get Reset Link"
 #~ msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:179
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:133
 msgid "If you want to participate in your own league"
 msgstr ""
 
@@ -264,12 +264,16 @@ msgstr ""
 msgid "Invalid URL format"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:182
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:136
 msgid "Invite Clubs"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:146
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:146
+#: src/screens/league/leagueScheduled.tsx:39
+msgid "Invite Players"
+msgstr ""
+
+#: src/screens/league/functions/shareLink.tsx:45
+#: src/screens/league/functions/shareLink.tsx:45
 msgid "Invite clubs"
 msgstr ""
 
@@ -278,7 +282,7 @@ msgstr ""
 #~ msgid "Invite people"
 #~ msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:47
+#: src/screens/league/leaguePreview.tsx:48
 msgid "It is impossible to recover deleted league. After removal the app will restart"
 msgstr ""
 
@@ -287,7 +291,7 @@ msgstr ""
 msgid "It seems you've used wrong sign in link, please try again."
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:121
+#: src/screens/league/leaguePreview.tsx:120
 msgid "Join"
 msgstr ""
 
@@ -295,11 +299,11 @@ msgstr ""
 msgid "Join Club"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:227
+#: src/screens/league/leaguePreview.tsx:226
 msgid "Join League"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:119
+#: src/screens/league/leaguePreview.tsx:118
 msgid "Join as a Player"
 msgstr ""
 
@@ -308,7 +312,11 @@ msgid "Join leagues that are open to public"
 msgstr ""
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:139
-msgid "Join {0} on Pro Clubs Zone!"
+#~ msgid "Join {0} on Pro Clubs Zone!"
+#~ msgstr ""
+
+#: src/screens/league/functions/shareLink.tsx:38
+msgid "Join {leagueName} on Pro Clubs Zone!"
 msgstr ""
 
 #: src/components/standingItems.tsx:79
@@ -323,7 +331,7 @@ msgstr ""
 msgid "League - {0}"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:181
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:135
 msgid "League Clubs"
 msgstr ""
 
@@ -348,19 +356,19 @@ msgstr ""
 msgid "League Requests"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:186
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:140
 msgid "League is full and matches can be scheduled"
 msgstr ""
 
-#: src/screens/league/league.tsx:50
+#: src/screens/league/league.tsx:43
 msgid "League link has expired or wrong"
 msgstr ""
 
-#: src/screens/league/league.tsx:50
+#: src/screens/league/league.tsx:43
 msgid "League not found"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:225
+#: src/screens/league/leaguePreview.tsx:224
 msgid "League not started"
 msgstr ""
 
@@ -387,7 +395,7 @@ msgstr ""
 msgid "Manage your received and sent request"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:138
+#: src/screens/league/leaguePreview.tsx:137
 msgid "Manager"
 msgstr ""
 
@@ -533,7 +541,7 @@ msgstr ""
 msgid "Platform"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:138
+#: src/screens/league/leaguePreview.tsx:137
 msgid "Player"
 msgstr ""
 
@@ -571,15 +579,15 @@ msgstr ""
 msgid "Remove Request"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:182
+#: src/screens/league/leaguePreview.tsx:181
 msgid "Removing League..."
 msgstr ""
 
-#: src/screens/league/leagueScheduled.tsx:37
+#: src/screens/league/leagueScheduled.tsx:38
 msgid "Report Center"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:226
+#: src/screens/league/leaguePreview.tsx:225
 msgid "Request Sent"
 msgstr ""
 
@@ -592,7 +600,7 @@ msgstr ""
 msgid "Result Submitted"
 msgstr ""
 
-#: src/screens/league/leagueScheduled.tsx:37
+#: src/screens/league/leagueScheduled.tsx:38
 msgid "Review and resolve all conflicted matches"
 msgstr ""
 
@@ -600,17 +608,17 @@ msgstr ""
 msgid "Roster"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:73
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:72
 msgid "Schedule"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:71
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:86
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:185
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:70
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:85
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:139
 msgid "Schedule Matches"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:162
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:116
 msgid "Scheduling Matches..."
 msgstr ""
 
@@ -642,6 +650,10 @@ msgstr ""
 msgid "Set up the league and invite players"
 msgstr ""
 
+#: src/screens/league/leagueScheduled.tsx:39
+msgid "Share league link with other players to invite them to your club"
+msgstr ""
+
 #: src/screens/auth/signIn.tsx:142
 #: src/screens/league/createLeague.tsx:66
 msgid "Sign In"
@@ -659,7 +671,7 @@ msgstr ""
 msgid "Signing you in"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:209
+#: src/screens/league/leaguePreview.tsx:208
 msgid "Social"
 msgstr ""
 
@@ -722,11 +734,11 @@ msgstr ""
 msgid "You can invite clubs from league page"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:119
+#: src/screens/league/leaguePreview.tsx:118
 msgid "You can join only as a player as this league is already full"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:86
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:85
 msgid "You can schedule matches once the league has {teamNum} teams"
 msgstr ""
 
@@ -782,11 +794,11 @@ msgstr ""
 msgid "{0} Teams"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:206
+#: src/screens/league/leaguePreview.tsx:205
 msgid "{0} clubs / {1} matches"
 msgstr ""
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:187
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:141
 msgid ""
 "{acceptedClubs}/{teamNum} Teams. \n"
 "Not enough teams to schedule matches"

@@ -111,7 +111,7 @@ export default function CreateLeague({navigation}: Props) {
 
   const fieldValidation = async () => {
     const twitterUrlExp = /(?:https?:\/\/)?(?:www\.)?twitter\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/;
-    const discordUrlExp = /(?:https?:\/\/)?(?:www\.)?discord\.com\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/;
+    const discordUrlExp = /(?:https?:\/\/)?(?:www\.)?discord\.[a-z]+\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-]*)/;
 
     let errorStatus: Record<'name' | 'discord' | 'twitter', string> = {
       name: '',
