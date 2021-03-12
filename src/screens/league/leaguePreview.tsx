@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-} from 'react';
+import React, {useState, useContext, useCallback, useLayoutEffect} from 'react';
 import {Text, View, Alert, ScrollView, Linking} from 'react-native';
 import {AuthContext} from '../../context/authContext';
 import {LeagueStackType} from './league';
@@ -21,6 +15,7 @@ import functions from '@react-native-firebase/functions';
 import FullScreenLoading from '../../components/loading';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import shareLeagueLink from './functions/shareLink';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -103,29 +98,6 @@ export default function LeaguePreview({navigation, route}: Props) {
   };
 
   useLayoutEffect(() => {
-    if (league.adminId === user.uid) {
-      navigation.setOptions({
-        headerRight: () => (
-          <IconButton name="delete-forever" onPress={onDeleteLeague} />
-        ),
-      });
-    } else if (accepted) {
-      navigation.setOptions({
-        headerRight: () => (
-          <IconButton
-            name="cog"
-            onPress={() =>
-              navigation.navigate('Club Settings', {
-                clubId: context.userData.leagues[leagueId].clubId,
-              })
-            }
-          />
-        ),
-      });
-    }
-  }, [navigation]);
-
-  useEffect(() => {
     const userLeagues = context.userData?.leagues;
     const inLeague =
       typeof userLeagues !== 'undefined'
@@ -133,13 +105,42 @@ export default function LeaguePreview({navigation, route}: Props) {
         : false;
 
     setJoined(inLeague);
+
     if (inLeague) {
       const acceptedToLeague = userLeagues[leagueId].accepted;
       setAccepted(acceptedToLeague);
     }
 
     setJoined(inLeague);
-  }, [context, leagueId]);
+
+    navigation.setOptions({
+      headerRight: () => (
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          <IconButton
+            name="share-variant"
+            onPress={() => {
+              shareLeagueLink(league.name, leagueId);
+            }}
+          />
+          {league.adminId !== user.uid && inLeague ? (
+            <IconButton
+              name="cog"
+              onPress={() =>
+                navigation.navigate('Club Settings', {
+                  clubId: context.userData.leagues[leagueId].clubId,
+                })
+              }
+            />
+          ) : (
+            <IconButton name="delete-forever" onPress={onDeleteLeague} />
+          )}
+        </View>
+      ),
+    });
+  }, [context, leagueContext]);
 
   const onCheckUserInLeague = () => {
     // const userLeague = context.userData?.leagues?.[leagueId];

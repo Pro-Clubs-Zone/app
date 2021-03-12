@@ -56,7 +56,7 @@ export default function LeagueStandings() {
       renderItem={({item, index}) => (
         <TableRow
           team={item.data.name}
-          p={item.data.points}
+          p={item.data.played}
           w={item.data.won}
           d={item.data.draw}
           l={item.data.lost}
