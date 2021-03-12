@@ -12,6 +12,7 @@ import {
 import {verticalScale} from 'react-native-size-matters';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import shareLeagueLink from './functions/shareLink';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -65,6 +66,16 @@ export default function LeagueScheduled({navigation}: Props) {
           subTitle={i18n._(t`Review and resolve all conflicted matches`)}
           badgeNumber={conflictMatchesCount}
           onPress={() => navigation.navigate('Report Center')}
+        />
+      )}
+      {!isAdmin && (
+        <CardMedium
+          title={i18n._(t`Invite Players`)}
+          subTitle={i18n._(
+            t`Share league link with other players to invite them to your club`,
+          )}
+          badgeNumber={conflictMatchesCount}
+          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
         />
       )}
       <CardSmallContainer>
