@@ -125,7 +125,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               shareLeagueLink(league.name, leagueId);
             }}
           />
-          {league.adminId !== user.uid && inLeague ? (
+          {league.adminId !== user.uid && inLeague && (
             <IconButton
               name="cog"
               onPress={() =>
@@ -134,7 +134,8 @@ export default function LeaguePreview({navigation, route}: Props) {
                 })
               }
             />
-          ) : (
+          )}
+          {league.adminId === user.uid && (
             <IconButton name="delete-forever" onPress={onDeleteLeague} />
           )}
         </View>

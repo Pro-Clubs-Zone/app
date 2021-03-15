@@ -17,7 +17,7 @@
     "version": "react-native-version"
   },
   "dependencies": {
-    "@expo/react-native-action-sheet": "^3.8.0",
+    "@expo/react-native-action-sheet": "^3.9.0",
     "@lingui/react": "^3.4.0",
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/masked-view": "^0.1.10",
@@ -28,7 +28,8 @@
     "@react-native-firebase/dynamic-links": "^11.0.0",
     "@react-native-firebase/firestore": "^11.0.0",
     "@react-native-firebase/functions": "^11.0.0",
-    "@react-native-picker/picker": "^1.9.10",
+    "@react-native-firebase/storage": "^11.0.0",
+    "@react-native-picker/picker": "^1.9.12",
     "@react-navigation/bottom-tabs": "^5.11.3",
     "@react-navigation/material-top-tabs": "^5.3.11",
     "@react-navigation/native": "^5.9.0",

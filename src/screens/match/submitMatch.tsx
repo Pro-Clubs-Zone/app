@@ -170,31 +170,30 @@ export default function SubmitMatch({navigation, route}: Props) {
   };
 
   const uploadScreenshots = async () => {
-    images.forEach((image, index) => {
-      let reference = storage().ref(
-        '/' + matchData.leagueId + '/facts/' + imageNames[index],
+    for (const [index, image] of images.entries()) {
+      let screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+      let reference = screenshotBucket.ref(
+        `/${matchData.leagueId}/facts/${imageNames[index]}`,
       );
       const pathToFile = image.uri;
-      console.log(pathToFile);
-
-      reference.putFile(pathToFile).then((g) => console.log(g));
-    });
+      const task = reference.putFile(pathToFile);
+      await task.then(() => console.log('image uploaded'));
+    }
   };
 
   const onSubmitMatch = async () => {
     fieldValidation().then(async (noErrors) => {
       if (noErrors) {
-        // setLoading(true);
-        await uploadScreenshots();
-        // .then(
-        //   async () =>
-        //     await submitMatch(homeScore, awayScore, matchData).then(
-        //       async (result) => {
-        //         await analytics().logEvent('match_submit_score');
-        //         showAlert(result);
-        //       },
-        //     ),
-        // );
+        setLoading(true);
+        await uploadScreenshots().then(
+          async () =>
+            await submitMatch(homeScore, awayScore, matchData).then(
+              async (result) => {
+                await analytics().logEvent('match_submit_score');
+                showAlert(result);
+              },
+            ),
+        );
       }
     });
   };
