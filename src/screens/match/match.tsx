@@ -51,6 +51,7 @@ export default function Match({route}: Props) {
       initialRouteName={
         route.params.upcoming ? 'Upcoming Match' : 'Finished Match'
       }
+      mode="modal"
       screenOptions={{
         headerBackTitleVisible: false,
         animationEnabled: false,
