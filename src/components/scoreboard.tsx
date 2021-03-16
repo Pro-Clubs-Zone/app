@@ -123,7 +123,7 @@ const ScoreBoard = ({
           <View style={styles.secondRow}>
             <PrimaryButton
               title={i18n._(t`Submit`)}
-              onPress={onSubmit}
+              onPress={onSubmit!}
               // disabled={
               //   data.disabled || false // To-do - if score is submitted by one manager - disable button ONLY FOR HIM with label "Score Submitted"
               // }

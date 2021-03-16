@@ -14,6 +14,7 @@ import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {PrimaryButton} from './buttons';
+import {t, Trans} from '@lingui/macro';
 
 type ThumbnailProps = {
   images: ImageURISource[];
@@ -121,7 +122,7 @@ function MultipleThumbs({
               alignSelf: 'center',
             },
           ]}>
-          Upload Screenshots
+          <Trans>Upload Screenshots</Trans>
           {
             //title ? title.toUpperCase() : null
           }
@@ -146,6 +147,28 @@ function MultipleThumbs({
       </View>
       {/* {renderInfo()}
       {renderAltButton()} */}
+      <View style={styles.screenshotInfo}>
+        <Text
+          style={[
+            TEXT_STYLES.body,
+            {
+              color: APP_COLORS.Gray,
+              marginBottom: verticalScale(4),
+              fontWeight: 'bold',
+            },
+          ]}>
+          <Trans>Required Screenshots</Trans>
+        </Text>
+        <Text
+          style={[
+            TEXT_STYLES.small,
+            {
+              color: APP_COLORS.Gray,
+            },
+          ]}>
+          <Trans>1. Facts - 2. Events - 3. Online Player ID List</Trans>
+        </Text>
+      </View>
     </View>
   );
 }
@@ -235,5 +258,10 @@ const styles = ScaledSheet.create({
     paddingHorizontal: '4@vs',
     height: '32@vs',
     alignItems: 'center',
+  },
+  screenshotInfo: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: '16@vs',
   },
 });
