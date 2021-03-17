@@ -79,7 +79,7 @@ function MatchScreenshots() {
   // const windowHeight = useWindowDimensions().height;
 
   useEffect(() => {
-    let screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+    let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
     if (__DEV__) {
       screenshotBucket = storage();
     }

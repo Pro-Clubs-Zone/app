@@ -169,7 +169,7 @@ export default function SubmitMatch({navigation, route}: Props) {
 
   const uploadScreenshots = async () => {
     for (const [index, image] of images.entries()) {
-      let screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+      let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
       if (__DEV__) {
         screenshotBucket = storage();
       }

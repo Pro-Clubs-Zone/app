@@ -67,7 +67,7 @@ export default function UpcomingMatch({navigation, route}: Props) {
   }, [leagueId]);
 
   useEffect(() => {
-    let screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+    let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
     if (__DEV__) {
       screenshotBucket = storage();
     }
