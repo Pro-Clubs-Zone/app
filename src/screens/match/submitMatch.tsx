@@ -169,7 +169,10 @@ export default function SubmitMatch({navigation, route}: Props) {
 
   const uploadScreenshots = async () => {
     for (const [index, image] of images.entries()) {
-      const screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+      let screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+      if (__DEV__) {
+        screenshotBucket = storage();
+      }
       const reference = screenshotBucket.ref(
         `/${matchData.leagueId}/${matchData.matchId}/${matchData.clubId}/facts/${imageNames[index]}`,
       );
@@ -183,15 +186,20 @@ export default function SubmitMatch({navigation, route}: Props) {
     fieldValidation().then(async (noErrors) => {
       if (noErrors) {
         setLoading(true);
-        await uploadScreenshots().then(
-          async () =>
-            await submitMatch(homeScore, awayScore, matchData).then(
-              async (result) => {
-                await analytics().logEvent('match_submit_score');
-                showAlert(result);
-              },
-            ),
-        );
+        await uploadScreenshots()
+          .then(
+            async () =>
+              await submitMatch(homeScore, awayScore, matchData).then(
+                async (result) => {
+                  await analytics().logEvent('match_submit_score');
+                  showAlert(result);
+                },
+              ),
+          )
+          .catch((err) => {
+            console.log('something wrong with uploading', err);
+            setLoading(false);
+          });
       }
     });
   };

@@ -79,9 +79,10 @@ function MatchScreenshots() {
   // const windowHeight = useWindowDimensions().height;
 
   useEffect(() => {
-    console.log('match screenshots');
-
-    const screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+    let screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+    if (__DEV__) {
+      screenshotBucket = storage();
+    }
     const homeRef = screenshotBucket.ref(
       `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/facts`,
     );

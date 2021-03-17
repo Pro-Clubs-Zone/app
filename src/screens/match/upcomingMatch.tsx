@@ -18,7 +18,7 @@ import MatchConflictItem from '../../components/matchConflictItem';
 import analytics from '@react-native-firebase/analytics';
 import {MatchContext} from '../../context/matchContext';
 import ImageView from 'react-native-image-viewing';
-import {firebase} from '@react-native-firebase/storage';
+import storage, {firebase} from '@react-native-firebase/storage';
 
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
@@ -67,9 +67,11 @@ export default function UpcomingMatch({navigation, route}: Props) {
   }, [leagueId]);
 
   useEffect(() => {
-    console.log('match screenshots');
+    let screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+    if (__DEV__) {
+      screenshotBucket = storage();
+    }
 
-    const screenshotBucket = firebase.app().storage('gs://prz-screenshots');
     const homeRef = screenshotBucket.ref(
       `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/facts`,
     );
