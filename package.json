@@ -14,7 +14,7 @@
     "ios-release": "npx react-native run-ios --scheme Dev --configuration Dev.Release",
     "android-debug": "npx react-native run-android --variant=devDebug --appIdSuffix=dev",
     "android-release": "npx react-native run-android --variant=devRelease --appIdSuffix=dev",
-    "version": "react-native-version"
+    "version": "lingui extract && lingui compile && react-native-version"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^3.9.0",
