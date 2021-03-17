@@ -16,7 +16,9 @@ type Props = {
   homeScore: number;
   awayScore: number;
   onPickResult: () => void;
+  onShowProof: () => void;
   header: string;
+  proofDisabled: boolean;
 };
 
 //---------- Conflict Item ----------//
@@ -51,14 +53,17 @@ const MatchConflictItem = (props: Props) => (
     </View>
     <View style={styles.conflictButtons}>
       <MinButton
+        secondary
+        onPress={props.onShowProof}
+        title={
+          props.proofDisabled ? i18n._(t`No Proof`) : i18n._(t`View Proof`)
+        }
+        disabled={props.proofDisabled}
+      />
+      <MinButton
         onPress={props.onPickResult}
         title={props.motm ? i18n._(t`Pick Player`) : i18n._(t`Pick Result`)} // To-Do: show success confrimation
       />
-      {/* <MinButton
-        secondary
-        onPress={props.onOpenProof}
-        title={i18n._(t`View Proof`)} // To-Do: show screenshot with image browser
-      /> */}
     </View>
   </View>
 );
@@ -67,8 +72,8 @@ const MatchConflictItem = (props: Props) => (
 
 const styles = ScaledSheet.create({
   conflictContainer: {
-    marginTop: '32@vs',
-    marginHorizontal: '32@vs',
+    //  marginTop: '16@vs',
+    marginVertical: '8@vs',
     borderColor: APP_COLORS.Primary,
     borderWidth: 1,
   },

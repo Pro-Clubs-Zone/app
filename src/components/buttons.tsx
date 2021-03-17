@@ -122,8 +122,11 @@ const MinButton = ({
         style={[
           TEXT_STYLES.buttonLabel,
           {
-            color:
-              !secondary && !disabled ? APP_COLORS.Accent : APP_COLORS.Gray,
+            color: disabled
+              ? APP_COLORS.Gray
+              : secondary
+              ? APP_COLORS.Light
+              : APP_COLORS.Accent,
           },
         ]}>
         {title.toUpperCase()}

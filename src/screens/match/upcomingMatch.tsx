@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, ImageURISource} from 'react';
 import {ScrollView, View, Alert} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import onConflictResolve from './functions/onConflictResolve';
@@ -17,6 +17,8 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import MatchConflictItem from '../../components/matchConflictItem';
 import analytics from '@react-native-firebase/analytics';
 import {MatchContext} from '../../context/matchContext';
+import ImageView from 'react-native-image-viewing';
+import {firebase} from '@react-native-firebase/storage';
 
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
@@ -32,6 +34,10 @@ type Props = {
 export default function UpcomingMatch({navigation, route}: Props) {
   const [canSubmit, setCanSubmit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
+  const [homeImages, setHomeImages] = useState<ImageURISource[]>([]);
+  const [awayImages, setAwayImages] = useState<ImageURISource[]>([]);
+  const [matchImages, setMatchImages] = useState<ImageURISource[]>([]);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -53,16 +59,53 @@ export default function UpcomingMatch({navigation, route}: Props) {
   // const getMatches = useGetMatches(leagueId, query);
 
   useEffect(() => {
-    console.log('====================================');
-    console.log('submit', matchData);
-    console.log('====================================');
-
     const userClub = context.userData!.leagues![leagueId].clubId!;
     const isManager = matchData.teams!.includes(userClub) && matchData.manager;
     const hasSubmitted = !!matchData.submissions?.[userClub];
     const managerCanSubmit = isManager && !hasSubmitted;
     setCanSubmit(managerCanSubmit);
   }, [leagueId]);
+
+  useEffect(() => {
+    console.log('match screenshots');
+
+    const screenshotBucket = firebase.app().storage('gs://prz-screenshots');
+    const homeRef = screenshotBucket.ref(
+      `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/facts`,
+    );
+    const awayRef = screenshotBucket.ref(
+      `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/facts`,
+    );
+    let homeImageUrls: ImageURISource[] = [];
+    let awayImageUrls: ImageURISource[] = [];
+    homeRef
+      .listAll()
+      .then(async (res) => {
+        for (const itemRef of res.items) {
+          await itemRef.getDownloadURL().then((url) => {
+            console.log(url);
+            homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
+          });
+        }
+      })
+      .then(() =>
+        awayRef
+          .listAll()
+          .then(async (res) => {
+            for (const itemRef of res.items) {
+              await itemRef.getDownloadURL().then((url) => {
+                console.log(url);
+                awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
+              });
+            }
+          })
+          .then(() => {
+            setHomeImages(homeImageUrls);
+            setAwayImages(awayImageUrls);
+            setLoading(false);
+          }),
+      );
+  }, []);
 
   const decrementConflictCounter = () => {
     const leagueData = {...context.userLeagues};
@@ -124,6 +167,12 @@ export default function UpcomingMatch({navigation, route}: Props) {
         visible={loading}
         label={i18n._(t`Submitting Match...`)}
       />
+      <ImageView
+        images={matchImages}
+        imageIndex={0}
+        visible={imageViewerVisible}
+        onRequestClose={() => setImageViewerVisible(false)}
+      />
       <ScoreBoard
         data={matchData}
         editable={false}
@@ -138,9 +187,19 @@ export default function UpcomingMatch({navigation, route}: Props) {
           onSelectHome={() => {
             onSelectResult(matchData.homeTeamId);
           }}
+          onShowProofHome={() => {
+            setMatchImages(homeImages);
+            setImageViewerVisible(true);
+          }}
+          homeProofDisabled={homeImages.length === 0}
           onSelectAway={() => {
             onSelectResult(matchData.awayTeamId);
           }}
+          onShowProofAway={() => {
+            setMatchImages(awayImages);
+            setImageViewerVisible(true);
+          }}
+          awayProofDisabled={awayImages.length === 0}
         />
       ) : (
         // <FlatList
@@ -184,33 +243,51 @@ export default function UpcomingMatch({navigation, route}: Props) {
 const MatchConflict = ({
   onSelectHome,
   onSelectAway,
+  onShowProofHome,
+  onShowProofAway,
+  homeProofDisabled,
+  awayProofDisabled,
   data,
 }: {
   onSelectHome: () => void;
   onSelectAway: () => void;
+  onShowProofHome: () => void;
+  onShowProofAway: () => void;
+  homeProofDisabled: boolean;
+  awayProofDisabled: boolean;
   data: IMatchNavData;
 }) => {
   return (
     <ScrollView
       stickyHeaderIndices={[0]}
+      showsVerticalScrollIndicator={false}
       contentContainerStyle={{paddingBottom: verticalScale(32)}}>
       <ListHeading col1={i18n._(t`Conflict Match`)} />
-      <MatchConflictItem
-        header={i18n._(t`${data.homeTeamName} Submission`)}
-        homeTeam={data.homeTeamName}
-        awayTeam={data.awayTeamName}
-        homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
-        awayScore={data.submissions[data.homeTeamId][data.awayTeamId]}
-        onPickResult={onSelectHome}
-      />
-      <MatchConflictItem
-        header={i18n._(t`${data.awayTeamName} Submission`)}
-        homeTeam={data.homeTeamName}
-        awayTeam={data.awayTeamName}
-        homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}
-        awayScore={data.submissions[data.awayTeamId][data.awayTeamId]}
-        onPickResult={onSelectAway}
-      />
+      <View
+        style={{
+          padding: verticalScale(16),
+        }}>
+        <MatchConflictItem
+          header={i18n._(t`${data.homeTeamName} Submission`)}
+          homeTeam={data.homeTeamName}
+          awayTeam={data.awayTeamName}
+          homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
+          awayScore={data.submissions[data.homeTeamId][data.awayTeamId]}
+          onPickResult={onSelectHome}
+          onShowProof={onShowProofHome}
+          proofDisabled={homeProofDisabled}
+        />
+        <MatchConflictItem
+          header={i18n._(t`${data.awayTeamName} Submission`)}
+          homeTeam={data.homeTeamName}
+          awayTeam={data.awayTeamName}
+          homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}
+          awayScore={data.submissions[data.awayTeamId][data.awayTeamId]}
+          onPickResult={onSelectAway}
+          onShowProof={onShowProofAway}
+          proofDisabled={awayProofDisabled}
+        />
+      </View>
     </ScrollView>
   );
 };
