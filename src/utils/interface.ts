@@ -5,6 +5,14 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
+export interface PlayerStats {
+  goals: number;
+  assists: number;
+  motm: number;
+  matches: number;
+  club: string;
+}
+
 export interface FixtureList extends IFlatList {
   data: IMatchNavData;
 }

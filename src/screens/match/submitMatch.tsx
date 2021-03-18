@@ -17,18 +17,24 @@ import {StackNavigationProp} from '@react-navigation/stack';
 //import useGetMatches from '../league/functions/useGetMatches';
 import analytics from '@react-native-firebase/analytics';
 import {MatchContext} from '../../context/matchContext';
-import {BigButton} from '../../components/buttons';
+import {BigButton, MinButton} from '../../components/buttons';
 import ScreenshotUploader from '../../components/screenshots';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import MatchPlayer from '../../components/matchPlayer';
+import {PlayerStats} from '../../utils/interface';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
 };
+
+interface MenuPlayerItem extends PlayerStats {
+  id: string;
+  username: string;
+}
 
 //const db = firestore();
 
@@ -44,7 +50,12 @@ export default function SubmitMatch({navigation, route}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [roster, setRoster] = useState([{}]);
+  const [roster, setRoster] = useState<{username: string}[]>([]);
+  const [selectedPlayer, setSelectedPlayer] = useState<{username: string}[]>(
+    [],
+  );
+  const [expandedPlayer, setExpandedPlayer] = useState<number>();
+  const [motm, setMotm] = useState<number>();
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -67,7 +78,7 @@ export default function SubmitMatch({navigation, route}: Props) {
 
   useEffect(() => {
     const currentRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    let rosterItems = [{}];
+    let rosterItems: [{}] = [];
 
     for (const [id, playerData] of Object.entries(currentRoster)) {
       const player = {
@@ -76,6 +87,7 @@ export default function SubmitMatch({navigation, route}: Props) {
       };
       rosterItems = [...rosterItems, player];
     }
+    console.log(rosterItems);
     setRoster(rosterItems);
   }, [context]);
 
@@ -230,7 +242,7 @@ export default function SubmitMatch({navigation, route}: Props) {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <>
       <FullScreenLoading
         visible={loading}
         label={i18n._(t`Submitting Match...`)}
@@ -241,21 +253,25 @@ export default function SubmitMatch({navigation, route}: Props) {
         visible={imageViewerVisible}
         onRequestClose={() => setImageViewerVisible(false)}
       />
-      <ScoreBoard data={matchData} editable={true} showSubmit={false}>
-        <MatchTextField
-          error={errorStates.homeScore}
-          onChangeText={(score: string) => onChangeText(score, 'homeScore')}
-          value={homeScore}
-        />
-        <View style={styles.divider} />
-        <MatchTextField
-          error={errorStates.awayScore}
-          onChangeText={(score: string) => onChangeText(score, 'awayScore')}
-          value={awayScore}
-        />
-      </ScoreBoard>
+      <ScrollView
+        bounces={false}
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}>
+        <ScoreBoard data={matchData} editable={true} showSubmit={false}>
+          <MatchTextField
+            error={errorStates.homeScore}
+            onChangeText={(score: string) => onChangeText(score, 'homeScore')}
+            value={homeScore}
+          />
+          <View style={styles.divider} />
+          <MatchTextField
+            error={errorStates.awayScore}
+            onChangeText={(score: string) => onChangeText(score, 'awayScore')}
+            value={awayScore}
+          />
+        </ScoreBoard>
 
-      <ScrollView>
         <ScreenshotUploader
           thumbsCount={3}
           images={images}
@@ -282,16 +298,32 @@ export default function SubmitMatch({navigation, route}: Props) {
             )
           }
         />
+        <ListHeading col1="Participated Players" />
         <View
           style={{
             padding: verticalScale(8),
-            flex: 1,
+            paddingBottom: verticalScale(32),
+            flexGrow: 1,
           }}>
-          <MatchPlayer />
+          {roster.map((player, i) => (
+            <MatchPlayer
+              username={player.username}
+              key={i}
+              motm={motm === i}
+              onMotm={() => (motm === i ? setMotm(null) : setMotm(i))}
+              onExpand={() =>
+                expandedPlayer === i
+                  ? setExpandedPlayer(null)
+                  : setExpandedPlayer(i)
+              }
+              expanded={expandedPlayer === i}
+            />
+          ))}
+          <MinButton title="add players" />
         </View>
+        <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
       </ScrollView>
-      <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
-    </View>
+    </>
   );
 }
 

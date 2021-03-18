@@ -6,25 +6,71 @@ import {IconButton} from './buttons';
 import {MatchTextField} from './textField';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-export default function MatchPlayer({expanded = true}) {
+export default function MatchPlayer({
+  expanded,
+  username,
+  motm,
+  onExpand,
+  onRemove,
+  onMotm,
+  goals,
+  goalsError,
+  onGoalsChange,
+  assists,
+  assistsError,
+  onAssistsChange,
+}: {
+  expanded: boolean;
+  username: string;
+  motm: boolean;
+  onExpand: () => void;
+  onRemove: () => void;
+  onMotm: () => void;
+  goals: number;
+  goalsError: boolean;
+  onGoalsChange: () => void;
+  assists: number;
+  assistsError: boolean;
+  onAssistsChange: () => void;
+}) {
   return (
     <View style={styles.container}>
-      <View style={styles.username}>
-        <Text style={TEXT_STYLES.body}>Username</Text>
-        <IconButton
-          name="arrow-down-drop-circle-outline"
-          color={APP_COLORS.Gray}
-        />
+      <View style={styles.collapsed}>
+        <Text style={TEXT_STYLES.body}>{username}</Text>
+        <View style={styles.itemActions}>
+          <IconButton
+            name="close-circle-outline"
+            color={APP_COLORS.Gray}
+            onPress={onRemove}
+          />
+          <IconButton
+            name={
+              expanded
+                ? 'arrow-up-drop-circle-outline'
+                : 'arrow-down-drop-circle-outline'
+            }
+            color={expanded ? APP_COLORS.Accent : APP_COLORS.Gray}
+            onPress={onExpand}
+          />
+        </View>
       </View>
       {expanded && (
         <View style={styles.expanded}>
           <View style={styles.control}>
             <Text style={TEXT_STYLES.caption}>Goals</Text>
-            <MatchTextField />
+            <MatchTextField
+              value={goals}
+              error={goalsError}
+              onChangeText={onGoalsChange}
+            />
           </View>
           <View style={styles.control}>
             <Text style={TEXT_STYLES.caption}>Assists</Text>
-            <MatchTextField />
+            <MatchTextField
+              value={assists}
+              error={assistsError}
+              onChangeText={onAssistsChange}
+            />
           </View>
           <View style={styles.control}>
             <Text style={TEXT_STYLES.caption}>MOTM</Text>
@@ -34,9 +80,10 @@ export default function MatchPlayer({expanded = true}) {
                 justifyContent: 'center',
               }}>
               <Icon
-                name="star"
+                name={motm ? 'star' : 'star-outline'}
                 size={verticalScale(32)}
-                color={APP_COLORS.Accent}
+                color={motm ? APP_COLORS.Accent : APP_COLORS.Light}
+                onPress={onMotm}
               />
             </View>
           </View>
@@ -63,13 +110,17 @@ const styles = ScaledSheet.create({
     shadowOpacity: 0.2,
     marginBottom: '8@vs',
   },
-  username: {
+  itemActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  collapsed: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingLeft: '12@vs',
     paddingVertical: '16@vs',
     flex: 1,
+    paddingLeft: '12@vs',
   },
   expanded: {
     flexDirection: 'row',
