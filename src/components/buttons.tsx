@@ -89,13 +89,19 @@ export const BigButtonOutlined = ({
 export const IconButton = ({
   onPress,
   name,
+  color,
 }: {
   onPress: () => void;
   name: string;
+  color?: APP_COLORS;
 }) => (
   <Pressable onPress={onPress}>
     <View style={styles.iconContainer}>
-      <Icon name={name} size={FONT_SIZES.M} color={APP_COLORS.Dark} />
+      <Icon
+        name={name}
+        size={FONT_SIZES.M}
+        color={color ? color : APP_COLORS.Dark}
+      />
     </View>
   </Pressable>
 );

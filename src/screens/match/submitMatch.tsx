@@ -22,6 +22,7 @@ import ScreenshotUploader from '../../components/screenshots';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
+import MatchPlayer from '../../components/matchPlayer';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -43,11 +44,14 @@ export default function SubmitMatch({navigation, route}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
+  const [roster, setRoster] = useState([{}]);
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
 
   const matchData = matchContext.match;
+  const leagueId = matchData.leagueId;
+  const clubId = matchData.clubId;
 
   // const leagueRef = db
   //   .collection('leagues')
@@ -60,6 +64,20 @@ export default function SubmitMatch({navigation, route}: Props) {
   //   .where('published', '==', true);
 
   // const getMatches = useGetMatches(leagueId, query);
+
+  useEffect(() => {
+    const currentRoster = context.userLeagues[leagueId].clubs[clubId].roster;
+    let rosterItems = [{}];
+
+    for (const [id, playerData] of Object.entries(currentRoster)) {
+      const player = {
+        id,
+        username: playerData.username,
+      };
+      rosterItems = [...rosterItems, player];
+    }
+    setRoster(rosterItems);
+  }, [context]);
 
   const showAlert = (submissionResult: string) => {
     let title: string;
@@ -212,10 +230,7 @@ export default function SubmitMatch({navigation, route}: Props) {
   };
 
   return (
-    <View
-      style={{
-        flex: 1,
-      }}>
+    <View style={{flex: 1}}>
       <FullScreenLoading
         visible={loading}
         label={i18n._(t`Submitting Match...`)}
@@ -226,7 +241,6 @@ export default function SubmitMatch({navigation, route}: Props) {
         visible={imageViewerVisible}
         onRequestClose={() => setImageViewerVisible(false)}
       />
-
       <ScoreBoard data={matchData} editable={true} showSubmit={false}>
         <MatchTextField
           error={errorStates.homeScore}
@@ -240,11 +254,8 @@ export default function SubmitMatch({navigation, route}: Props) {
           value={awayScore}
         />
       </ScoreBoard>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'space-between',
-        }}>
+
+      <ScrollView>
         <ScreenshotUploader
           thumbsCount={3}
           images={images}
@@ -271,8 +282,15 @@ export default function SubmitMatch({navigation, route}: Props) {
             )
           }
         />
-        <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
-      </View>
+        <View
+          style={{
+            padding: verticalScale(8),
+            flex: 1,
+          }}>
+          <MatchPlayer />
+        </View>
+      </ScrollView>
+      <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
     </View>
   );
 }
