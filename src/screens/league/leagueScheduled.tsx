@@ -33,6 +33,7 @@ export default function LeagueScheduled({navigation}: Props) {
   const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
   const isAdmin = context.userData.leagues[leagueId].admin;
+  const isManager = context.userData.leagues[leagueId].manager;
   const conflictMatchesCount =
     context.userLeagues[leagueId].conflictMatchesCount;
 
@@ -68,16 +69,6 @@ export default function LeagueScheduled({navigation}: Props) {
           onPress={() => navigation.navigate('Report Center')}
         />
       )}
-      {!isAdmin && (
-        <CardMedium
-          title={i18n._(t`Invite Players`)}
-          subTitle={i18n._(
-            t`Share league link with other players to invite them to your club`,
-          )}
-          badgeNumber={conflictMatchesCount}
-          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
-        />
-      )}
       <CardSmallContainer>
         <CardSmall
           title="Standings"
@@ -99,6 +90,16 @@ export default function LeagueScheduled({navigation}: Props) {
           })
         }
       />
+      {isManager && (
+        <CardMedium
+          title={i18n._(t`Invite Players`)}
+          subTitle={i18n._(
+            t`Share league link with other players to invite them to your club`,
+          )}
+          badgeNumber={conflictMatchesCount}
+          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+        />
+      )}
     </ScrollView>
   );
 }

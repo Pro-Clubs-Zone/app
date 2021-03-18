@@ -546,6 +546,8 @@ PODS:
   - React-jsinspector (0.63.3)
   - react-native-image-picker (3.3.2):
     - React-Core
+  - react-native-pager-view (5.1.2):
+    - React-Core
   - react-native-safe-area-context (3.2.0):
     - React-Core
   - React-RCTActionSheet (0.63.3):
@@ -616,42 +618,69 @@ PODS:
     - React
   - RNCPicker (1.9.12):
     - React-Core
-  - RNFBAnalytics (11.1.1):
+  - RNFBAnalytics (11.1.2):
     - Firebase/Analytics (= 7.8.1)
     - React-Core
     - RNFBApp
-  - RNFBApp (11.1.1):
+  - RNFBApp (11.1.2):
     - Firebase/CoreOnly (= 7.8.1)
     - React-Core
-  - RNFBAuth (11.1.1):
+  - RNFBAuth (11.1.2):
     - Firebase/Auth (= 7.8.1)
     - React-Core
     - RNFBApp
-  - RNFBCrashlytics (11.1.1):
+  - RNFBCrashlytics (11.1.2):
     - Firebase/Crashlytics (= 7.8.1)
     - React-Core
     - RNFBApp
-  - RNFBDynamicLinks (11.1.1):
+  - RNFBDynamicLinks (11.1.2):
     - Firebase/DynamicLinks (= 7.8.1)
     - GoogleUtilities/AppDelegateSwizzler
     - React-Core
     - RNFBApp
-  - RNFBFirestore (11.1.1):
+  - RNFBFirestore (11.1.2):
     - Firebase/Firestore (= 7.8.1)
     - React-Core
     - RNFBApp
-  - RNFBFunctions (11.1.1):
+  - RNFBFunctions (11.1.2):
     - Firebase/Functions (= 7.8.1)
     - React-Core
     - RNFBApp
-  - RNFBStorage (11.1.1):
+  - RNFBStorage (11.1.2):
     - Firebase/Storage (= 7.8.1)
     - React-Core
     - RNFBApp
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNReanimated (1.13.2):
+  - RNReanimated (2.0.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - Folly
+    - glog
+    - RCTRequired
+    - RCTTypeSafety
+    - React
+    - React-callinvoker
     - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - React-RCTVibration
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (2.18.1):
     - React-Core
   - RNVectorIcons (7.1.0):
@@ -677,6 +706,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -765,6 +795,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-RCTActionSheet:
@@ -862,6 +894,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: b56c03e61c0dd5f5801255f2160a815f4a53d451
   React-jsinspector: 8e68ffbfe23880d3ee9bafa8be2777f60b25cbe2
   react-native-image-picker: 5b2f1ea1f9230b131abbfb8a4aa1eb209aba9ed9
+  react-native-pager-view: d728200ac02cad7ccacc5903d0b65ff7b8c00cde
   react-native-safe-area-context: e471852c5ed67eea4b10c5d9d43c1cebae3b231d
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
@@ -877,16 +910,16 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: 1ab3f6ec0bc2c676dad4a00471d4c9d1a2cf68a2
   RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
   RNCPicker: b1e22287e5feb38fb10cac877753b924ba1c05d1
-  RNFBAnalytics: 1d148d71352fff61c03fae581c76b42ba122054b
-  RNFBApp: 27bb6551d41886fb7352c66174defc26d2c298b4
-  RNFBAuth: 76096a8d7fcc09d1bb9def59534d584037d825e9
-  RNFBCrashlytics: 40b0d09b49b57fe8c0b3a2b5070ecce36192e630
-  RNFBDynamicLinks: 0148ef301369c62060d811911fa44c8c9a83ac9a
-  RNFBFirestore: f7e6b28bd9fe079f9bf153e8a2eac7e9a9367c80
-  RNFBFunctions: d78c65e1c4eb3fd73533179b43190219c96558d6
-  RNFBStorage: 9b274982a3558e3dc99a1e9e63be97e5014dc9d8
+  RNFBAnalytics: b924aec7a5b8289dbc4f3a961c3222cd7705f236
+  RNFBApp: bb830cc7f7598e46437b833adc841df345e19e2f
+  RNFBAuth: d011f1b1a066a8bceba63c42369de9c5ce68de5e
+  RNFBCrashlytics: 47278b69b418d41e71f3b64673eaded59d4dee63
+  RNFBDynamicLinks: 3fdbe70011988b9f9dbdde0eafbe51079c20215f
+  RNFBFirestore: 53c0bbc1903f039e791300bb821c55a0cf37bfb1
+  RNFBFunctions: 998b7b6568ecef2c8501168bd762a56e88d74194
+  RNFBStorage: 301038338b021e19080338cfc89662c7e8ac117d
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNReanimated: e03f7425cb7a38dcf1b644d680d1bfc91c3337ad
+  RNReanimated: 5231286440b796e09df3bfa5c1b12b02bfe07664
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNVectorIcons: bc69e6a278b14842063605de32bec61f0b251a59
   Yoga: 7d13633d129fd179e01b8953d38d47be90db185a
