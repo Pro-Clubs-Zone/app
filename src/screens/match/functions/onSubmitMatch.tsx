@@ -1,6 +1,6 @@
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
-import {IMatchNavData} from '../../../utils/interface';
+import {IMatch, IMatchNavData} from '../../../utils/interface';
 
 const db = firestore();
 const firFunc = functions();
@@ -8,19 +8,24 @@ const firFunc = functions();
 const submitMatch = async (
   homeScore: string,
   awayScore: string,
-  matchData: IMatchNavData,
+  initialMatchData: IMatchNavData,
 ): Promise<string> => {
   const teamSubmission = {
-    [matchData.clubId]: {
-      [matchData.homeTeamId]: Number(homeScore),
-      [matchData.awayTeamId]: Number(awayScore),
+    [initialMatchData.clubId]: {
+      [initialMatchData.homeTeamId]: Number(homeScore),
+      [initialMatchData.awayTeamId]: Number(awayScore),
     },
   };
   const matchRef = db
     .collection('leagues')
-    .doc(matchData.leagueId)
+    .doc(initialMatchData.leagueId)
     .collection('matches')
-    .doc(matchData.matchId);
+    .doc(initialMatchData.matchId);
+
+  let matchData: IMatch;
+  await matchRef.get().then((res) => {
+    matchData = res.data() as IMatch;
+  });
 
   return matchRef
     .set(
@@ -30,13 +35,13 @@ const submitMatch = async (
       {merge: true},
     )
     .then(() => {
-      // let message;
       if (
         matchData.submissions &&
         Object.keys(matchData.submissions).length === 1
       ) {
         const controlMatch = firFunc.httpsCallable('matchSubmission');
-        const match: IMatchNavData = {
+        const match: IMatch = {
+          ...initialMatchData,
           ...matchData,
           submissions: {...matchData.submissions, ...teamSubmission},
         };
