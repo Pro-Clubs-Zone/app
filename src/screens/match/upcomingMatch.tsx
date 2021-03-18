@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useState, ImageURISource} from 'react';
-import {ScrollView, View, Alert} from 'react-native';
+import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
+import {ScrollView, View, Alert, ImageURISource, Share} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import onConflictResolve from './functions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
@@ -19,6 +19,8 @@ import analytics from '@react-native-firebase/analytics';
 import {MatchContext} from '../../context/matchContext';
 import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
+import {IconButton} from '../../components/buttons';
+import {useActionSheet} from '@expo/react-native-action-sheet';
 
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
@@ -41,6 +43,7 @@ export default function UpcomingMatch({navigation}: Props) {
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
+  const {showActionSheetWithOptions} = useActionSheet();
 
   const matchData: IMatchNavData = matchContext.match;
   const leagueId = matchData.leagueId;
@@ -57,12 +60,152 @@ export default function UpcomingMatch({navigation}: Props) {
 
   // const getMatches = useGetMatches(leagueId, query);
 
-  useEffect(() => {
+  const showSuccessAlert = () => {
+    const title = i18n._(t`Match Resolved`);
+    const body = i18n._(t`Match was published with the selected result`);
+
+    let foundUserMatch = context.userMatches.filter(
+      (match) => match.id === matchData.matchId,
+    );
+
+    if (foundUserMatch.length !== 0) {
+      let notPublishedMatches = context.userMatches.filter(
+        (match) => match.id !== matchData.matchId,
+      );
+
+      context.setUserMatches(notPublishedMatches);
+    }
+
+    Alert.alert(
+      title,
+      body,
+      [
+        {
+          text: i18n._(t`Close`),
+          onPress: () => {
+            setLoading(false);
+            navigation.goBack();
+          },
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const onResolveMatch = () => {
+    const resolveMatch = async (result: string) => {
+      const resultSubmission = {
+        [matchData.homeTeamId]:
+          result === 'home' ? 3 : result === 'draw' ? 1 : 0,
+        [matchData.awayTeamId]:
+          result === 'away' ? 3 : result === 'draw' ? 1 : 0,
+      };
+      setLoading(true);
+      await onConflictResolve(matchData, resultSubmission).then(() => {
+        showSuccessAlert();
+      });
+    };
+
+    const showAlert = (result: string) => {
+      Alert.alert(
+        i18n._(t`Resolve Match`),
+        i18n._(
+          t`Are you sure you want to pick ${
+            result === 'home'
+              ? matchData.homeTeamName
+              : result === 'away'
+              ? matchData.awayTeamName
+              : 'no team'
+          } as a winner?`,
+        ),
+        [
+          {
+            text: i18n._(t`Confirm`),
+            onPress: () => resolveMatch(result),
+            style: 'default',
+          },
+          {
+            text: i18n._(t`Cancel`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    };
+
+    const options = [
+      i18n._(t`${matchData.homeTeamName} is winner`),
+      i18n._(t`${matchData.awayTeamName} is winner`),
+      i18n._(t`Match is a draw`),
+      i18n._(t`Cancel`),
+    ];
+    const cancelButtonIndex = 3;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      (buttonIndex) => {
+        switch (buttonIndex) {
+          case 0:
+            showAlert('home');
+            break;
+          case 1:
+            showAlert('away');
+            break;
+          case 2:
+            showAlert('draw');
+            break;
+        }
+      },
+    );
+  };
+
+  const shareMatchDetails = async () => {
+    const content = `PRZ Match Report:\nLeague Name: ${
+      matchData.leagueName
+    },\nLeague ID: ${matchData.leagueId.slice(
+      0,
+      5,
+    )},\nMatch ID: ${matchData.matchId.slice(
+      0,
+      5,
+    )},\nPlease describe the issue:\n`;
+    await Share.share(
+      {
+        message: content,
+        title: i18n._(t`Share report with admin`),
+      },
+      {
+        dialogTitle: i18n._(t`Report Match`),
+      },
+    );
+  };
+
+  useLayoutEffect(() => {
     const userClub = context.userData!.leagues![leagueId].clubId!;
     const isManager = matchData.teams!.includes(userClub) && matchData.manager;
     const hasSubmitted = !!matchData.submissions?.[userClub];
     const managerCanSubmit = isManager && !hasSubmitted;
     setCanSubmit(managerCanSubmit);
+
+    navigation.setOptions({
+      headerRight: () => (
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          {matchData.admin && (
+            <IconButton name="whistle" onPress={() => onResolveMatch()} />
+          )}
+          <IconButton
+            name="message-alert-outline"
+            onPress={() => shareMatchDetails()}
+          />
+        </View>
+      ),
+    });
   }, [leagueId]);
 
   useEffect(() => {
@@ -121,45 +264,15 @@ export default function UpcomingMatch({navigation}: Props) {
     context.setUserData(userData);
   };
 
-  const showAlert = () => {
-    const title = i18n._(t`Conflict Resolved`);
-    const body = i18n._(t`Match was published with the selected result`);
-
-    let foundUserMatch = context.userMatches.filter(
-      (match) => match.id === matchData.matchId,
-    );
-
-    if (foundUserMatch.length !== 0) {
-      let notPublishedMatches = context.userMatches.filter(
-        (match) => match.id !== matchData.matchId,
-      );
-
-      context.setUserMatches(notPublishedMatches);
-    }
-
-    Alert.alert(
-      title,
-      body,
-      [
-        {
-          text: i18n._(t`Close`),
-          onPress: () => {
-            setLoading(false);
-            navigation.goBack();
-          },
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
   const onSelectResult = async (id: string) => {
     setLoading(true);
-    await onConflictResolve(matchData, id).then(async (result) => {
-      await analytics().logEvent('match_resolve_conflict');
-      decrementConflictCounter();
-      showAlert();
-    });
+    await onConflictResolve(matchData, matchData.submissions[id]).then(
+      async () => {
+        await analytics().logEvent('match_resolve_conflict');
+        decrementConflictCounter();
+        showSuccessAlert();
+      },
+    );
   };
 
   return (
