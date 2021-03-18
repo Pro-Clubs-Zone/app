@@ -1,8 +1,9 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {IMatchNavData} from '../../utils/interface';
+import {IMatch, IMatchNavData} from '../../utils/interface';
 import {RouteProp} from '@react-navigation/native';
 import {LeagueStackType} from '../league/league';
 import {createStackNavigator} from '@react-navigation/stack';
+import firestore from '@react-native-firebase/firestore';
 
 // Screens
 import UpcomingMatch from './upcomingMatch';
@@ -30,6 +31,8 @@ type Props = {
   route: ScreenRouteProp;
 };
 
+const db = firestore();
+
 export default function Match({route}: Props) {
   const [loading, setLoading] = useState(true);
 
@@ -38,8 +41,18 @@ export default function Match({route}: Props) {
   const matchContext = useContext(MatchContext);
 
   useEffect(() => {
-    matchContext.setMatch(data);
-    setLoading(false);
+    const matchRef = db
+      .collection('leagues')
+      .doc(data.leagueId)
+      .collection('matches')
+      .doc(data.matchId);
+
+    matchRef.get().then((res) => {
+      const matchData = res.data() as IMatch;
+      const matchNavData = {...data, ...matchData};
+      matchContext.setMatch(matchNavData);
+      setLoading(false);
+    });
   }, [data]);
 
   if (loading) {
@@ -59,9 +72,6 @@ export default function Match({route}: Props) {
       <Stack.Screen
         name="Upcoming Match"
         component={UpcomingMatch}
-        initialParams={{
-          matchData: data,
-        }}
         options={{
           headerStyle: {
             elevation: 0,
@@ -80,9 +90,6 @@ export default function Match({route}: Props) {
       <Stack.Screen
         name="Finished Match"
         component={FinishedMatch}
-        initialParams={{
-          matchData: data,
-        }}
         options={{
           headerStyle: {
             elevation: 0,

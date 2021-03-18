@@ -96,7 +96,6 @@ export default function LeagueScheduled({navigation}: Props) {
           subTitle={i18n._(
             t`Share league link with other players to invite them to your club`,
           )}
-          badgeNumber={conflictMatchesCount}
           onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
         />
       )}

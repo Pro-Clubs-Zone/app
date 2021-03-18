@@ -31,7 +31,7 @@ type Props = {
 
 //const db = firestore();
 
-export default function UpcomingMatch({navigation, route}: Props) {
+export default function UpcomingMatch({navigation}: Props) {
   const [canSubmit, setCanSubmit] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [homeImages, setHomeImages] = useState<ImageURISource[]>([]);
@@ -44,7 +44,6 @@ export default function UpcomingMatch({navigation, route}: Props) {
 
   const matchData: IMatchNavData = matchContext.match;
   const leagueId = matchData.leagueId;
-  console.log('nav', route, navigation);
 
   // const leagueRef = db
   //   .collection('leagues')
@@ -80,34 +79,37 @@ export default function UpcomingMatch({navigation, route}: Props) {
     );
     let homeImageUrls: ImageURISource[] = [];
     let awayImageUrls: ImageURISource[] = [];
-    homeRef
-      .listAll()
-      .then(async (res) => {
-        for (const itemRef of res.items) {
-          await itemRef.getDownloadURL().then((url) => {
-            console.log(url);
-            homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
-          });
-        }
-      })
-      .then(() =>
-        awayRef
-          .listAll()
-          .then(async (res) => {
-            for (const itemRef of res.items) {
-              await itemRef.getDownloadURL().then((url) => {
-                console.log(url);
-                awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
-              });
-            }
-          })
-          .then(() => {
-            setHomeImages(homeImageUrls);
-            setAwayImages(awayImageUrls);
-            setLoading(false);
-          }),
-      );
-  }, []);
+
+    if (matchData.conflict && matchData.admin) {
+      homeRef
+        .listAll()
+        .then(async (res) => {
+          for (const itemRef of res.items) {
+            await itemRef.getDownloadURL().then((url) => {
+              console.log(url);
+              homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
+            });
+          }
+        })
+        .then(() =>
+          awayRef
+            .listAll()
+            .then(async (res) => {
+              for (const itemRef of res.items) {
+                await itemRef.getDownloadURL().then((url) => {
+                  console.log(url);
+                  awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
+                });
+              }
+            })
+            .then(() => {
+              setHomeImages(homeImageUrls);
+              setAwayImages(awayImageUrls);
+              setLoading(false);
+            }),
+        );
+    }
+  }, [matchContext]);
 
   const decrementConflictCounter = () => {
     const leagueData = {...context.userLeagues};
