@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState, useRef} from 'react';
 import {ScrollView, View, Alert, ImageURISource} from 'react-native';
 import submitMatch from './functions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
@@ -24,6 +24,7 @@ import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import MatchPlayer from '../../components/matchPlayer';
 import {PlayerStats} from '../../utils/interface';
+import Select from '../../components/select';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -49,6 +50,7 @@ export default function SubmitMatch({navigation, route}: Props) {
   const [imageNames, setImageNames] = useState<string[]>([]);
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [selectVisible, setSelectVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
   const [roster, setRoster] = useState<{username: string}[]>([]);
   const [selectedPlayer, setSelectedPlayer] = useState<{username: string}[]>(
@@ -63,6 +65,10 @@ export default function SubmitMatch({navigation, route}: Props) {
   const matchData = matchContext.match;
   const leagueId = matchData.leagueId;
   const clubId = matchData.clubId;
+
+  const ref = useRef(null);
+
+  console.log(ref);
 
   // const leagueRef = db
   //   .collection('leagues')
@@ -253,6 +259,15 @@ export default function SubmitMatch({navigation, route}: Props) {
         visible={imageViewerVisible}
         onRequestClose={() => setImageViewerVisible(false)}
       />
+      <Select
+        visible={selectVisible}
+        displayKey="username"
+        submitButtonText="Submit"
+        uniqueKey="id"
+        items={roster}
+        onClose={() => setSelectVisible(false)}
+        ref={ref}
+      />
       <ScrollView
         bounces={false}
         contentContainerStyle={{
@@ -319,7 +334,10 @@ export default function SubmitMatch({navigation, route}: Props) {
               expanded={expandedPlayer === i}
             />
           ))}
-          <MinButton title="add players" />
+          <MinButton
+            title="add players"
+            onPress={() => ref?.current?._toggleSelector()}
+          />
         </View>
         <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
       </ScrollView>
