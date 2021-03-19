@@ -64,6 +64,10 @@ msgstr ""
 msgid "Are you sure you want to leave this club? This action can't be undone"
 msgstr ""
 
+#: src/screens/match/upcomingMatch.tsx:82
+msgid "Are you sure you want to pick {0} as a winner?"
+msgstr ""
+
 #: src/screens/club/club.tsx:141
 msgid "Are you sure you want to remove this player?"
 msgstr ""
@@ -107,6 +111,8 @@ msgstr ""
 #: src/screens/leagueAdmin/clubs.tsx:133
 #: src/screens/leagueAdmin/clubs.tsx:177
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:79
+#: src/screens/match/upcomingMatch.tsx:93
+#: src/screens/match/upcomingMatch.tsx:102
 #: src/screens/user/requests.tsx:73
 #: src/screens/user/requests.tsx:137
 #: src/screens/user/requests.tsx:228
@@ -136,7 +142,7 @@ msgstr ""
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:87
 #: src/screens/match/submitMatch.tsx:96
-#: src/screens/match/upcomingMatch.tsx:111
+#: src/screens/match/upcomingMatch.tsx:62
 #: src/screens/user/requests.tsx:111
 #: src/screens/user/requests.tsx:111
 msgid "Close"
@@ -161,7 +167,7 @@ msgid "Clubs"
 msgstr ""
 
 #: src/screens/match/finishedMatch.tsx:36
-#: src/screens/match/upcomingMatch.tsx:175
+#: src/screens/match/upcomingMatch.tsx:248
 msgid "Coming Soon"
 msgstr ""
 
@@ -169,13 +175,17 @@ msgstr ""
 msgid "Communication"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:180
+#: src/screens/match/upcomingMatch.tsx:88
+msgid "Confirm"
+msgstr ""
+
+#: src/screens/match/upcomingMatch.tsx:253
 msgid "Conflict Match"
 msgstr ""
 
 #: src/screens/match/upcomingMatch.tsx:102
-msgid "Conflict Resolved"
-msgstr ""
+#~ msgid "Conflict Resolved"
+#~ msgstr ""
 
 #: src/screens/league/createClub.tsx:119
 msgid "Create Club"
@@ -273,7 +283,7 @@ msgstr ""
 msgid "Invite Clubs"
 msgstr ""
 
-#: src/screens/league/leagueScheduled.tsx:39
+#: src/screens/league/leagueScheduled.tsx:48
 msgid "Invite Players"
 msgstr ""
 
@@ -413,6 +423,10 @@ msgstr ""
 #~ msgid "Manager your received and sent request"
 #~ msgstr ""
 
+#: src/screens/match/upcomingMatch.tsx:53
+msgid "Match Resolved"
+msgstr ""
+
 #: src/screens/match/finishedMatch.tsx:36
 msgid "Match Stats & Info"
 msgstr ""
@@ -421,8 +435,12 @@ msgstr ""
 msgid "Match cannot be published due to conflict."
 msgstr ""
 
+#: src/screens/match/upcomingMatch.tsx:101
+msgid "Match is a draw"
+msgstr ""
+
 #: src/screens/match/submitMatch.tsx:61
-#: src/screens/match/upcomingMatch.tsx:103
+#: src/screens/match/upcomingMatch.tsx:54
 msgid "Match was published with the selected result"
 msgstr ""
 
@@ -544,7 +562,7 @@ msgstr ""
 #~ msgid "Password reset link was send to your email"
 #~ msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:175
+#: src/screens/match/upcomingMatch.tsx:248
 msgid "Past Fixtures"
 msgstr ""
 
@@ -602,8 +620,13 @@ msgstr ""
 msgid "Removing League..."
 msgstr ""
 
-#: src/screens/league/leagueScheduled.tsx:38
+#: src/screens/league/leagueScheduled.tsx:39
 msgid "Report Center"
+msgstr ""
+
+#: src/screens/match/upcomingMatch.tsx:128
+#: src/screens/match/upcomingMatch.tsx:128
+msgid "Report Match"
 msgstr ""
 
 #: src/screens/league/leaguePreview.tsx:226
@@ -618,12 +641,16 @@ msgstr ""
 #~ msgid "Reset Password"
 #~ msgstr ""
 
+#: src/screens/match/upcomingMatch.tsx:82
+msgid "Resolve Match"
+msgstr ""
+
 #: src/screens/match/submitMatch.tsx:60
 #: src/screens/match/submitMatch.tsx:69
 msgid "Result Submitted"
 msgstr ""
 
-#: src/screens/league/leagueScheduled.tsx:38
+#: src/screens/league/leagueScheduled.tsx:39
 msgid "Review and resolve all conflicted matches"
 msgstr ""
 
@@ -673,8 +700,13 @@ msgstr ""
 msgid "Set up the league and invite players"
 msgstr ""
 
-#: src/screens/league/leagueScheduled.tsx:39
+#: src/screens/league/leagueScheduled.tsx:48
 msgid "Share league link with other players to invite them to your club"
+msgstr ""
+
+#: src/screens/match/upcomingMatch.tsx:126
+#: src/screens/match/upcomingMatch.tsx:126
+msgid "Share report with admin"
 msgstr ""
 
 #: src/screens/auth/signIn.tsx:142
@@ -707,7 +739,7 @@ msgid "Submit Match"
 msgstr ""
 
 #: src/screens/match/submitMatch.tsx:170
-#: src/screens/match/upcomingMatch.tsx:130
+#: src/screens/match/upcomingMatch.tsx:203
 msgid "Submitting Match..."
 msgstr ""
 
@@ -818,8 +850,8 @@ msgstr ""
 msgid "{0} Matches"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:184
-#: src/screens/match/upcomingMatch.tsx:185
+#: src/screens/match/upcomingMatch.tsx:257
+#: src/screens/match/upcomingMatch.tsx:258
 msgid "{0} Submission"
 msgstr ""
 
@@ -836,6 +868,11 @@ msgstr ""
 
 #: src/screens/league/leaguePreview.tsx:206
 msgid "{0} clubs / {1} matches"
+msgstr ""
+
+#: src/screens/match/upcomingMatch.tsx:99
+#: src/screens/match/upcomingMatch.tsx:100
+msgid "{0} is winner"
 msgstr ""
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:141
