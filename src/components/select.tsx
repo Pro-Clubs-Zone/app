@@ -2,7 +2,9 @@ import React, {forwardRef, useRef} from 'react';
 import {View, Text, Modal} from 'react-native';
 import {ScaledSheet} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
-import SectionedMultiSelect from 'react-native-sectioned-multi-select';
+import SectionedMultiSelect, {
+  SectionedMultiSelectProps,
+} from 'react-native-sectioned-multi-select';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IconButton} from './buttons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -34,11 +36,11 @@ const icons = {
   },
   cancel: {
     name: 'close', // cancel button
-    size: 18,
+    size: 32,
   },
 };
 
-const Select = forwardRef((props, ref) => (
+const Select = forwardRef((props: SectionedMultiSelectProps<any>, ref) => (
   // <Modal visible={visible} transparent>
   //   <View style={styles.container}>
   //     <SafeAreaView style={styles.content}>
@@ -46,16 +48,24 @@ const Select = forwardRef((props, ref) => (
   //         <Text style={TEXT_STYLES.body}>Title</Text>
   //         <IconButton name="close" onPress={onClose} color="white" />
   //       </View>
+
   <SectionedMultiSelect
     showDropDowns={false}
     showChips={false}
     showCancelButton={false}
-    hideConfirm={true}
+    hideConfirm={false}
     hideSearch={true}
     IconRenderer={Icon}
     icons={icons}
+    single={false}
     hideSelect
     ref={ref}
+    alwaysShowSelectText={true}
+    styles={{
+      modalWrapper: styles.container,
+      container: styles.content,
+      //listContainer: styles.listContainer,
+    }}
     {...props}
   />
 ));
@@ -64,15 +74,14 @@ const Select = forwardRef((props, ref) => (
 
 const styles = ScaledSheet.create({
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-    flex: 1,
+    paddingVertical: '64@vs',
   },
   content: {
-    width: '90%',
-    height: '80%',
     backgroundColor: APP_COLORS.Dark,
+  },
+  listContainer: {
+    padding: 0,
+    height: 2,
   },
   header: {
     flexDirection: 'row',

@@ -18,7 +18,9 @@ const getUserMatches = async (
     const clubId = league.clubId;
     const userLeague = userData.leagues[leagueId];
     const admin = userLeague.admin;
-    if (clubId) {
+    const accepted = league.accepted;
+
+    if (clubId && accepted) {
       const matchesSnapshot = db
         .collection('leagues')
         .doc(leagueId)

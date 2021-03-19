@@ -32,9 +32,9 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-interface MenuPlayerItem extends PlayerStats {
+interface SelectMenu {
+  name: string;
   id: string;
-  username: string;
 }
 
 //const db = firestore();
@@ -50,14 +50,12 @@ export default function SubmitMatch({navigation, route}: Props) {
   const [imageNames, setImageNames] = useState<string[]>([]);
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
-  const [selectVisible, setSelectVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [roster, setRoster] = useState<{username: string}[]>([]);
-  const [selectedPlayer, setSelectedPlayer] = useState<{username: string}[]>(
-    [],
-  );
-  const [expandedPlayer, setExpandedPlayer] = useState<number>();
-  const [motm, setMotm] = useState<number>();
+  const [roster, setRoster] = useState<SelectMenu[]>([]);
+  const [tempSelectedPlayers, setTempSelectedPlayer] = useState<string[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<SelectMenu[]>([]);
+  const [expandedPlayer, setExpandedPlayer] = useState<string>();
+  const [motm, setMotm] = useState<string>();
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -67,8 +65,6 @@ export default function SubmitMatch({navigation, route}: Props) {
   const clubId = matchData.clubId;
 
   const ref = useRef(null);
-
-  console.log(ref);
 
   // const leagueRef = db
   //   .collection('leagues')
@@ -84,14 +80,14 @@ export default function SubmitMatch({navigation, route}: Props) {
 
   useEffect(() => {
     const currentRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    let rosterItems: [{}] = [];
+    let rosterItems: SelectMenu[] = [];
 
     for (const [id, playerData] of Object.entries(currentRoster)) {
       const player = {
-        id,
-        username: playerData.username,
+        id: id,
+        name: playerData.username,
       };
-      rosterItems = [...rosterItems, player];
+      rosterItems.push(player);
     }
     console.log(rosterItems);
     setRoster(rosterItems);
@@ -247,6 +243,31 @@ export default function SubmitMatch({navigation, route}: Props) {
     setImages(updatedImages);
   };
 
+  const onConfirmSeletion = () => {
+    console.log(tempSelectedPlayers);
+    let selection: SelectMenu[] = [];
+    tempSelectedPlayers.forEach((playerId) => {
+      const matchedPlayer = roster.filter((player) => player.id === playerId);
+      console.log('selection', selection);
+      selection.push(matchedPlayer[0]);
+    });
+
+    setSelectedPlayers(selection);
+  };
+
+  const onRemoveSelection = (playerId: string) => {
+    const removed = selectedPlayers.filter((item) => item.id !== playerId);
+    const unselected = tempSelectedPlayers.filter((item) => item !== playerId);
+    setTempSelectedPlayer(unselected);
+    setSelectedPlayers(removed);
+    if (motm === playerId) {
+      setMotm(null);
+    }
+    if (expandedPlayer === playerId) {
+      setExpandedPlayer(null);
+    }
+  };
+
   return (
     <>
       <FullScreenLoading
@@ -260,12 +281,14 @@ export default function SubmitMatch({navigation, route}: Props) {
         onRequestClose={() => setImageViewerVisible(false)}
       />
       <Select
-        visible={selectVisible}
-        displayKey="username"
-        submitButtonText="Submit"
-        uniqueKey="id"
+        subKey="players"
         items={roster}
-        onClose={() => setSelectVisible(false)}
+        uniqueKey="id"
+        selectedItems={tempSelectedPlayers}
+        onSelectedItemsChange={(item) => setTempSelectedPlayer(item)}
+        // onSelectedItemObjectsChange={(item) => console.log('obj', item)}
+        onConfirm={onConfirmSeletion}
+        // onClose={() => ref?.current?._toggleSelector()}
         ref={ref}
       />
       <ScrollView
@@ -320,18 +343,21 @@ export default function SubmitMatch({navigation, route}: Props) {
             paddingBottom: verticalScale(32),
             flexGrow: 1,
           }}>
-          {roster.map((player, i) => (
+          {selectedPlayers.map((player) => (
             <MatchPlayer
-              username={player.username}
-              key={i}
-              motm={motm === i}
-              onMotm={() => (motm === i ? setMotm(null) : setMotm(i))}
-              onExpand={() =>
-                expandedPlayer === i
-                  ? setExpandedPlayer(null)
-                  : setExpandedPlayer(i)
+              username={player.name}
+              key={player.id}
+              motm={motm === player.id}
+              onMotm={() =>
+                motm === player.id ? setMotm(null) : setMotm(player.id)
               }
-              expanded={expandedPlayer === i}
+              onExpand={() =>
+                expandedPlayer === player.id
+                  ? setExpandedPlayer(null)
+                  : setExpandedPlayer(player.id)
+              }
+              expanded={expandedPlayer === player.id}
+              onRemove={() => onRemoveSelection(player.id)}
             />
           ))}
           <MinButton

@@ -43,6 +43,7 @@ export default function LeaguePreview({navigation, route}: Props) {
   const leagueId = leagueContext.leagueId;
   const scheduled = league.scheduled;
   const leagueComplete = league.acceptedClubs === league.teamNum;
+  const isManager = context.userData.leagues[leagueId].manager;
 
   const infoMode = route.params?.infoMode;
 
@@ -125,7 +126,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               shareLeagueLink(league.name, leagueId);
             }}
           />
-          {league.adminId !== user.uid && inLeague && (
+          {league.adminId !== user.uid && inLeague && isManager && (
             <IconButton
               name="cog"
               onPress={() =>
