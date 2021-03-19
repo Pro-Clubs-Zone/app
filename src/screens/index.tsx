@@ -57,14 +57,14 @@ export default function AppIndex() {
   const requests = useContext(RequestContext);
   const context = useContext(AppContext);
 
-  const debug = true;
+  // const debug = true;
 
   const uid = user.uid;
   const displayName = user.displayName;
 
   useLayoutEffect(() => {
     crashlytics().log('App mounted.');
-    if (__DEV__ && debug) {
+    if (__DEV__) {
       const localAddress = '192.168.0.178';
       console.log('dev');
 
