@@ -1,5 +1,12 @@
 import React, {useContext, useEffect, useState, useRef} from 'react';
-import {ScrollView, View, Alert, ImageURISource} from 'react-native';
+import {
+  ScrollView,
+  View,
+  Alert,
+  ImageURISource,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import submitMatch from './functions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
@@ -8,7 +15,6 @@ import {MatchTextField} from '../../components/textField';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
 //import firestore from '@react-native-firebase/firestore';
-import EmptyState from '../../components/emptyState';
 import i18n from '../../utils/i18n';
 import {ListHeading} from '../../components/listItems';
 import {t} from '@lingui/macro';
@@ -53,9 +59,10 @@ export default function SubmitMatch({navigation, route}: Props) {
   const [currentImage, setCurrentImage] = useState(0);
   const [roster, setRoster] = useState<SelectMenu[]>([]);
   const [tempSelectedPlayers, setTempSelectedPlayer] = useState<string[]>([]);
-  const [selectedPlayers, setSelectedPlayers] = useState<SelectMenu[]>([]);
+  const [selectedPlayers, setSelectedPlayers] = useState<
+    Partial<SelectMenu & PlayerStats>[]
+  >([]);
   const [expandedPlayer, setExpandedPlayer] = useState<string>();
-  const [motm, setMotm] = useState<string>();
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -244,12 +251,25 @@ export default function SubmitMatch({navigation, route}: Props) {
   };
 
   const onConfirmSeletion = () => {
-    console.log(tempSelectedPlayers);
-    let selection: SelectMenu[] = [];
+    let selection = [...selectedPlayers];
     tempSelectedPlayers.forEach((playerId) => {
       const matchedPlayer = roster.filter((player) => player.id === playerId);
-      console.log('selection', selection);
-      selection.push(matchedPlayer[0]);
+      // if selected players do not have temp selected player -> add temp to selected
+      const isSelected = selectedPlayers.some(
+        (player) => player.id === playerId,
+      );
+      if (!isSelected) {
+        selection.push(matchedPlayer[0]);
+      }
+    });
+    // If selected players have players not from temp selection => remove that player
+    selection.forEach((selectedPlayer, index) => {
+      const isSelected = tempSelectedPlayers.some(
+        (playerId) => playerId === selectedPlayer.id,
+      );
+      if (!isSelected) {
+        selection.splice(index, 1);
+      }
     });
 
     setSelectedPlayers(selection);
@@ -260,12 +280,22 @@ export default function SubmitMatch({navigation, route}: Props) {
     const unselected = tempSelectedPlayers.filter((item) => item !== playerId);
     setTempSelectedPlayer(unselected);
     setSelectedPlayers(removed);
-    if (motm === playerId) {
-      setMotm(null);
-    }
     if (expandedPlayer === playerId) {
       setExpandedPlayer(null);
     }
+  };
+
+  const onUpdatePlayerStats = (
+    index: number,
+    stat: string,
+    value: string | boolean,
+  ) => {
+    let currentData = [...selectedPlayers];
+    const updatedData = {...selectedPlayers[index], [stat]: value};
+    currentData[index] = updatedData;
+    console.log(currentData);
+
+    setSelectedPlayers(currentData);
   };
 
   return (
@@ -291,82 +321,93 @@ export default function SubmitMatch({navigation, route}: Props) {
         // onClose={() => ref?.current?._toggleSelector()}
         ref={ref}
       />
-      <ScrollView
-        bounces={false}
-        contentContainerStyle={{
-          flexGrow: 1,
-        }}>
-        <ScoreBoard data={matchData} editable={true} showSubmit={false}>
-          <MatchTextField
-            error={errorStates.homeScore}
-            onChangeText={(score: string) => onChangeText(score, 'homeScore')}
-            value={homeScore}
-          />
-          <View style={styles.divider} />
-          <MatchTextField
-            error={errorStates.awayScore}
-            onChangeText={(score: string) => onChangeText(score, 'awayScore')}
-            value={awayScore}
-          />
-        </ScoreBoard>
-
-        <ScreenshotUploader
-          thumbsCount={3}
-          images={images}
-          multiple={true}
-          onZoom={(i) => {
-            setCurrentImage(i);
-            setImageViewerVisible(true);
-          }}
-          onRemove={(i) => onRemoveThumb(i)}
-          onUpload={() =>
-            launchImageLibrary(
-              {
-                mediaType: 'photo',
-                maxWidth: 1920,
-                maxHeight: 1280,
-              },
-              (res) => {
-                if (res.uri) {
-                  setImages([...images, {uri: res.uri}]);
-                  setImageNames([...imageNames, res.fileName!]);
-                  console.log(res);
-                }
-              },
-            )
-          }
-        />
-        <ListHeading col1="Participated Players" />
-        <View
-          style={{
-            padding: verticalScale(8),
-            paddingBottom: verticalScale(32),
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+        style={{flexGrow: 1}}>
+        <ScrollView
+          bounces={false}
+          contentContainerStyle={{
             flexGrow: 1,
-          }}>
-          {selectedPlayers.map((player) => (
-            <MatchPlayer
-              username={player.name}
-              key={player.id}
-              motm={motm === player.id}
-              onMotm={() =>
-                motm === player.id ? setMotm(null) : setMotm(player.id)
-              }
-              onExpand={() =>
-                expandedPlayer === player.id
-                  ? setExpandedPlayer(null)
-                  : setExpandedPlayer(player.id)
-              }
-              expanded={expandedPlayer === player.id}
-              onRemove={() => onRemoveSelection(player.id)}
+          }}
+          keyboardDismissMode="on-drag">
+          <ScoreBoard data={matchData} editable={true} showSubmit={false}>
+            <MatchTextField
+              error={errorStates.homeScore}
+              onChangeText={(score: string) => onChangeText(score, 'homeScore')}
+              value={homeScore}
             />
-          ))}
-          <MinButton
-            title="add players"
-            onPress={() => ref?.current?._toggleSelector()}
+            <View style={styles.divider} />
+            <MatchTextField
+              error={errorStates.awayScore}
+              onChangeText={(score: string) => onChangeText(score, 'awayScore')}
+              value={awayScore}
+            />
+          </ScoreBoard>
+
+          <ScreenshotUploader
+            thumbsCount={3}
+            images={images}
+            multiple={true}
+            onZoom={(i) => {
+              setCurrentImage(i);
+              setImageViewerVisible(true);
+            }}
+            onRemove={(i) => onRemoveThumb(i)}
+            onUpload={() =>
+              launchImageLibrary(
+                {
+                  mediaType: 'photo',
+                  maxWidth: 1920,
+                  maxHeight: 1280,
+                },
+                (res) => {
+                  if (res.uri) {
+                    setImages([...images, {uri: res.uri}]);
+                    setImageNames([...imageNames, res.fileName!]);
+                    console.log(res);
+                  }
+                },
+              )
+            }
           />
-        </View>
-        <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
-      </ScrollView>
+          <ListHeading col1="Participated Players" />
+          <View
+            style={{
+              padding: verticalScale(8),
+              paddingBottom: verticalScale(32),
+              flexGrow: 1,
+            }}>
+            {selectedPlayers.map((player, index) => (
+              <MatchPlayer
+                username={player.name}
+                key={player.id}
+                motm={player.motm}
+                onMotm={() => onUpdatePlayerStats(index, 'motm', !player.motm)}
+                onExpand={() =>
+                  expandedPlayer === player.id
+                    ? setExpandedPlayer(null)
+                    : setExpandedPlayer(player.id)
+                }
+                expanded={expandedPlayer === player.id}
+                onRemove={() => onRemoveSelection(player.id)}
+                goals={player.goals}
+                assists={player.assists}
+                onGoalsChange={(value) =>
+                  onUpdatePlayerStats(index, 'goals', value)
+                }
+                onAssistsChange={(value) =>
+                  onUpdatePlayerStats(index, 'assists', value)
+                }
+              />
+            ))}
+            <MinButton
+              title="add players"
+              onPress={() => ref?.current?._toggleSelector()}
+            />
+          </View>
+          <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }

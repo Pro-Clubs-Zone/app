@@ -26,12 +26,12 @@ export default function MatchPlayer({
   onExpand: () => void;
   onRemove: () => void;
   onMotm: () => void;
-  goals: number;
+  goals: string;
   goalsError: boolean;
-  onGoalsChange: () => void;
-  assists: number;
+  onGoalsChange: (value: string) => void;
+  assists: string;
   assistsError: boolean;
-  onAssistsChange: () => void;
+  onAssistsChange: (value: string) => void;
 }) {
   return (
     <View style={styles.container}>
