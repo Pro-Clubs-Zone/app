@@ -32,6 +32,7 @@ import MatchPlayer from '../../components/matchPlayer';
 import {PlayerStats} from '../../utils/interface';
 import Select from '../../components/select';
 import addMatchStats from './functions/onAddMatchStats';
+import Toast from '../../components/toast';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -64,6 +65,8 @@ export default function SubmitMatch({navigation, route}: Props) {
   >([]);
   const [expandedPlayer, setExpandedPlayer] = useState<string>();
   const [motm, setMotm] = useState<string>();
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -106,6 +109,14 @@ export default function SubmitMatch({navigation, route}: Props) {
 
     setRoster(rosterItems);
   }, [context]);
+
+  const onShowToast = (message: string) => {
+    setShowToast(true);
+    setToastMessage(message);
+    setTimeout(() => {
+      setShowToast(false);
+    }, 1000);
+  };
 
   const showAlert = (submissionResult: string) => {
     let title: string;
@@ -192,7 +203,29 @@ export default function SubmitMatch({navigation, route}: Props) {
 
     if (!homeScore || !awayScore) {
       setErrorStates({awayScore: !awayScore, homeScore: !homeScore});
+
+      onShowToast(i18n._(t`Match scores are missing`));
       return false;
+    }
+
+    if (selectedPlayers.length > 0) {
+      const teamScore =
+        matchData.clubId === matchData.homeTeamId
+          ? Number(homeScore)
+          : Number(awayScore);
+
+      let totalGoals = 0;
+      let totalAssists = 0;
+
+      selectedPlayers.forEach((player) => {
+        totalGoals += player.goals ? Number(player.goals) : 0;
+        totalAssists += player.assists ? Number(player.assists) : 0;
+      });
+
+      if (totalGoals > teamScore || totalAssists > teamScore) {
+        onShowToast(i18n._(t`More goals or assists than team has scored`));
+        return false;
+      }
     }
 
     return true;
@@ -301,7 +334,6 @@ export default function SubmitMatch({navigation, route}: Props) {
     let currentData = [...selectedPlayers];
     const updatedData = {...selectedPlayers[index], [stat]: value};
     currentData[index] = updatedData;
-    console.log(currentData);
 
     setSelectedPlayers(currentData);
   };
@@ -330,6 +362,8 @@ export default function SubmitMatch({navigation, route}: Props) {
         // onClose={() => ref?.current?._toggleSelector()}
         ref={ref}
       />
+      <Toast message={toastMessage} visible={showToast} success={false} />
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'position' : 'height'}
         style={{flexGrow: 1}}>

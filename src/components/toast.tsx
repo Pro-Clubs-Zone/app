@@ -89,7 +89,7 @@ const styles = ScaledSheet.create({
     zIndex: 100,
     flex: 1,
     borderRadius: 3,
-    bottom: '56@vs',
+    bottom: '64@vs',
     alignSelf: 'center',
   },
 });
