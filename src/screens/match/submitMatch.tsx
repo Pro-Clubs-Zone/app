@@ -31,6 +31,7 @@ import storage, {firebase} from '@react-native-firebase/storage';
 import MatchPlayer from '../../components/matchPlayer';
 import {PlayerStats} from '../../utils/interface';
 import Select from '../../components/select';
+import addMatchStats from './functions/onAddMatchStats';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -57,12 +58,13 @@ export default function SubmitMatch({navigation, route}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [roster, setRoster] = useState<SelectMenu[]>([]);
+  const [roster, setRoster] = useState<Array<SelectMenu & PlayerStats>>([]);
   const [tempSelectedPlayers, setTempSelectedPlayer] = useState<string[]>([]);
   const [selectedPlayers, setSelectedPlayers] = useState<
-    Partial<SelectMenu & PlayerStats>[]
+    Array<SelectMenu & PlayerStats>
   >([]);
   const [expandedPlayer, setExpandedPlayer] = useState<string>();
+  const [motm, setMotm] = useState<string>();
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
@@ -87,16 +89,22 @@ export default function SubmitMatch({navigation, route}: Props) {
 
   useEffect(() => {
     const currentRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    let rosterItems: SelectMenu[] = [];
+    let rosterItems: (SelectMenu & PlayerStats)[] = [];
 
     for (const [id, playerData] of Object.entries(currentRoster)) {
-      const player = {
+      const player: SelectMenu & PlayerStats = {
         id: id,
         name: playerData.username,
+        goals: undefined,
+        assists: undefined,
+        matches: undefined,
+        motm: undefined,
+        club: context.userData.leagues[leagueId].clubName,
+        clubId: clubId,
       };
       rosterItems.push(player);
     }
-    console.log(rosterItems);
+
     setRoster(rosterItems);
   }, [context]);
 
@@ -226,15 +234,15 @@ export default function SubmitMatch({navigation, route}: Props) {
       if (noErrors) {
         setLoading(true);
         await uploadScreenshots()
-          .then(
-            async () =>
-              await submitMatch(homeScore, awayScore, matchData).then(
-                async (result) => {
-                  await analytics().logEvent('match_submit_score');
-                  showAlert(result);
-                },
-              ),
-          )
+          .then(async () => {
+            await submitMatch(homeScore, awayScore, matchData).then(
+              async (result) => {
+                await addMatchStats(matchData, selectedPlayers, motm);
+                await analytics().logEvent('match_submit_score');
+                showAlert(result);
+              },
+            );
+          })
           .catch((err) => {
             console.log('something wrong with uploading', err);
             setLoading(false);
@@ -280,16 +288,16 @@ export default function SubmitMatch({navigation, route}: Props) {
     const unselected = tempSelectedPlayers.filter((item) => item !== playerId);
     setTempSelectedPlayer(unselected);
     setSelectedPlayers(removed);
+    if (motm === playerId) {
+      setMotm(null);
+    }
+
     if (expandedPlayer === playerId) {
       setExpandedPlayer(null);
     }
   };
 
-  const onUpdatePlayerStats = (
-    index: number,
-    stat: string,
-    value: string | boolean,
-  ) => {
+  const onUpdatePlayerStats = (index: number, stat: string, value: string) => {
     let currentData = [...selectedPlayers];
     const updatedData = {...selectedPlayers[index], [stat]: value};
     currentData[index] = updatedData;
@@ -381,8 +389,10 @@ export default function SubmitMatch({navigation, route}: Props) {
               <MatchPlayer
                 username={player.name}
                 key={player.id}
-                motm={player.motm}
-                onMotm={() => onUpdatePlayerStats(index, 'motm', !player.motm)}
+                motm={motm === player.id}
+                onMotm={() =>
+                  motm === player.id ? setMotm(null) : setMotm(player.id)
+                }
                 onExpand={() =>
                   expandedPlayer === player.id
                     ? setExpandedPlayer(null)
@@ -390,8 +400,8 @@ export default function SubmitMatch({navigation, route}: Props) {
                 }
                 expanded={expandedPlayer === player.id}
                 onRemove={() => onRemoveSelection(player.id)}
-                goals={player.goals}
-                assists={player.assists}
+                goals={player.goals?.toString()}
+                assists={player.assists?.toString()}
                 onGoalsChange={(value) =>
                   onUpdatePlayerStats(index, 'goals', value)
                 }
