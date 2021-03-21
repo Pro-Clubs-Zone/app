@@ -22,7 +22,7 @@ export default function MatchPlayer({
 }: {
   expanded: boolean;
   username: string;
-  motm: string;
+  motm: boolean;
   onExpand: () => void;
   onRemove: () => void;
   onMotm: () => void;

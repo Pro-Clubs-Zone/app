@@ -40,7 +40,6 @@ type Props = {
 };
 
 interface SelectMenu {
-  name: string;
   id: string;
 }
 
@@ -94,7 +93,7 @@ export default function SubmitMatch({navigation, route}: Props) {
     for (const [id, playerData] of Object.entries(currentRoster)) {
       const player: SelectMenu & PlayerStats = {
         id: id,
-        name: playerData.username,
+        username: playerData.username,
         goals: undefined,
         assists: undefined,
         matches: undefined,
@@ -237,7 +236,8 @@ export default function SubmitMatch({navigation, route}: Props) {
           .then(async () => {
             await submitMatch(homeScore, awayScore, matchData).then(
               async (result) => {
-                await addMatchStats(matchData, selectedPlayers, motm);
+                selectedPlayers.length > 0 &&
+                  (await addMatchStats(matchData, selectedPlayers, motm));
                 await analytics().logEvent('match_submit_score');
                 showAlert(result);
               },
@@ -322,6 +322,7 @@ export default function SubmitMatch({navigation, route}: Props) {
         subKey="players"
         items={roster}
         uniqueKey="id"
+        displayKey="username"
         selectedItems={tempSelectedPlayers}
         onSelectedItemsChange={(item) => setTempSelectedPlayer(item)}
         // onSelectedItemObjectsChange={(item) => console.log('obj', item)}
@@ -387,7 +388,7 @@ export default function SubmitMatch({navigation, route}: Props) {
             }}>
             {selectedPlayers.map((player, index) => (
               <MatchPlayer
-                username={player.name}
+                username={player.username}
                 key={player.id}
                 motm={motm === player.id}
                 onMotm={() =>
@@ -400,8 +401,8 @@ export default function SubmitMatch({navigation, route}: Props) {
                 }
                 expanded={expandedPlayer === player.id}
                 onRemove={() => onRemoveSelection(player.id)}
-                goals={player.goals?.toString()}
-                assists={player.assists?.toString()}
+                goals={player.goals}
+                assists={player.assists}
                 onGoalsChange={(value) =>
                   onUpdatePlayerStats(index, 'goals', value)
                 }

@@ -8,10 +8,11 @@ export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 export interface PlayerStats {
   goals: number;
   assists: number;
-  motm: number;
+  motm: number | boolean;
   matches: number;
   club: string;
   clubId: string;
+  username: string;
 }
 
 export interface FixtureList extends IFlatList {
