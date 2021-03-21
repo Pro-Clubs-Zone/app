@@ -44,7 +44,7 @@ msgstr ""
 msgid "Accepted Clubs"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:207
+#: src/screens/league/leaguePreview.tsx:208
 msgid "Admin"
 msgstr ""
 
@@ -105,9 +105,9 @@ msgstr ""
 #: src/screens/club/clubSettings.tsx:56
 #: src/screens/club/clubSettings.tsx:77
 #: src/screens/league/joinClub.tsx:100
-#: src/screens/league/leaguePreview.tsx:73
-#: src/screens/league/leaguePreview.tsx:132
-#: src/screens/league/leaguePreview.tsx:138
+#: src/screens/league/leaguePreview.tsx:74
+#: src/screens/league/leaguePreview.tsx:133
+#: src/screens/league/leaguePreview.tsx:139
 #: src/screens/leagueAdmin/clubs.tsx:133
 #: src/screens/leagueAdmin/clubs.tsx:177
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:79
@@ -171,7 +171,7 @@ msgstr ""
 msgid "Coming Soon"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:208
+#: src/screens/league/leaguePreview.tsx:209
 msgid "Communication"
 msgstr ""
 
@@ -215,7 +215,7 @@ msgstr ""
 msgid "Decline"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:48
+#: src/screens/league/leaguePreview.tsx:49
 msgid "Delete League?"
 msgstr ""
 
@@ -297,7 +297,7 @@ msgstr ""
 #~ msgid "Invite people"
 #~ msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:48
+#: src/screens/league/leaguePreview.tsx:49
 msgid "It is impossible to recover deleted league. After removal the app will restart"
 msgstr ""
 
@@ -306,7 +306,7 @@ msgstr ""
 msgid "It seems you've used wrong sign in link, please try again."
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:121
+#: src/screens/league/leaguePreview.tsx:122
 msgid "Join"
 msgstr ""
 
@@ -314,11 +314,11 @@ msgstr ""
 msgid "Join Club"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:227
+#: src/screens/league/leaguePreview.tsx:228
 msgid "Join League"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:119
+#: src/screens/league/leaguePreview.tsx:120
 msgid "Join as a Player"
 msgstr ""
 
@@ -383,7 +383,7 @@ msgstr ""
 msgid "League not found"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:225
+#: src/screens/league/leaguePreview.tsx:226
 msgid "League not started"
 msgstr ""
 
@@ -410,7 +410,7 @@ msgstr ""
 msgid "Manage your received and sent request"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:138
+#: src/screens/league/leaguePreview.tsx:139
 msgid "Manager"
 msgstr ""
 
@@ -578,7 +578,7 @@ msgstr ""
 msgid "Platform"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:138
+#: src/screens/league/leaguePreview.tsx:139
 msgid "Player"
 msgstr ""
 
@@ -616,7 +616,7 @@ msgstr ""
 msgid "Remove Request"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:182
+#: src/screens/league/leaguePreview.tsx:183
 msgid "Removing League..."
 msgstr ""
 
@@ -629,7 +629,7 @@ msgstr ""
 msgid "Report Match"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:226
+#: src/screens/league/leaguePreview.tsx:227
 msgid "Request Sent"
 msgstr ""
 
@@ -726,7 +726,7 @@ msgstr ""
 msgid "Signing you in"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:209
+#: src/screens/league/leaguePreview.tsx:210
 msgid "Social"
 msgstr ""
 
@@ -806,7 +806,7 @@ msgstr ""
 msgid "You can invite clubs from league page"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:119
+#: src/screens/league/leaguePreview.tsx:120
 msgid "You can join only as a player as this league is already full"
 msgstr ""
 
@@ -866,7 +866,7 @@ msgstr ""
 msgid "{0} Teams"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:206
+#: src/screens/league/leaguePreview.tsx:207
 msgid "{0} clubs / {1} matches"
 msgstr ""
 
