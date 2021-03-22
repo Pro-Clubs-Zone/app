@@ -194,12 +194,12 @@ export default function SubmitMatch({navigation, route}: Props) {
   };
 
   const fieldValidation = async (): Promise<boolean> => {
-    const regex = new RegExp('^[0-9]*$');
+    const scoreRegex = new RegExp('^[0-9]*$');
 
-    if (!regex.test(homeScore) || !regex.test(awayScore)) {
+    if (!scoreRegex.test(homeScore) || !scoreRegex.test(awayScore)) {
       setErrorStates({
-        awayScore: !regex.test(awayScore),
-        homeScore: !regex.test(homeScore),
+        awayScore: !scoreRegex.test(awayScore),
+        homeScore: !scoreRegex.test(homeScore),
       });
       return false;
     }
@@ -244,10 +244,10 @@ export default function SubmitMatch({navigation, route}: Props) {
   const onChangeText = (text: string, field: 'homeScore' | 'awayScore') => {
     switch (field) {
       case 'homeScore':
-        setHomeScore(text);
+        setHomeScore(text.replace(/[^0-9]/g, ''));
         break;
       case 'awayScore':
-        setAwayScore(text);
+        setAwayScore(text.replace(/[^0-9]/g, ''));
         break;
     }
 
@@ -343,7 +343,10 @@ export default function SubmitMatch({navigation, route}: Props) {
 
   const onUpdatePlayerStats = (index: number, stat: string, value: string) => {
     let currentData = [...selectedPlayers];
-    const updatedData = {...selectedPlayers[index], [stat]: value};
+    const updatedData = {
+      ...selectedPlayers[index],
+      [stat]: value.replace(/[^0-9]/g, ''),
+    };
     currentData[index] = updatedData;
 
     setSelectedPlayers(currentData);
@@ -374,12 +377,18 @@ export default function SubmitMatch({navigation, route}: Props) {
       <Toast message={toastMessage} visible={showToast} success={false} />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        behavior="padding"
+        keyboardVerticalOffset={
+          Platform.OS === 'android' ? verticalScale(-64) : 0
+        }>
         <ScrollView
           bounces={false}
           contentContainerStyle={{
             flexGrow: 1,
-            minHeight: windowHeight - verticalScale(80),
+            minHeight:
+              Platform.OS === 'ios'
+                ? windowHeight - verticalScale(80)
+                : windowHeight - verticalScale(52),
           }}>
           <ScoreBoard data={matchData} editable={true} showSubmit={false}>
             <MatchTextField
