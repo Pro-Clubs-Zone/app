@@ -1,12 +1,11 @@
-import React, {forwardRef, useRef} from 'react';
-import {View, Text, Modal} from 'react-native';
-import {ScaledSheet} from 'react-native-size-matters';
+import React, {forwardRef} from 'react';
+import {View, Text} from 'react-native';
+import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
 import SectionedMultiSelect, {
   SectionedMultiSelectProps,
 } from 'react-native-sectioned-multi-select';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {IconButton} from './buttons';
+import {BigButton, IconButton} from './buttons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const icons = {
@@ -15,15 +14,15 @@ const icons = {
     size: 24,
   },
   arrowUp: {
-    name: 'close', // dropdown toggle
+    name: 'menu-up', // dropdown toggle
     size: 22,
   },
   arrowDown: {
-    name: 'close', // dropdown toggle
+    name: 'menu-down', // dropdown toggle
     size: 22,
   },
   selectArrowDown: {
-    name: 'close', // select
+    name: 'menu-down', // select
     size: 24,
   },
   close: {
@@ -40,6 +39,21 @@ const icons = {
   },
 };
 
+const Header = ({title, onCancel}: {title: string; onCancel: () => void}) => (
+  <View style={styles.header}>
+    <Text
+      style={[
+        TEXT_STYLES.body,
+        {
+          color: APP_COLORS.Gray,
+        },
+      ]}>
+      {title}
+    </Text>
+    <IconButton name="close" color={APP_COLORS.Gray} onPress={onCancel} />
+  </View>
+);
+
 const Select = forwardRef((props: SectionedMultiSelectProps<any>, ref) => (
   // <Modal visible={visible} transparent>
   //   <View style={styles.container}>
@@ -53,19 +67,43 @@ const Select = forwardRef((props: SectionedMultiSelectProps<any>, ref) => (
     showDropDowns={false}
     showChips={false}
     showCancelButton={false}
-    hideConfirm={false}
+    hideConfirm={true}
     hideSearch={true}
     IconRenderer={Icon}
     icons={icons}
     single={false}
     hideSelect
     ref={ref}
+    modalSupportedOrientations={['portrait']}
+    modalWithSafeAreaView={true}
     alwaysShowSelectText={true}
+    headerComponent={
+      <Header title="Roster" onCancel={() => ref?.current?._toggleSelector()} />
+    }
+    stickyFooterComponent={
+      <BigButton title="Confirm" onPress={props.onConfirm} />
+    }
+    selectedIconComponent={
+      <Icon
+        name="check"
+        size={verticalScale(16)}
+        color={APP_COLORS.Accent}
+        style={{marginRight: verticalScale(4)}}
+      />
+    }
     styles={{
-      modalWrapper: styles.container,
       container: styles.content,
-      //listContainer: styles.listContainer,
+      item: styles.item,
+      scrollView: {paddingHorizontal: 0},
+      separator: {backgroundColor: APP_COLORS.Secondary},
+      itemText: [
+        TEXT_STYLES.body,
+        {
+          fontWeight: 'normal',
+        },
+      ],
     }}
+    colors={{itemBackground: APP_COLORS.Primary}}
     {...props}
   />
 ));
@@ -73,16 +111,10 @@ const Select = forwardRef((props: SectionedMultiSelectProps<any>, ref) => (
 //---------- Stylesheet ----------//
 
 const styles = ScaledSheet.create({
-  container: {
-    paddingVertical: '64@vs',
-  },
   content: {
     backgroundColor: APP_COLORS.Dark,
   },
-  listContainer: {
-    padding: 0,
-    height: 2,
-  },
+
   header: {
     flexDirection: 'row',
     height: '56@vs',
@@ -90,6 +122,11 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     backgroundColor: APP_COLORS.Secondary,
     paddingLeft: '12@vs',
+  },
+  item: {
+    backgroundColor: APP_COLORS.Dark,
+    height: '48@vs',
+    paddingHorizontal: '12@vs',
   },
 });
 

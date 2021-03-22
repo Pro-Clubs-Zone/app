@@ -317,6 +317,7 @@ export default function SubmitMatch({navigation, route}: Props) {
     });
 
     setSelectedPlayers(selection);
+    ref?.current?._toggleSelector();
   };
 
   const onRemoveSelection = (playerId: string) => {
