@@ -6,6 +6,7 @@ import {
   ImageURISource,
   KeyboardAvoidingView,
   Platform,
+  useWindowDimensions,
 } from 'react-native';
 import submitMatch from './functions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
@@ -76,6 +77,8 @@ export default function SubmitMatch({navigation, route}: Props) {
   const clubId = matchData.clubId;
 
   const ref = useRef(null);
+
+  const windowHeight = useWindowDimensions().height;
 
   // const leagueRef = db
   //   .collection('leagues')
@@ -365,14 +368,13 @@ export default function SubmitMatch({navigation, route}: Props) {
       <Toast message={toastMessage} visible={showToast} success={false} />
 
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'position' : 'height'}
-        style={{flexGrow: 1}}>
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <ScrollView
           bounces={false}
           contentContainerStyle={{
             flexGrow: 1,
-          }}
-          keyboardDismissMode="on-drag">
+            minHeight: windowHeight - verticalScale(80),
+          }}>
           <ScoreBoard data={matchData} editable={true} showSubmit={false}>
             <MatchTextField
               error={errorStates.homeScore}
@@ -416,41 +418,51 @@ export default function SubmitMatch({navigation, route}: Props) {
           <ListHeading col1="Participated Players" />
           <View
             style={{
-              padding: verticalScale(8),
-              paddingBottom: verticalScale(32),
-              flexGrow: 1,
+              flex: 1,
+              justifyContent: 'space-between',
             }}>
-            {selectedPlayers.map((player, index) => (
-              <MatchPlayer
-                username={player.username}
-                key={player.id}
-                motm={motm === player.id}
-                onMotm={() =>
-                  motm === player.id ? setMotm(null) : setMotm(player.id)
-                }
-                onExpand={() =>
-                  expandedPlayer === player.id
-                    ? setExpandedPlayer(null)
-                    : setExpandedPlayer(player.id)
-                }
-                expanded={expandedPlayer === player.id}
-                onRemove={() => onRemoveSelection(player.id)}
-                goals={player.goals}
-                assists={player.assists}
-                onGoalsChange={(value) =>
-                  onUpdatePlayerStats(index, 'goals', value)
-                }
-                onAssistsChange={(value) =>
-                  onUpdatePlayerStats(index, 'assists', value)
-                }
+            <View
+              style={{
+                paddingHorizontal: verticalScale(8),
+                paddingTop: verticalScale(16),
+                paddingBottom: verticalScale(24),
+              }}>
+              {selectedPlayers.map((player, index) => (
+                <MatchPlayer
+                  username={player.username}
+                  key={player.id}
+                  motm={motm === player.id}
+                  onMotm={() =>
+                    motm === player.id ? setMotm(null) : setMotm(player.id)
+                  }
+                  onExpand={() =>
+                    expandedPlayer === player.id
+                      ? setExpandedPlayer(null)
+                      : setExpandedPlayer(player.id)
+                  }
+                  expanded={expandedPlayer === player.id}
+                  onRemove={() => onRemoveSelection(player.id)}
+                  goals={player.goals}
+                  assists={player.assists}
+                  onGoalsChange={(value) =>
+                    onUpdatePlayerStats(index, 'goals', value)
+                  }
+                  onAssistsChange={(value) =>
+                    onUpdatePlayerStats(index, 'assists', value)
+                  }
+                />
+              ))}
+              <MinButton
+                title="add players"
+                onPress={() => ref?.current?._toggleSelector()}
               />
-            ))}
-            <MinButton
-              title="add players"
-              onPress={() => ref?.current?._toggleSelector()}
+            </View>
+
+            <BigButton
+              title={i18n._(t`Submit Match`)}
+              onPress={onSubmitMatch}
             />
           </View>
-          <BigButton title={i18n._(t`Submit Match`)} onPress={onSubmitMatch} />
         </ScrollView>
       </KeyboardAvoidingView>
     </>
