@@ -211,6 +211,13 @@ export default function SubmitMatch({navigation, route}: Props) {
       return false;
     }
 
+    if (selectedPlayers.length > 11) {
+      onShowToast(
+        i18n._(t`You have selected more than 11 players for this match`),
+      );
+      return false;
+    }
+
     if (selectedPlayers.length > 0) {
       const teamScore =
         matchData.clubId === matchData.homeTeamId
@@ -361,9 +368,7 @@ export default function SubmitMatch({navigation, route}: Props) {
         displayKey="username"
         selectedItems={tempSelectedPlayers}
         onSelectedItemsChange={(item) => setTempSelectedPlayer(item)}
-        // onSelectedItemObjectsChange={(item) => console.log('obj', item)}
         onConfirm={onConfirmSeletion}
-        // onClose={() => ref?.current?._toggleSelector()}
         ref={ref}
       />
       <Toast message={toastMessage} visible={showToast} success={false} />
@@ -416,7 +421,7 @@ export default function SubmitMatch({navigation, route}: Props) {
               )
             }
           />
-          <ListHeading col1="Participated Players" />
+          <ListHeading col1={i18n._(t`Participated Players`)} />
           <View
             style={{
               flex: 1,
@@ -454,7 +459,7 @@ export default function SubmitMatch({navigation, route}: Props) {
                 />
               ))}
               <MinButton
-                title="add players"
+                title={i18n._(t`Add Players`)}
                 onPress={() => ref?.current?._toggleSelector()}
               />
             </View>
