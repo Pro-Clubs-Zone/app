@@ -80,24 +80,29 @@ export default function LeagueScheduled({navigation}: Props) {
         />
       </CardSmallContainer>
       <CardMedium
-        title={userClub.clubName}
-        subTitle={`${clubRosterLength} club members`}
-        badgeNumber={clubRequests}
-        onPress={() =>
-          navigation.navigate('My Club', {
-            clubId: userClub.clubId,
-            manager: userClub.manager,
-          })
-        }
+        title={i18n._(t`League Stats`)}
+        subTitle={i18n._(t`Check out the league leaders`)}
+        onPress={() => navigation.navigate('Stats')}
       />
+
       {isManager && (
-        <CardMedium
-          title={i18n._(t`Invite Players`)}
-          subTitle={i18n._(
-            t`Share league link with other players to invite them to your club`,
-          )}
-          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
-        />
+        <CardSmallContainer>
+          <CardSmall
+            title={userClub.clubName}
+            // subTitle={`${clubRosterLength} club members`}
+            badgeNumber={clubRequests}
+            onPress={() =>
+              navigation.navigate('My Club', {
+                clubId: userClub.clubId,
+                manager: userClub.manager,
+              })
+            }
+          />
+          <CardSmall
+            title={i18n._(t`Invite Players`)}
+            onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+          />
+        </CardSmallContainer>
       )}
     </ScrollView>
   );

@@ -30,6 +30,7 @@ import CreateClub from './createClub';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
 import SignIn from '../auth/signIn';
+import Stats from './stats';
 
 interface ClubProps {
   clubId: string;
@@ -54,6 +55,7 @@ export type LeagueStackType = {
   'Club Settings': ClubProps;
   'Report Center': ILeagueProps;
   'Sign In': undefined;
+  Stats: undefined;
 };
 
 const Stack = createStackNavigator<LeagueStackType>();
@@ -197,6 +199,7 @@ export default function LeagueStack({navigation, route}: Props) {
             }}
           />
           <Stack.Screen name="Standings" component={LeagueStandings} />
+          <Stack.Screen name="Stats" component={Stats} />
           <Stack.Screen
             name="Fixtures"
             component={Fixtures}

@@ -15,13 +15,15 @@ type StandingsList = {
 };
 
 export default function LeagueStandings() {
-  const [data, setData] = useState<{[id: string]: IClubStanding}>({});
+  //  const [data, setData] = useState<{[id: string]: IClubStanding}>({});
   const [standings, setStandings] = useState<StandingsList[]>([]);
 
   const leagueContext = useContext(LeagueContext);
   const leagueId = leagueContext.leagueId;
 
   useEffect(() => {
+    console.log('standings');
+
     const standingsRef = db
       .collection('leagues')
       .doc(leagueId)
@@ -30,25 +32,22 @@ export default function LeagueStandings() {
 
     standingsRef.get().then((doc) => {
       const standingsData = doc.data() as {[id: string]: IClubStanding};
-      setData(standingsData);
+
+      let leagueStandings: StandingsList[] = [];
+
+      for (let [clubId, clubData] of Object.entries(standingsData)) {
+        let clubStanding: StandingsList = {
+          key: clubId,
+          data: clubData,
+        };
+        leagueStandings.push(clubStanding);
+      }
+      leagueStandings.sort((a, b) => {
+        return b.data.points - a.data.points;
+      });
+      setStandings(leagueStandings);
     });
   }, [leagueId]);
-
-  useEffect(() => {
-    let leagueStandings: StandingsList[] = [];
-    console.log(data, 'standings data');
-    for (let [clubId, clubData] of Object.entries(data)) {
-      let clubStanding: StandingsList = {
-        key: clubId,
-        data: clubData,
-      };
-      leagueStandings.push(clubStanding);
-    }
-    leagueStandings.sort((a, b) => {
-      return b.data.points - a.data.points;
-    });
-    setStandings(leagueStandings);
-  }, [data]);
 
   return (
     <FlatList

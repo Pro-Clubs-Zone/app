@@ -21,7 +21,7 @@ interface OneLineProps {
 }
 
 interface TwoLineProps extends OneLineProps {
-  value?: string;
+  value?: string | number;
   sub: string;
   disabled?: boolean;
   rightDefaultIcon?: boolean;
