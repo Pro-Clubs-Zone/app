@@ -6,6 +6,7 @@ import {LeagueContext} from '../../context/leagueContext';
 import {TableHeader, TableRow} from '../../components/standingItems';
 import {ListSeparator} from '../../components/listItems';
 import {verticalScale} from 'react-native-size-matters';
+import FullScreenLoading from '../../components/loading';
 
 const db = firestore();
 
@@ -17,6 +18,7 @@ type StandingsList = {
 export default function LeagueStandings() {
   //  const [data, setData] = useState<{[id: string]: IClubStanding}>({});
   const [standings, setStandings] = useState<StandingsList[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const leagueContext = useContext(LeagueContext);
   const leagueId = leagueContext.leagueId;
@@ -30,50 +32,56 @@ export default function LeagueStandings() {
       .collection('stats')
       .doc('standings');
 
-    standingsRef.get().then((doc) => {
-      const standingsData = doc.data() as {[id: string]: IClubStanding};
+    standingsRef
+      .get()
+      .then((doc) => {
+        const standingsData = doc.data() as {[id: string]: IClubStanding};
 
-      let leagueStandings: StandingsList[] = [];
+        let leagueStandings: StandingsList[] = [];
 
-      for (let [clubId, clubData] of Object.entries(standingsData)) {
-        let clubStanding: StandingsList = {
-          key: clubId,
-          data: clubData,
-        };
-        leagueStandings.push(clubStanding);
-      }
-      leagueStandings.sort((a, b) => {
-        return b.data.points - a.data.points;
-      });
-      setStandings(leagueStandings);
-    });
+        for (let [clubId, clubData] of Object.entries(standingsData)) {
+          let clubStanding: StandingsList = {
+            key: clubId,
+            data: clubData,
+          };
+          leagueStandings.push(clubStanding);
+        }
+        leagueStandings.sort((a, b) => {
+          return b.data.points - a.data.points;
+        });
+        setStandings(leagueStandings);
+      })
+      .then(() => setLoading(false));
   }, [leagueId]);
 
   return (
-    <FlatList
-      data={standings}
-      renderItem={({item, index}) => (
-        <TableRow
-          team={item.data.name}
-          p={item.data.played}
-          w={item.data.won}
-          d={item.data.draw}
-          l={item.data.lost}
-          dif={item.data.scored - item.data.conceded}
-          pts={item.data.points}
-          position={index + 1}
-        />
-      )}
-      keyExtractor={(item) => item.key}
-      ItemSeparatorComponent={() => <ListSeparator />}
-      ListHeaderComponent={() => <TableHeader />}
-      stickyHeaderIndices={[0]}
-      bounces={false}
-      getItemLayout={(item, index) => ({
-        length: verticalScale(48),
-        offset: verticalScale(49) * index,
-        index,
-      })}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <FlatList
+        data={standings}
+        renderItem={({item, index}) => (
+          <TableRow
+            team={item.data.name}
+            p={item.data.played}
+            w={item.data.won}
+            d={item.data.draw}
+            l={item.data.lost}
+            dif={item.data.scored - item.data.conceded}
+            pts={item.data.points}
+            position={index + 1}
+          />
+        )}
+        keyExtractor={(item) => item.key}
+        ItemSeparatorComponent={() => <ListSeparator />}
+        ListHeaderComponent={() => <TableHeader />}
+        stickyHeaderIndices={[0]}
+        bounces={false}
+        getItemLayout={(item, index) => ({
+          length: verticalScale(48),
+          offset: verticalScale(49) * index,
+          index,
+        })}
+      />
+    </>
   );
 }

@@ -4,6 +4,10 @@ import {SectionList} from 'react-native';
 import {ISectionList, PlayerStats} from '../../utils/interface';
 import {LeagueContext} from '../../context/leagueContext';
 import {ListHeading, TwoLine} from '../../components/listItems';
+import FullScreenLoading from '../../components/loading';
+import EmptyState from '../../components/emptyState';
+import i18n from '../../utils/i18n';
+import {t} from '@lingui/macro';
 
 const db = firestore();
 
@@ -15,6 +19,7 @@ interface SectionData extends ISectionList {
 
 export default function Stats() {
   const [data, setData] = useState<SectionData[]>();
+  const [loading, setLoading] = useState<boolean>(true);
 
   const leagueContext = useContext(LeagueContext);
   const leagueId = leagueContext.leagueId;
@@ -50,74 +55,98 @@ export default function Stats() {
     let motms: StatData[] = [];
     let matches: StatData[] = [];
 
-    playerStatsRef.get().then((res) => {
-      let statsData = res.data() as PlayerStats[];
+    playerStatsRef
+      .get()
+      .then((res) => {
+        let statsData = res.data() as PlayerStats[];
 
-      for (const player of Object.values(statsData)) {
-        let statObject: {
-          username: string;
-          club: string;
-          value: number;
-        };
-
-        if (player.goals > 0) {
-          statObject = {
-            club: player.club,
-            username: player.username,
-            value: player.goals,
+        for (const player of Object.values(statsData)) {
+          let statObject: {
+            username: string;
+            club: string;
+            value: number;
           };
-          goalscorers.push(statObject);
+
+          if (player.goals > 0) {
+            statObject = {
+              club: player.club,
+              username: player.username,
+              value: player.goals,
+            };
+            goalscorers.push(statObject);
+          }
+          if (player.assists > 0) {
+            statObject = {
+              club: player.club,
+              username: player.username,
+              value: player.assists,
+            };
+            assists.push(statObject);
+          }
+          if (player.motm > 0) {
+            statObject = {
+              club: player.club,
+              username: player.username,
+              value: player.motm,
+            };
+            motms.push(statObject);
+          }
+          if (player.matches > 0) {
+            statObject = {
+              club: player.club,
+              username: player.username,
+              value: player.matches,
+            };
+            matches.push(statObject);
+          }
         }
-        if (player.assists > 0) {
-          statObject = {
-            club: player.club,
-            username: player.username,
-            value: player.assists,
-          };
-          assists.push(statObject);
-        }
-        if (player.motm > 0) {
-          statObject = {
-            club: player.club,
-            username: player.username,
-            value: player.motm,
-          };
-          motms.push(statObject);
-        }
-        if (player.matches > 0) {
-          statObject = {
-            club: player.club,
-            username: player.username,
-            value: player.matches,
-          };
-          matches.push(statObject);
-        }
-      }
 
-      goalscorers.sort((a, b) => b.value - a.value);
-      dataStructure[0].data = goalscorers.slice(0, 10);
+        goalscorers.sort((a, b) => b.value - a.value);
+        dataStructure[0].data = goalscorers.slice(0, 10);
 
-      assists.sort((a, b) => b.value - a.value);
-      dataStructure[1].data = assists.slice(0, 10);
+        assists.sort((a, b) => b.value - a.value);
+        dataStructure[1].data = assists.slice(0, 10);
 
-      motms.sort((a, b) => b.value - a.value);
-      dataStructure[2].data = motms.slice(0, 10);
+        motms.sort((a, b) => b.value - a.value);
+        dataStructure[2].data = motms.slice(0, 10);
 
-      matches.sort((a, b) => b.value - a.value);
-      dataStructure[3].data = matches.slice(0, 10);
+        matches.sort((a, b) => b.value - a.value);
+        dataStructure[3].data = matches.slice(0, 10);
 
-      setData(dataStructure);
-    });
+        setData(dataStructure);
+      })
+      .then(() => setLoading(false));
   }, [leagueId]);
 
   return (
-    <SectionList
-      sections={data}
-      keyExtractor={(item, index) => item.username + index}
-      renderItem={({item}) => (
-        <TwoLine title={item.username} sub={item.club} value={item.value} />
-      )}
-      renderSectionHeader={({section: {title}}) => <ListHeading col1={title} />}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <SectionList
+        sections={data}
+        keyExtractor={(item, index) => item.username + index}
+        renderItem={({item}) => (
+          <TwoLine title={item.username} sub={item.club} value={item.value} />
+        )}
+        renderSectionHeader={({section: {title}}) => (
+          <ListHeading col1={title} />
+        )}
+        renderSectionFooter={({section}) => {
+          if (section.data.length === 0) {
+            return (
+              <EmptyState
+                //      title={i18n._(t`No stats available`)}
+                title={i18n._(t`No Players yet`)}
+              />
+            );
+          }
+        }}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title={i18n._(t`No stats available`)}
+            body={i18n._(t`This league currentl has no submitted matches`)}
+          />
+        )}
+      />
+    </>
   );
 }
