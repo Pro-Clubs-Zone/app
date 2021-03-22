@@ -94,13 +94,13 @@ export default function CreateLeague({navigation}: Props) {
   ) => {
     switch (field) {
       case 'name':
-        setData({...data, name: text});
+        setData({...data, name: text.trimStart()});
         break;
       case 'discord':
-        setData({...data, discord: text});
+        setData({...data, discord: text.trim()});
         break;
       case 'twitter':
-        setData({...data, twitter: text});
+        setData({...data, twitter: text.trim()});
         break;
     }
 

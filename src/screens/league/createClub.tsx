@@ -144,7 +144,7 @@ export default function CreateClub({route, navigation}: Props) {
     <FormView>
       <FormContent>
         <TextField
-          onChangeText={(text) => setClubName(text)}
+          onChangeText={(text) => setClubName(text.trimStart())}
           value={clubName}
           placeholder={i18n._(t`Club Name`)}
           autoCorrect={false}
