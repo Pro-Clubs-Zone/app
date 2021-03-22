@@ -44,6 +44,10 @@ msgstr ""
 msgid "Accepted Clubs"
 msgstr ""
 
+#: src/screens/match/submitMatch.tsx:316
+msgid "Add Players"
+msgstr ""
+
 #: src/screens/league/leaguePreview.tsx:208
 msgid "Admin"
 msgstr ""
@@ -124,6 +128,10 @@ msgstr ""
 #~ msgid "Check out later"
 #~ msgstr ""
 
+#: src/screens/league/leagueScheduled.tsx:44
+msgid "Check out the league leaders"
+msgstr ""
+
 #: src/screens/auth/signIn.tsx:105
 #: src/screens/auth/signIn.tsx:105
 #: src/screens/auth/signIn.tsx:105
@@ -137,11 +145,11 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/club/clubSettings.tsx:36
 #: src/screens/league/createLeague.tsx:122
-#: src/screens/league/league.tsx:45
+#: src/screens/league/league.tsx:46
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:87
-#: src/screens/match/submitMatch.tsx:96
+#: src/screens/match/submitMatch.tsx:138
 #: src/screens/match/upcomingMatch.tsx:62
 #: src/screens/user/requests.tsx:111
 #: src/screens/user/requests.tsx:111
@@ -283,7 +291,7 @@ msgstr ""
 msgid "Invite Clubs"
 msgstr ""
 
-#: src/screens/league/leagueScheduled.tsx:48
+#: src/screens/league/leagueScheduled.tsx:53
 msgid "Invite Players"
 msgstr ""
 
@@ -371,15 +379,19 @@ msgstr ""
 msgid "League Requests"
 msgstr ""
 
+#: src/screens/league/leagueScheduled.tsx:44
+msgid "League Stats"
+msgstr ""
+
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:140
 msgid "League is full and matches can be scheduled"
 msgstr ""
 
-#: src/screens/league/league.tsx:43
+#: src/screens/league/league.tsx:44
 msgid "League link has expired or wrong"
 msgstr ""
 
-#: src/screens/league/league.tsx:43
+#: src/screens/league/league.tsx:44
 msgid "League not found"
 msgstr ""
 
@@ -431,7 +443,7 @@ msgstr ""
 msgid "Match Stats & Info"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:65
+#: src/screens/match/submitMatch.tsx:107
 msgid "Match cannot be published due to conflict."
 msgstr ""
 
@@ -439,16 +451,20 @@ msgstr ""
 msgid "Match is a draw"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:61
+#: src/screens/match/submitMatch.tsx:158
+msgid "Match scores are missing"
+msgstr ""
+
+#: src/screens/match/submitMatch.tsx:103
 #: src/screens/match/upcomingMatch.tsx:54
 msgid "Match was published with the selected result"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:70
+#: src/screens/match/submitMatch.tsx:112
 msgid "Match will be published once opponent submits their result"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:64
+#: src/screens/match/submitMatch.tsx:106
 msgid "Match will be reviewed"
 msgstr ""
 
@@ -460,6 +476,10 @@ msgstr ""
 #: src/screens/league/createClub.tsx:117
 #: src/screens/league/createLeague.tsx:157
 msgid "Minimum {0} letters, no profanity"
+msgstr ""
+
+#: src/screens/match/submitMatch.tsx:176
+msgid "More goals or assists than team has scored"
 msgstr ""
 
 #: src/screens/user/home.tsx:208
@@ -501,6 +521,10 @@ msgstr ""
 msgid "No Fixtures"
 msgstr ""
 
+#: src/screens/league/stats.tsx:101
+msgid "No Players yet"
+msgstr ""
+
 #: src/components/matchConflictItem.tsx:28
 msgid "No Proof"
 msgstr ""
@@ -526,6 +550,10 @@ msgstr ""
 msgid "No space character"
 msgstr ""
 
+#: src/screens/league/stats.tsx:103
+msgid "No stats available"
+msgstr ""
+
 #: src/components/standingItems.tsx:70
 msgid "PL"
 msgstr ""
@@ -536,6 +564,10 @@ msgstr ""
 
 #: src/components/standingItems.tsx:91
 msgid "PTS"
+msgstr ""
+
+#: src/screens/match/submitMatch.tsx:303
+msgid "Participated Players"
 msgstr ""
 
 #: src/screens/auth/resetPassword.tsx:95
@@ -645,8 +677,8 @@ msgstr ""
 msgid "Resolve Match"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:60
-#: src/screens/match/submitMatch.tsx:69
+#: src/screens/match/submitMatch.tsx:102
+#: src/screens/match/submitMatch.tsx:111
 msgid "Result Submitted"
 msgstr ""
 
@@ -701,8 +733,8 @@ msgid "Set up the league and invite players"
 msgstr ""
 
 #: src/screens/league/leagueScheduled.tsx:48
-msgid "Share league link with other players to invite them to your club"
-msgstr ""
+#~ msgid "Share league link with other players to invite them to your club"
+#~ msgstr ""
 
 #: src/screens/match/upcomingMatch.tsx:126
 #: src/screens/match/upcomingMatch.tsx:126
@@ -734,11 +766,11 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:196
+#: src/screens/match/submitMatch.tsx:319
 msgid "Submit Match"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:170
+#: src/screens/match/submitMatch.tsx:271
 #: src/screens/match/upcomingMatch.tsx:203
 msgid "Submitting Match..."
 msgstr ""
@@ -773,6 +805,10 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:124
 #: src/screens/auth/signIn.tsx:124
 msgid "There is no user with this email"
+msgstr ""
+
+#: src/screens/league/stats.tsx:103
+msgid "This league currentl has no submitted matches"
 msgstr ""
 
 #: src/components/screenshots.tsx:59
@@ -825,6 +861,10 @@ msgstr ""
 
 #: src/screens/club/clubSettings.tsx:34
 msgid "You cannot remove club when league is scheduled"
+msgstr ""
+
+#: src/screens/match/submitMatch.tsx:162
+msgid "You have selected more than 11 players for this match"
 msgstr ""
 
 #: src/screens/league/createLeague.tsx:275
