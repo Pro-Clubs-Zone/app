@@ -1,13 +1,13 @@
-import React, {useContext, useEffect, ImageURISource, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Image,
   ScrollView,
   Pressable,
   useWindowDimensions,
+  ImageURISource,
 } from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
-import {RouteProp} from '@react-navigation/native';
 import ScoreBoard from '../../components/scoreboard';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 //import {LeagueContext} from '../../context/leagueContext';
@@ -23,17 +23,19 @@ import ImageView from 'react-native-image-viewing';
 import {ListHeading} from '../../components/listItems';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
+import {AuthContext} from '../../context/authContext';
+import {MatchStackType} from './match';
 
 // type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
-// type ScreenNavigationProp = StackNavigationProp<
-//   MatchStackType,
-//   'Finished Match'
-// >;
+type ScreenNavigationProp = StackNavigationProp<
+  MatchStackType,
+  'Finished Match'
+>;
 
-// type Props = {
-//   navigation: ScreenNavigationProp;
-//   route: ScreenRouteProp;
-// };
+type Props = {
+  navigation: ScreenNavigationProp;
+  //route: ScreenRouteProp;
+};
 
 type FinishedMatchStack = {
   Result: undefined;
@@ -51,13 +53,29 @@ export default function FinishedMatch() {
   );
 }
 
-function MatchResult() {
+function MatchResult({navigation}: Props) {
+  const [isPlayer, setIsPlayer] = useState(false);
+
   const matchContext = useContext(MatchContext);
+  const user = useContext(AuthContext);
   const matchData: IMatchNavData = matchContext.match;
+  const uid = user.uid;
+
+  useEffect(() => {
+    if (uid in matchData.players) {
+      console.log('player participated', matchData);
+      setIsPlayer(true);
+    }
+  }, [matchContext]);
 
   return (
     <View style={{flex: 1}}>
-      <ScoreBoard data={matchData} editable={false} showSubmit={false} />
+      <ScoreBoard
+        data={matchData}
+        editable={false}
+        showSubmit={isPlayer}
+        onSubmit={() => navigation.navigate('Submit Stats')}
+      />
       <EmptyState
         title={i18n._(t`Match Stats & Info`)}
         body={i18n._(t`Coming Soon`)}

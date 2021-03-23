@@ -11,6 +11,7 @@ import FinishedMatch from './finishedMatch';
 import {MatchContext} from '../../context/matchContext';
 import SubmitMatch from './submitMatch';
 import {NonModalLoading} from '../../components/loading';
+import SubmitStats from './submitStats';
 
 type MatchProps = {
   matchData: IMatchNavData;
@@ -21,6 +22,7 @@ export type MatchStackType = {
   'Conflict Match': MatchProps;
   'Finished Match': MatchProps;
   'Submit Match': undefined;
+  'Submit Stats': undefined;
 };
 
 const Stack = createStackNavigator<MatchStackType>();
@@ -81,6 +83,15 @@ export default function Match({route}: Props) {
       <Stack.Screen
         name="Submit Match"
         component={SubmitMatch}
+        options={{
+          headerStyle: {
+            elevation: 0,
+          },
+        }}
+      />
+      <Stack.Screen
+        name="Submit Stats"
+        component={SubmitStats}
         options={{
           headerStyle: {
             elevation: 0,

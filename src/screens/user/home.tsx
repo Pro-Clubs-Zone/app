@@ -242,7 +242,7 @@ export default function Home({navigation}: Props) {
                 onPress={() =>
                   navigation.navigate('Match', {
                     matchData: item.data,
-                    upcoming: true,
+                    upcoming: !item.data.published,
                   })
                 }
                 submitted={!!item.data.submissions?.[item.data.clubId]}

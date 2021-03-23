@@ -22,6 +22,7 @@ type ThumbnailProps = {
   onUpload: () => void;
   onRemove: (index: number) => void;
   onZoom: (index: number) => void;
+  description: string;
 };
 
 export default function ScreenshotUploader({
@@ -31,6 +32,7 @@ export default function ScreenshotUploader({
   thumbsCount,
   onRemove,
   onZoom,
+  description,
 }: ThumbnailProps & {
   multiple: boolean;
 }) {
@@ -45,6 +47,7 @@ export default function ScreenshotUploader({
         thumbsCount={thumbsCount}
         onRemove={onRemove}
         onZoom={onZoom}
+        description={description}
       />
     </View>
   );
@@ -56,6 +59,7 @@ function MultipleThumbs({
   thumbsCount,
   onRemove,
   onZoom,
+  description,
 }: ThumbnailProps) {
   //   const showDefaultThumbs = (number, upload) => {
   //     var i = 0;
@@ -166,7 +170,7 @@ function MultipleThumbs({
               color: APP_COLORS.Gray,
             },
           ]}>
-          <Trans>1. Facts - 2. Events - 3. Online Player ID List</Trans>
+          {description}
         </Text>
       </View>
     </View>
