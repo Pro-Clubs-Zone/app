@@ -1,15 +1,12 @@
 import firestore from '@react-native-firebase/firestore';
-import {IMatchNavData, PlayerStats} from '../../../utils/interface';
+import {IMatchNavData} from '../../../utils/interface';
+import {PlayerStats} from '../submitMatch';
 
 const db = firestore();
 
-interface SelectMenu {
-  id: string;
-}
-
 const addMatchStats = async (
   match: IMatchNavData,
-  playerData: Array<SelectMenu & PlayerStats>,
+  playerData: Array<PlayerStats>,
   motm: string,
 ) => {
   const totalStatsRef = db
@@ -27,13 +24,8 @@ const addMatchStats = async (
 
     const isMotm = player.id === motm ? 1 : 0;
 
-    const goals = player.goals ? Number(player.goals) : 0;
-    const assists = player.assists ? Number(player.assists) : 0;
-
     const totalStats = {
       [player.id]: {
-        goals: firestore.FieldValue.increment(goals),
-        assists: firestore.FieldValue.increment(assists),
         matches: firestore.FieldValue.increment(1),
         motm: firestore.FieldValue.increment(isMotm),
         club: player.club,
@@ -44,12 +36,7 @@ const addMatchStats = async (
 
     const matchStats = {
       [match.matchId]: {
-        assists: assists,
-        goals: goals,
         motm: isMotm,
-        //    club: player.club,
-        //    clubId: player.clubId,
-        //    username: player.username,
       },
     };
 

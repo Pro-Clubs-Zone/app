@@ -5,14 +5,44 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
-export interface PlayerStats {
+export interface GoalkeeperStats {
+  goalsConceded: number;
+  shotsCaught: number;
+  shotsParried: number;
+  crossesCaught: number;
+  ballsStriped: number;
+}
+
+export interface OutfieldPlayerStats {
+  rating: number;
   goals: number;
+  shotsOnTarget: number;
+  shotsOffTarget: number;
   assists: number;
-  motm: number | boolean;
-  matches: number;
-  club: string;
-  clubId: string;
-  username: string;
+  completedShortPasses: number;
+  completedMediumPasses: number;
+  completedLongPasses: number;
+  failedShortPasses: number;
+  failedMediumPasses: number;
+  failedLongPasses: number;
+  keyPasses: number;
+  successfulCrosses: number;
+  failedCrosses: number;
+  keyDribbles: number;
+  fouled: number;
+  successfulDribbles: number;
+  wonTackles: number;
+  lostTackles: number;
+  fouls: number;
+  penaltiesConceded: number;
+  interceptions: number;
+  blocks: number;
+  outOfPosition: number;
+  possessionWon: number;
+  possessionLost: number;
+  clearances: number;
+  headersWon: number;
+  heardersLost: number;
 }
 
 export interface FixtureList extends IFlatList {

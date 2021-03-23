@@ -1,10 +1,8 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {ScrollView, View, Alert, ImageURISource} from 'react-native';
-import submitMatch from './functions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
 import ScoreBoard from '../../components/scoreboard';
-import {MatchTextField} from '../../components/textField';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
 //import firestore from '@react-native-firebase/firestore';
@@ -21,7 +19,6 @@ import ScreenshotUploader from '../../components/screenshots';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
-import {PlayerStats} from '../../utils/interface';
 import Toast from '../../components/toast';
 import SwitchLabel from '../../components/switch';
 
@@ -39,6 +36,8 @@ interface SelectMenu {
 
 export default function SubmitStats({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
+  const [isGK, setIsGK] = useState(false);
+  const [updateImage, setUpdateImage] = useState(false);
 
   const [imageNames, setImageNames] = useState<string[]>([]);
   const [images, setImages] = useState<ImageURISource[]>([]);
@@ -148,14 +147,16 @@ export default function SubmitStats({navigation}: Props) {
         <View style={styles.options}>
           <SwitchLabel
             title={i18n._(t`I played as a Goalkeeper`)}
-            value={false}
+            value={isGK}
+            onValueChange={() => setIsGK(!isGK)}
           />
           <SwitchLabel
             title={i18n._(t`Update my player image`)}
-            value={false}
+            value={updateImage}
+            onValueChange={() => setUpdateImage(!updateImage)}
           />
         </View>
-        <BigButton title={i18n._(t`Submit Match`)} />
+        <BigButton title={i18n._(t`Submit Stats`)} />
       </ScrollView>
     </>
   );

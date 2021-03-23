@@ -7,31 +7,15 @@ import {MatchTextField} from './textField';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function MatchPlayer({
-  expanded,
   username,
   motm,
-  onExpand,
   onRemove,
   onMotm,
-  goals,
-  goalsError,
-  onGoalsChange,
-  assists,
-  assistsError,
-  onAssistsChange,
 }: {
-  expanded: boolean;
   username: string;
   motm: boolean;
-  onExpand: () => void;
   onRemove: () => void;
   onMotm: () => void;
-  goals: string;
-  goalsError: boolean;
-  onGoalsChange: (value: string) => void;
-  assists: string;
-  assistsError: boolean;
-  onAssistsChange: (value: string) => void;
 }) {
   return (
     <View style={styles.container}>
@@ -44,51 +28,12 @@ export default function MatchPlayer({
             onPress={onRemove}
           />
           <IconButton
-            name={
-              expanded
-                ? 'arrow-up-drop-circle-outline'
-                : 'arrow-down-drop-circle-outline'
-            }
-            color={expanded ? APP_COLORS.Accent : APP_COLORS.Gray}
-            onPress={onExpand}
+            name={motm ? 'star' : 'star-outline'}
+            color={motm ? APP_COLORS.Accent : APP_COLORS.Light}
+            onPress={onMotm}
           />
         </View>
       </View>
-      {expanded && (
-        <View style={styles.expanded}>
-          <View style={styles.control}>
-            <Text style={TEXT_STYLES.caption}>Goals</Text>
-            <MatchTextField
-              value={goals}
-              error={goalsError}
-              onChangeText={onGoalsChange}
-            />
-          </View>
-          <View style={styles.control}>
-            <Text style={TEXT_STYLES.caption}>Assists</Text>
-            <MatchTextField
-              value={assists}
-              error={assistsError}
-              onChangeText={onAssistsChange}
-            />
-          </View>
-          <View style={styles.control}>
-            <Text style={TEXT_STYLES.caption}>MOTM</Text>
-            <View
-              style={{
-                height: verticalScale(40),
-                justifyContent: 'center',
-              }}>
-              <Icon
-                name={motm ? 'star' : 'star-outline'}
-                size={verticalScale(32)}
-                color={motm ? APP_COLORS.Accent : APP_COLORS.Light}
-                onPress={onMotm}
-              />
-            </View>
-          </View>
-        </View>
-      )}
     </View>
   );
 }

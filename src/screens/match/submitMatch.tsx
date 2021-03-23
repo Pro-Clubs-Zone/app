@@ -30,7 +30,6 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import MatchPlayer from '../../components/matchPlayer';
-import {PlayerStats} from '../../utils/interface';
 import Select from '../../components/select';
 import addMatchStats from './functions/onAddMatchStats';
 import Toast from '../../components/toast';
@@ -41,8 +40,12 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-interface SelectMenu {
+export interface PlayerStats {
   id: string;
+  username: string;
+  motm?: string;
+  club: string;
+  clubId: string;
 }
 
 //const db = firestore();
@@ -59,12 +62,11 @@ export default function SubmitMatch({navigation}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [roster, setRoster] = useState<Array<SelectMenu & PlayerStats>>([]);
+  const [roster, setRoster] = useState<Array<PlayerStats>>([]);
   const [tempSelectedPlayers, setTempSelectedPlayer] = useState<string[]>([]);
-  const [selectedPlayers, setSelectedPlayers] = useState<
-    Array<SelectMenu & PlayerStats>
-  >([]);
-  const [expandedPlayer, setExpandedPlayer] = useState<string>();
+  const [selectedPlayers, setSelectedPlayers] = useState<Array<PlayerStats>>(
+    [],
+  );
   const [motm, setMotm] = useState<string>();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -94,15 +96,12 @@ export default function SubmitMatch({navigation}: Props) {
 
   useEffect(() => {
     const currentRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    let rosterItems: (SelectMenu & PlayerStats)[] = [];
+    let rosterItems: PlayerStats[] = [];
 
     for (const [id, playerData] of Object.entries(currentRoster)) {
-      const player: SelectMenu & PlayerStats = {
+      const player: PlayerStats = {
         id: id,
         username: playerData.username,
-        goals: undefined,
-        assists: undefined,
-        matches: undefined,
         motm: undefined,
         club: context.userData.leagues[leagueId].clubName,
         clubId: clubId,
@@ -218,26 +217,6 @@ export default function SubmitMatch({navigation}: Props) {
       return false;
     }
 
-    if (selectedPlayers.length > 0) {
-      const teamScore =
-        matchData.clubId === matchData.homeTeamId
-          ? Number(homeScore)
-          : Number(awayScore);
-
-      let totalGoals = 0;
-      let totalAssists = 0;
-
-      selectedPlayers.forEach((player) => {
-        totalGoals += player.goals ? Number(player.goals) : 0;
-        totalAssists += player.assists ? Number(player.assists) : 0;
-      });
-
-      if (totalGoals > teamScore || totalAssists > teamScore) {
-        onShowToast(i18n._(t`More goals or assists than team has scored`));
-        return false;
-      }
-    }
-
     return true;
   };
 
@@ -338,21 +317,6 @@ export default function SubmitMatch({navigation}: Props) {
     if (motm === playerId) {
       setMotm(null);
     }
-
-    if (expandedPlayer === playerId) {
-      setExpandedPlayer(null);
-    }
-  };
-
-  const onUpdatePlayerStats = (index: number, stat: string, value: string) => {
-    let currentData = [...selectedPlayers];
-    const updatedData = {
-      ...selectedPlayers[index],
-      [stat]: value.replace(/[^0-9]/g, ''),
-    };
-    currentData[index] = updatedData;
-
-    setSelectedPlayers(currentData);
   };
 
   return (
@@ -436,7 +400,10 @@ export default function SubmitMatch({navigation}: Props) {
               )
             }
           />
-          <ListHeading col1={i18n._(t`Participated Players`)} />
+          <ListHeading
+            col1={i18n._(t`Participated Players`)}
+            col4={i18n._(t`MOTM`)}
+          />
           <View
             style={{
               flex: 1,
@@ -456,21 +423,7 @@ export default function SubmitMatch({navigation}: Props) {
                   onMotm={() =>
                     motm === player.id ? setMotm(null) : setMotm(player.id)
                   }
-                  onExpand={() =>
-                    expandedPlayer === player.id
-                      ? setExpandedPlayer(null)
-                      : setExpandedPlayer(player.id)
-                  }
-                  expanded={expandedPlayer === player.id}
                   onRemove={() => onRemoveSelection(player.id)}
-                  goals={player.goals}
-                  assists={player.assists}
-                  onGoalsChange={(value) =>
-                    onUpdatePlayerStats(index, 'goals', value)
-                  }
-                  onAssistsChange={(value) =>
-                    onUpdatePlayerStats(index, 'assists', value)
-                  }
                 />
               ))}
               <MinButton
