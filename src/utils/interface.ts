@@ -48,6 +48,7 @@ export interface IMatch {
   published: boolean;
   conflict: boolean;
   result?: {[team: string]: number};
+  players?: {[id: string]: boolean};
 }
 
 export interface ISectionList {

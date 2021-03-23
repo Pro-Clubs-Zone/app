@@ -10,6 +10,7 @@ import firestore from '@react-native-firebase/firestore';
 const getUserMatches = async (
   userData: IUser,
   userLeagues: {[id: string]: ILeague},
+  uid: string,
 ): Promise<FixtureList[]> => {
   const db = firestore();
   let matches: FixtureList[] = [];
@@ -27,10 +28,9 @@ const getUserMatches = async (
         .collection('matches');
 
       await matchesSnapshot
-        .where('teams', 'array-contains', clubId)
-        .where('published', '==', false)
+        .where('published', '==', true)
+        .where(`players.${uid}`, '==', false)
         .orderBy('id', 'asc')
-        .limit(4)
         .get()
         .then((snapshot) => {
           snapshot.forEach((doc) => {
@@ -50,6 +50,7 @@ const getUserMatches = async (
               homeTeamName: homeTeamName,
               awayTeamName: awayTeamName,
               admin: admin,
+              //   statsSubmitted: false,
             };
 
             const fixture: FixtureList = {
@@ -59,6 +60,45 @@ const getUserMatches = async (
 
             matches.push(fixture);
           });
+        })
+        .then(async () => {
+          await matchesSnapshot
+            .where('teams', 'array-contains', clubId)
+            .where('published', '==', false)
+            .orderBy('id', 'asc')
+            .limit(4)
+            .get()
+            .then((snapshot) => {
+              snapshot.forEach((doc) => {
+                const matchData = doc.data() as IMatch;
+                const matchId = doc.id;
+                const leagueData = userLeagues[leagueId];
+                const homeTeamName =
+                  leagueData.clubs[matchData.homeTeamId].name;
+                const awayTeamName =
+                  leagueData.clubs[matchData.awayTeamId].name;
+
+                let match: IMatchNavData = {
+                  ...matchData,
+                  matchId: doc.id,
+                  clubId: clubId,
+                  manager: league.manager,
+                  leagueId: leagueId,
+                  leagueName: leagueData.name,
+                  homeTeamName: homeTeamName,
+                  awayTeamName: awayTeamName,
+                  admin: admin,
+                  //  statsSubmitted: false,
+                };
+
+                const fixture: FixtureList = {
+                  id: matchId,
+                  data: match,
+                };
+
+                matches.push(fixture);
+              });
+            });
         })
         .catch((err) => console.log('matches error', err));
     }

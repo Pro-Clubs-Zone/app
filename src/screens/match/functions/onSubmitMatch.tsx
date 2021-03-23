@@ -1,14 +1,19 @@
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
-import {IMatch, IMatchNavData} from '../../../utils/interface';
+import {IMatch, IMatchNavData, PlayerStats} from '../../../utils/interface';
 
 const db = firestore();
 const firFunc = functions();
+
+interface SelectMenu {
+  id: string;
+}
 
 const submitMatch = async (
   homeScore: string,
   awayScore: string,
   initialMatchData: IMatchNavData,
+  players: Array<SelectMenu & PlayerStats>,
 ): Promise<string> => {
   const teamSubmission = {
     [initialMatchData.clubId]: {
@@ -23,6 +28,14 @@ const submitMatch = async (
     .doc(initialMatchData.matchId);
 
   let matchData: IMatch;
+  let playerList: {
+    [id: string]: boolean;
+  } = {};
+
+  players.forEach((player) => {
+    playerList[player.id] = false;
+  });
+
   await matchRef.get().then((res) => {
     matchData = res.data() as IMatch;
   });
@@ -31,6 +44,7 @@ const submitMatch = async (
     .set(
       {
         submissions: teamSubmission,
+        players: playerList,
       },
       {merge: true},
     )

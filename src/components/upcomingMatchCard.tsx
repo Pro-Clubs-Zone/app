@@ -11,6 +11,7 @@ const UpcomingMatchCard = ({
   onPress,
   submitted,
   conflict,
+  published,
 }: {
   rivalName: string;
   clubName: string;
@@ -18,19 +19,32 @@ const UpcomingMatchCard = ({
   onPress: () => void;
   submitted: boolean;
   conflict: boolean;
+  published: boolean;
 }) => (
   <Pressable onPress={onPress}>
     <View
       style={[
         styles.card,
-        submitted ? (conflict ? styles.conflict : styles.submitted) : null,
+        published
+          ? styles.published
+          : submitted
+          ? conflict
+            ? styles.conflict
+            : styles.submitted
+          : null,
       ]}>
       {submitted && (
         <View
           style={[
             styles.submittedCheck,
             {
-              backgroundColor: conflict ? APP_COLORS.Red : APP_COLORS.Green,
+              backgroundColor: published
+                ? APP_COLORS.Green
+                : submitted
+                ? conflict
+                  ? APP_COLORS.Red
+                  : APP_COLORS.Accent
+                : null,
             },
           ]}>
           <Icon
@@ -105,11 +119,15 @@ const styles = ScaledSheet.create({
   },
   submitted: {
     borderWidth: 1,
-    borderColor: APP_COLORS.Green,
+    borderColor: APP_COLORS.Accent,
   },
   conflict: {
     borderWidth: 1,
     borderColor: APP_COLORS.Red,
+  },
+  published: {
+    borderWidth: 1,
+    borderColor: APP_COLORS.Green,
   },
   submittedCheck: {
     position: 'absolute',

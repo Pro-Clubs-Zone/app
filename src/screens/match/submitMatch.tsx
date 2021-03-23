@@ -47,7 +47,7 @@ interface SelectMenu {
 
 //const db = firestore();
 
-export default function SubmitMatch({navigation, route}: Props) {
+export default function SubmitMatch({navigation}: Props) {
   const [homeScore, setHomeScore] = useState<string>('');
   const [awayScore, setAwayScore] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
@@ -277,14 +277,17 @@ export default function SubmitMatch({navigation, route}: Props) {
         setLoading(true);
         await uploadScreenshots()
           .then(async () => {
-            await submitMatch(homeScore, awayScore, matchData).then(
-              async (result) => {
-                selectedPlayers.length > 0 &&
-                  (await addMatchStats(matchData, selectedPlayers, motm));
-                await analytics().logEvent('match_submit_score');
-                showAlert(result);
-              },
-            );
+            await submitMatch(
+              homeScore,
+              awayScore,
+              matchData,
+              selectedPlayers,
+            ).then(async (result) => {
+              selectedPlayers.length > 0 &&
+                (await addMatchStats(matchData, selectedPlayers, motm));
+              await analytics().logEvent('match_submit_score');
+              showAlert(result);
+            });
           })
           .catch((err) => {
             console.log('something wrong with uploading', err);

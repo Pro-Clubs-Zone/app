@@ -172,7 +172,7 @@ export default function Home({navigation}: Props) {
               const {updatedUserData, userLeagues} = data;
               context.setUserData(updatedUserData);
               context.setUserLeagues(userLeagues);
-              await getUserMatches(updatedUserData, userLeagues)
+              await getUserMatches(updatedUserData, userLeagues, uid)
                 .then((matchesData) => {
                   context.setUserMatches(matchesData);
                   //  setUpcomingMatches(matchesData);
@@ -247,6 +247,7 @@ export default function Home({navigation}: Props) {
                 }
                 submitted={!!item.data.submissions?.[item.data.clubId]}
                 conflict={item.data.conflict}
+                published={item.data.published}
               />
             )}
             keyExtractor={(item) => item.id}
