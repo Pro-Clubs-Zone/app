@@ -31,6 +31,41 @@ const addPlayerStats = async (
 
   let totalStats = {};
 
+  const commonStats = {
+    assists: firestore.FieldValue.increment(playerStats.assists),
+    completedShortPasses: firestore.FieldValue.increment(
+      playerStats.completedShortPasses,
+    ),
+    completedMediumPasses: firestore.FieldValue.increment(
+      playerStats.completedMediumPasses,
+    ),
+    completedLongPasses: firestore.FieldValue.increment(
+      playerStats.completedLongPasses,
+    ),
+    failedShortPasses: firestore.FieldValue.increment(
+      playerStats.failedShortPasses,
+    ),
+    failedMediumPasses: firestore.FieldValue.increment(
+      playerStats.failedMediumPasses,
+    ),
+    failedLongPasses: firestore.FieldValue.increment(
+      playerStats.failedLongPasses,
+    ),
+    keyPasses: firestore.FieldValue.increment(playerStats.keyPasses),
+    successfulCrosses: firestore.FieldValue.increment(
+      playerStats.successfulCrosses,
+    ),
+    failedCrosses: firestore.FieldValue.increment(playerStats.failedCrosses),
+    interceptions: firestore.FieldValue.increment(playerStats.interceptions),
+    blocks: firestore.FieldValue.increment(playerStats.blocks),
+    outOfPosition: firestore.FieldValue.increment(playerStats.outOfPosition),
+    possessionWon: firestore.FieldValue.increment(playerStats.possessionWon),
+    possessionLost: firestore.FieldValue.increment(playerStats.possessionLost),
+    clearances: firestore.FieldValue.increment(playerStats.clearances),
+    headersWon: firestore.FieldValue.increment(playerStats.headersWon),
+    heardersLost: firestore.FieldValue.increment(playerStats.heardersLost),
+  };
+
   if (isGK) {
     totalStats = {
       goalsConceded: firestore.FieldValue.increment(playerStats.goalsConceded),
@@ -38,6 +73,7 @@ const addPlayerStats = async (
       shotsParried: firestore.FieldValue.increment(playerStats.shotsParried),
       crossesCaught: firestore.FieldValue.increment(playerStats.crossesCaught),
       ballsStriped: firestore.FieldValue.increment(playerStats.ballsStriped),
+      ...commonStats,
     };
   } else {
     totalStats = {
@@ -47,30 +83,7 @@ const addPlayerStats = async (
       shotsOffTarget: firestore.FieldValue.increment(
         playerStats.shotsOffTarget,
       ),
-      assists: firestore.FieldValue.increment(playerStats.assists),
-      completedShortPasses: firestore.FieldValue.increment(
-        playerStats.completedShortPasses,
-      ),
-      completedMediumPasses: firestore.FieldValue.increment(
-        playerStats.completedMediumPasses,
-      ),
-      completedLongPasses: firestore.FieldValue.increment(
-        playerStats.completedLongPasses,
-      ),
-      failedShortPasses: firestore.FieldValue.increment(
-        playerStats.failedShortPasses,
-      ),
-      failedMediumPasses: firestore.FieldValue.increment(
-        playerStats.failedMediumPasses,
-      ),
-      failedLongPasses: firestore.FieldValue.increment(
-        playerStats.failedLongPasses,
-      ),
-      keyPasses: firestore.FieldValue.increment(playerStats.keyPasses),
-      successfulCrosses: firestore.FieldValue.increment(
-        playerStats.successfulCrosses,
-      ),
-      failedCrosses: firestore.FieldValue.increment(playerStats.failedCrosses),
+
       keyDribbles: firestore.FieldValue.increment(playerStats.keyDribbles),
       fouled: firestore.FieldValue.increment(playerStats.fouled),
       successfulDribbles: firestore.FieldValue.increment(
@@ -82,16 +95,7 @@ const addPlayerStats = async (
       penaltiesConceded: firestore.FieldValue.increment(
         playerStats.penaltiesConceded,
       ),
-      interceptions: firestore.FieldValue.increment(playerStats.interceptions),
-      blocks: firestore.FieldValue.increment(playerStats.blocks),
-      outOfPosition: firestore.FieldValue.increment(playerStats.outOfPosition),
-      possessionWon: firestore.FieldValue.increment(playerStats.possessionWon),
-      possessionLost: firestore.FieldValue.increment(
-        playerStats.possessionLost,
-      ),
-      clearances: firestore.FieldValue.increment(playerStats.clearances),
-      headersWon: firestore.FieldValue.increment(playerStats.headersWon),
-      heardersLost: firestore.FieldValue.increment(playerStats.heardersLost),
+      ...commonStats,
     };
   }
 

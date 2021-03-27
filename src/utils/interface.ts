@@ -5,19 +5,7 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
-export interface GoalkeeperStats {
-  goalsConceded: number;
-  shotsCaught: number;
-  shotsParried: number;
-  crossesCaught: number;
-  ballsStriped: number;
-}
-
-export interface OutfieldPlayerStats {
-  rating: number;
-  goals: number;
-  shotsOnTarget: number;
-  shotsOffTarget: number;
+export interface CommonPlayerStats {
   assists: number;
   completedShortPasses: number;
   completedMediumPasses: number;
@@ -28,13 +16,6 @@ export interface OutfieldPlayerStats {
   keyPasses: number;
   successfulCrosses: number;
   failedCrosses: number;
-  keyDribbles: number;
-  fouled: number;
-  successfulDribbles: number;
-  wonTackles: number;
-  lostTackles: number;
-  fouls: number;
-  penaltiesConceded: number;
   interceptions: number;
   blocks: number;
   outOfPosition: number;
@@ -43,6 +24,28 @@ export interface OutfieldPlayerStats {
   clearances: number;
   headersWon: number;
   heardersLost: number;
+}
+
+export interface GoalkeeperStats extends CommonPlayerStats {
+  goalsConceded: number;
+  shotsCaught: number;
+  shotsParried: number;
+  crossesCaught: number;
+  ballsStriped: number;
+}
+
+export interface OutfieldPlayerStats extends CommonPlayerStats {
+  rating: number;
+  goals: number;
+  shotsOnTarget: number;
+  shotsOffTarget: number;
+  keyDribbles: number;
+  fouled: number;
+  successfulDribbles: number;
+  wonTackles: number;
+  lostTackles: number;
+  fouls: number;
+  penaltiesConceded: number;
 }
 
 export interface FixtureList extends IFlatList {
