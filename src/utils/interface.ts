@@ -6,46 +6,46 @@ export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
 export interface CommonPlayerStats {
-  assists: number;
-  completedShortPasses: number;
-  completedMediumPasses: number;
-  completedLongPasses: number;
-  failedShortPasses: number;
-  failedMediumPasses: number;
-  failedLongPasses: number;
-  keyPasses: number;
-  successfulCrosses: number;
-  failedCrosses: number;
-  interceptions: number;
-  blocks: number;
-  outOfPosition: number;
-  possessionWon: number;
-  possessionLost: number;
-  clearances: number;
-  headersWon: number;
-  heardersLost: number;
+  rating: any;
+  assists: any;
+  completedShortPasses: any;
+  completedMediumPasses: any;
+  completedLongPasses: any;
+  failedShortPasses: any;
+  failedMediumPasses: any;
+  failedLongPasses: any;
+  keyPasses: any;
+  successfulCrosses: any;
+  failedCrosses: any;
+  interceptions: any;
+  blocks: any;
+  outOfPosition: any;
+  possessionWon: any;
+  possessionLost: any;
+  clearances: any;
+  headersWon: any;
+  heardersLost: any;
 }
 
 export interface GoalkeeperStats extends CommonPlayerStats {
-  goalsConceded: number;
-  shotsCaught: number;
-  shotsParried: number;
-  crossesCaught: number;
-  ballsStriped: number;
+  goalsConceded: any;
+  shotsCaught: any;
+  shotsParried: any;
+  crossesCaught: any;
+  ballsStriped: any;
 }
 
 export interface OutfieldPlayerStats extends CommonPlayerStats {
-  rating: number;
-  goals: number;
-  shotsOnTarget: number;
-  shotsOffTarget: number;
-  keyDribbles: number;
-  fouled: number;
-  successfulDribbles: number;
-  wonTackles: number;
-  lostTackles: number;
-  fouls: number;
-  penaltiesConceded: number;
+  goals: any;
+  shotsOnTarget: any;
+  shotsOffTarget: any;
+  keyDribbles: any;
+  fouled: any;
+  successfulDribbles: any;
+  wonTackles: any;
+  lostTackles: any;
+  fouls: any;
+  penaltiesConceded: any;
 }
 
 export interface FixtureList extends IFlatList {

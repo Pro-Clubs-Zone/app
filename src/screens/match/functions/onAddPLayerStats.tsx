@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import {
+  CommonPlayerStats,
   GoalkeeperStats,
   IMatchNavData,
   OutfieldPlayerStats,
@@ -29,9 +30,10 @@ const addPlayerStats = async (
     .collection('matches')
     .doc(match.matchId);
 
-  let totalStats = {};
+  let totalStats: GoalkeeperStats | OutfieldPlayerStats = {};
 
-  const commonStats = {
+  const commonStats: CommonPlayerStats = {
+    rating: firestore.FieldValue.increment(playerStats.rating),
     assists: firestore.FieldValue.increment(playerStats.assists),
     completedShortPasses: firestore.FieldValue.increment(
       playerStats.completedShortPasses,
@@ -77,13 +79,11 @@ const addPlayerStats = async (
     };
   } else {
     totalStats = {
-      rating: firestore.FieldValue.increment(playerStats.rating),
       goals: firestore.FieldValue.increment(playerStats.goals),
       shotsOnTarget: firestore.FieldValue.increment(playerStats.shotsOnTarget),
       shotsOffTarget: firestore.FieldValue.increment(
         playerStats.shotsOffTarget,
       ),
-
       keyDribbles: firestore.FieldValue.increment(playerStats.keyDribbles),
       fouled: firestore.FieldValue.increment(playerStats.fouled),
       successfulDribbles: firestore.FieldValue.increment(

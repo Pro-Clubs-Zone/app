@@ -10,7 +10,7 @@ import {
 const {RNImageOCR} = NativeModules;
 
 export default async function readImage(uri: string, isGK: boolean) {
-  let ocrResult: OutfieldPlayerStats | GoalkeeperStats = {};
+  let playerStats: OutfieldPlayerStats | GoalkeeperStats = {};
 
   const sortStats = (data: string[], sectionIndex: number) => {
     const sortPasses = (commonPlayerData: string[]) => {
@@ -89,7 +89,7 @@ export default async function readImage(uri: string, isGK: boolean) {
           case 3:
             player.headersWon = Number(stat);
             break;
-          case 3:
+          case 4:
             player.heardersLost = Number(stat);
         }
       });
@@ -164,6 +164,45 @@ export default async function readImage(uri: string, isGK: boolean) {
       }
 
       return outfieldPlayer;
+    } else {
+      let goalkeeper: GoalkeeperStats = {};
+      switch (sectionIndex) {
+        case 0: // Rating
+          goalkeeper.rating = parseFloat(data[sectionIndex]);
+          break;
+        case 1: // Goalkeeping
+          data.forEach((stat, index) => {
+            switch (index) {
+              case 0:
+                goalkeeper.goalsConceded = Number(stat);
+                break;
+              case 1:
+                goalkeeper.shotsCaught = Number(stat);
+                break;
+              case 2:
+                goalkeeper.shotsParried = Number(stat);
+                break;
+              case 3:
+                goalkeeper.crossesCaught = Number(stat);
+                break;
+              case 4:
+                goalkeeper.ballsStriped = Number(stat);
+            }
+          });
+          break;
+        case 2: // Passes
+          const passes = sortPasses(data);
+          goalkeeper = {...goalkeeper, ...passes};
+          break;
+        case 3: // Positioning
+          const positioning = sortPositioning(data);
+          goalkeeper = {...goalkeeper, ...positioning};
+          break;
+        case 4: // Ball retention
+          const ballRetention = sortBallRetention(data);
+          goalkeeper = {...goalkeeper, ...ballRetention};
+      }
+      return goalkeeper;
     }
   };
 
@@ -174,7 +213,6 @@ export default async function readImage(uri: string, isGK: boolean) {
       const base64 = 'data:image/png;base64,' + res;
       await RNImageOCR.recognize(base64)
         .then((result: string) => {
-          console.log('ocr result', result);
           let convertedData: string[] = [];
           let val = '';
           for (let i = 0; i < result.length; i++) {
@@ -204,8 +242,7 @@ export default async function readImage(uri: string, isGK: boolean) {
           console.log('formatted', formattedData);
           const sortedData = sortStats(formattedData, index);
 
-          ocrResult = {...ocrResult, ...sortedData};
-          console.log('withNewData', ocrResult);
+          playerStats = {...playerStats, ...sortedData};
         })
         .catch((err) => {
           console.log('OCR Error: ', err);
@@ -294,5 +331,6 @@ export default async function readImage(uri: string, isGK: boolean) {
   for (const [index, data] of Object.entries(cropData)) {
     await cropImage(data, Number(index));
   }
-  console.log('final res', ocrResult);
+
+  return playerStats;
 }

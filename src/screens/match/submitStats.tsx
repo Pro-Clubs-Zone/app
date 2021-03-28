@@ -31,63 +31,63 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-let outfieldPlayerStats: OutfieldPlayerStats = {
-  rating: 0,
-  goals: 0,
-  shotsOnTarget: 0,
-  shotsOffTarget: 0,
-  assists: 0,
-  completedShortPasses: 0,
-  completedMediumPasses: 0,
-  completedLongPasses: 0,
-  failedShortPasses: 0,
-  failedMediumPasses: 0,
-  failedLongPasses: 0,
-  keyPasses: 0,
-  successfulCrosses: 0,
-  failedCrosses: 0,
-  keyDribbles: 0,
-  fouled: 0,
-  successfulDribbles: 0,
-  wonTackles: 0,
-  lostTackles: 0,
-  fouls: 0,
-  penaltiesConceded: 0,
-  interceptions: 0,
-  blocks: 0,
-  outOfPosition: 0,
-  possessionWon: 0,
-  possessionLost: 0,
-  clearances: 0,
-  headersWon: 0,
-  heardersLost: 0,
-};
+// let outfieldPlayerStats: OutfieldPlayerStats = {
+//   rating: 0,
+//   goals: 0,
+//   shotsOnTarget: 0,
+//   shotsOffTarget: 0,
+//   assists: 0,
+//   completedShortPasses: 0,
+//   completedMediumPasses: 0,
+//   completedLongPasses: 0,
+//   failedShortPasses: 0,
+//   failedMediumPasses: 0,
+//   failedLongPasses: 0,
+//   keyPasses: 0,
+//   successfulCrosses: 0,
+//   failedCrosses: 0,
+//   keyDribbles: 0,
+//   fouled: 0,
+//   successfulDribbles: 0,
+//   wonTackles: 0,
+//   lostTackles: 0,
+//   fouls: 0,
+//   penaltiesConceded: 0,
+//   interceptions: 0,
+//   blocks: 0,
+//   outOfPosition: 0,
+//   possessionWon: 0,
+//   possessionLost: 0,
+//   clearances: 0,
+//   headersWon: 0,
+//   heardersLost: 0,
+// };
 
-let goalkeeperStats: GoalkeeperStats = {
-  goalsConceded: 0,
-  shotsCaught: 0,
-  shotsParried: 0,
-  crossesCaught: 0,
-  ballsStriped: 0,
-  assists: 0,
-  completedShortPasses: 0,
-  completedMediumPasses: 0,
-  completedLongPasses: 0,
-  failedShortPasses: 0,
-  failedMediumPasses: 0,
-  failedLongPasses: 0,
-  keyPasses: 0,
-  successfulCrosses: 0,
-  failedCrosses: 0,
-  interceptions: 0,
-  blocks: 0,
-  outOfPosition: 0,
-  possessionWon: 0,
-  possessionLost: 0,
-  clearances: 0,
-  headersWon: 0,
-  heardersLost: 0,
-};
+// let goalkeeperStats: GoalkeeperStats = {
+//   goalsConceded: 0,
+//   shotsCaught: 0,
+//   shotsParried: 0,
+//   crossesCaught: 0,
+//   ballsStriped: 0,
+//   assists: 0,
+//   completedShortPasses: 0,
+//   completedMediumPasses: 0,
+//   completedLongPasses: 0,
+//   failedShortPasses: 0,
+//   failedMediumPasses: 0,
+//   failedLongPasses: 0,
+//   keyPasses: 0,
+//   successfulCrosses: 0,
+//   failedCrosses: 0,
+//   interceptions: 0,
+//   blocks: 0,
+//   outOfPosition: 0,
+//   possessionWon: 0,
+//   possessionLost: 0,
+//   clearances: 0,
+//   headersWon: 0,
+//   heardersLost: 0,
+// };
 
 //const db = firestore();
 
@@ -159,14 +159,16 @@ export default function SubmitStats({navigation}: Props) {
   };
 
   const onSubmitStats = async () => {
-    //  setLoading(true);
-    await readImage(images[0].uri, isGK);
-    // await addPlayerStats(matchData, outfieldPlayerStats, uid, isGK).then(
-    //   async () => {
-    //     await analytics().logEvent('match_submit_stats');
-    //     showAlert();
-    //   },
-    // );
+    setLoading(true);
+    await readImage(images[0].uri, isGK).then(
+      async (playerStats) =>
+        await addPlayerStats(matchData, playerStats, uid, isGK).then(
+          async () => {
+            await analytics().logEvent('match_submit_stats');
+            showAlert();
+          },
+        ),
+    );
   };
 
   return (
