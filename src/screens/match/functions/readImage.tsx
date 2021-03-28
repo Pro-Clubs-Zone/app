@@ -2,17 +2,180 @@ import {ImageCropData, NativeModules, Platform} from 'react-native';
 import RNTesseractOcr from 'react-native-tesseract-ocr';
 import ImageEditor from '@react-native-community/image-editor';
 import RNFS from 'react-native-fs';
+import {
+  CommonPlayerStats,
+  GoalkeeperStats,
+  OutfieldPlayerStats,
+} from '../../../utils/interface';
 const {RNImageOCR} = NativeModules;
 
 export default async function readImage(uri: string, isGK: boolean) {
+  let ocrResult: OutfieldPlayerStats | GoalkeeperStats = {};
+
+  const sortStats = (data: string[], sectionIndex: number) => {
+    const sortPasses = (commonPlayerData: string[]) => {
+      let player: CommonPlayerStats = {};
+
+      commonPlayerData.forEach((stat, index) => {
+        switch (index) {
+          case 0:
+            player.assists = Number(stat);
+            break;
+          case 1:
+            player.completedShortPasses = Number(stat);
+            break;
+          case 2:
+            player.completedMediumPasses = Number(stat);
+            break;
+          case 3:
+            player.completedLongPasses = Number(stat);
+            break;
+          case 4:
+            player.failedShortPasses = Number(stat);
+            break;
+          case 5:
+            player.failedMediumPasses = Number(stat);
+            break;
+          case 6:
+            player.failedLongPasses = Number(stat);
+            break;
+          case 7:
+            player.keyPasses = Number(stat);
+            break;
+          case 8:
+            player.successfulCrosses = Number(stat);
+            break;
+          case 9:
+            player.failedCrosses = Number(stat);
+        }
+      });
+
+      return player;
+    };
+
+    const sortPositioning = (commonPlayerData: string[]) => {
+      let player: CommonPlayerStats = {};
+
+      commonPlayerData.forEach((stat, index) => {
+        switch (index) {
+          case 0:
+            player.interceptions = Number(stat);
+            break;
+          case 1:
+            player.blocks = Number(stat);
+            break;
+          case 2:
+            player.outOfPosition = Number(stat);
+        }
+      });
+
+      return player;
+    };
+
+    const sortBallRetention = (commonPlayerData: string[]) => {
+      let player: CommonPlayerStats = {};
+
+      commonPlayerData.forEach((stat, index) => {
+        switch (index) {
+          case 0:
+            player.possessionWon = Number(stat);
+            break;
+          case 1:
+            player.possessionLost = Number(stat);
+            break;
+          case 2:
+            player.clearances = Number(stat);
+            break;
+          case 3:
+            player.headersWon = Number(stat);
+            break;
+          case 3:
+            player.heardersLost = Number(stat);
+        }
+      });
+
+      return player;
+    };
+
+    if (!isGK) {
+      let outfieldPlayer: OutfieldPlayerStats = {};
+
+      switch (sectionIndex) {
+        case 0: // Rating
+          outfieldPlayer.rating = parseFloat(data[sectionIndex]);
+          break;
+        case 1: // Shooting
+          data.forEach((stat, index) => {
+            switch (index) {
+              case 0:
+                outfieldPlayer.goals = Number(stat);
+                break;
+              case 1:
+                //   const statToNum = parseInt(stat[index], 10);
+                outfieldPlayer.shotsOnTarget = Number(stat);
+                break;
+              case 2:
+                outfieldPlayer.shotsOffTarget = Number(stat);
+            }
+          });
+          break;
+        case 2: // Passes
+          const passes = sortPasses(data);
+          outfieldPlayer = {...outfieldPlayer, ...passes};
+          break;
+        case 3: // Movement
+          data.forEach((stat, index) => {
+            switch (index) {
+              case 0:
+                outfieldPlayer.keyDribbles = Number(stat);
+                break;
+              case 1:
+                outfieldPlayer.fouled = Number(stat);
+                break;
+              case 2:
+                outfieldPlayer.successfulDribbles = Number(stat);
+            }
+          });
+          break;
+        case 4: //Tackling
+          data.forEach((stat, index) => {
+            switch (index) {
+              case 0:
+                outfieldPlayer.wonTackles = Number(stat);
+                break;
+              case 1:
+                outfieldPlayer.lostTackles = Number(stat);
+                break;
+              case 2:
+                outfieldPlayer.fouls = Number(stat);
+                break;
+              case 3:
+                outfieldPlayer.penaltiesConceded = Number(stat);
+            }
+          });
+          break;
+        case 5: // Positioning
+          const positioning = sortPositioning(data);
+          outfieldPlayer = {...outfieldPlayer, ...positioning};
+          break;
+        case 6: // Ball retention
+          const ballRetention = sortBallRetention(data);
+          outfieldPlayer = {...outfieldPlayer, ...ballRetention};
+      }
+
+      return outfieldPlayer;
+    }
+  };
+
   const getTextFromImageIos = async (croppedUri: string, index: number) => {
+    //  let statSection: string[][] = [];
     //  let imgUri = 'file:///' + croppedUri.replace('file://', '');
     await RNFS.readFile(croppedUri, 'base64').then(async (res) => {
       const base64 = 'data:image/png;base64,' + res;
       await RNImageOCR.recognize(base64)
-        .then((result) => {
+        .then((result: string) => {
           console.log('ocr result', result);
-          let arr = [];
+          let convertedData: string[] = [];
           let val = '';
           for (let i = 0; i < result.length; i++) {
             if (result[i] !== ' ' && result[i] !== '\n' && result[i] !== '↵') {
@@ -26,55 +189,33 @@ export default async function readImage(uri: string, isGK: boolean) {
             }
 
             if ((result[i] === '' || result[i] === '\n') && val !== '') {
-              arr.push(val);
+              convertedData.push(val);
               val = '';
             }
           }
 
-          let arrr = [];
-          for (let i = 0; i < arr.length; i++) {
-            let adata = arr[i].split('/');
-            adata.map((obj) => {
-              arrr.push(obj);
+          let formattedData: string[] = [];
+          for (let i = 0; i < convertedData.length; i++) {
+            let trimmed = convertedData[i].split('/');
+            trimmed.map((obj) => {
+              formattedData.push(obj);
             });
           }
-          console.log('ocr ready', arrr);
+          console.log('formatted', formattedData);
+          const sortedData = sortStats(formattedData, index);
 
-          // const tempData = _.cloneDeep(this.state.ocrDATA);
-          // tempData[index] = arrr;
-          // this.setState({ocrDATA: tempData});
-
-          /*this.state.ocrDATA.map((obj, index) => {
-              if (obj === undefined) {
-                return null;
-              } else {
-                this.setState({ loading: false });
-              }
-            });
-
-            console.log("ARRAY-INDEX: ", index, this.state.ocrDATA);*/
+          ocrResult = {...ocrResult, ...sortedData};
+          console.log('withNewData', ocrResult);
         })
         .catch((err) => {
           console.log('OCR Error: ', err);
         });
     });
-    // await ImageStore.getBase64ForTag(
-    //   successURI,
-    //   (resppp) => {
-    //     let str = 'data:image/png;base64,' + resppp;
-    //     this.getTextFromImageIos(str, index);
-    //   },
-    //   (error) => {
-    //     console.log('cropImage to data,', error);
-    //   },
-    // );
   };
 
   const cropImage = async (cropData: ImageCropData, index: number) => {
     await ImageEditor.cropImage(uri, cropData)
       .then(async (successURI) => {
-        console.log('succesrUri', successURI);
-
         if (Platform.OS === 'ios') {
           await getTextFromImageIos(successURI, index);
         }
@@ -85,10 +226,9 @@ export default async function readImage(uri: string, isGK: boolean) {
       .catch((error) => console.log('Error caught in this.cropImage:', error));
   };
 
-  let scale = 1920 / 1920;
   // let cropProfile = {
-  //   offset: {x: 585 / scale, y: 235 / scale},
-  //   size: {width: 166 / scale, height: 166 / scale},
+  //   offset: {x: 585, y: 235},
+  //   size: {width: 166, height: 166},
   // };
 
   // this.cropProfileIMG(cropProfile);
@@ -97,60 +237,62 @@ export default async function readImage(uri: string, isGK: boolean) {
   if (!isGK) {
     cropData = [
       {
-        offset: {x: 1029 / scale, y: 240 / scale},
-        size: {width: 195 / scale, height: 96 / scale},
+        offset: {x: 1029, y: 240},
+        size: {width: 195, height: 96},
       },
       {
-        offset: {x: 802 / scale, y: 484 / scale},
-        size: {width: 120 / scale, height: 72 / scale},
+        offset: {x: 802, y: 484},
+        size: {width: 120, height: 72},
+      },
+
+      {
+        offset: {x: 802, y: 592},
+        size: {width: 120, height: 180},
       },
       {
-        offset: {x: 802 / scale, y: 592 / scale},
-        size: {width: 120 / scale, height: 180 / scale},
+        offset: {x: 802, y: 808},
+        size: {width: 120, height: 108},
       },
       {
-        offset: {x: 802 / scale, y: 808 / scale},
-        size: {width: 120 / scale, height: 108 / scale},
+        offset: {x: 1549, y: 484},
+        size: {width: 120, height: 108},
       },
       {
-        offset: {x: 1549 / scale, y: 484 / scale},
-        size: {width: 120 / scale, height: 108 / scale},
+        offset: {x: 1549, y: 628},
+        size: {width: 120, height: 72},
       },
       {
-        offset: {x: 1549 / scale, y: 628 / scale},
-        size: {width: 120 / scale, height: 72 / scale},
-      },
-      {
-        offset: {x: 1549 / scale, y: 736 / scale},
-        size: {width: 120 / scale, height: 108 / scale},
+        offset: {x: 1549, y: 736},
+        size: {width: 120, height: 108},
       },
     ];
   } else {
     cropData = [
       {
-        offset: {x: 1029 / scale, y: 240 / scale},
-        size: {width: 195 / scale, height: 96 / scale},
+        offset: {x: 1029, y: 240},
+        size: {width: 195, height: 96},
       },
       {
-        offset: {x: 802 / scale, y: 448 / scale},
-        size: {width: 120 / scale, height: 144 / scale},
+        offset: {x: 802, y: 448},
+        size: {width: 120, height: 144},
       },
       {
-        offset: {x: 1549 / scale, y: 436 / scale},
-        size: {width: 120 / scale, height: 180 / scale},
+        offset: {x: 1549, y: 436},
+        size: {width: 120, height: 180},
       },
       {
-        offset: {x: 1549 / scale, y: 652 / scale},
-        size: {width: 120 / scale, height: 72 / scale},
+        offset: {x: 1549, y: 652},
+        size: {width: 120, height: 72},
       },
       {
-        offset: {x: 1549 / scale, y: 760 / scale},
-        size: {width: 120 / scale, height: 108 / scale},
+        offset: {x: 1549, y: 760},
+        size: {width: 120, height: 108},
       },
     ];
   }
 
-  cropData.map((data, index) => {
-    cropImage(data, index);
-  });
+  for (const [index, data] of Object.entries(cropData)) {
+    await cropImage(data, Number(index));
+  }
+  console.log('final res', ocrResult);
 }
