@@ -20,6 +20,7 @@
     "@expo/react-native-action-sheet": "^3.9.0",
     "@lingui/react": "^3.7.2",
     "@react-native-async-storage/async-storage": "^1.14.1",
+    "@react-native-community/image-editor": "^2.3.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/analytics": "^11.1.2",
     "@react-native-firebase/app": "^11.1.2",
@@ -37,6 +38,7 @@
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-bootsplash": "^3.2.0",
+    "react-native-fs": "^2.16.6",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-image-picker": "^3.3.2",
     "react-native-image-viewing": "^0.2.0",
@@ -48,6 +50,7 @@
     "react-native-sectioned-multi-select": "^0.8.1",
     "react-native-size-matters": "^0.4.0",
     "react-native-tab-view": "^3.0.0",
+    "react-native-tesseract-ocr": "^2.0.1",
     "react-native-vector-icons": "^7.1.0"
   },
   "devDependencies": {

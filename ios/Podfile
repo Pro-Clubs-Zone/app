@@ -13,7 +13,8 @@ target 'ProClubsZone' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
-
+  pod 'tesseract-objc/eng', :git => 'https://github.com/ziyafenn/tesseract-objc-prz.git'
+  pod 'GPUImage'
   target 'ProClubsZoneTests' do
     inherit! :complete
     # Pods for testing

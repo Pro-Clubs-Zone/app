@@ -23,6 +23,7 @@ import SwitchLabel from '../../components/switch';
 import {GoalkeeperStats, OutfieldPlayerStats} from '../../utils/interface';
 import addPlayerStats from './functions/onAddPLayerStats';
 import {AuthContext} from '../../context/authContext';
+import readImage from './functions/readImage';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Stats'>;
 
@@ -158,13 +159,14 @@ export default function SubmitStats({navigation}: Props) {
   };
 
   const onSubmitStats = async () => {
-    setLoading(true);
-    await addPlayerStats(matchData, outfieldPlayerStats, uid, isGK).then(
-      async () => {
-        await analytics().logEvent('match_submit_stats');
-        showAlert();
-      },
-    );
+    //  setLoading(true);
+    await readImage(images[0].uri, isGK);
+    // await addPlayerStats(matchData, outfieldPlayerStats, uid, isGK).then(
+    //   async () => {
+    //     await analytics().logEvent('match_submit_stats');
+    //     showAlert();
+    //   },
+    // );
   };
 
   return (
