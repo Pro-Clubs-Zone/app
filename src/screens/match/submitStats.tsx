@@ -20,10 +20,10 @@ import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import Toast from '../../components/toast';
 import SwitchLabel from '../../components/switch';
-import {GoalkeeperStats, OutfieldPlayerStats} from '../../utils/interface';
 import addPlayerStats from './functions/onAddPLayerStats';
 import {AuthContext} from '../../context/authContext';
 import readImage from './functions/readImage';
+import ImageEditor from '@react-native-community/image-editor';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Stats'>;
 
@@ -100,7 +100,7 @@ export default function SubmitStats({navigation}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-
+  const [profileImage, setProfileImage] = useState<string>();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -151,6 +151,26 @@ export default function SubmitStats({navigation}: Props) {
     }
   };
 
+  const updateProfilePic = async () => {
+    const cropData = {
+      offset: {x: 585, y: 235},
+      size: {width: 166, height: 166},
+    };
+
+    const screenshotBucket = storage();
+    const reference = screenshotBucket.ref(`/app/player-img/${uid}`);
+
+    await ImageEditor.cropImage(images[0].uri, cropData)
+      .then(async (successURI) => {
+        const pathToFile = successURI;
+        const task = reference.putFile(pathToFile);
+        await task.then(() => console.log('profile pic uploaded'));
+      })
+      .catch((error) =>
+        console.log('Error caught while cropping profile pic', error),
+      );
+  };
+
   const onRemoveThumb = (seletectedThumbIndex: number) => {
     const updatedImages = images.filter(
       (image, i) => i !== seletectedThumbIndex,
@@ -166,6 +186,9 @@ export default function SubmitStats({navigation}: Props) {
           async () => {
             await analytics().logEvent('match_submit_stats');
             await uploadScreenshots();
+            if (updateImage) {
+              await updateProfilePic();
+            }
             showAlert();
           },
         ),

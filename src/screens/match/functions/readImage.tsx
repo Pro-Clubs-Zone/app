@@ -260,15 +260,10 @@ export default async function readImage(uri: string, isGK: boolean) {
         //     this.getTextFromImageAndroid(successURI, index);
         //   }
       })
-      .catch((error) => console.log('Error caught in this.cropImage:', error));
+      .catch((error) =>
+        console.log('Error caught while cropping stats', error),
+      );
   };
-
-  // let cropProfile = {
-  //   offset: {x: 585, y: 235},
-  //   size: {width: 166, height: 166},
-  // };
-
-  // this.cropProfileIMG(cropProfile);
 
   let cropData: ImageCropData[] = [];
   if (!isGK) {
