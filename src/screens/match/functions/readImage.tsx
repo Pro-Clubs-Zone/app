@@ -1,5 +1,5 @@
 import {ImageCropData, NativeModules, Platform} from 'react-native';
-import RNTesseractOcr from 'react-native-tesseract-ocr';
+import TesseractOcr from 'react-native-tesseract-ocr';
 import ImageEditor from '@react-native-community/image-editor';
 import RNFS from 'react-native-fs';
 import {
@@ -206,47 +206,69 @@ export default async function readImage(uri: string, isGK: boolean) {
     }
   };
 
+  const postOCR = (result: string, index: number) => {
+    let convertedData: string[] = [];
+    let val = '';
+    for (let i = 0; i < result.length; i++) {
+      if (result[i] !== ' ' && result[i] !== '\n' && result[i] !== '↵') {
+        if (result[i] === 'D' || result[i] === 'U' || result[i] === '—') {
+          val = val + '0';
+        } else if (result[i] === 'S') {
+          val = val + '5';
+        } else {
+          val = val + result[i];
+        }
+      }
+
+      if (Platform.OS === 'ios') {
+        if ((result[i] === '' || result[i] === '\n') && val !== '') {
+          convertedData.push(val);
+          val = '';
+        }
+      } else {
+        if (
+          (result[i] === '' || result[i] === '\n' || result.length - 1 === i) &&
+          val !== ''
+        ) {
+          convertedData.push(val);
+          val = '';
+        }
+      }
+    }
+
+    let formattedData: string[] = [];
+    for (let i = 0; i < convertedData.length; i++) {
+      let trimmed = convertedData[i].split('/');
+      trimmed.map((obj) => {
+        formattedData.push(obj);
+      });
+    }
+    const sortedData = sortStats(formattedData, index);
+
+    playerStats = {...playerStats, ...sortedData};
+  };
+
+  const getTextFromImageAndroid = async (croppedUri: string, index: number) => {
+    const tessOptions = {
+      whitelist: '1234567890/.',
+      blacklist: null,
+    };
+
+    const strippedUri = croppedUri.replace('file://', '');
+
+    await TesseractOcr.recognize(strippedUri, 'eng', tessOptions)
+      .then((result: string) => postOCR(result, index))
+      .catch((err) => console.log('OCR Error: ', err));
+  };
+
   const getTextFromImageIos = async (croppedUri: string, index: number) => {
     //  let statSection: string[][] = [];
     //  let imgUri = 'file:///' + croppedUri.replace('file://', '');
     await RNFS.readFile(croppedUri, 'base64').then(async (res) => {
       const base64 = 'data:image/png;base64,' + res;
       await RNImageOCR.recognize(base64)
-        .then((result: string) => {
-          let convertedData: string[] = [];
-          let val = '';
-          for (let i = 0; i < result.length; i++) {
-            if (result[i] !== ' ' && result[i] !== '\n' && result[i] !== '↵') {
-              if (result[i] === 'D' || result[i] === 'U' || result[i] === '—') {
-                val = val + '0';
-              } else if (result[i] === 'S') {
-                val = val + '5';
-              } else {
-                val = val + result[i];
-              }
-            }
-
-            if ((result[i] === '' || result[i] === '\n') && val !== '') {
-              convertedData.push(val);
-              val = '';
-            }
-          }
-
-          let formattedData: string[] = [];
-          for (let i = 0; i < convertedData.length; i++) {
-            let trimmed = convertedData[i].split('/');
-            trimmed.map((obj) => {
-              formattedData.push(obj);
-            });
-          }
-          console.log('formatted', formattedData);
-          const sortedData = sortStats(formattedData, index);
-
-          playerStats = {...playerStats, ...sortedData};
-        })
-        .catch((err) => {
-          console.log('OCR Error: ', err);
-        });
+        .then((result: string) => postOCR(result, index))
+        .catch((err) => console.log('OCR Error: ', err));
     });
   };
 
@@ -255,10 +277,9 @@ export default async function readImage(uri: string, isGK: boolean) {
       .then(async (successURI) => {
         if (Platform.OS === 'ios') {
           await getTextFromImageIos(successURI, index);
+        } else {
+          await getTextFromImageAndroid(successURI, index);
         }
-        //   else {
-        //     this.getTextFromImageAndroid(successURI, index);
-        //   }
       })
       .catch((error) =>
         console.log('Error caught while cropping stats', error),

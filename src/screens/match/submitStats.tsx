@@ -100,7 +100,6 @@ export default function SubmitStats({navigation}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [profileImage, setProfileImage] = useState<string>();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
@@ -179,19 +178,20 @@ export default function SubmitStats({navigation}: Props) {
   };
 
   const onSubmitStats = async () => {
-    setLoading(true);
+    //  setLoading(true);
     await readImage(images[0].uri, isGK).then(
-      async (playerStats) =>
-        await addPlayerStats(matchData, playerStats, uid, isGK).then(
-          async () => {
-            await analytics().logEvent('match_submit_stats');
-            await uploadScreenshots();
-            if (updateImage) {
-              await updateProfilePic();
-            }
-            showAlert();
-          },
-        ),
+      async (playerStats) => console.log(playerStats),
+
+      // await addPlayerStats(matchData, playerStats, uid, isGK).then(
+      //   async () => {
+      //     await analytics().logEvent('match_submit_stats');
+      //     await uploadScreenshots();
+      //     if (updateImage) {
+      //       await updateProfilePic();
+      //     }
+      //     showAlert();
+      //   },
+      // ),
     );
   };
 
@@ -250,11 +250,11 @@ export default function SubmitStats({navigation}: Props) {
             value={isGK}
             onValueChange={() => setIsGK(!isGK)}
           />
-          <SwitchLabel
+          {/* <SwitchLabel
             title={i18n._(t`Update my player image`)}
             value={updateImage}
             onValueChange={() => setUpdateImage(!updateImage)}
-          />
+          /> */}
         </View>
         <BigButton title={i18n._(t`Submit Stats`)} onPress={onSubmitStats} />
       </ScrollView>
