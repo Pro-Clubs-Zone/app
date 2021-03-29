@@ -143,7 +143,7 @@ export default function SubmitStats({navigation}: Props) {
         screenshotBucket = storage();
       }
       const reference = screenshotBucket.ref(
-        `/${matchData.leagueId}/${matchData.matchId}/${matchData.clubId}/facts/${imageNames[index]}`,
+        `/${matchData.leagueId}/${matchData.matchId}/${matchData.clubId}/performance/${uid}`,
       );
       const pathToFile = image.uri;
       const task = reference.putFile(pathToFile);
@@ -165,6 +165,7 @@ export default function SubmitStats({navigation}: Props) {
         await addPlayerStats(matchData, playerStats, uid, isGK).then(
           async () => {
             await analytics().logEvent('match_submit_stats');
+            await uploadScreenshots();
             showAlert();
           },
         ),

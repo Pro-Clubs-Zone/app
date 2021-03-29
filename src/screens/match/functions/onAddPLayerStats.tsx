@@ -33,7 +33,7 @@ const addPlayerStats = async (
   let totalStats: GoalkeeperStats | OutfieldPlayerStats = {};
 
   const commonStats: CommonPlayerStats = {
-    rating: firestore.FieldValue.increment(playerStats.rating),
+    rating: firestore.FieldValue.arrayUnion(playerStats.rating),
     assists: firestore.FieldValue.increment(playerStats.assists),
     completedShortPasses: firestore.FieldValue.increment(
       playerStats.completedShortPasses,

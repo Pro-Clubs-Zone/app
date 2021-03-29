@@ -1,19 +1,16 @@
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
-import {IMatch, IMatchNavData, PlayerStats} from '../../../utils/interface';
+import {IMatch, IMatchNavData} from '../../../utils/interface';
+import {PlayerStats} from '../submitMatch';
 
 const db = firestore();
 const firFunc = functions();
-
-interface SelectMenu {
-  id: string;
-}
 
 const submitMatch = async (
   homeScore: string,
   awayScore: string,
   initialMatchData: IMatchNavData,
-  players: Array<SelectMenu & PlayerStats>,
+  players: Array<PlayerStats>,
 ): Promise<string> => {
   const teamSubmission = {
     [initialMatchData.clubId]: {
