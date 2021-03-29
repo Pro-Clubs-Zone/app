@@ -1,5 +1,11 @@
-import React, {useContext, useState} from 'react';
-import {ScrollView, View, Alert, ImageURISource} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {
+  ScrollView,
+  View,
+  Alert,
+  ImageURISource,
+  PermissionsAndroid,
+} from 'react-native';
 import {MatchStackType} from './match';
 import ScoreBoard from '../../components/scoreboard';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
@@ -109,6 +115,35 @@ export default function SubmitStats({navigation}: Props) {
   const matchData = matchContext.match;
   const uid = auth.uid;
 
+  const requestAndroidPermission = async () => {
+    try {
+      const askPermission = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      ]);
+      const granted = askPermission['android.permission.READ_EXTERNAL_STORAGE'];
+      if (granted === 'granted') {
+        return true;
+      }
+      if (granted === 'never_ask_again') {
+        Alert.alert(
+          i18n._(t`Can't access storage`),
+          i18n._(
+            t`You have denied the app access to storage. To change, give the permission from the Android app info menu.`,
+          ),
+          [
+            {
+              text: i18n._(t`Close`),
+            },
+          ],
+          {cancelable: false},
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   const showAlert = () => {
     Alert.alert(
       i18n._(t`Stats Submitted`),
@@ -178,21 +213,18 @@ export default function SubmitStats({navigation}: Props) {
   };
 
   const onSubmitStats = async () => {
-    //  setLoading(true);
-    await readImage(images[0].uri, isGK).then(
-      async (playerStats) => console.log(playerStats),
+    setLoading(true);
 
-      // await addPlayerStats(matchData, playerStats, uid, isGK).then(
-      //   async () => {
-      //     await analytics().logEvent('match_submit_stats');
-      //     await uploadScreenshots();
-      //     if (updateImage) {
-      //       await updateProfilePic();
-      //     }
-      //     showAlert();
-      //   },
-      // ),
-    );
+    await readImage(images[0].uri, isGK).then(async (playerStats) => {
+      await addPlayerStats(matchData, playerStats, uid, isGK).then(async () => {
+        await analytics().logEvent('match_submit_stats');
+        await uploadScreenshots();
+        if (updateImage) {
+          await updateProfilePic();
+        }
+        showAlert();
+      });
+    });
   };
 
   return (
@@ -226,22 +258,26 @@ export default function SubmitStats({navigation}: Props) {
             setImageViewerVisible(true);
           }}
           onRemove={(i) => onRemoveThumb(i)}
-          onUpload={() =>
-            launchImageLibrary(
-              {
-                mediaType: 'photo',
-                maxWidth: 1920,
-                maxHeight: 1280,
-              },
-              (res) => {
-                if (res.uri) {
-                  setImages([...images, {uri: res.uri}]);
-                  setImageNames([...imageNames, res.fileName!]);
-                  console.log(res);
-                }
-              },
-            )
-          }
+          onUpload={() => {
+            requestAndroidPermission().then(
+              (permission) =>
+                permission === true &&
+                launchImageLibrary(
+                  {
+                    mediaType: 'photo',
+                    maxWidth: 1920,
+                    maxHeight: 1280,
+                  },
+                  (res) => {
+                    if (res.uri) {
+                      setImages([...images, {uri: res.uri}]);
+                      setImageNames([...imageNames, res.fileName!]);
+                      console.log(res);
+                    }
+                  },
+                ),
+            );
+          }}
         />
         <ListHeading col1={i18n._(t`Options`)} />
         <View style={styles.options}>
