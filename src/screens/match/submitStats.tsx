@@ -1,10 +1,11 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   ScrollView,
   View,
   Alert,
   ImageURISource,
   PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import {MatchStackType} from './match';
 import ScoreBoard from '../../components/scoreboard';
@@ -115,46 +116,19 @@ export default function SubmitStats({navigation}: Props) {
   const matchData = matchContext.match;
   const uid = auth.uid;
 
-  const requestAndroidPermission = async () => {
-    try {
-      const askPermission = await PermissionsAndroid.requestMultiple([
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-      ]);
-      const granted = askPermission['android.permission.READ_EXTERNAL_STORAGE'];
-      if (granted === 'granted') {
-        return true;
-      }
-      if (granted === 'never_ask_again') {
-        Alert.alert(
-          i18n._(t`Can't access storage`),
-          i18n._(
-            t`You have denied the app access to storage. To change, give the permission from the Android app info menu.`,
-          ),
-          [
-            {
-              text: i18n._(t`Close`),
-            },
-          ],
-          {cancelable: false},
-        );
-      }
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-
-  const showAlert = () => {
+  const showAlert = (title, body, success) => {
     Alert.alert(
-      i18n._(t`Stats Submitted`),
-      i18n._(t`All good`),
+      title,
+      body,
       [
         {
           text: i18n._(t`Close`),
           onPress: () => {
-            setLoading(false);
-            navigation.popToTop();
-            navigation.goBack();
+            if (success) {
+              setLoading(false);
+              navigation.popToTop();
+              navigation.goBack();
+            }
           },
         },
       ],
@@ -162,13 +136,42 @@ export default function SubmitStats({navigation}: Props) {
     );
   };
 
-  const onShowToast = (message: string) => {
-    setShowToast(true);
-    setToastMessage(message);
-    setTimeout(() => {
-      setShowToast(false);
-    }, 1000);
+  const requestAndroidPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const askPermission = await PermissionsAndroid.requestMultiple([
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        ]);
+        const granted =
+          askPermission['android.permission.READ_EXTERNAL_STORAGE'];
+        if (granted === 'granted') {
+          return true;
+        }
+        if (granted === 'never_ask_again') {
+          showAlert(
+            i18n._(t`Can't access storage`),
+            i18n._(
+              t`You have denied the app access to storage. To change, give the permission from the Android app info menu.`,
+            ),
+            false,
+          );
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    } else {
+      return true;
+    }
   };
+
+  // const onShowToast = (message: string) => {
+  //   setShowToast(true);
+  //   setToastMessage(message);
+  //   setTimeout(() => {
+  //     setShowToast(false);
+  //   }, 1000);
+  // };
 
   const uploadScreenshots = async () => {
     for (const [index, image] of images.entries()) {
@@ -213,18 +216,33 @@ export default function SubmitStats({navigation}: Props) {
   };
 
   const onSubmitStats = async () => {
-    setLoading(true);
-
-    await readImage(images[0].uri, isGK).then(async (playerStats) => {
-      await addPlayerStats(matchData, playerStats, uid, isGK).then(async () => {
-        await analytics().logEvent('match_submit_stats');
-        await uploadScreenshots();
-        if (updateImage) {
-          await updateProfilePic();
-        }
-        showAlert();
+    if (images[0].width === 1920 && images[0].height === 1080) {
+      setLoading(true);
+      await readImage(images[0].uri, isGK).then(async (playerStats) => {
+        await addPlayerStats(matchData, playerStats, uid, isGK).then(
+          async () => {
+            await analytics().logEvent('match_submit_stats');
+            await uploadScreenshots();
+            if (updateImage) {
+              await updateProfilePic();
+            }
+            showAlert(
+              i18n._(t`Stats submitted`),
+              i18n._(t`Your player performance stats are now published`),
+              true,
+            );
+          },
+        );
       });
-    });
+    } else {
+      showAlert(
+        i18n._(t`Wrong image size`),
+        i18n._(
+          t`There is something wrong with your image size. Please send this image to your league admin or PRZ team`,
+        ),
+        false,
+      );
+    }
   };
 
   return (
@@ -266,13 +284,15 @@ export default function SubmitStats({navigation}: Props) {
                   {
                     mediaType: 'photo',
                     maxWidth: 1920,
-                    maxHeight: 1280,
+                    maxHeight: 1080,
                   },
                   (res) => {
                     if (res.uri) {
-                      setImages([...images, {uri: res.uri}]);
+                      setImages([
+                        ...images,
+                        {uri: res.uri, width: res.width, height: res.height},
+                      ]);
                       setImageNames([...imageNames, res.fileName!]);
-                      console.log(res);
                     }
                   },
                 ),
