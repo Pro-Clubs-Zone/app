@@ -244,7 +244,7 @@ export default async function readImage(uri: string, isGK: boolean) {
       });
     }
 
-    if (isGK && index === 1 && formattedData.length === 7) {
+    if (isGK && index === 3 && formattedData.length === 1) {
       throw new Error(
         'If you played as an outfield player, disable switch in options below.',
       );

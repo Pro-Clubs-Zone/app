@@ -35,9 +35,9 @@ export default function SwitchLabel({
         )}
       </View>
       <Switch
-        trackColor={{false: APP_COLORS.Dark, true: APP_COLORS.Accent}}
+        trackColor={{false: APP_COLORS.Secondary, true: APP_COLORS.Accent}}
         thumbColor={APP_COLORS.Primary}
-        ios_backgroundColor={APP_COLORS.Dark}
+        ios_backgroundColor={APP_COLORS.Secondary}
         //  onValueChange={toggleSwitch}
         {...props}
       />
