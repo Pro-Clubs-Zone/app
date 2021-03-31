@@ -243,6 +243,18 @@ export default async function readImage(uri: string, isGK: boolean) {
         formattedData.push(obj);
       });
     }
+
+    if (isGK && index === 1 && formattedData.length === 7) {
+      throw new Error(
+        'If you played as an outfield player, disable switch in options below.',
+      );
+    }
+    if (!isGK && index === 2 && formattedData.length === 0) {
+      throw new Error(
+        'If you played as a goalkeeper, enable switch in options below.',
+      );
+    }
+
     const sortedData = sortStats(formattedData, index);
 
     playerStats = {...playerStats, ...sortedData};
@@ -253,37 +265,38 @@ export default async function readImage(uri: string, isGK: boolean) {
       whitelist: '1234567890/.',
       blacklist: null,
     };
-
     const strippedUri = croppedUri.replace('file://', '');
 
-    await TesseractOcr.recognize(strippedUri, 'eng', tessOptions)
-      .then((result: string) => postOCR(result, index))
-      .catch((err) => console.log('OCR Error: ', err));
+    try {
+      const ocr = await TesseractOcr.recognize(strippedUri, 'eng', tessOptions);
+      postOCR(ocr, index);
+    } catch (error) {
+      throw Error(error.message);
+    }
   };
 
   const getTextFromImageIos = async (croppedUri: string, index: number) => {
-    //  let statSection: string[][] = [];
-    //  let imgUri = 'file:///' + croppedUri.replace('file://', '');
-    await RNFS.readFile(croppedUri, 'base64').then(async (res) => {
-      const base64 = 'data:image/png;base64,' + res;
-      await RNImageOCR.recognize(base64)
-        .then((result: string) => postOCR(result, index))
-        .catch((err) => console.log('OCR Error: ', err));
-    });
+    try {
+      const readFile = await RNFS.readFile(croppedUri, 'base64');
+      const base64 = 'data:image/png;base64,' + readFile;
+      const ocr = await RNImageOCR.recognize(base64);
+      postOCR(ocr, index);
+    } catch (error) {
+      throw Error(error.message);
+    }
   };
 
   const cropImage = async (cropData: ImageCropData, index: number) => {
-    await ImageEditor.cropImage(uri, cropData)
-      .then(async (successURI) => {
-        if (Platform.OS === 'ios') {
-          await getTextFromImageIos(successURI, index);
-        } else {
-          await getTextFromImageAndroid(successURI, index);
-        }
-      })
-      .catch((error) =>
-        console.log('Error caught while cropping stats', error),
-      );
+    try {
+      const editImage = await ImageEditor.cropImage(uri, cropData);
+      if (Platform.OS === 'ios') {
+        await getTextFromImageIos(editImage, index);
+      } else {
+        await getTextFromImageAndroid(editImage, index);
+      }
+    } catch (error) {
+      throw Error(error.message);
+    }
   };
 
   let cropData: ImageCropData[] = [];
@@ -345,7 +358,11 @@ export default async function readImage(uri: string, isGK: boolean) {
   }
 
   for (const [index, data] of Object.entries(cropData)) {
-    await cropImage(data, Number(index));
+    try {
+      await cropImage(data, Number(index));
+    } catch (error) {
+      throw Error(error.message);
+    }
   }
 
   return playerStats;

@@ -128,6 +128,8 @@ export default function SubmitStats({navigation}: Props) {
               setLoading(false);
               navigation.popToTop();
               navigation.goBack();
+            } else {
+              setLoading(false);
             }
           },
         },
@@ -164,14 +166,6 @@ export default function SubmitStats({navigation}: Props) {
       return true;
     }
   };
-
-  // const onShowToast = (message: string) => {
-  //   setShowToast(true);
-  //   setToastMessage(message);
-  //   setTimeout(() => {
-  //     setShowToast(false);
-  //   }, 1000);
-  // };
 
   const uploadScreenshots = async () => {
     for (const [index, image] of images.entries()) {
@@ -218,27 +212,34 @@ export default function SubmitStats({navigation}: Props) {
   const onSubmitStats = async () => {
     if (images[0].width === 1920 && images[0].height === 1080) {
       setLoading(true);
-      await readImage(images[0].uri, isGK).then(async (playerStats) => {
-        await addPlayerStats(matchData, playerStats, uid, isGK).then(
-          async () => {
-            await analytics().logEvent('match_submit_stats');
-            await uploadScreenshots();
-            if (updateImage) {
-              await updateProfilePic();
-            }
-            showAlert(
-              i18n._(t`Stats submitted`),
-              i18n._(t`Your player performance stats are now published`),
-              true,
-            );
-          },
+      try {
+        if (updateImage) {
+          updateProfilePic();
+        }
+        const ocrResult = await readImage(images[0].uri, isGK);
+        console.log(ocrResult);
+
+        await addPlayerStats(matchData, ocrResult, uid, isGK);
+        await uploadScreenshots();
+        analytics().logEvent('match_submit_stats');
+        showAlert(
+          i18n._(t`Stats submitted`),
+          i18n._(t`Your player performance stats are now published`),
+          true,
         );
-      });
+      } catch (error) {
+        console.log(error);
+        showAlert(
+          i18n._(t`Problem processing image`),
+          i18n._(t`${error.message}`),
+          false,
+        );
+      }
     } else {
       showAlert(
-        i18n._(t`Wrong image size`),
+        i18n._(t`Wrong image`),
         i18n._(
-          t`There is something wrong with your image size. Please send this image to your league admin or PRZ team`,
+          t`There is something wrong with your image. Please send this image to your league admin or PRZ team`,
         ),
         false,
       );
@@ -249,7 +250,7 @@ export default function SubmitStats({navigation}: Props) {
     <>
       <FullScreenLoading
         visible={loading}
-        label={i18n._(t`Submitting Match...`)}
+        label={i18n._(t`Submitting Performance Stats...`)}
       />
       <ImageView
         images={images}
