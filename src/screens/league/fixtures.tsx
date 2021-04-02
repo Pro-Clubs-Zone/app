@@ -69,7 +69,7 @@ function UpcomingFixtures({navigation}: Props) {
             matchId={item.data.id}
             homeTeamName={item.data.homeTeamName}
             awayTeamName={item.data.awayTeamName}
-            conflict={item.data.conflict}
+            conflict={item.data.conflict || item.data.motmConflict}
             onPress={() =>
               navigation.navigate('Match', {
                 matchData: item.data,

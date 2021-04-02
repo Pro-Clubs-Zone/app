@@ -83,6 +83,7 @@ export interface IMatch {
   teams?: [string, string];
   published: boolean;
   conflict: boolean;
+  motmConflict: boolean;
   result?: {[team: string]: number};
   players?: {[id: string]: boolean};
 }

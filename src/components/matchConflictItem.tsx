@@ -8,9 +8,8 @@ import {t} from '@lingui/macro';
 import i18n from '../utils/i18n';
 
 type Props = {
-  player?: string;
-  playerRating?: number;
-  motm?: boolean;
+  motm?: string;
+  resultConflict: boolean;
   homeTeam: string;
   awayTeam: string;
   homeScore: number;
@@ -19,37 +18,24 @@ type Props = {
   onShowProof: () => void;
   header: string;
   proofDisabled: boolean;
+  motmConflict: boolean;
 };
 
 //---------- Conflict Item ----------//
 
 const MatchConflictItem = (props: Props) => (
-  <View
-    style={[
-      styles.conflictContainer,
-      {
-        //   marginBottom: props.marginBottom ? verticalScale(32) : 0,
-      },
-    ]}>
+  <View style={styles.conflictContainer}>
     <View>
       <ListHeading col1={props.header} />
-      {/* {props.motm ? (
-        <View pointerEvents="none">
-          <OneLine title={props.player} key2={props.playerRating} />
-        </View>
-      ) : ( */}
-      <OneLine
-        //img={props.homeLogo ? props.homeLogo : defaultLogo}
-
-        title={props.homeTeam}
-        key1={props.homeScore}
-      />
-      <OneLine
-        //img={props.awayLogo ? props.awayLogo : defaultLogo}
-        title={props.awayTeam}
-        key1={props.awayScore}
-      />
-      {/* )} */}
+      {props.resultConflict && (
+        <>
+          <OneLine title={props.homeTeam} key1={props.homeScore} />
+          <OneLine title={props.awayTeam} key1={props.awayScore} />
+        </>
+      )}
+      {props.motmConflict && (
+        <OneLine title={i18n._(t`MOTM`)} rightIcon="check" />
+      )}
     </View>
     <View style={styles.conflictButtons}>
       <MinButton
@@ -60,10 +46,7 @@ const MatchConflictItem = (props: Props) => (
         }
         disabled={props.proofDisabled}
       />
-      <MinButton
-        onPress={props.onPickResult}
-        title={props.motm ? i18n._(t`Pick Player`) : i18n._(t`Pick Result`)} // To-Do: show success confrimation
-      />
+      <MinButton onPress={props.onPickResult} title={i18n._(t`Pick Result`)} />
     </View>
   </View>
 );

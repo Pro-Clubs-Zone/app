@@ -157,40 +157,33 @@ export default function Home({navigation}: Props) {
   };
 
   useEffect(() => {
-    if (user) {
+    const fetchData = async () => {
       const userRef = db.collection('users').doc(uid!);
       let userInfo: IUser;
-      userRef
-        .get()
-        .then(async (doc) => {
-          setLoading(true);
-          userInfo = doc.data() as IUser;
-          console.log('get data');
-          //  setUsername(userInfo.username);
-          if (doc.exists && userInfo.leagues) {
-            await getLeaguesClubs(userInfo).then(async (data) => {
-              const {updatedUserData, userLeagues} = data;
-              context.setUserData(updatedUserData);
-              context.setUserLeagues(userLeagues);
-              await getUserMatches(updatedUserData, userLeagues, uid)
-                .then((matchesData) => {
-                  context.setUserMatches(matchesData);
-                  //  setUpcomingMatches(matchesData);
-                })
-                .then(() => {
-                  getClubRequests(userLeagues);
-                  getLeagueRequests(userLeagues);
-                });
-            });
-          } else {
-            console.log('no leagues', loading);
-            context.setUserData(userInfo);
-          }
-        })
-        .then(() => {
-          console.log('set loading ');
-          setLoading(false);
-        });
+      setLoading(true);
+      const doc = await userRef.get();
+      userInfo = doc.data() as IUser;
+      if (doc.exists && userInfo.leagues) {
+        const leagueAndClubsData = await getLeaguesClubs(userInfo);
+        const {updatedUserData, userLeagues} = leagueAndClubsData;
+        context.setUserData(updatedUserData);
+        context.setUserLeagues(userLeagues);
+        const matchesData = await getUserMatches(
+          updatedUserData,
+          userLeagues,
+          uid,
+        );
+        context.setUserMatches(matchesData);
+        getClubRequests(userLeagues);
+        getLeagueRequests(userLeagues);
+      } else {
+        console.log('no leagues', loading);
+        context.setUserData(userInfo);
+      }
+      setLoading(false);
+    };
+    if (user) {
+      fetchData();
     }
   }, [user]);
 
@@ -246,7 +239,7 @@ export default function Home({navigation}: Props) {
                   })
                 }
                 submitted={!!item.data.submissions?.[item.data.clubId]}
-                conflict={item.data.conflict}
+                conflict={item.data.conflict || item.data.motmConflict}
                 published={item.data.published}
               />
             )}

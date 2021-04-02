@@ -298,7 +298,7 @@ export default function UpcomingMatch({navigation}: Props) {
           navigation.navigate('Submit Match');
         }}
       />
-      {matchData.conflict && matchData.admin ? (
+      {(matchData.conflict || matchData.motmConflict) && matchData.admin ? (
         <MatchConflict
           data={matchData}
           onSelectHome={() => {
@@ -390,9 +390,12 @@ const MatchConflict = ({
           awayTeam={data.awayTeamName}
           homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
           awayScore={data.submissions[data.homeTeamId][data.awayTeamId]}
+          motm={data.motmSubmissions[data.homeTeamId]}
           onPickResult={onSelectHome}
           onShowProof={onShowProofHome}
           proofDisabled={homeProofDisabled}
+          resultConflict={data.conflict}
+          motmConflict={data.motmConflict}
         />
         <MatchConflictItem
           header={i18n._(t`${data.awayTeamName} Submission`)}
@@ -400,9 +403,12 @@ const MatchConflict = ({
           awayTeam={data.awayTeamName}
           homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}
           awayScore={data.submissions[data.awayTeamId][data.awayTeamId]}
+          motm={data.motmSubmissions[data.awayTeamId]}
           onPickResult={onSelectAway}
           onShowProof={onShowProofAway}
           proofDisabled={awayProofDisabled}
+          resultConflict={data.conflict}
+          motmConflict={data.motmConflict}
         />
       </View>
     </ScrollView>
