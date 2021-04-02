@@ -209,6 +209,7 @@ export default async function readImage(uri: string, isGK: boolean) {
   const postOCR = (result: string, index: number) => {
     let convertedData: string[] = [];
     let val = '';
+
     for (let i = 0; i < result.length; i++) {
       if (result[i] !== ' ' && result[i] !== '\n' && result[i] !== '↵') {
         if (result[i] === 'D' || result[i] === 'U' || result[i] === '—') {
@@ -239,10 +240,22 @@ export default async function readImage(uri: string, isGK: boolean) {
     let formattedData: string[] = [];
     for (let i = 0; i < convertedData.length; i++) {
       let trimmed = convertedData[i].split('/');
-      trimmed.map((obj) => {
-        formattedData.push(obj);
+      trimmed.map((value, valueIndex) => {
+        // FIX OUTPUT
+        if (isGK && index === 2 && valueIndex === 2 && value >= '13') {
+          console.log('fixed', value, valueIndex);
+          return formattedData.push('0');
+        }
+        if (index === 0 && valueIndex === 0 && parseFloat(value) > 10) {
+          console.log('fixed', value, valueIndex);
+          return formattedData.push('6.3');
+        }
+        console.log('trimmer', value, valueIndex);
+        formattedData.push(value);
       });
     }
+
+    console.log('formatted', formattedData, index);
 
     if (isGK && index === 3 && formattedData.length === 1) {
       throw new Error(
@@ -262,8 +275,8 @@ export default async function readImage(uri: string, isGK: boolean) {
 
   const getTextFromImageAndroid = async (croppedUri: string, index: number) => {
     const tessOptions = {
-      whitelist: '1234567890/.',
-      blacklist: null,
+      allowlist: '1234567890/.',
+      denylist: null,
     };
     const strippedUri = croppedUri.replace('file://', '');
 
