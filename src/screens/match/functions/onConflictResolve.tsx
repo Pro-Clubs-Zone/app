@@ -5,15 +5,15 @@ const firFunc = functions();
 
 const onConflictResolve = async (
   data: IMatchNavData,
-  selectedResult: {},
-  conflict = false,
+  selectedTeam: string,
+  adminResolution = false,
 ): Promise<string> => {
   const resolveConflict = firFunc.httpsCallable('conflictResolution');
 
   return resolveConflict({
     match: data,
-    result: selectedResult,
-    conflict: conflict,
+    selectedTeam: selectedTeam,
+    adminResolution,
   })
     .then((response) => {
       return response.data;

@@ -62,7 +62,7 @@ function MatchResult({navigation}: Props) {
   const uid = user.uid;
 
   useEffect(() => {
-    if (uid in matchData.players) {
+    if (matchData.players && uid in matchData.players) {
       console.log('player participated', matchData);
       setIsPlayer(true);
     }
@@ -85,7 +85,9 @@ function MatchResult({navigation}: Props) {
 }
 
 function MatchScreenshots() {
-  const [matchImages, setMatchImages] = useState<ImageURISource[]>([]);
+  const [matchImages, setMatchImages] = useState<
+    Array<ImageURISource & {team: string}>
+  >([]);
   const [loading, setLoading] = useState(true);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
@@ -97,45 +99,47 @@ function MatchScreenshots() {
   // const windowHeight = useWindowDimensions().height;
 
   useEffect(() => {
-    let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
-    if (__DEV__) {
-      screenshotBucket = storage();
-    }
-    const homeRef = screenshotBucket.ref(
-      `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/facts`,
-    );
-    const awayRef = screenshotBucket.ref(
-      `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/facts`,
-    );
-    let homeImageUrls: ImageURISource[] = [];
-    let awayImageUrls: ImageURISource[] = [];
-    homeRef
-      .listAll()
-      .then(async (res) => {
-        for (const itemRef of res.items) {
-          await itemRef.getDownloadURL().then((url) => {
-            console.log(url);
-            homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
-          });
-        }
-      })
-      .then(() =>
-        awayRef
-          .listAll()
-          .then(async (res) => {
-            for (const itemRef of res.items) {
-              await itemRef.getDownloadURL().then((url) => {
-                console.log(url);
-                awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
-              });
-            }
-          })
-          .then(() => {
-            setMatchImages([...homeImageUrls, ...awayImageUrls]);
-            setLoading(false);
-          }),
+    const getImages = async () => {
+      let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
+      if (__DEV__) {
+        screenshotBucket = storage();
+      }
+      const homeRef = screenshotBucket.ref(
+        `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/facts`,
       );
-  }, []);
+      const awayRef = screenshotBucket.ref(
+        `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/facts`,
+      );
+      let homeImageUrls: Array<ImageURISource & {team: string}> = [];
+      let awayImageUrls: Array<ImageURISource & {team: string}> = [];
+
+      let [homeTeamImages, awayTeamImages] = await Promise.all([
+        homeRef.listAll(),
+        awayRef.listAll(),
+      ]);
+
+      //const homeTeamImages = await homeRef.listAll();
+      for (const itemRef of homeTeamImages.items) {
+        const url = await itemRef.getDownloadURL();
+        console.log(url);
+        homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
+      }
+      //const awayTeamImages = await awayRef.listAll();
+
+      for (const itemRef of awayTeamImages.items) {
+        const url = await itemRef.getDownloadURL();
+        console.log(url);
+        awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
+      }
+      setMatchImages([...homeImageUrls, ...awayImageUrls]);
+      setLoading(false);
+    };
+    try {
+      getImages();
+    } catch (error) {
+      console.log('error getting images');
+    }
+  }, [matchData]);
 
   const MatchImage = ({uri, index}: {uri: string; index: number}) => (
     <Pressable

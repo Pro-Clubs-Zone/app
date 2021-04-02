@@ -35,7 +35,7 @@ type Props = {
 
 export default function UpcomingMatch({navigation}: Props) {
   const [canSubmit, setCanSubmit] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<string>();
   const [homeImages, setHomeImages] = useState<ImageURISource[]>([]);
   const [awayImages, setAwayImages] = useState<ImageURISource[]>([]);
   const [matchImages, setMatchImages] = useState<ImageURISource[]>([]);
@@ -83,7 +83,7 @@ export default function UpcomingMatch({navigation}: Props) {
         {
           text: i18n._(t`Close`),
           onPress: () => {
-            setLoading(false);
+            setLoading(undefined);
             navigation.goBack();
           },
         },
@@ -94,16 +94,9 @@ export default function UpcomingMatch({navigation}: Props) {
 
   const onResolveMatch = () => {
     const resolveMatch = async (result: string) => {
-      const resultSubmission = {
-        [matchData.homeTeamId]:
-          result === 'home' ? 3 : result === 'draw' ? 1 : 0,
-        [matchData.awayTeamId]:
-          result === 'away' ? 3 : result === 'draw' ? 1 : 0,
-      };
-      setLoading(true);
-      await onConflictResolve(matchData, resultSubmission).then(() => {
-        showSuccessAlert();
-      });
+      setLoading(i18n._(t`Submitting Match...`));
+      await onConflictResolve(matchData, result, true);
+      showSuccessAlert();
     };
 
     const showAlert = (result: string) => {
@@ -209,48 +202,51 @@ export default function UpcomingMatch({navigation}: Props) {
   }, [leagueId]);
 
   useEffect(() => {
-    let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
-    if (__DEV__) {
-      screenshotBucket = storage();
-    }
+    const getImages = async () => {
+      let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
+      if (__DEV__) {
+        screenshotBucket = storage();
+      }
 
-    const homeRef = screenshotBucket.ref(
-      `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/facts`,
-    );
-    const awayRef = screenshotBucket.ref(
-      `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/facts`,
-    );
-    let homeImageUrls: ImageURISource[] = [];
-    let awayImageUrls: ImageURISource[] = [];
+      const homeRef = screenshotBucket.ref(
+        `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/facts`,
+      );
+      const awayRef = screenshotBucket.ref(
+        `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/facts`,
+      );
+      let homeImageUrls: Array<ImageURISource & {team: string}> = [];
+      let awayImageUrls: Array<ImageURISource & {team: string}> = [];
 
-    if (matchData.conflict && matchData.admin) {
-      homeRef
-        .listAll()
-        .then(async (res) => {
-          for (const itemRef of res.items) {
-            await itemRef.getDownloadURL().then((url) => {
-              console.log(url);
-              homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
-            });
-          }
-        })
-        .then(() =>
-          awayRef
-            .listAll()
-            .then(async (res) => {
-              for (const itemRef of res.items) {
-                await itemRef.getDownloadURL().then((url) => {
-                  console.log(url);
-                  awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
-                });
-              }
-            })
-            .then(() => {
-              setHomeImages(homeImageUrls);
-              setAwayImages(awayImageUrls);
-              setLoading(false);
-            }),
-        );
+      if ((matchData.conflict || matchData.motmConflict) && matchData.admin) {
+        setLoading(i18n._(t`Loading`));
+        let [homeTeamImages, awayTeamImages] = await Promise.all([
+          homeRef.listAll(),
+          awayRef.listAll(),
+        ]);
+
+        //  const homeTeamImages = await homeRef.listAll();
+        for (const itemRef of homeTeamImages.items) {
+          const url = await itemRef.getDownloadURL();
+          console.log(url);
+          homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
+        }
+
+        //const awayTeamImages = await awayRef.listAll();
+        for (const itemRef of awayTeamImages.items) {
+          const url = await itemRef.getDownloadURL();
+          console.log(url);
+          awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
+        }
+
+        setHomeImages(homeImageUrls);
+        setAwayImages(awayImageUrls);
+        setLoading(undefined);
+      }
+    };
+    try {
+      getImages();
+    } catch (error) {
+      console.log('error getting images');
     }
   }, [matchContext]);
 
@@ -264,15 +260,12 @@ export default function UpcomingMatch({navigation}: Props) {
     context.setUserData(userData);
   };
 
-  const onSelectResult = async (id: string) => {
-    setLoading(true);
-    await onConflictResolve(matchData, matchData.submissions[id]).then(
-      async () => {
-        await analytics().logEvent('match_resolve_conflict');
-        decrementConflictCounter();
-        showSuccessAlert();
-      },
-    );
+  const onSelectResult = async (teamID: string) => {
+    setLoading(i18n._(t`Submitting Match...`));
+    await onConflictResolve(matchData, teamID);
+    await analytics().logEvent('match_resolve_conflict');
+    decrementConflictCounter();
+    showSuccessAlert();
   };
 
   return (
@@ -280,10 +273,7 @@ export default function UpcomingMatch({navigation}: Props) {
       style={{
         flex: 1,
       }}>
-      <FullScreenLoading
-        visible={loading}
-        label={i18n._(t`Submitting Match...`)}
-      />
+      <FullScreenLoading visible={loading !== undefined} label={loading} />
       <ImageView
         images={matchImages}
         imageIndex={0}
@@ -390,7 +380,7 @@ const MatchConflict = ({
           awayTeam={data.awayTeamName}
           homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
           awayScore={data.submissions[data.homeTeamId][data.awayTeamId]}
-          motm={data.motmSubmissions[data.homeTeamId]}
+          motm={data.motmSubmissions?.[data.homeTeamId]}
           onPickResult={onSelectHome}
           onShowProof={onShowProofHome}
           proofDisabled={homeProofDisabled}
@@ -403,7 +393,7 @@ const MatchConflict = ({
           awayTeam={data.awayTeamName}
           homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}
           awayScore={data.submissions[data.awayTeamId][data.awayTeamId]}
-          motm={data.motmSubmissions[data.awayTeamId]}
+          motm={data.motmSubmissions?.[data.awayTeamId]}
           onPickResult={onSelectAway}
           onShowProof={onShowProofAway}
           proofDisabled={awayProofDisabled}
