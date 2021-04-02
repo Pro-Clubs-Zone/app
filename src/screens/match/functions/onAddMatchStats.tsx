@@ -27,7 +27,7 @@ const addMatchStats = async (
     const totalStats = {
       [player.id]: {
         matches: firestore.FieldValue.increment(1),
-        motm: firestore.FieldValue.increment(isMotm),
+        //      motm: firestore.FieldValue.increment(isMotm),
         club: player.club,
         clubId: player.clubId,
         username: player.username,
@@ -36,7 +36,7 @@ const addMatchStats = async (
 
     const matchStats = {
       [match.matchId]: {
-        motm: isMotm,
+        motm: false,
       },
     };
 

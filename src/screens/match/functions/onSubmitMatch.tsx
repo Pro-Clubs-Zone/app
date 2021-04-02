@@ -11,6 +11,7 @@ const submitMatch = async (
   awayScore: string,
   initialMatchData: IMatchNavData,
   players: Array<PlayerStats>,
+  motm: string,
 ): Promise<string> => {
   const teamSubmission = {
     [initialMatchData.clubId]: {
@@ -18,6 +19,10 @@ const submitMatch = async (
       [initialMatchData.awayTeamId]: Number(awayScore),
     },
   };
+  const motmSubmission = {
+    [initialMatchData.clubId]: motm,
+  };
+
   const matchRef = db
     .collection('leagues')
     .doc(initialMatchData.leagueId)
@@ -37,40 +42,46 @@ const submitMatch = async (
     matchData = res.data() as IMatch;
   });
 
-  return matchRef
-    .set(
-      {
-        submissions: teamSubmission,
-        players: playerList,
-      },
-      {merge: true},
-    )
-    .then(() => {
-      if (
-        matchData.submissions &&
-        Object.keys(matchData.submissions).length === 1
-      ) {
-        const controlMatch = firFunc.httpsCallable('matchSubmission');
-        const match: IMatch = {
-          ...initialMatchData,
-          ...matchData,
-          submissions: {...matchData.submissions, ...teamSubmission},
-        };
+  let submissionData: {
+    submissions: {};
+    players: {};
+    motmSubmissions?: {};
+  } = {
+    submissions: teamSubmission,
+    players: playerList,
+  };
 
-        return controlMatch({match: match})
-          .then((response) => {
-            return response.data;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      } else {
-        return 'First Submission';
-      }
-    })
-    .then((message) => {
-      return message;
-    });
+  if (motm !== undefined) {
+    submissionData.motmSubmissions = motmSubmission;
+  }
+
+  await matchRef.set(submissionData, {merge: true});
+
+  if (
+    matchData.submissions &&
+    Object.keys(matchData.submissions).length === 1
+  ) {
+    const controlMatch = firFunc.httpsCallable('matchSubmission');
+
+    let match: IMatch = {
+      ...initialMatchData,
+      ...matchData,
+      submissions: {...matchData.submissions, ...teamSubmission},
+    };
+
+    if (motm !== undefined) {
+      match.motmSubmissions = {...matchData.motmSubmissions, ...motmSubmission};
+    }
+
+    try {
+      const submissionResult = await controlMatch({match: match});
+      return submissionResult.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  } else {
+    return 'First Submission';
+  }
 };
 
 export default submitMatch;

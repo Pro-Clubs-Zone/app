@@ -251,29 +251,40 @@ export default function SubmitMatch({navigation}: Props) {
   };
 
   const onSubmitMatch = async () => {
-    fieldValidation().then(async (noErrors) => {
-      if (noErrors) {
+    try {
+      const noFieldErrors = fieldValidation();
+      if (noFieldErrors) {
         setLoading(true);
-        await uploadScreenshots()
-          .then(async () => {
-            await submitMatch(
-              homeScore,
-              awayScore,
-              matchData,
-              selectedPlayers,
-            ).then(async (result) => {
-              selectedPlayers.length > 0 &&
-                (await addMatchStats(matchData, selectedPlayers, motm));
-              await analytics().logEvent('match_submit_score');
-              showAlert(result);
-            });
-          })
-          .catch((err) => {
-            console.log('something wrong with uploading', err);
-            setLoading(false);
-          });
+        await uploadScreenshots();
+        const submissionResult = await submitMatch(
+          homeScore,
+          awayScore,
+          matchData,
+          selectedPlayers,
+          motm,
+        );
+        if (selectedPlayers.length > 0) {
+          await addMatchStats(matchData, selectedPlayers, motm);
+        }
+        await analytics().logEvent('match_submit_score');
+        showAlert(submissionResult);
       }
-    });
+    } catch (error) {
+      console.log('something wrong with uploading', error);
+      Alert.alert(
+        i18n._(t`Something went wrong`),
+        error.message,
+        [
+          {
+            text: i18n._(t`Close`),
+            onPress: () => {
+              setLoading(false);
+            },
+          },
+        ],
+        {cancelable: false},
+      );
+    }
   };
 
   const onRemoveThumb = (seletectedThumbIndex: number) => {

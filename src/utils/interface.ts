@@ -77,6 +77,9 @@ export interface IMatch {
       [team: string]: number;
     };
   };
+  motmSubmissions?: {
+    [team: string]: string;
+  };
   teams?: [string, string];
   published: boolean;
   conflict: boolean;
