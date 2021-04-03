@@ -21,6 +21,7 @@ import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import {IconButton} from '../../components/buttons';
 import {useActionSheet} from '@expo/react-native-action-sheet';
+import getMatchImages from './functions/getMatchImages';
 
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
@@ -214,30 +215,14 @@ export default function UpcomingMatch({navigation}: Props) {
       const awayRef = screenshotBucket.ref(
         `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/facts`,
       );
-      let homeImageUrls: Array<ImageURISource & {team: string}> = [];
-      let awayImageUrls: Array<ImageURISource & {team: string}> = [];
 
       if ((matchData.conflict || matchData.motmConflict) && matchData.admin) {
         setLoading(i18n._(t`Loading`));
-        let [homeTeamImages, awayTeamImages] = await Promise.all([
-          homeRef.listAll(),
-          awayRef.listAll(),
-        ]);
 
-        //  const homeTeamImages = await homeRef.listAll();
-        for (const itemRef of homeTeamImages.items) {
-          const url = await itemRef.getDownloadURL();
-          console.log(url);
-          homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
-        }
-
-        //const awayTeamImages = await awayRef.listAll();
-        for (const itemRef of awayTeamImages.items) {
-          const url = await itemRef.getDownloadURL();
-          console.log(url);
-          awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
-        }
-
+        const [homeImageUrls, awayImageUrls] = await getMatchImages(
+          homeRef,
+          awayRef,
+        );
         setHomeImages(homeImageUrls);
         setAwayImages(awayImageUrls);
         setLoading(undefined);

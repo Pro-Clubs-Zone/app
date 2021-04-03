@@ -25,6 +25,7 @@ import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
 import {AuthContext} from '../../context/authContext';
 import {MatchStackType} from './match';
+import getMatchImages from './functions/getMatchImages';
 
 // type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -39,7 +40,8 @@ type Props = {
 
 type FinishedMatchStack = {
   Result: undefined;
-  Screenshots: undefined;
+  'Match Stats': undefined;
+  'Player Stats': undefined;
 };
 
 const Tab = createMaterialTopTabNavigator<FinishedMatchStack>();
@@ -48,7 +50,8 @@ export default function FinishedMatch() {
   return (
     <Tab.Navigator lazy={true}>
       <Tab.Screen name="Result" component={MatchResult} />
-      <Tab.Screen name="Screenshots" component={MatchScreenshots} />
+      <Tab.Screen name="Match Stats" component={MatchScreenshots} />
+      <Tab.Screen name="Player Stats" component={MatchScreenshots} />
     </Tab.Navigator>
   );
 }
@@ -110,30 +113,14 @@ function MatchScreenshots() {
       const awayRef = screenshotBucket.ref(
         `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/facts`,
       );
-      let homeImageUrls: Array<ImageURISource & {team: string}> = [];
-      let awayImageUrls: Array<ImageURISource & {team: string}> = [];
-
-      let [homeTeamImages, awayTeamImages] = await Promise.all([
-        homeRef.listAll(),
-        awayRef.listAll(),
-      ]);
-
-      //const homeTeamImages = await homeRef.listAll();
-      for (const itemRef of homeTeamImages.items) {
-        const url = await itemRef.getDownloadURL();
-        console.log(url);
-        homeImageUrls = [...homeImageUrls, {uri: url, team: 'home'}];
-      }
-      //const awayTeamImages = await awayRef.listAll();
-
-      for (const itemRef of awayTeamImages.items) {
-        const url = await itemRef.getDownloadURL();
-        console.log(url);
-        awayImageUrls = [...awayImageUrls, {uri: url, team: 'away'}];
-      }
+      const [homeImageUrls, awayImageUrls] = await getMatchImages(
+        homeRef,
+        awayRef,
+      );
       setMatchImages([...homeImageUrls, ...awayImageUrls]);
       setLoading(false);
     };
+
     try {
       getImages();
     } catch (error) {
