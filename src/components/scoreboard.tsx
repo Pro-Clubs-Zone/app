@@ -14,6 +14,7 @@ type Props = {
   onSubmit?: () => void;
   data: IMatchNavData;
   children?: any;
+  submitTitle?: any;
 };
 
 const ScoreBoard = ({
@@ -22,6 +23,7 @@ const ScoreBoard = ({
   showSubmit,
   onSubmit,
   children,
+  submitTitle,
 }: Props) => {
   const homeTeamScore = data.result?.[data.homeTeamId];
   const awayTeamScore = data.result?.[data.awayTeamId];
@@ -122,7 +124,7 @@ const ScoreBoard = ({
           //   data.showSubmit ? ( // To-Do - here we check if score is published or not
           <View style={styles.secondRow}>
             <PrimaryButton
-              title={i18n._(t`Submit`)}
+              title={submitTitle ?? i18n._(t`Submit`)}
               onPress={onSubmit!}
               // disabled={
               //   data.disabled || false // To-do - if score is submitted by one manager - disable button ONLY FOR HIM with label "Score Submitted"

@@ -20,7 +20,7 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {MatchContext} from '../../context/matchContext';
 import storage, {firebase} from '@react-native-firebase/storage';
-import FullScreenLoading from '../../components/loading';
+import FullScreenLoading} from '../../components/loading';
 import ImageView from 'react-native-image-viewing';
 import {ListHeading} from '../../components/listItems';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
@@ -47,6 +47,12 @@ type FinishedMatchStack = {
   'Player Stats': undefined;
 };
 
+export type ImageProps = ImageURISource & {
+  team: string;
+  name: string;
+  clubId: string;
+};
+
 const Tab = createMaterialTopTabNavigator<FinishedMatchStack>();
 
 export default function FinishedMatch() {
@@ -68,8 +74,11 @@ function MatchResult({navigation}: Props) {
   const uid = user.uid;
 
   useEffect(() => {
-    if (matchData.players && uid in matchData.players) {
-      console.log('player participated', matchData);
+    if (
+      matchData.players &&
+      uid in matchData.players &&
+      matchData.players[uid] === false
+    ) {
       setIsPlayer(true);
     }
   }, [matchContext]);
@@ -81,6 +90,7 @@ function MatchResult({navigation}: Props) {
         editable={false}
         showSubmit={isPlayer}
         onSubmit={() => navigation.navigate('Submit Stats')}
+        submitTitle={i18n._(t`Submit Stats`)}
       />
       <EmptyState
         title={i18n._(t`Match Stats & Info`)}
@@ -91,9 +101,7 @@ function MatchResult({navigation}: Props) {
 }
 
 function MatchScreenshots() {
-  const [matchImages, setMatchImages] = useState<
-    Array<ImageURISource & {team: string}>
-  >([]);
+  const [matchImages, setMatchImages] = useState<Array<ImageProps>>([]);
   const [loading, setLoading] = useState(true);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
@@ -119,6 +127,8 @@ function MatchScreenshots() {
       const [homeImageUrls, awayImageUrls] = await getMatchImages(
         homeRef,
         awayRef,
+        matchData.homeTeamId,
+        matchData.awayTeamId,
       );
       setMatchImages([...homeImageUrls, ...awayImageUrls]);
       setLoading(false);
@@ -197,9 +207,7 @@ function MatchScreenshots() {
 }
 
 function PlayerScreenshots({navigation}: Props) {
-  const [matchImages, setMatchImages] = useState<
-    Array<ImageURISource & {team: string; name: string}>
-  >([]);
+  const [matchImages, setMatchImages] = useState<Array<ImageProps>>([]);
   const [loading, setLoading] = useState(true);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
@@ -227,6 +235,8 @@ function PlayerScreenshots({navigation}: Props) {
       const [homeImageUrls, awayImageUrls] = await getMatchImages(
         homeRef,
         awayRef,
+        matchData.homeTeamId,
+        matchData.awayTeamId,
       );
 
       setMatchImages([...homeImageUrls, ...awayImageUrls]);
@@ -238,9 +248,11 @@ function PlayerScreenshots({navigation}: Props) {
     } catch (error) {
       console.log('error getting images');
     }
-  }, [matchData]);
+  }, []);
 
   const showResultAlert = (title: any, body: any) => {
+    console.log('alert shown');
+
     Alert.alert(
       title,
       body,
@@ -258,7 +270,7 @@ function PlayerScreenshots({navigation}: Props) {
     );
   };
 
-  const showConfirmationAlert = (playerID: string) => {
+  const showConfirmationAlert = (matchImage: ImageProps) => {
     Alert.alert(
       i18n._(t`Removing player stats`),
       i18n._(
@@ -267,7 +279,8 @@ function PlayerScreenshots({navigation}: Props) {
       [
         {
           text: i18n._(t`Remove`),
-          onPress: () => onRemovePlayerSubmission(playerID),
+          onPress: () =>
+            onRemovePlayerSubmission(matchImage.name, matchImage.clubId),
         },
         {
           text: i18n._(t`Close`),
@@ -278,28 +291,34 @@ function PlayerScreenshots({navigation}: Props) {
     );
   };
 
-  const onRemovePlayerSubmission = async (playerID: string) => {
+  const onRemovePlayerSubmission = async (playerID: string, clubID: string) => {
+    console.log('club id from image', clubID);
+    setImageViewerVisible(false);
+   // setLoading(true);
     try {
+     // console.log('start removing');
+
       const removeSubmission = firFunc.httpsCallable('removeSubmission');
-      setImageViewerVisible(false);
-      setLoading(true);
-      const submissionRemoved = await removeSubmission({
+      await removeSubmission({
         leagueID: matchData.leagueId,
         matchID: matchData.matchId,
-        clubID: matchData.clubId,
+        clubID: clubID,
         playerID: playerID,
       });
-      if (submissionRemoved) {
-        showResultAlert(
-          i18n._(t`Submission Removed`),
-          i18n._(
-            t`Player performance stats submission for this match was removed`,
-          ),
-        );
-      }
+   //   console.log('finished removing');
+
+      showResultAlert(
+        i18n._(t`Submission Removed`),
+        i18n._(
+          t`Player performance stats submission for this match was removed`,
+        ),
+      );
+      //setLoading(false);
+     // navigation.popToTop();
     } catch (error) {
-      showResultAlert(i18n._(t`Something went wrong`), error.mesage);
       console.log(error);
+
+      showResultAlert(i18n._(t`Something went wrong`), error);
     }
   };
 
@@ -327,56 +346,57 @@ function PlayerScreenshots({navigation}: Props) {
     <SafeAreaView>
       <MinButton
         title={i18n._(t`Remove Player Stat`)}
-        onPress={() =>
-          showConfirmationAlert(matchImages[image.imageIndex].name)
-        }
+        onPress={() => showConfirmationAlert(matchImages[image.imageIndex])}
       />
     </SafeAreaView>
   );
 
   return (
-    <ScrollView style={{flex: 1}}>
+ 
+      <ScrollView style={{flex: 1}}>
       <FullScreenLoading visible={loading} />
-      <ImageView
-        images={matchImages}
-        imageIndex={currentImage}
-        visible={imageViewerVisible}
-        onRequestClose={() => setImageViewerVisible(false)}
-        FooterComponent={(image) => <RemoveStatButton image={image} />}
-      />
-      <ListHeading col1={matchData.homeTeamName} />
-      <View style={styles.gallery}>
-        {matchImages.some((image) => image.team === 'home') ? (
-          matchImages.map(
-            (image, index) =>
-              image.team === 'home' && (
-                <MatchImage uri={image.uri} index={index} key={index} />
-              ),
-          )
-        ) : (
-          <EmptyState
-            body={i18n._(t`Players uploaded no images`)}
-            title={i18n._(t`No screenshots`)}
-          />
-        )}
-      </View>
-      <ListHeading col1={matchData.awayTeamName} />
-      <View style={styles.gallery}>
-        {matchImages.some((image) => image.team === 'away') ? (
-          matchImages.map(
-            (image, index) =>
-              image.team === 'away' && (
-                <MatchImage uri={image.uri} index={index} key={index} />
-              ),
-          )
-        ) : (
-          <EmptyState
-            body={i18n._(t`Players uploaded no images`)}
-            title={i18n._(t`No screenshots`)}
-          />
-        )}
-      </View>
-    </ScrollView>
+        <ImageView
+          images={matchImages}
+          imageIndex={currentImage}
+          visible={imageViewerVisible}
+          onRequestClose={() => setImageViewerVisible(false)}
+          FooterComponent={(image) =>
+            matchData.admin ? <RemoveStatButton image={image} /> : null
+          }
+        />
+        <ListHeading col1={matchData.homeTeamName} />
+        <View style={styles.gallery}>
+          {matchImages.some((image) => image.team === 'home') ? (
+            matchImages.map(
+              (image, index) =>
+                image.team === 'home' && (
+                  <MatchImage uri={image.uri} index={index} key={index} />
+                ),
+            )
+          ) : (
+            <EmptyState
+              body={i18n._(t`Players uploaded no images`)}
+              title={i18n._(t`No screenshots`)}
+            />
+          )}
+        </View>
+        <ListHeading col1={matchData.awayTeamName} />
+        <View style={styles.gallery}>
+          {matchImages.some((image) => image.team === 'away') ? (
+            matchImages.map(
+              (image, index) =>
+                image.team === 'away' && (
+                  <MatchImage uri={image.uri} index={index} key={index} />
+                ),
+            )
+          ) : (
+            <EmptyState
+              body={i18n._(t`Players uploaded no images`)}
+              title={i18n._(t`No screenshots`)}
+            />
+          )}
+        </View>
+      </ScrollView>
   );
 }
 
