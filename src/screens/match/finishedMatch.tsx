@@ -7,6 +7,7 @@ import {
   useWindowDimensions,
   ImageURISource,
   SafeAreaView,
+  Alert,
 } from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import ScoreBoard from '../../components/scoreboard';
@@ -239,6 +240,44 @@ function PlayerScreenshots({navigation}: Props) {
     }
   }, [matchData]);
 
+  const showResultAlert = (title: any, body: any) => {
+    Alert.alert(
+      title,
+      body,
+      [
+        {
+          text: i18n._(t`Close`),
+          onPress: () => {
+            setLoading(false);
+            navigation.popToTop();
+          },
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const showConfirmationAlert = (playerID: string) => {
+    Alert.alert(
+      i18n._(t`Removing player stats`),
+      i18n._(
+        t`Are you sure you want to remove player stats submission for this match?`,
+      ),
+      [
+        {
+          text: i18n._(t`Remove`),
+          onPress: () => onRemovePlayerSubmission(playerID),
+        },
+        {
+          text: i18n._(t`Close`),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   const onRemovePlayerSubmission = async (playerID: string) => {
     try {
       const removeSubmission = firFunc.httpsCallable('removeSubmission');
@@ -251,11 +290,15 @@ function PlayerScreenshots({navigation}: Props) {
         playerID: playerID,
       });
       if (submissionRemoved) {
-        setLoading(false);
-        navigation.popToTop();
+        showResultAlert(
+          i18n._(t`Submission Removed`),
+          i18n._(
+            t`Player performance stats submission for this match was removed`,
+          ),
+        );
       }
     } catch (error) {
-      setLoading(false);
+      showResultAlert(i18n._(t`Something went wrong`), error.mesage);
       console.log(error);
     }
   };
@@ -285,7 +328,7 @@ function PlayerScreenshots({navigation}: Props) {
       <MinButton
         title={i18n._(t`Remove Player Stat`)}
         onPress={() =>
-          onRemovePlayerSubmission(matchImages[image.imageIndex].name)
+          showConfirmationAlert(matchImages[image.imageIndex].name)
         }
       />
     </SafeAreaView>
