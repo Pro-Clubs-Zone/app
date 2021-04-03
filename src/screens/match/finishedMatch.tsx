@@ -6,6 +6,7 @@ import {
   Pressable,
   useWindowDimensions,
   ImageURISource,
+  SafeAreaView,
 } from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import ScoreBoard from '../../components/scoreboard';
@@ -26,6 +27,7 @@ import {APP_COLORS} from '../../utils/designSystem';
 import {AuthContext} from '../../context/authContext';
 import {MatchStackType} from './match';
 import getMatchImages from './functions/getMatchImages';
+import {MinButton} from '../../components/buttons';
 
 // type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -195,7 +197,7 @@ function MatchScreenshots() {
 
 function PlayerScreenshots() {
   const [matchImages, setMatchImages] = useState<
-    Array<ImageURISource & {team: string}>
+    Array<ImageURISource & {team: string; name: string}>
   >([]);
   const [loading, setLoading] = useState(true);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
@@ -223,6 +225,7 @@ function PlayerScreenshots() {
         homeRef,
         awayRef,
       );
+
       setMatchImages([...homeImageUrls, ...awayImageUrls]);
       setLoading(false);
     };
@@ -254,6 +257,15 @@ function PlayerScreenshots() {
     </Pressable>
   );
 
+  const RemoveStatButton = ({image}: {image: {imageIndex: number}}) => (
+    <SafeAreaView>
+      <MinButton
+        title={i18n._(t`Remove Player Stat`)}
+        onPress={() => console.log(matchImages[image.imageIndex].name)}
+      />
+    </SafeAreaView>
+  );
+
   return (
     <ScrollView style={{flex: 1}}>
       <FullScreenLoading visible={loading} />
@@ -262,6 +274,7 @@ function PlayerScreenshots() {
         imageIndex={currentImage}
         visible={imageViewerVisible}
         onRequestClose={() => setImageViewerVisible(false)}
+        FooterComponent={(image) => <RemoveStatButton image={image} />}
       />
       <ListHeading col1={matchData.homeTeamName} />
       <View style={styles.gallery}>
