@@ -1,7 +1,6 @@
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
-import {IMatch, IMatchNavData} from '../../../utils/interface';
-import {PlayerStats} from '../submitMatch';
+import {IMatch, IMatchNavData, PlayerStatsInfo} from '../../../utils/interface';
 
 const db = firestore();
 const firFunc = functions();
@@ -10,7 +9,7 @@ const submitMatch = async (
   homeScore: string,
   awayScore: string,
   initialMatchData: IMatchNavData,
-  players: Array<PlayerStats>,
+  players: Array<PlayerStatsInfo>,
   motm: string,
 ): Promise<string> => {
   const teamSubmission = {

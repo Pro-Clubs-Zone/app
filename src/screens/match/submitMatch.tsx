@@ -33,20 +33,13 @@ import MatchPlayer from '../../components/matchPlayer';
 import Select from '../../components/select';
 import addMatchStats from './functions/onAddMatchStats';
 import Toast from '../../components/toast';
+import {PlayerStatsInfo} from '../../utils/interface';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
 };
-
-export interface PlayerStats {
-  id: string;
-  username: string;
-  motm?: string;
-  club: string;
-  clubId: string;
-}
 
 //const db = firestore();
 
@@ -62,11 +55,11 @@ export default function SubmitMatch({navigation}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [roster, setRoster] = useState<Array<PlayerStats>>([]);
+  const [roster, setRoster] = useState<Array<PlayerStatsInfo>>([]);
   const [tempSelectedPlayers, setTempSelectedPlayer] = useState<string[]>([]);
-  const [selectedPlayers, setSelectedPlayers] = useState<Array<PlayerStats>>(
-    [],
-  );
+  const [selectedPlayers, setSelectedPlayers] = useState<
+    Array<PlayerStatsInfo>
+  >([]);
   const [motm, setMotm] = useState<string>();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
@@ -96,10 +89,10 @@ export default function SubmitMatch({navigation}: Props) {
 
   useEffect(() => {
     const currentRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    let rosterItems: PlayerStats[] = [];
+    let rosterItems: PlayerStatsInfo[] = [];
 
     for (const [id, playerData] of Object.entries(currentRoster)) {
-      const player: PlayerStats = {
+      const player: PlayerStatsInfo = {
         id: id,
         username: playerData.username,
         motm: undefined,

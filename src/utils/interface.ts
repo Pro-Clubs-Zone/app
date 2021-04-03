@@ -5,6 +5,15 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
+export interface PlayerStatsInfo {
+  id: string;
+  username: string;
+  motm?: string | number | boolean;
+  club: string;
+  clubId: string;
+  matches?: number;
+}
+
 export interface CommonPlayerStats {
   rating: any;
   assists: any;

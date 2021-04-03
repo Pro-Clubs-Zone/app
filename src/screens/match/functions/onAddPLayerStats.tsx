@@ -30,7 +30,7 @@ const addPlayerStats = async (
     .collection('matches')
     .doc(match.matchId);
 
-  let totalStats: GoalkeeperStats | OutfieldPlayerStats = {};
+  let totalStats = {} as GoalkeeperStats | OutfieldPlayerStats;
 
   const commonStats: CommonPlayerStats = {
     rating: firestore.FieldValue.arrayUnion(playerStats.rating),

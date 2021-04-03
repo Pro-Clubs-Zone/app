@@ -1,7 +1,12 @@
 import React, {useContext, useEffect, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {SectionList} from 'react-native';
-import {ISectionList, PlayerStats} from '../../utils/interface';
+import {
+  ISectionList,
+  OutfieldPlayerStats,
+  GoalkeeperStats,
+  PlayerStatsInfo,
+} from '../../utils/interface';
 import {LeagueContext} from '../../context/leagueContext';
 import {ListHeading, TwoLine} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
@@ -45,77 +50,91 @@ export default function Stats() {
         data: [],
       },
       {
-        title: 'Most matches',
+        title: 'Key Passes',
+        data: [],
+      },
+      {
+        title: 'Key Dribbles',
+        data: [],
+      },
+      {
+        title: 'Won Tackles',
+        data: [],
+      },
+      {
+        title: 'Appearances',
         data: [],
       },
     ];
 
-    let goalscorers: StatData[] = [];
-    let assists: StatData[] = [];
-    let motms: StatData[] = [];
-    let matches: StatData[] = [];
+    let stats: {
+      [stat: string]: StatData[];
+    } = {
+      goals: [],
+      assists: [],
+      motm: [],
+      matches: [],
+      keyPasses: [],
+      keyDribbles: [],
+      wonTackles: [],
+    };
 
-    playerStatsRef
-      .get()
-      .then((res) => {
-        let statsData = res.data() as PlayerStats[];
+    const getPlayerStats = async () => {
+      const playerList = await playerStatsRef.get();
 
-        for (const player of Object.values(statsData)) {
-          let statObject: {
-            username: string;
-            club: string;
-            value: number;
-          };
+      let statsData = playerList.data() as Array<
+        PlayerStatsInfo & OutfieldPlayerStats & GoalkeeperStats
+      >;
 
-          if (player.goals > 0) {
+      for (const player of Object.values(statsData)) {
+        let statObject: StatData;
+        console.log('statsData', player);
+
+        const addStats = (
+          stat: string,
+          value: number,
+          dataStructureIndex: number,
+        ) => {
+          if (value && value > 0) {
             statObject = {
               club: player.club,
               username: player.username,
-              value: player.goals,
+              value: value,
             };
-            goalscorers.push(statObject);
+
+            stats[stat].push(statObject);
           }
-          if (player.assists > 0) {
-            statObject = {
-              club: player.club,
-              username: player.username,
-              value: player.assists,
-            };
-            assists.push(statObject);
-          }
-          if (player.motm > 0) {
-            statObject = {
-              club: player.club,
-              username: player.username,
-              value: player.motm,
-            };
-            motms.push(statObject);
-          }
-          if (player.matches > 0) {
-            statObject = {
-              club: player.club,
-              username: player.username,
-              value: player.matches,
-            };
-            matches.push(statObject);
-          }
-        }
 
-        goalscorers.sort((a, b) => b.value - a.value);
-        dataStructure[0].data = goalscorers.slice(0, 10);
+          console.log('stats', statObject);
+          stats[stat].sort((a, b) => b.value - a.value);
+          dataStructure[dataStructureIndex].data = stats[stat].slice(0, 10);
+          console.log('dataStructure', dataStructure);
+        };
 
-        assists.sort((a, b) => b.value - a.value);
-        dataStructure[1].data = assists.slice(0, 10);
+        addStats('goals', player.goals, 0);
+        addStats('assists', player.assists, 1);
+        addStats('motm', player.motm as number, 2);
+        addStats('keyPasses', player.keyPasses, 3);
+        addStats('keyDribbles', player.keyDribbles, 4);
+        addStats('wonTackles', player.wonTackles, 5);
+        //         addStats('rating', player.rating, 4);
+        addStats('matches', player.matches, 6);
 
-        motms.sort((a, b) => b.value - a.value);
-        dataStructure[2].data = motms.slice(0, 10);
+        // AVG Rating
 
-        matches.sort((a, b) => b.value - a.value);
-        dataStructure[3].data = matches.slice(0, 10);
+        // Most Tackles
+        // Most Clean Sheat
+      }
 
-        setData(dataStructure);
-      })
-      .then(() => setLoading(false));
+      setData(dataStructure);
+      setLoading(false);
+    };
+
+    try {
+      getPlayerStats();
+    } catch (error) {
+      console.log(error);
+    }
   }, [leagueId]);
 
   return (
@@ -135,7 +154,7 @@ export default function Stats() {
             return (
               <EmptyState
                 //      title={i18n._(t`No stats available`)}
-                title={i18n._(t`No Players yet`)}
+                title={i18n._(t`No players yet`)}
               />
             );
           }
@@ -143,7 +162,7 @@ export default function Stats() {
         ListEmptyComponent={() => (
           <EmptyState
             title={i18n._(t`No stats available`)}
-            body={i18n._(t`This league currentl has no submitted matches`)}
+            body={i18n._(t`This league currently has no submitted matches`)}
           />
         )}
       />

@@ -1,12 +1,11 @@
 import firestore from '@react-native-firebase/firestore';
-import {IMatchNavData} from '../../../utils/interface';
-import {PlayerStats} from '../submitMatch';
+import {IMatchNavData, PlayerStatsInfo} from '../../../utils/interface';
 
 const db = firestore();
 
 const addMatchStats = async (
   match: IMatchNavData,
-  playerData: Array<PlayerStats>,
+  playerData: Array<PlayerStatsInfo>,
   motm: string,
 ) => {
   const totalStatsRef = db
