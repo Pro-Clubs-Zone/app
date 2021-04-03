@@ -62,6 +62,10 @@ export default function Stats() {
         data: [],
       },
       {
+        title: 'Average Rating',
+        data: [],
+      },
+      {
         title: 'Appearances',
         data: [],
       },
@@ -77,6 +81,7 @@ export default function Stats() {
       keyPasses: [],
       keyDribbles: [],
       wonTackles: [],
+      rating: [],
     };
 
     const getPlayerStats = async () => {
@@ -88,27 +93,30 @@ export default function Stats() {
 
       for (const player of Object.values(statsData)) {
         let statObject: StatData;
-        console.log('statsData', player);
+        console.log(statsData);
 
         const addStats = (
           stat: string,
-          value: number,
+          value: number | number[],
           dataStructureIndex: number,
         ) => {
-          if (value && value > 0) {
+          let avgRating;
+          if (stat === 'rating' && value !== undefined) {
+            avgRating = value.reduce((p, c) => p + c, 0) / value.length;
+          }
+
+          if (value > 0 || avgRating > 0) {
             statObject = {
               club: player.club,
               username: player.username,
-              value: value,
+              value: stat === 'rating' ? avgRating : value,
             };
 
             stats[stat].push(statObject);
           }
 
-          console.log('stats', statObject);
           stats[stat].sort((a, b) => b.value - a.value);
           dataStructure[dataStructureIndex].data = stats[stat].slice(0, 10);
-          console.log('dataStructure', dataStructure);
         };
 
         addStats('goals', player.goals, 0);
@@ -117,12 +125,11 @@ export default function Stats() {
         addStats('keyPasses', player.keyPasses, 3);
         addStats('keyDribbles', player.keyDribbles, 4);
         addStats('wonTackles', player.wonTackles, 5);
-        //         addStats('rating', player.rating, 4);
-        addStats('matches', player.matches, 6);
+        addStats('rating', player.rating, 6);
+        addStats('matches', player.matches, 7);
 
         // AVG Rating
 
-        // Most Tackles
         // Most Clean Sheat
       }
 
@@ -133,7 +140,7 @@ export default function Stats() {
     try {
       getPlayerStats();
     } catch (error) {
-      console.log(error);
+      console.log('err', error);
     }
   }, [leagueId]);
 
