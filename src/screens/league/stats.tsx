@@ -62,6 +62,10 @@ export default function Stats() {
         data: [],
       },
       {
+        title: 'Least Conceded',
+        data: [],
+      },
+      {
         title: 'Average Rating',
         data: [],
       },
@@ -82,6 +86,7 @@ export default function Stats() {
       keyDribbles: [],
       wonTackles: [],
       rating: [],
+      goalsConceded: [],
     };
 
     const getPlayerStats = async () => {
@@ -115,7 +120,12 @@ export default function Stats() {
             stats[stat].push(statObject);
           }
 
-          stats[stat].sort((a, b) => b.value - a.value);
+          if (stat === 'goalsConceded') {
+            stats[stat].sort((a, b) => a.value - b.value);
+          } else {
+            stats[stat].sort((a, b) => b.value - a.value);
+          }
+
           dataStructure[dataStructureIndex].data = stats[stat].slice(0, 10);
         };
 
@@ -125,12 +135,9 @@ export default function Stats() {
         addStats('keyPasses', player.keyPasses, 3);
         addStats('keyDribbles', player.keyDribbles, 4);
         addStats('wonTackles', player.wonTackles, 5);
-        addStats('rating', player.rating, 6);
-        addStats('matches', player.matches, 7);
-
-        // AVG Rating
-
-        // Most Clean Sheat
+        addStats('goalsConceded', player.goalsConceded, 6);
+        addStats('rating', player.rating, 7);
+        addStats('matches', player.matches, 8);
       }
 
       setData(dataStructure);
@@ -172,6 +179,7 @@ export default function Stats() {
             body={i18n._(t`This league currently has no submitted matches`)}
           />
         )}
+        stickySectionHeadersEnabled={true}
       />
     </>
   );
