@@ -75,6 +75,7 @@ export default function Match({route}: Props) {
         name="Upcoming Match"
         component={UpcomingMatch}
         options={{
+          title: `Upcoming Match #${data.id}`,
           headerStyle: {
             elevation: 0,
           },
@@ -102,6 +103,7 @@ export default function Match({route}: Props) {
         name="Finished Match"
         component={FinishedMatch}
         options={{
+          title: `Finished Match #${data.id}`,
           headerStyle: {
             elevation: 0,
           },

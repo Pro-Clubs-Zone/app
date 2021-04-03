@@ -51,7 +51,7 @@ export default function FinishedMatch() {
     <Tab.Navigator lazy={true}>
       <Tab.Screen name="Result" component={MatchResult} />
       <Tab.Screen name="Match Stats" component={MatchScreenshots} />
-      <Tab.Screen name="Player Stats" component={MatchScreenshots} />
+      <Tab.Screen name="Player Stats" component={PlayerScreenshots} />
     </Tab.Navigator>
   );
 }
@@ -185,6 +185,112 @@ function MatchScreenshots() {
         ) : (
           <EmptyState
             body={i18n._(t`Manager uploaded no images`)}
+            title={i18n._(t`No screenshots`)}
+          />
+        )}
+      </View>
+    </ScrollView>
+  );
+}
+
+function PlayerScreenshots() {
+  const [matchImages, setMatchImages] = useState<
+    Array<ImageURISource & {team: string}>
+  >([]);
+  const [loading, setLoading] = useState(true);
+  const [imageViewerVisible, setImageViewerVisible] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0);
+
+  const matchContext = useContext(MatchContext);
+  const matchData: IMatchNavData = matchContext.match;
+
+  const windowWidth = useWindowDimensions().width;
+  // const windowHeight = useWindowDimensions().height;
+
+  useEffect(() => {
+    const getImages = async () => {
+      let screenshotBucket = firebase.app().storage('gs://prz-screen-shots');
+      if (__DEV__) {
+        screenshotBucket = storage();
+      }
+      const homeRef = screenshotBucket.ref(
+        `/${matchData.leagueId}/${matchData.matchId}/${matchData.homeTeamId}/performance`,
+      );
+      const awayRef = screenshotBucket.ref(
+        `/${matchData.leagueId}/${matchData.matchId}/${matchData.awayTeamId}/performance`,
+      );
+      const [homeImageUrls, awayImageUrls] = await getMatchImages(
+        homeRef,
+        awayRef,
+      );
+      setMatchImages([...homeImageUrls, ...awayImageUrls]);
+      setLoading(false);
+    };
+
+    try {
+      getImages();
+    } catch (error) {
+      console.log('error getting images');
+    }
+  }, [matchData]);
+
+  const MatchImage = ({uri, index}: {uri: string; index: number}) => (
+    <Pressable
+      onPress={() => {
+        setCurrentImage(index);
+        setImageViewerVisible(true);
+      }}>
+      <Image
+        source={{
+          uri: uri,
+        }}
+        style={{
+          height: verticalScale(100),
+          width: windowWidth / 3,
+          borderWidth: 3,
+          borderColor: APP_COLORS.Dark,
+        }}
+      />
+    </Pressable>
+  );
+
+  return (
+    <ScrollView style={{flex: 1}}>
+      <FullScreenLoading visible={loading} />
+      <ImageView
+        images={matchImages}
+        imageIndex={currentImage}
+        visible={imageViewerVisible}
+        onRequestClose={() => setImageViewerVisible(false)}
+      />
+      <ListHeading col1={matchData.homeTeamName} />
+      <View style={styles.gallery}>
+        {matchImages.some((image) => image.team === 'home') ? (
+          matchImages.map(
+            (image, index) =>
+              image.team === 'home' && (
+                <MatchImage uri={image.uri} index={index} key={index} />
+              ),
+          )
+        ) : (
+          <EmptyState
+            body={i18n._(t`Players uploaded no images`)}
+            title={i18n._(t`No screenshots`)}
+          />
+        )}
+      </View>
+      <ListHeading col1={matchData.awayTeamName} />
+      <View style={styles.gallery}>
+        {matchImages.some((image) => image.team === 'away') ? (
+          matchImages.map(
+            (image, index) =>
+              image.team === 'away' && (
+                <MatchImage uri={image.uri} index={index} key={index} />
+              ),
+          )
+        ) : (
+          <EmptyState
+            body={i18n._(t`Players uploaded no images`)}
             title={i18n._(t`No screenshots`)}
           />
         )}
