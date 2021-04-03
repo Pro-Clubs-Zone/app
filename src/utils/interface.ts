@@ -8,7 +8,7 @@ export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 export interface PlayerStatsInfo {
   id: string;
   username: string;
-  motm?: string | number | boolean;
+  motm?: string | number;
   club: string;
   clubId: string;
   matches?: number;

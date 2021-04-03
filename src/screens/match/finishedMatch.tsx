@@ -12,7 +12,7 @@ import {IMatchNavData} from '../../utils/interface';
 import ScoreBoard from '../../components/scoreboard';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 //import {LeagueContext} from '../../context/leagueContext';
-//import firestore from '@react-native-firebase/firestore';
+import functions from '@react-native-firebase/functions';
 import {StackNavigationProp} from '@react-navigation/stack';
 import EmptyState from '../../components/emptyState';
 import {t} from '@lingui/macro';
@@ -195,7 +195,7 @@ function MatchScreenshots() {
   );
 }
 
-function PlayerScreenshots() {
+function PlayerScreenshots({navigation}: Props) {
   const [matchImages, setMatchImages] = useState<
     Array<ImageURISource & {team: string; name: string}>
   >([]);
@@ -208,6 +208,8 @@ function PlayerScreenshots() {
 
   const windowWidth = useWindowDimensions().width;
   // const windowHeight = useWindowDimensions().height;
+
+  const firFunc = functions();
 
   useEffect(() => {
     const getImages = async () => {
@@ -237,6 +239,27 @@ function PlayerScreenshots() {
     }
   }, [matchData]);
 
+  const onRemovePlayerSubmission = async (playerID: string) => {
+    try {
+      const removeSubmission = firFunc.httpsCallable('removeSubmission');
+      setImageViewerVisible(false);
+      setLoading(true);
+      const submissionRemoved = await removeSubmission({
+        leagueID: matchData.leagueId,
+        matchID: matchData.matchId,
+        clubID: matchData.clubId,
+        playerID: playerID,
+      });
+      if (submissionRemoved) {
+        setLoading(false);
+        navigation.popToTop();
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   const MatchImage = ({uri, index}: {uri: string; index: number}) => (
     <Pressable
       onPress={() => {
@@ -261,7 +284,9 @@ function PlayerScreenshots() {
     <SafeAreaView>
       <MinButton
         title={i18n._(t`Remove Player Stat`)}
-        onPress={() => console.log(matchImages[image.imageIndex].name)}
+        onPress={() =>
+          onRemovePlayerSubmission(matchImages[image.imageIndex].name)
+        }
       />
     </SafeAreaView>
   );

@@ -6,7 +6,7 @@ const db = firestore();
 const addMatchStats = async (
   match: IMatchNavData,
   playerData: Array<PlayerStatsInfo>,
-  motm: string,
+  // motm: string,
 ) => {
   const totalStatsRef = db
     .collection('leagues')
@@ -21,7 +21,7 @@ const addMatchStats = async (
       .collection('playerMatches')
       .doc(player.id);
 
-    const isMotm = player.id === motm ? 1 : 0;
+    // const isMotm = player.id === motm ? 1 : 0;
 
     const totalStats = {
       [player.id]: {
@@ -35,7 +35,7 @@ const addMatchStats = async (
 
     const matchStats = {
       [match.matchId]: {
-        motm: false,
+        motm: 0,
       },
     };
 

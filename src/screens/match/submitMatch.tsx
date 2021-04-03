@@ -245,7 +245,7 @@ export default function SubmitMatch({navigation}: Props) {
 
   const onSubmitMatch = async () => {
     try {
-      const noFieldErrors = fieldValidation();
+      const noFieldErrors = await fieldValidation();
       if (noFieldErrors) {
         setLoading(true);
         await uploadScreenshots();
@@ -257,7 +257,7 @@ export default function SubmitMatch({navigation}: Props) {
           motm,
         );
         if (selectedPlayers.length > 0) {
-          await addMatchStats(matchData, selectedPlayers, motm);
+          await addMatchStats(matchData, selectedPlayers);
         }
         await analytics().logEvent('match_submit_score');
         showAlert(submissionResult);
