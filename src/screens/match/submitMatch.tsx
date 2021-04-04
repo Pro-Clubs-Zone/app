@@ -113,7 +113,7 @@ export default function SubmitMatch({navigation}: Props) {
     }, 1000);
   };
 
-  const showAlert = (submissionResult: string) => {
+  const updateContextShowAlert = (submissionResult: string) => {
     let title: string;
     let body: string;
 
@@ -260,7 +260,7 @@ export default function SubmitMatch({navigation}: Props) {
           await addMatchStats(matchData, selectedPlayers);
         }
         await analytics().logEvent('match_submit_score');
-        showAlert(submissionResult);
+        updateContextShowAlert(submissionResult);
       }
     } catch (error) {
       console.log('something wrong with uploading', error);

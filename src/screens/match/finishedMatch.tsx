@@ -98,16 +98,24 @@ function MatchResult({navigation}: Props) {
     setGoalscorers(matchGoalscorers);
   };
 
+  const getMotm = () => {
+    if (matchData.motm) {
+      const motmPlayerId = matchData.motm;
+      const motmPlayer = matchData.players[motmPlayerId];
+      // console.log(motmPlayer);
+      setMotm({
+        username: motmPlayer.username,
+        club: motmPlayer.club,
+        rating: motmPlayer.rating,
+      });
+    }
+  };
+
   useEffect(() => {
-    const motmPlayerId = matchData.motm;
-    const motmPlayer = matchData.players[motmPlayerId];
-    // console.log(motmPlayer);
-    setMotm({
-      username: motmPlayer.username,
-      club: motmPlayer.club,
-      rating: motmPlayer.rating,
-    });
-    getGoalscorers();
+    if (matchData.players) {
+      getMotm();
+      getGoalscorers();
+    }
     if (
       matchData.players &&
       uid in matchData.players &&
@@ -142,37 +150,47 @@ function MatchResult({navigation}: Props) {
             style={{
               padding: verticalScale(16),
             }}>
-            <View
-              style={{
-                paddingBottom: verticalScale(16),
-              }}>
-              <Text style={TEXT_STYLES.caption}>{i18n._(t`Player`)}</Text>
-              <Text
-                style={[
-                  TEXT_STYLES.display4,
-                  {
-                    color: APP_COLORS.Accent,
-                  },
-                ]}>
-                {motm.username}
-              </Text>
-            </View>
-            <View
-              style={{
-                flexDirection: 'row',
-              }}>
-              <View
-                style={{
-                  paddingRight: verticalScale(48),
-                }}>
-                <Text style={TEXT_STYLES.caption}>{i18n._(t`Club`)}</Text>
-                <Text style={TEXT_STYLES.display5}>{motm.username}</Text>
-              </View>
-              <View>
-                <Text style={TEXT_STYLES.caption}>{i18n._(t`Rating`)}</Text>
-                <Text style={TEXT_STYLES.display5}>{motm.rating}</Text>
-              </View>
-            </View>
+            {motm ? (
+              <>
+                <View
+                  style={{
+                    paddingBottom: verticalScale(16),
+                  }}>
+                  <Text style={TEXT_STYLES.caption}>{i18n._(t`Player`)}</Text>
+                  <Text
+                    style={[
+                      TEXT_STYLES.display4,
+                      {
+                        color: APP_COLORS.Accent,
+                      },
+                    ]}>
+                    {motm.username}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}>
+                  <View
+                    style={{
+                      paddingRight: verticalScale(48),
+                    }}>
+                    <Text style={TEXT_STYLES.caption}>{i18n._(t`Club`)}</Text>
+                    <Text style={TEXT_STYLES.display5}>{motm.username}</Text>
+                  </View>
+                  {motm.rating && (
+                    <View>
+                      <Text style={TEXT_STYLES.caption}>
+                        {i18n._(t`Rating`)}
+                      </Text>
+                      <Text style={TEXT_STYLES.display5}>{motm.rating}</Text>
+                    </View>
+                  )}
+                </View>
+              </>
+            ) : (
+              <EmptyState title={i18n._(t`No MOTM`)} />
+            )}
           </View>
         </View>
         <View>
@@ -180,7 +198,7 @@ function MatchResult({navigation}: Props) {
             col1={i18n._(t`${matchData.homeTeamName} goalscorers`)}
             col4={i18n._(t`Goals`)}
           />
-          {goalscorers.some(
+          {goalscorers?.some(
             (player) => player.clubId === matchData.homeTeamId,
           ) ? (
             goalscorers.map(
@@ -198,7 +216,7 @@ function MatchResult({navigation}: Props) {
             col1={i18n._(t`${matchData.awayTeamName} goalscorers`)}
             col4={i18n._(t`Goals`)}
           />
-          {goalscorers.some(
+          {goalscorers?.some(
             (player) => player.clubId === matchData.awayTeamId,
           ) ? (
             goalscorers.map(
