@@ -22,6 +22,7 @@ import storage, {firebase} from '@react-native-firebase/storage';
 import {IconButton} from '../../components/buttons';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import getMatchImages from './functions/getMatchImages';
+import shareMatchDetails from './functions/shareMatchDetails';
 
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
@@ -156,27 +157,6 @@ export default function UpcomingMatch({navigation}: Props) {
     );
   };
 
-  const shareMatchDetails = async () => {
-    const content = `PRZ Match Report:\nLeague Name: ${
-      matchData.leagueName
-    },\nLeague ID: ${matchData.leagueId.slice(
-      0,
-      5,
-    )},\nMatch ID: ${matchData.matchId.slice(
-      0,
-      5,
-    )},\nPlease describe the issue:\n`;
-    await Share.share(
-      {
-        message: content,
-        title: i18n._(t`Share report with admin`),
-      },
-      {
-        dialogTitle: i18n._(t`Report Match`),
-      },
-    );
-  };
-
   useLayoutEffect(() => {
     const userClub = context.userData!.leagues![leagueId].clubId!;
     const isManager = matchData.teams!.includes(userClub) && matchData.manager;
@@ -195,7 +175,7 @@ export default function UpcomingMatch({navigation}: Props) {
           )}
           <IconButton
             name="message-alert-outline"
-            onPress={() => shareMatchDetails()}
+            onPress={() => shareMatchDetails(matchData)}
           />
         </View>
       ),
@@ -222,6 +202,8 @@ export default function UpcomingMatch({navigation}: Props) {
         const [homeImageUrls, awayImageUrls] = await getMatchImages(
           homeRef,
           awayRef,
+          matchData.homeTeamId,
+          matchData.awayTeamId,
         );
         setHomeImages(homeImageUrls);
         setAwayImages(awayImageUrls);

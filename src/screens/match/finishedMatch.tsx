@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import {
   View,
   Image,
@@ -20,7 +20,7 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {MatchContext} from '../../context/matchContext';
 import storage, {firebase} from '@react-native-firebase/storage';
-import FullScreenLoading} from '../../components/loading';
+import FullScreenLoading from '../../components/loading';
 import ImageView from 'react-native-image-viewing';
 import {ListHeading} from '../../components/listItems';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
@@ -28,7 +28,8 @@ import {APP_COLORS} from '../../utils/designSystem';
 import {AuthContext} from '../../context/authContext';
 import {MatchStackType} from './match';
 import getMatchImages from './functions/getMatchImages';
-import {MinButton} from '../../components/buttons';
+import {IconButton, MinButton} from '../../components/buttons';
+import shareMatchDetails from './functions/shareMatchDetails';
 
 // type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -55,7 +56,21 @@ export type ImageProps = ImageURISource & {
 
 const Tab = createMaterialTopTabNavigator<FinishedMatchStack>();
 
-export default function FinishedMatch() {
+export default function FinishedMatch({navigation}: Props) {
+  const matchContext = useContext(MatchContext);
+
+  useLayoutEffect(() => {
+    const matchData: IMatchNavData = matchContext.match;
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          name="message-alert-outline"
+          onPress={() => shareMatchDetails(matchData)}
+        />
+      ),
+    });
+  }, [matchContext]);
+
   return (
     <Tab.Navigator lazy={true}>
       <Tab.Screen name="Result" component={MatchResult} />
@@ -294,9 +309,9 @@ function PlayerScreenshots({navigation}: Props) {
   const onRemovePlayerSubmission = async (playerID: string, clubID: string) => {
     console.log('club id from image', clubID);
     setImageViewerVisible(false);
-   // setLoading(true);
+    // setLoading(true);
     try {
-     // console.log('start removing');
+      // console.log('start removing');
 
       const removeSubmission = firFunc.httpsCallable('removeSubmission');
       await removeSubmission({
@@ -305,7 +320,7 @@ function PlayerScreenshots({navigation}: Props) {
         clubID: clubID,
         playerID: playerID,
       });
-   //   console.log('finished removing');
+      //   console.log('finished removing');
 
       showResultAlert(
         i18n._(t`Submission Removed`),
@@ -314,7 +329,7 @@ function PlayerScreenshots({navigation}: Props) {
         ),
       );
       //setLoading(false);
-     // navigation.popToTop();
+      // navigation.popToTop();
     } catch (error) {
       console.log(error);
 
@@ -352,51 +367,50 @@ function PlayerScreenshots({navigation}: Props) {
   );
 
   return (
- 
-      <ScrollView style={{flex: 1}}>
+    <ScrollView style={{flex: 1}}>
       <FullScreenLoading visible={loading} />
-        <ImageView
-          images={matchImages}
-          imageIndex={currentImage}
-          visible={imageViewerVisible}
-          onRequestClose={() => setImageViewerVisible(false)}
-          FooterComponent={(image) =>
-            matchData.admin ? <RemoveStatButton image={image} /> : null
-          }
-        />
-        <ListHeading col1={matchData.homeTeamName} />
-        <View style={styles.gallery}>
-          {matchImages.some((image) => image.team === 'home') ? (
-            matchImages.map(
-              (image, index) =>
-                image.team === 'home' && (
-                  <MatchImage uri={image.uri} index={index} key={index} />
-                ),
-            )
-          ) : (
-            <EmptyState
-              body={i18n._(t`Players uploaded no images`)}
-              title={i18n._(t`No screenshots`)}
-            />
-          )}
-        </View>
-        <ListHeading col1={matchData.awayTeamName} />
-        <View style={styles.gallery}>
-          {matchImages.some((image) => image.team === 'away') ? (
-            matchImages.map(
-              (image, index) =>
-                image.team === 'away' && (
-                  <MatchImage uri={image.uri} index={index} key={index} />
-                ),
-            )
-          ) : (
-            <EmptyState
-              body={i18n._(t`Players uploaded no images`)}
-              title={i18n._(t`No screenshots`)}
-            />
-          )}
-        </View>
-      </ScrollView>
+      <ImageView
+        images={matchImages}
+        imageIndex={currentImage}
+        visible={imageViewerVisible}
+        onRequestClose={() => setImageViewerVisible(false)}
+        FooterComponent={(image) =>
+          matchData.admin ? <RemoveStatButton image={image} /> : null
+        }
+      />
+      <ListHeading col1={matchData.homeTeamName} />
+      <View style={styles.gallery}>
+        {matchImages.some((image) => image.team === 'home') ? (
+          matchImages.map(
+            (image, index) =>
+              image.team === 'home' && (
+                <MatchImage uri={image.uri} index={index} key={index} />
+              ),
+          )
+        ) : (
+          <EmptyState
+            body={i18n._(t`Players uploaded no images`)}
+            title={i18n._(t`No screenshots`)}
+          />
+        )}
+      </View>
+      <ListHeading col1={matchData.awayTeamName} />
+      <View style={styles.gallery}>
+        {matchImages.some((image) => image.team === 'away') ? (
+          matchImages.map(
+            (image, index) =>
+              image.team === 'away' && (
+                <MatchImage uri={image.uri} index={index} key={index} />
+              ),
+          )
+        ) : (
+          <EmptyState
+            body={i18n._(t`Players uploaded no images`)}
+            title={i18n._(t`No screenshots`)}
+          />
+        )}
+      </View>
+    </ScrollView>
   );
 }
 
