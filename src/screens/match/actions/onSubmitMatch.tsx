@@ -1,6 +1,11 @@
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
-import {IMatch, IMatchNavData, PlayerStatsInfo} from '../../../utils/interface';
+import {
+  IMatch,
+  IMatchNavData,
+  MatchPlayerData,
+  PlayerStatsInfo,
+} from '../../../utils/interface';
 
 const db = firestore();
 const firFunc = functions();
@@ -29,12 +34,16 @@ const submitMatch = async (
     .doc(initialMatchData.matchId);
 
   let matchData: IMatch;
-  let playerList: {
-    [id: string]: boolean;
-  } = {};
+  let playerList: MatchPlayerData = {};
 
   players.forEach((player) => {
-    playerList[player.id] = false;
+    playerList[player.id] = {
+      submitted: false,
+      clubId: player.clubId,
+      username: player.username,
+      motm: player.id === motm ?? false,
+      club: player.club,
+    };
   });
 
   await matchRef.get().then((res) => {

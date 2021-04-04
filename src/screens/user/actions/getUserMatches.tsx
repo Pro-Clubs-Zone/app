@@ -29,7 +29,7 @@ const getUserMatches = async (
 
       await matchesSnapshot
         .where('published', '==', true)
-        .where(`players.${uid}`, '==', false)
+        .where(`players.${uid}.submitted`, '==', false)
         .orderBy('id', 'asc')
         .get()
         .then((snapshot) => {

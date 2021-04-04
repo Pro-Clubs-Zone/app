@@ -8,6 +8,7 @@ import {
   ImageURISource,
   SafeAreaView,
   Alert,
+  Text,
 } from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import ScoreBoard from '../../components/scoreboard';
@@ -22,9 +23,9 @@ import {MatchContext} from '../../context/matchContext';
 import storage, {firebase} from '@react-native-firebase/storage';
 import FullScreenLoading from '../../components/loading';
 import ImageView from 'react-native-image-viewing';
-import {ListHeading} from '../../components/listItems';
+import {ListHeading, OneLine} from '../../components/listItems';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
-import {APP_COLORS} from '../../utils/designSystem';
+import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {AuthContext} from '../../context/authContext';
 import {MatchStackType} from './match';
 import getMatchImages from './actions/getMatchImages';
@@ -107,10 +108,41 @@ function MatchResult({navigation}: Props) {
         onSubmit={() => navigation.navigate('Submit Stats')}
         submitTitle={i18n._(t`Submit Stats`)}
       />
-      <EmptyState
+      {
+        // MOTM - Name, Club, Rating, Card
+        // Goalscorers for both teams
+      }
+      <ScrollView>
+        <View>
+          <ListHeading col1={i18n._(t`Man of the Match`)} />
+          <View>
+            <View>
+              <Text style={TEXT_STYLES.caption}>{i18n._(t`Player`)}</Text>
+              <Text style={TEXT_STYLES.display5}>Player Name</Text>
+            </View>
+            <View>
+              <Text style={TEXT_STYLES.caption}>{i18n._(t`Club`)}</Text>
+              <Text style={TEXT_STYLES.display5}>Club Name</Text>
+            </View>
+            <View>
+              <Text style={TEXT_STYLES.caption}>{i18n._(t`Rating`)}</Text>
+              <Text style={TEXT_STYLES.display5}>9.4</Text>
+            </View>
+          </View>
+        </View>
+        <View>
+          <ListHeading col1={i18n._(t`Home Team goalscorers`)} />
+          <OneLine title="Name" key2="3" />
+        </View>
+        <View>
+          <ListHeading col1={i18n._(t`Away Team goalscorers`)} />
+          <OneLine title="Name" key2="3" />
+        </View>
+      </ScrollView>
+      {/* <EmptyState
         title={i18n._(t`Match Stats & Info`)}
         body={i18n._(t`Coming Soon`)}
-      />
+      /> */}
     </View>
   );
 }

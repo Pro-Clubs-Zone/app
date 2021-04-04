@@ -101,7 +101,7 @@ const addPlayerStats = async (
 
   batch.set(totalStatsRef, {[uid]: totalStats}, {merge: true});
   batch.set(matchStatsRef, {[match.matchId]: playerStats}, {merge: true});
-  batch.update(matchRef, {[`players.${uid}`]: true});
+  batch.update(matchRef, {[`players.${uid}.submitted`]: true});
 
   await batch.commit().catch((err) => console.log('error', err));
 };
