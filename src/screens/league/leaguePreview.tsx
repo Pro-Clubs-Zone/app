@@ -15,7 +15,7 @@ import functions from '@react-native-firebase/functions';
 import FullScreenLoading from '../../components/loading';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
-import shareLeagueLink from './functions/shareLink';
+import shareLeagueLink from './actions/shareLink';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,

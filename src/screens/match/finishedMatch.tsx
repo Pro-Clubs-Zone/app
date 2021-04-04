@@ -27,9 +27,9 @@ import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
 import {AuthContext} from '../../context/authContext';
 import {MatchStackType} from './match';
-import getMatchImages from './functions/getMatchImages';
+import getMatchImages from './actions/getMatchImages';
 import {IconButton, MinButton} from '../../components/buttons';
-import shareMatchDetails from './functions/shareMatchDetails';
+import shareMatchDetails from './actions/shareMatchDetails';
 
 // type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<

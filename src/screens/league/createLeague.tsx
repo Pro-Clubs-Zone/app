@@ -12,7 +12,7 @@ import FullScreenLoading from '../../components/loading';
 import {Alert, Platform, View, KeyboardAvoidingView} from 'react-native';
 import Picker from '../../components/picker';
 import {APP_COLORS} from '../../utils/designSystem';
-import createLeague from '../../actions/createLeague';
+import createLeague from './actions/createLeague';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {verticalScale} from 'react-native-size-matters';

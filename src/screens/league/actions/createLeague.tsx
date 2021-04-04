@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import {ILeague} from '../utils/interface';
+import {ILeague} from '../../../utils/interface';
 import analytics from '@react-native-firebase/analytics';
 
 const createLeague = async (data: ILeague, uid: string, username: string) => {

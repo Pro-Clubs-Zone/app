@@ -8,7 +8,7 @@ import {
   Platform,
   useWindowDimensions,
 } from 'react-native';
-import submitMatch from './functions/onSubmitMatch';
+import submitMatch from './actions/onSubmitMatch';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
 import ScoreBoard from '../../components/scoreboard';
@@ -31,7 +31,7 @@ import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import MatchPlayer from '../../components/matchPlayer';
 import Select from '../../components/select';
-import addMatchStats from './functions/onAddMatchStats';
+import addMatchStats from './actions/onAddMatchStats';
 import Toast from '../../components/toast';
 import {PlayerStatsInfo} from '../../utils/interface';
 

@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import {FlatList, View} from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import useGetMatches from './functions/useGetMatches';
+import useGetMatches from './actions/useGetMatches';
 // import {RouteProp} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueStackType} from './league';

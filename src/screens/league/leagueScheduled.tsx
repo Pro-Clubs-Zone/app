@@ -12,7 +12,7 @@ import {
 import {verticalScale} from 'react-native-size-matters';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
-import shareLeagueLink from './functions/shareLink';
+import shareLeagueLink from './actions/shareLink';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,

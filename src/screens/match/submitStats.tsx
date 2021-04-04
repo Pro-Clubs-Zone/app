@@ -27,9 +27,9 @@ import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import Toast from '../../components/toast';
 import SwitchLabel from '../../components/switch';
-import addPlayerStats from './functions/onAddPLayerStats';
+import addPlayerStats from './actions/onAddPLayerStats';
 import {AuthContext} from '../../context/authContext';
-import readImage from './functions/readImage';
+import readImage from './actions/readImage';
 import ImageEditor from '@react-native-community/image-editor';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Stats'>;

@@ -12,7 +12,7 @@ import EmptyState from '../../components/emptyState';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FixtureItem from '../../components/fixtureItems';
-import useGetMatches from '../league/functions/useGetMatches';
+import useGetMatches from '../league/actions/useGetMatches';
 import {MinButton} from '../../components/buttons';
 
 type ScreenNavigationProp = StackNavigationProp<

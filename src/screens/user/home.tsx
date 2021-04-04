@@ -17,8 +17,8 @@ import {
   IClubRequestData,
   IPlayerRequestData,
 } from '../../utils/interface';
-import getUserMatches from './functions/getUserMatches';
-import getLeaguesClubs from './functions/getUserLeagueClubs';
+import getUserMatches from './actions/getUserMatches';
+import getLeaguesClubs from './actions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {t, Trans} from '@lingui/macro';

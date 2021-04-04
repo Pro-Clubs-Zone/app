@@ -18,7 +18,7 @@ import analytics from '@react-native-firebase/analytics';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {RequestContext} from '../../context/requestContext';
-import shareLeagueLink from '../league/functions/shareLink';
+import shareLeagueLink from '../league/actions/shareLink';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,

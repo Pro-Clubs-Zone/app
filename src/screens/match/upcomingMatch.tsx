@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
 import {ScrollView, View, Alert, ImageURISource, Share} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
-import onConflictResolve from './functions/onConflictResolve';
+import onConflictResolve from './actions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
 import {MatchStackType} from './match';
 import ScoreBoard from '../../components/scoreboard';
@@ -21,8 +21,8 @@ import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
 import {IconButton} from '../../components/buttons';
 import {useActionSheet} from '@expo/react-native-action-sheet';
-import getMatchImages from './functions/getMatchImages';
-import shareMatchDetails from './functions/shareMatchDetails';
+import getMatchImages from './actions/getMatchImages';
+import shareMatchDetails from './actions/shareMatchDetails';
 
 type ScreenNavigationProp = StackNavigationProp<
   MatchStackType,
