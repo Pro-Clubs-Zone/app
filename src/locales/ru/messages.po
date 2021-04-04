@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/components/screenshots.tsx:89
+#: src/screens/match/submitMatch.tsx:267
 msgid "1. Facts - 2. Events - 3. Online Player ID List"
 msgstr ""
 
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Accepted Clubs"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:316
+#: src/screens/match/submitMatch.tsx:292
 msgid "Add Players"
 msgstr ""
 
@@ -68,8 +68,12 @@ msgstr ""
 msgid "Are you sure you want to leave this club? This action can't be undone"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:82
+#: src/screens/match/upcomingMatch.tsx:79
 msgid "Are you sure you want to pick {0} as a winner?"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:236
+msgid "Are you sure you want to remove player stats submission for this match?"
 msgstr ""
 
 #: src/screens/club/club.tsx:141
@@ -93,7 +97,7 @@ msgid "At least {0} characters"
 msgstr ""
 
 #: src/screens/league/createClub.tsx:48
-#: src/screens/league/createLeague.tsx:102
+#: src/screens/league/createLeague.tsx:103
 msgid "At least {0} letters"
 msgstr ""
 
@@ -102,6 +106,10 @@ msgstr ""
 #: src/screens/user/requests.tsx:109
 #: src/screens/user/requests.tsx:109
 msgid "Can't accept club due to league team limit. Either remove accepted teams or decline this request."
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:134
+msgid "Can't access storage"
 msgstr ""
 
 #: src/screens/club/club.tsx:150
@@ -115,8 +123,8 @@ msgstr ""
 #: src/screens/leagueAdmin/clubs.tsx:133
 #: src/screens/leagueAdmin/clubs.tsx:177
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:79
-#: src/screens/match/upcomingMatch.tsx:93
-#: src/screens/match/upcomingMatch.tsx:102
+#: src/screens/match/upcomingMatch.tsx:90
+#: src/screens/match/upcomingMatch.tsx:99
 #: src/screens/user/requests.tsx:73
 #: src/screens/user/requests.tsx:137
 #: src/screens/user/requests.tsx:228
@@ -144,16 +152,24 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/auth/signIn.tsx:107
 #: src/screens/club/clubSettings.tsx:36
-#: src/screens/league/createLeague.tsx:122
+#: src/screens/league/createLeague.tsx:123
 #: src/screens/league/league.tsx:46
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:87
-#: src/screens/match/submitMatch.tsx:138
-#: src/screens/match/upcomingMatch.tsx:62
+#: src/screens/match/finishedMatch.tsx:226
+#: src/screens/match/finishedMatch.tsx:242
+#: src/screens/match/submitMatch.tsx:134
+#: src/screens/match/submitMatch.tsx:206
+#: src/screens/match/submitStats.tsx:108
+#: src/screens/match/upcomingMatch.tsx:64
 #: src/screens/user/requests.tsx:111
 #: src/screens/user/requests.tsx:111
 msgid "Close"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:115
+msgid "Club"
 msgstr ""
 
 #: src/screens/user/requests.tsx:34
@@ -174,8 +190,7 @@ msgstr ""
 msgid "Clubs"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:36
-#: src/screens/match/upcomingMatch.tsx:248
+#: src/screens/match/upcomingMatch.tsx:221
 msgid "Coming Soon"
 msgstr ""
 
@@ -183,11 +198,11 @@ msgstr ""
 msgid "Communication"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:88
+#: src/screens/match/upcomingMatch.tsx:85
 msgid "Confirm"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:253
+#: src/screens/match/upcomingMatch.tsx:227
 msgid "Conflict Match"
 msgstr ""
 
@@ -195,11 +210,15 @@ msgstr ""
 #~ msgid "Conflict Resolved"
 #~ msgstr ""
 
+#: src/screens/league/createLeague.tsx:253
+msgid "Contact PRZ to enable this option"
+msgstr ""
+
 #: src/screens/league/createClub.tsx:119
 msgid "Create Club"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:282
+#: src/screens/league/createLeague.tsx:262
 #: src/screens/user/leagues.tsx:52
 msgid "Create League"
 msgstr ""
@@ -227,7 +246,7 @@ msgstr ""
 msgid "Delete League?"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:274
+#: src/screens/league/createLeague.tsx:254
 msgid "Describe your league and its rules"
 msgstr ""
 
@@ -235,7 +254,7 @@ msgstr ""
 #~ msgid "Describe your league in a few sentences..."
 #~ msgstr ""
 
-#: src/screens/league/createLeague.tsx:274
+#: src/screens/league/createLeague.tsx:254
 msgid "Description"
 msgstr ""
 
@@ -266,7 +285,7 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:71
 #: src/screens/auth/signUp.tsx:51
 #: src/screens/league/createClub.tsx:44
-#: src/screens/league/createLeague.tsx:98
+#: src/screens/league/createLeague.tsx:99
 msgid "Field can't be empty"
 msgstr ""
 
@@ -278,12 +297,21 @@ msgstr ""
 #~ msgid "Get Reset Link"
 #~ msgstr ""
 
+#: src/screens/match/finishedMatch.tsx:129
+#: src/screens/match/finishedMatch.tsx:133
+msgid "Goals"
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:230
+msgid "I played as a Goalkeeper"
+msgstr ""
+
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:133
 msgid "If you want to participate in your own league"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:106
-#: src/screens/league/createLeague.tsx:110
+#: src/screens/league/createLeague.tsx:107
+#: src/screens/league/createLeague.tsx:111
 msgid "Invalid URL format"
 msgstr ""
 
@@ -295,8 +323,8 @@ msgstr ""
 msgid "Invite Players"
 msgstr ""
 
-#: src/screens/league/functions/shareLink.tsx:45
-#: src/screens/league/functions/shareLink.tsx:45
+#: src/screens/league/actions/shareLink.tsx:45
+#: src/screens/league/actions/shareLink.tsx:45
 msgid "Invite clubs"
 msgstr ""
 
@@ -338,7 +366,7 @@ msgstr ""
 #~ msgid "Join {0} on Pro Clubs Zone!"
 #~ msgstr ""
 
-#: src/screens/league/functions/shareLink.tsx:38
+#: src/screens/league/actions/shareLink.tsx:38
 msgid "Join {leagueName} on Pro Clubs Zone!"
 msgstr ""
 
@@ -362,7 +390,7 @@ msgstr ""
 msgid "League Explorer"
 msgstr "Лиги Мира"
 
-#: src/screens/league/createLeague.tsx:120
+#: src/screens/league/createLeague.tsx:121
 msgid "League Limit Reached"
 msgstr ""
 
@@ -370,7 +398,7 @@ msgstr ""
 #~ msgid "League Name"
 #~ msgstr ""
 
-#: src/screens/league/createLeague.tsx:157
+#: src/screens/league/createLeague.tsx:158
 msgid "League Name (required)"
 msgstr ""
 
@@ -415,10 +443,20 @@ msgstr ""
 
 #: src/components/loading.tsx:24
 #: src/components/loading.tsx:38
+#: src/screens/match/upcomingMatch.tsx:144
 msgid "Loading"
 msgstr ""
 
-#: src/screens/user/home.tsx:208
+#: src/components/matchConflictItem.tsx:17
+#: src/screens/match/submitMatch.tsx:281
+msgid "MOTM"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:91
+msgid "Man of the Match"
+msgstr ""
+
+#: src/screens/user/home.tsx:197
 msgid "Manage your received and sent request"
 msgstr ""
 
@@ -426,8 +464,8 @@ msgstr ""
 msgid "Manager"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:100
-#: src/screens/match/finishedMatch.tsx:104
+#: src/screens/match/finishedMatch.tsx:185
+#: src/screens/match/finishedMatch.tsx:189
 msgid "Manager uploaded no images"
 msgstr ""
 
@@ -435,54 +473,54 @@ msgstr ""
 #~ msgid "Manager your received and sent request"
 #~ msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:53
+#: src/screens/match/upcomingMatch.tsx:55
 msgid "Match Resolved"
 msgstr ""
 
 #: src/screens/match/finishedMatch.tsx:36
-msgid "Match Stats & Info"
-msgstr ""
+#~ msgid "Match Stats & Info"
+#~ msgstr ""
 
-#: src/screens/match/submitMatch.tsx:107
+#: src/screens/match/submitMatch.tsx:103
 msgid "Match cannot be published due to conflict."
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:101
+#: src/screens/match/upcomingMatch.tsx:98
 msgid "Match is a draw"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:158
+#: src/screens/match/submitMatch.tsx:154
 msgid "Match scores are missing"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:103
-#: src/screens/match/upcomingMatch.tsx:54
+#: src/screens/match/submitMatch.tsx:99
+#: src/screens/match/upcomingMatch.tsx:56
 msgid "Match was published with the selected result"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:112
+#: src/screens/match/submitMatch.tsx:108
 msgid "Match will be published once opponent submits their result"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:106
+#: src/screens/match/submitMatch.tsx:102
 msgid "Match will be reviewed"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:248
-#: src/screens/league/createLeague.tsx:248
+#: src/screens/league/createLeague.tsx:249
+#: src/screens/league/createLeague.tsx:249
 msgid "Matches"
 msgstr ""
 
 #: src/screens/league/createClub.tsx:117
-#: src/screens/league/createLeague.tsx:157
+#: src/screens/league/createLeague.tsx:158
 msgid "Minimum {0} letters, no profanity"
 msgstr ""
 
 #: src/screens/match/submitMatch.tsx:176
-msgid "More goals or assists than team has scored"
-msgstr ""
+#~ msgid "More goals or assists than team has scored"
+#~ msgstr ""
 
-#: src/screens/user/home.tsx:208
+#: src/screens/user/home.tsx:197
 msgid "My Requests"
 msgstr ""
 
@@ -499,7 +537,7 @@ msgstr ""
 msgid "New requests"
 msgstr ""
 
-#: src/screens/user/home.tsx:177
+#: src/screens/user/home.tsx:166
 msgid "Next Matches"
 msgstr ""
 
@@ -521,11 +559,15 @@ msgstr ""
 msgid "No Fixtures"
 msgstr ""
 
-#: src/screens/league/stats.tsx:101
-msgid "No Players yet"
+#: src/screens/match/finishedMatch.tsx:125
+msgid "No MOTM"
 msgstr ""
 
-#: src/components/matchConflictItem.tsx:28
+#: src/screens/league/stats.tsx:101
+#~ msgid "No Players yet"
+#~ msgstr ""
+
+#: src/components/matchConflictItem.tsx:20
 msgid "No Proof"
 msgstr ""
 
@@ -533,16 +575,27 @@ msgstr ""
 msgid "No Public Leagues"
 msgstr ""
 
-#: src/screens/user/home.tsx:203
+#: src/screens/user/home.tsx:192
 msgid "No Upcoming Matches"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:130
+#: src/screens/match/finishedMatch.tsx:134
+msgid "No goalscorers"
 msgstr ""
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:157
 #~ msgid "No members except you"
 #~ msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:100
-#: src/screens/match/finishedMatch.tsx:104
+#: src/screens/league/stats.tsx:133
+msgid "No players yet"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:185
+#: src/screens/match/finishedMatch.tsx:189
+#: src/screens/match/finishedMatch.tsx:291
+#: src/screens/match/finishedMatch.tsx:295
 msgid "No screenshots"
 msgstr ""
 
@@ -550,8 +603,12 @@ msgstr ""
 msgid "No space character"
 msgstr ""
 
-#: src/screens/league/stats.tsx:103
+#: src/screens/league/stats.tsx:135
 msgid "No stats available"
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:228
+msgid "Options"
 msgstr ""
 
 #: src/components/standingItems.tsx:70
@@ -566,7 +623,7 @@ msgstr ""
 msgid "PTS"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:303
+#: src/screens/match/submitMatch.tsx:281
 msgid "Participated Players"
 msgstr ""
 
@@ -594,28 +651,54 @@ msgstr ""
 #~ msgid "Password reset link was send to your email"
 #~ msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:248
+#: src/screens/match/upcomingMatch.tsx:221
 msgid "Past Fixtures"
 msgstr ""
 
 #: src/components/matchConflictItem.tsx:29
-msgid "Pick Player"
-msgstr ""
+#~ msgid "Pick Player"
+#~ msgstr ""
 
-#: src/components/matchConflictItem.tsx:29
+#: src/components/matchConflictItem.tsx:21
 msgid "Pick Result"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:166
+#: src/screens/league/createLeague.tsx:167
 msgid "Platform"
 msgstr ""
 
 #: src/screens/league/leaguePreview.tsx:139
+#: src/screens/match/finishedMatch.tsx:99
 msgid "Player"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:64
+#: src/screens/match/submitStats.tsx:209
+msgid "Player Performance"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:261
+msgid "Player performance stats submission for this match was removed"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:291
+#: src/screens/match/finishedMatch.tsx:295
+msgid "Players uploaded no images"
+msgstr ""
+
+#: src/screens/league/createLeague.tsx:65
 msgid "Please sign in first to create a league"
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:192
+msgid "Problem processing image"
+msgstr ""
+
+#: src/screens/league/createLeague.tsx:253
+msgid "Public League"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:120
+msgid "Rating"
 msgstr ""
 
 #: src/screens/user/requests.tsx:93
@@ -629,6 +712,7 @@ msgstr ""
 #: src/screens/club/club.tsx:143
 #: src/screens/club/clubSettings.tsx:44
 #: src/screens/leagueAdmin/clubs.tsx:155
+#: src/screens/match/finishedMatch.tsx:238
 #: src/screens/user/requests.tsx:221
 msgid "Remove"
 msgstr ""
@@ -644,6 +728,10 @@ msgstr ""
 msgid "Remove Player"
 msgstr ""
 
+#: src/screens/match/finishedMatch.tsx:284
+msgid "Remove Player Stat"
+msgstr ""
+
 #: src/screens/user/requests.tsx:219
 msgid "Remove Request"
 msgstr ""
@@ -652,12 +740,16 @@ msgstr ""
 msgid "Removing League..."
 msgstr ""
 
+#: src/screens/match/finishedMatch.tsx:236
+msgid "Removing player stats"
+msgstr ""
+
 #: src/screens/league/leagueScheduled.tsx:39
 msgid "Report Center"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:128
-#: src/screens/match/upcomingMatch.tsx:128
+#: src/screens/match/actions/shareMatchDetails.tsx:19
+#: src/screens/match/actions/shareMatchDetails.tsx:19
 msgid "Report Match"
 msgstr ""
 
@@ -673,12 +765,12 @@ msgstr ""
 #~ msgid "Reset Password"
 #~ msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:82
+#: src/screens/match/upcomingMatch.tsx:79
 msgid "Resolve Match"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:102
-#: src/screens/match/submitMatch.tsx:111
+#: src/screens/match/submitMatch.tsx:98
+#: src/screens/match/submitMatch.tsx:107
 msgid "Result Submitted"
 msgstr ""
 
@@ -708,7 +800,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:166
+#: src/screens/league/createLeague.tsx:167
 msgid "Select Platform"
 msgstr ""
 
@@ -736,13 +828,13 @@ msgstr ""
 #~ msgid "Share league link with other players to invite them to your club"
 #~ msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:126
-#: src/screens/match/upcomingMatch.tsx:126
+#: src/screens/match/actions/shareMatchDetails.tsx:17
+#: src/screens/match/actions/shareMatchDetails.tsx:17
 msgid "Share report with admin"
 msgstr ""
 
 #: src/screens/auth/signIn.tsx:142
-#: src/screens/league/createLeague.tsx:66
+#: src/screens/league/createLeague.tsx:67
 msgid "Sign In"
 msgstr ""
 
@@ -750,7 +842,7 @@ msgstr ""
 msgid "Sign Up"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:64
+#: src/screens/league/createLeague.tsx:65
 msgid "Sign in to continue"
 msgstr ""
 
@@ -762,17 +854,40 @@ msgstr ""
 msgid "Social"
 msgstr ""
 
+#: src/screens/match/finishedMatch.tsx:267
+#: src/screens/match/submitMatch.tsx:204
+msgid "Something went wrong"
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:188
+msgid "Stats submitted"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:261
+msgid "Submission Removed"
+msgstr ""
+
 #: src/components/scoreboard.tsx:83
 msgid "Submit"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:319
+#: src/screens/match/submitMatch.tsx:295
 msgid "Submit Match"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:271
-#: src/screens/match/upcomingMatch.tsx:203
+#: src/screens/match/finishedMatch.tsx:87
+#: src/screens/match/submitStats.tsx:233
+msgid "Submit Stats"
+msgstr ""
+
+#: src/screens/match/submitMatch.tsx:249
+#: src/screens/match/upcomingMatch.tsx:74
+#: src/screens/match/upcomingMatch.tsx:167
 msgid "Submitting Match..."
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:200
+msgid "Submitting Performance Stats..."
 msgstr ""
 
 #: src/components/standingItems.tsx:64
@@ -786,8 +901,8 @@ msgstr ""
 msgid "Team Limit Reached"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:216
-#: src/screens/league/createLeague.tsx:216
+#: src/screens/league/createLeague.tsx:217
+#: src/screens/league/createLeague.tsx:217
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "Teams"
 msgstr ""
@@ -807,8 +922,16 @@ msgstr ""
 msgid "There is no user with this email"
 msgstr ""
 
+#: src/screens/match/submitStats.tsx:196
+msgid "There is something wrong with your image. Please send this image to your league admin or PRZ team"
+msgstr ""
+
 #: src/screens/league/stats.tsx:103
-msgid "This league currentl has no submitted matches"
+#~ msgid "This league currentl has no submitted matches"
+#~ msgstr ""
+
+#: src/screens/league/stats.tsx:135
+msgid "This league currently has no submitted matches"
 msgstr ""
 
 #: src/components/screenshots.tsx:59
@@ -825,12 +948,16 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: src/components/matchConflictItem.tsx:28
+#: src/components/matchConflictItem.tsx:20
 msgid "View Proof"
 msgstr ""
 
 #: src/components/standingItems.tsx:73
 msgid "W"
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:196
+msgid "Wrong image"
 msgstr ""
 
 #: src/screens/auth/completeSignIn.tsx:45
@@ -855,7 +982,7 @@ msgstr ""
 #~ msgid "You can sign in with your new password"
 #~ msgstr ""
 
-#: src/screens/league/createLeague.tsx:120
+#: src/screens/league/createLeague.tsx:121
 msgid "You cannot create more than one league"
 msgstr ""
 
@@ -863,46 +990,58 @@ msgstr ""
 msgid "You cannot remove club when league is scheduled"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:162
+#: src/screens/match/submitStats.tsx:134
+msgid "You have denied the app access to storage. To change, give the permission from the Android app info menu."
+msgstr ""
+
+#: src/screens/match/submitMatch.tsx:158
 msgid "You have selected more than 11 players for this match"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:275
+#: src/screens/match/submitStats.tsx:188
+msgid "Your player performance stats are now published"
+msgstr ""
+
+#: src/screens/league/createLeague.tsx:255
 msgid "discord.com/abcde123"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:157
+#: src/screens/league/createLeague.tsx:158
 msgid "i.e. La Liga"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:276
+#: src/screens/league/createLeague.tsx:256
 msgid "twitter.com/proclubszone"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:228
+#: src/screens/match/submitStats.tsx:192
+msgid "{0}"
+msgstr ""
+
+#: src/screens/league/createLeague.tsx:229
 msgid "{0} Match"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:233
-#: src/screens/league/createLeague.tsx:238
-#: src/screens/league/createLeague.tsx:243
-#: src/screens/league/createLeague.tsx:248
+#: src/screens/league/createLeague.tsx:234
+#: src/screens/league/createLeague.tsx:239
+#: src/screens/league/createLeague.tsx:244
+#: src/screens/league/createLeague.tsx:249
 msgid "{0} Matches"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:257
-#: src/screens/match/upcomingMatch.tsx:258
+#: src/screens/match/upcomingMatch.tsx:231
+#: src/screens/match/upcomingMatch.tsx:232
 msgid "{0} Submission"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:181
-#: src/screens/league/createLeague.tsx:186
-#: src/screens/league/createLeague.tsx:191
-#: src/screens/league/createLeague.tsx:196
-#: src/screens/league/createLeague.tsx:201
-#: src/screens/league/createLeague.tsx:206
-#: src/screens/league/createLeague.tsx:211
-#: src/screens/league/createLeague.tsx:216
+#: src/screens/league/createLeague.tsx:182
+#: src/screens/league/createLeague.tsx:187
+#: src/screens/league/createLeague.tsx:192
+#: src/screens/league/createLeague.tsx:197
+#: src/screens/league/createLeague.tsx:202
+#: src/screens/league/createLeague.tsx:207
+#: src/screens/league/createLeague.tsx:212
+#: src/screens/league/createLeague.tsx:217
 msgid "{0} Teams"
 msgstr ""
 
@@ -910,8 +1049,13 @@ msgstr ""
 msgid "{0} clubs / {1} matches"
 msgstr ""
 
-#: src/screens/match/upcomingMatch.tsx:99
-#: src/screens/match/upcomingMatch.tsx:100
+#: src/screens/match/finishedMatch.tsx:129
+#: src/screens/match/finishedMatch.tsx:133
+msgid "{0} goalscorers"
+msgstr ""
+
+#: src/screens/match/upcomingMatch.tsx:96
+#: src/screens/match/upcomingMatch.tsx:97
 msgid "{0} is winner"
 msgstr ""
 
