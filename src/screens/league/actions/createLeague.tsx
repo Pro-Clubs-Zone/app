@@ -12,7 +12,7 @@ const createLeague = async (data: ILeague, uid: string, username: string) => {
     name: data.name.trim(),
     adminId: uid,
     adminUsername: username,
-    description: data.description.trim(),
+    description: data.description?.trim(),
     created: firestore.Timestamp.now(),
   };
   batch.set(leagueRef, dataWithTimestamp);
