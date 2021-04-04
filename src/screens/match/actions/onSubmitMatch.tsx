@@ -34,7 +34,7 @@ const submitMatch = async (
     .doc(initialMatchData.matchId);
 
   let matchData: IMatch;
-  let playerList: MatchPlayerData = {};
+  let playerList: {[uid: string]: MatchPlayerData} = {};
 
   players.forEach((player) => {
     playerList[player.id] = {

@@ -6,13 +6,13 @@ export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
 export interface MatchPlayerData {
-  [id: string]: {
-    submitted: boolean;
-    clubId: string;
-    username: string;
-    motm: boolean;
-    club: string;
-  };
+  submitted: boolean;
+  clubId: string;
+  username: string;
+  motm: boolean;
+  club: string;
+  goals?: number;
+  rating?: number;
 }
 
 export interface PlayerStatsInfo {
@@ -99,12 +99,13 @@ export interface IMatch {
   motmSubmissions?: {
     [team: string]: string;
   };
+  motm?: string;
   teams?: [string, string];
   published: boolean;
   conflict: boolean;
   motmConflict: boolean;
   result?: {[team: string]: number};
-  players?: MatchPlayerData;
+  players?: {[id: string]: MatchPlayerData};
 }
 
 export interface ISectionList {

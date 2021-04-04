@@ -3,6 +3,7 @@ import {
   CommonPlayerStats,
   GoalkeeperStats,
   IMatchNavData,
+  MatchPlayerData,
   OutfieldPlayerStats,
 } from '../../../utils/interface';
 
@@ -31,6 +32,18 @@ const addPlayerStats = async (
     .doc(match.matchId);
 
   let totalStats = {} as GoalkeeperStats | OutfieldPlayerStats;
+
+  let matchPlayerData: {[uid: string]: Partial<MatchPlayerData>} = {
+    [uid]: {
+      submitted: true,
+      rating: playerStats.rating,
+      goals: 0,
+    },
+  };
+
+  if (playerStats.goals && playerStats.goals > 0) {
+    matchPlayerData[uid].goals = playerStats.goals;
+  }
 
   const commonStats: CommonPlayerStats = {
     rating: firestore.FieldValue.arrayUnion(playerStats.rating),
@@ -101,7 +114,7 @@ const addPlayerStats = async (
 
   batch.set(totalStatsRef, {[uid]: totalStats}, {merge: true});
   batch.set(matchStatsRef, {[match.matchId]: playerStats}, {merge: true});
-  batch.update(matchRef, {[`players.${uid}.submitted`]: true});
+  batch.set(matchRef, {players: matchPlayerData}, {merge: true});
 
   await batch.commit().catch((err) => console.log('error', err));
 };

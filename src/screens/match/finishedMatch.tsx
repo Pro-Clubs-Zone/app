@@ -10,7 +10,7 @@ import {
   Alert,
   Text,
 } from 'react-native';
-import {IMatchNavData} from '../../utils/interface';
+import {IMatchNavData, MatchPlayerData} from '../../utils/interface';
 import ScoreBoard from '../../components/scoreboard';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 //import {LeagueContext} from '../../context/leagueContext';
@@ -83,21 +83,44 @@ export default function FinishedMatch({navigation}: Props) {
 
 function MatchResult({navigation}: Props) {
   const [isPlayer, setIsPlayer] = useState(false);
+  const [motm, setMotm] = useState<Partial<MatchPlayerData>>();
+  const [goalscorers, setGoalscorers] = useState<MatchPlayerData[]>();
+  const [loading, setLoading] = useState(true);
 
   const matchContext = useContext(MatchContext);
   const user = useContext(AuthContext);
   const matchData: IMatchNavData = matchContext.match;
   const uid = user.uid;
 
+  const getGoalscorers = () => {
+    const playersData = Object.values(matchData.players);
+    const matchGoalscorers = playersData.filter((player) => player.goals > 0);
+    setGoalscorers(matchGoalscorers);
+  };
+
   useEffect(() => {
+    const motmPlayerId = matchData.motm;
+    const motmPlayer = matchData.players[motmPlayerId];
+    // console.log(motmPlayer);
+    setMotm({
+      username: motmPlayer.username,
+      club: motmPlayer.club,
+      rating: motmPlayer.rating,
+    });
+    getGoalscorers();
     if (
       matchData.players &&
       uid in matchData.players &&
-      matchData.players[uid] === false
+      matchData.players[uid].submitted === false
     ) {
       setIsPlayer(true);
     }
+    setLoading(false);
   }, [matchContext]);
+
+  if (loading) {
+    return <FullScreenLoading visible={loading} />;
+  }
 
   return (
     <View style={{flex: 1}}>
@@ -115,34 +138,80 @@ function MatchResult({navigation}: Props) {
       <ScrollView>
         <View>
           <ListHeading col1={i18n._(t`Man of the Match`)} />
-          <View>
-            <View>
+          <View
+            style={{
+              padding: verticalScale(16),
+            }}>
+            <View
+              style={{
+                paddingBottom: verticalScale(16),
+              }}>
               <Text style={TEXT_STYLES.caption}>{i18n._(t`Player`)}</Text>
-              <Text style={TEXT_STYLES.display5}>Player Name</Text>
+              <Text
+                style={[
+                  TEXT_STYLES.display4,
+                  {
+                    color: APP_COLORS.Accent,
+                  },
+                ]}>
+                {motm.username}
+              </Text>
             </View>
-            <View>
-              <Text style={TEXT_STYLES.caption}>{i18n._(t`Club`)}</Text>
-              <Text style={TEXT_STYLES.display5}>Club Name</Text>
-            </View>
-            <View>
-              <Text style={TEXT_STYLES.caption}>{i18n._(t`Rating`)}</Text>
-              <Text style={TEXT_STYLES.display5}>9.4</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
+              <View
+                style={{
+                  paddingRight: verticalScale(48),
+                }}>
+                <Text style={TEXT_STYLES.caption}>{i18n._(t`Club`)}</Text>
+                <Text style={TEXT_STYLES.display5}>{motm.username}</Text>
+              </View>
+              <View>
+                <Text style={TEXT_STYLES.caption}>{i18n._(t`Rating`)}</Text>
+                <Text style={TEXT_STYLES.display5}>{motm.rating}</Text>
+              </View>
             </View>
           </View>
         </View>
         <View>
-          <ListHeading col1={i18n._(t`Home Team goalscorers`)} />
-          <OneLine title="Name" key2="3" />
+          <ListHeading
+            col1={i18n._(t`${matchData.homeTeamName} goalscorers`)}
+            col4={i18n._(t`Goals`)}
+          />
+          {goalscorers.some(
+            (player) => player.clubId === matchData.homeTeamId,
+          ) ? (
+            goalscorers.map(
+              (player) =>
+                player.clubId === matchData.homeTeamId && (
+                  <OneLine title={player.username} key2={player.goals} />
+                ),
+            )
+          ) : (
+            <EmptyState body={i18n._(t`No goalscorers`)} />
+          )}
         </View>
         <View>
-          <ListHeading col1={i18n._(t`Away Team goalscorers`)} />
-          <OneLine title="Name" key2="3" />
+          <ListHeading
+            col1={i18n._(t`${matchData.awayTeamName} goalscorers`)}
+            col4={i18n._(t`Goals`)}
+          />
+          {goalscorers.some(
+            (player) => player.clubId === matchData.awayTeamId,
+          ) ? (
+            goalscorers.map(
+              (player) =>
+                player.clubId === matchData.awayTeamId && (
+                  <OneLine title={player.username} key2={player.goals} />
+                ),
+            )
+          ) : (
+            <EmptyState body={i18n._(t`No goalscorers`)} />
+          )}
         </View>
       </ScrollView>
-      {/* <EmptyState
-        title={i18n._(t`Match Stats & Info`)}
-        body={i18n._(t`Coming Soon`)}
-      /> */}
     </View>
   );
 }

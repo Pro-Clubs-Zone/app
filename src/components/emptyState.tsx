@@ -5,7 +5,7 @@ import {PrimaryButton} from './buttons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 
 type Props = {
-  title: string;
+  title?: string;
   body?: string;
   buttonTitle?: string;
   buttonOnPress?: () => void;
