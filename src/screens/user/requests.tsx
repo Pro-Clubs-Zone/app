@@ -144,7 +144,7 @@ function ClubRequests() {
         ListEmptyComponent={() => (
           <EmptyState
             title={i18n._(t`Club Requests`)}
-            body={i18n._(t`Receive club requests will appear here`)}
+            body={i18n._(t`Received club requests will appear here`)}
           />
         )}
         contentContainerStyle={{
@@ -260,7 +260,7 @@ function LeagueRequests() {
         ListEmptyComponent={() => (
           <EmptyState
             title={i18n._(t`League Requests`)}
-            body={i18n._(t`Receive league requests will appear here`)}
+            body={i18n._(t`Received league requests will appear here`)}
           />
         )}
         contentContainerStyle={{

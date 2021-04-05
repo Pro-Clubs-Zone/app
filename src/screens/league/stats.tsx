@@ -109,12 +109,13 @@ export default function Stats() {
           if (stat === 'rating' && value !== undefined) {
             avgRating = value.reduce((p, c) => p + c, 0) / value.length;
           }
+          //FIXME If conceded, show all starting with 0;
 
           if (value > 0 || avgRating > 0) {
             statObject = {
               club: player.club,
               username: player.username,
-              value: stat === 'rating' ? avgRating : value,
+              value: stat === 'rating' ? avgRating.toFixed(1) : value,
             };
 
             stats[stat].push(statObject);

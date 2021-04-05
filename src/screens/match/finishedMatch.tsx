@@ -176,7 +176,7 @@ function MatchResult({navigation}: Props) {
                       paddingRight: verticalScale(48),
                     }}>
                     <Text style={TEXT_STYLES.caption}>{i18n._(t`Club`)}</Text>
-                    <Text style={TEXT_STYLES.display5}>{motm.username}</Text>
+                    <Text style={TEXT_STYLES.display5}>{motm.club}</Text>
                   </View>
                   {motm.rating && (
                     <View>
@@ -202,9 +202,13 @@ function MatchResult({navigation}: Props) {
             (player) => player.clubId === matchData.homeTeamId,
           ) ? (
             goalscorers.map(
-              (player) =>
+              (player, index) =>
                 player.clubId === matchData.homeTeamId && (
-                  <OneLine title={player.username} key2={player.goals} />
+                  <OneLine
+                    title={player.username}
+                    key2={player.goals}
+                    key={index}
+                  />
                 ),
             )
           ) : (
@@ -220,9 +224,13 @@ function MatchResult({navigation}: Props) {
             (player) => player.clubId === matchData.awayTeamId,
           ) ? (
             goalscorers.map(
-              (player) =>
+              (player, index) =>
                 player.clubId === matchData.awayTeamId && (
-                  <OneLine title={player.username} key2={player.goals} />
+                  <OneLine
+                    title={player.username}
+                    key2={player.goals}
+                    key={index}
+                  />
                 ),
             )
           ) : (
