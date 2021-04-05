@@ -588,7 +588,7 @@ msgstr ""
 #~ msgid "No members except you"
 #~ msgstr ""
 
-#: src/screens/league/stats.tsx:133
+#: src/screens/league/stats.tsx:134
 msgid "No players yet"
 msgstr ""
 
@@ -603,7 +603,7 @@ msgstr ""
 msgid "No space character"
 msgstr ""
 
-#: src/screens/league/stats.tsx:135
+#: src/screens/league/stats.tsx:136
 msgid "No stats available"
 msgstr ""
 
@@ -702,11 +702,19 @@ msgid "Rating"
 msgstr ""
 
 #: src/screens/user/requests.tsx:93
-msgid "Receive club requests will appear here"
+#~ msgid "Receive club requests will appear here"
+#~ msgstr ""
+
+#: src/screens/user/requests.tsx:157
+#~ msgid "Receive league requests will appear here"
+#~ msgstr ""
+
+#: src/screens/user/requests.tsx:93
+msgid "Received club requests will appear here"
 msgstr ""
 
 #: src/screens/user/requests.tsx:157
-msgid "Receive league requests will appear here"
+msgid "Received league requests will appear here"
 msgstr ""
 
 #: src/screens/club/club.tsx:143
@@ -930,7 +938,7 @@ msgstr ""
 #~ msgid "This league currentl has no submitted matches"
 #~ msgstr ""
 
-#: src/screens/league/stats.tsx:135
+#: src/screens/league/stats.tsx:136
 msgid "This league currently has no submitted matches"
 msgstr ""
 
