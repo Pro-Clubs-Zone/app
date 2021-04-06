@@ -166,6 +166,7 @@ function SignUp({navigation}: Props) {
         return await Promise.all([
           firAuth.currentUser.updateProfile(userProfile),
           createDbEntry(userData),
+          userData.user.sendEmailVerification(),
         ]);
         //   setLoading(false);
         // const onCreateLeague = async () => {

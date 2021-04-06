@@ -49,12 +49,14 @@ const App = () => {
       const getLink = await Linking.getInitialURL();
 
       if (firUrl) {
+        console.log('firUrl', firUrl);
         if (firUrl.url.length > 34) {
           return firUrl.url;
         }
       }
 
       if (getLink) {
+        console.log('getLink', getLink);
         if (getLink.includes('firebaseapp')) {
           await AsyncStorage.setItem('@storage_Url', getLink);
         }

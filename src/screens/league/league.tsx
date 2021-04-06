@@ -31,6 +31,7 @@ import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
 import SignIn from '../auth/signIn';
 import Stats from './stats';
+import SignUp from '../auth/signUp';
 
 interface ClubProps {
   clubId: string;
@@ -55,6 +56,7 @@ export type LeagueStackType = {
   'Club Settings': ClubProps;
   'Report Center': ILeagueProps;
   'Sign In': undefined;
+  'Sign Up': undefined;
   Stats: undefined;
 };
 
@@ -227,6 +229,7 @@ export default function LeagueStack({navigation, route}: Props) {
           }}>
           <Stack.Screen name="League Preview" component={LeaguePreview} />
           <Stack.Screen name="Sign In" component={SignIn} />
+          <Stack.Screen name="Sign Up" component={SignUp} />
           <Stack.Screen name="Join Club" component={JoinClub} />
         </Stack.Navigator>
       );
@@ -272,6 +275,7 @@ export default function LeagueStack({navigation, route}: Props) {
         <Stack.Screen name="Create Club" component={CreateClub} />
         <Stack.Screen name="Join Club" component={JoinClub} />
         <Stack.Screen name="Sign In" component={SignIn} />
+        <Stack.Screen name="Sign Up" component={SignUp} />
         <Stack.Screen name="Club Settings" component={ClubSettings} />
       </Stack.Navigator>
     );

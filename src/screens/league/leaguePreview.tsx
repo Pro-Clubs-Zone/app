@@ -144,13 +144,33 @@ export default function LeaguePreview({navigation, route}: Props) {
     });
   }, [context, leagueContext]);
 
-  const onCheckUserInLeague = () => {
+  const onCheckUserInLeague = async () => {
+    await user.currentUser.reload();
     // const userLeague = context.userData?.leagues?.[leagueId];
 
     // if (userLeague) {
     //   setAccepted(userLeague.accepted);
     //   return userInLeague();
     // } else {
+
+    if (user.uid && !user.emailVerified) {
+      return Alert.alert(
+        i18n._(t`Email not verified`),
+        i18n._(t`Please verify your email before joining a league`),
+        [
+          {
+            text: i18n._(t`Resend verification`),
+            onPress: () => user.currentUser.sendEmailVerification(),
+            style: 'cancel',
+          },
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
     if (scheduled || leagueComplete) {
       return showJoinAsPlayer();
     } else {
@@ -170,7 +190,7 @@ export default function LeaguePreview({navigation, route}: Props) {
             if (user.uid) {
               navigation.navigate('Join Club');
             } else {
-              navigation.navigate('Sign In');
+              navigation.navigate('Sign Up');
             }
           },
         },
@@ -201,7 +221,7 @@ export default function LeaguePreview({navigation, route}: Props) {
                 newLeague: false,
               });
             } else {
-              navigation.navigate('Sign In');
+              navigation.navigate('Sign Up');
             }
 
             break;
@@ -209,7 +229,7 @@ export default function LeaguePreview({navigation, route}: Props) {
             if (user.uid) {
               navigation.navigate('Join Club');
             } else {
-              navigation.navigate('Sign In');
+              navigation.navigate('Sign Up');
             }
             break;
         }

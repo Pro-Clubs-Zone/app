@@ -74,7 +74,7 @@ export default function CreateLeague({navigation}: Props) {
         [
           {
             text: i18n._(t`Sign In`),
-            onPress: () => navigation.navigate('Sign In'),
+            onPress: () => navigation.navigate('Sign Up'),
           },
         ],
         {cancelable: false},
@@ -158,39 +158,63 @@ export default function CreateLeague({navigation}: Props) {
     );
   };
 
-  const onCreateLeague = () => {
-    fieldValidation().then(async (noErrors) => {
-      if (noErrors) {
-        setLoading(true);
-        const username = userData!.username;
-        await createLeague(data, uid!, username).then((leagueId) => {
-          let updatedUserData = {...context.userData!};
-          let updatedUserLeagues = {...context.userLeagues};
+  const onCreateLeague = async () => {
+    await user.currentUser.reload();
 
-          updatedUserData.leagues = {
-            ...updatedUserData.leagues,
-            [leagueId]: {
-              admin: true,
-              manager: false,
-            },
-          };
+    if (user.uid && !user.emailVerified) {
+      return Alert.alert(
+        i18n._(t`Email not verified`),
+        i18n._(t`Please verify your email before joining a league`),
+        [
+          {
+            text: i18n._(t`Resend verification`),
+            onPress: () => user.currentUser.sendEmailVerification(),
+            style: 'cancel',
+          },
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+    const noErrors = await fieldValidation();
+    if (noErrors) {
+      setLoading(true);
+      const username = userData!.username;
+      try {
+        const leagueId = await createLeague(data, uid, username);
+        let updatedUserData = {...context.userData!};
+        let updatedUserLeagues = {...context.userLeagues};
 
-          updatedUserLeagues = {
-            ...updatedUserLeagues,
-            [leagueId]: data,
-          };
+        updatedUserData.leagues = {
+          ...updatedUserData.leagues,
+          [leagueId]: {
+            admin: true,
+            manager: false,
+          },
+        };
 
-          context.setUserData(updatedUserData);
-          context.setUserLeagues(updatedUserLeagues);
-          setLoading(false);
-          navigation.navigate('League', {
-            leagueId: leagueId,
-            isAdmin: true,
-            newLeague: true,
-          });
+        updatedUserLeagues = {
+          ...updatedUserLeagues,
+          [leagueId]: data,
+        };
+
+        context.setUserData(updatedUserData);
+        context.setUserLeagues(updatedUserLeagues);
+        setLoading(false);
+        navigation.navigate('League', {
+          leagueId: leagueId,
+          isAdmin: true,
+          newLeague: true,
         });
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+        throw new Error(error);
       }
-    });
+    }
   };
 
   const pickerItemColor =
