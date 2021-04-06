@@ -22,16 +22,16 @@ msgstr ""
 #~ msgstr ""
 
 #: src/screens/auth/signIn.tsx:156
-msgid "<0>By signing up you agree to our <1>Privacy Policy.</1></0>"
+#~ msgid "<0>By signing up you agree to our <1>Privacy Policy.</1></0>"
+#~ msgstr ""
+
+#: src/screens/auth/signIn.tsx:144
+msgid "<0>Don’t have an account? <1>Sign up now.</1></0>"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:150
-#~ msgid "<0>Don’t have an account? <1>Sign up now.</1></0>"
-#~ msgstr ""
-
-#: src/screens/auth/signIn.tsx:133
-#~ msgid "<0>Forgot login details? <1>Get help recovering it.</1></0>"
-#~ msgstr ""
+#: src/screens/auth/signIn.tsx:127
+msgid "<0>Forgot login details? <1>Get help recovering it.</1></0>"
+msgstr ""
 
 #: src/screens/club/club.tsx:156
 #: src/screens/leagueAdmin/clubs.tsx:133
@@ -48,7 +48,7 @@ msgstr ""
 msgid "Add Players"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:208
+#: src/screens/league/leaguePreview.tsx:222
 msgid "Admin"
 msgstr ""
 
@@ -62,6 +62,10 @@ msgstr ""
 
 #: src/screens/user/requests.tsx:233
 msgid "All your sent requests will appear here"
+msgstr ""
+
+#: src/screens/auth/signUp.tsx:217
+msgid "Already have an account?"
 msgstr ""
 
 #: src/screens/club/clubSettings.tsx:63
@@ -92,12 +96,16 @@ msgstr ""
 msgid "Are you sure you want to schedule matches and start the league?"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:55
+#: src/screens/auth/resetPassword.tsx:51
+#: src/screens/auth/signIn.tsx:84
+#: src/screens/auth/signUp.tsx:85
+#: src/screens/auth/signUp.tsx:93
+#: src/screens/auth/signUp.tsx:202
 msgid "At least {0} characters"
 msgstr ""
 
 #: src/screens/league/createClub.tsx:48
-#: src/screens/league/createLeague.tsx:103
+#: src/screens/league/createLeague.tsx:106
 msgid "At least {0} letters"
 msgstr ""
 
@@ -118,8 +126,8 @@ msgstr ""
 #: src/screens/club/clubSettings.tsx:77
 #: src/screens/league/joinClub.tsx:100
 #: src/screens/league/leaguePreview.tsx:74
-#: src/screens/league/leaguePreview.tsx:133
-#: src/screens/league/leaguePreview.tsx:139
+#: src/screens/league/leaguePreview.tsx:147
+#: src/screens/league/leaguePreview.tsx:153
 #: src/screens/leagueAdmin/clubs.tsx:133
 #: src/screens/leagueAdmin/clubs.tsx:177
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:79
@@ -143,17 +151,18 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:105
 #: src/screens/auth/signIn.tsx:105
 #: src/screens/auth/signIn.tsx:105
-msgid "Check your email"
-msgstr ""
+#~ msgid "Check your email"
+#~ msgstr ""
 
-#: src/screens/auth/completeSignIn.tsx:47
-#: src/screens/auth/completeSignIn.tsx:63
-#: src/screens/auth/signIn.tsx:107
-#: src/screens/auth/signIn.tsx:107
-#: src/screens/auth/signIn.tsx:107
+#: src/screens/auth/passwordRecovery.tsx:69
+#: src/screens/auth/resetPassword.tsx:68
 #: src/screens/club/clubSettings.tsx:36
-#: src/screens/league/createLeague.tsx:123
-#: src/screens/league/league.tsx:46
+#: src/screens/league/createLeague.tsx:126
+#: src/screens/league/createLeague.tsx:145
+#: src/screens/league/createLeague.tsx:145
+#: src/screens/league/league.tsx:47
+#: src/screens/league/leaguePreview.tsx:120
+#: src/screens/league/leaguePreview.tsx:120
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:87
@@ -194,7 +203,7 @@ msgstr ""
 msgid "Coming Soon"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:209
+#: src/screens/league/leaguePreview.tsx:223
 msgid "Communication"
 msgstr ""
 
@@ -210,7 +219,7 @@ msgstr ""
 #~ msgid "Conflict Resolved"
 #~ msgstr ""
 
-#: src/screens/league/createLeague.tsx:253
+#: src/screens/league/createLeague.tsx:279
 msgid "Contact PRZ to enable this option"
 msgstr ""
 
@@ -218,7 +227,7 @@ msgstr ""
 msgid "Create Club"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:262
+#: src/screens/league/createLeague.tsx:288
 #: src/screens/user/leagues.tsx:52
 msgid "Create League"
 msgstr ""
@@ -246,7 +255,7 @@ msgstr ""
 msgid "Delete League?"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:254
+#: src/screens/league/createLeague.tsx:280
 msgid "Describe your league and its rules"
 msgstr ""
 
@@ -254,38 +263,58 @@ msgstr ""
 #~ msgid "Describe your league in a few sentences..."
 #~ msgstr ""
 
-#: src/screens/league/createLeague.tsx:254
+#: src/screens/league/createLeague.tsx:280
 msgid "Description"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:141
+#: src/screens/auth/passwordRecovery.tsx:94
+#: src/screens/auth/signIn.tsx:122
+#: src/screens/auth/signUp.tsx:197
 msgid "E-mail"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:67
+#: src/screens/auth/passwordRecovery.tsx:48
+#: src/screens/auth/signIn.tsx:72
+#: src/screens/auth/signUp.tsx:73
 msgid "Email is badly formatted"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:141
+#: src/screens/league/createLeague.tsx:138
+#: src/screens/league/createLeague.tsx:138
+#: src/screens/league/leaguePreview.tsx:113
+#: src/screens/league/leaguePreview.tsx:113
+msgid "Email not verified"
+msgstr ""
+
+#: src/screens/auth/passwordRecovery.tsx:94
+#: src/screens/auth/signIn.tsx:122
+#: src/screens/auth/signUp.tsx:197
 msgid "Enter E-mail"
 msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:95
-#~ msgid "Enter Password"
-#~ msgstr ""
+#: src/screens/auth/resetPassword.tsx:93
+#: src/screens/auth/signIn.tsx:123
+#: src/screens/auth/signUp.tsx:202
+msgid "Enter Password"
+msgstr ""
 
 #: src/components/scoreboard.tsx:67
 msgid "Enter Score"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:103
+#: src/screens/auth/signUp.tsx:208
 msgid "Enter Username"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:71
-#: src/screens/auth/signUp.tsx:51
+#: src/screens/auth/passwordRecovery.tsx:52
+#: src/screens/auth/resetPassword.tsx:47
+#: src/screens/auth/signIn.tsx:76
+#: src/screens/auth/signIn.tsx:80
+#: src/screens/auth/signUp.tsx:77
+#: src/screens/auth/signUp.tsx:81
+#: src/screens/auth/signUp.tsx:89
 #: src/screens/league/createClub.tsx:44
-#: src/screens/league/createLeague.tsx:99
+#: src/screens/league/createLeague.tsx:102
 msgid "Field can't be empty"
 msgstr ""
 
@@ -293,9 +322,9 @@ msgstr ""
 msgid "GD"
 msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:98
-#~ msgid "Get Reset Link"
-#~ msgstr ""
+#: src/screens/auth/passwordRecovery.tsx:95
+msgid "Get Reset Link"
+msgstr ""
 
 #: src/screens/match/finishedMatch.tsx:129
 #: src/screens/match/finishedMatch.tsx:133
@@ -310,8 +339,8 @@ msgstr ""
 msgid "If you want to participate in your own league"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:107
-#: src/screens/league/createLeague.tsx:111
+#: src/screens/league/createLeague.tsx:110
+#: src/screens/league/createLeague.tsx:114
 msgid "Invalid URL format"
 msgstr ""
 
@@ -339,10 +368,10 @@ msgstr ""
 
 #: src/screens/auth/completeSignIn.tsx:45
 #: src/screens/auth/completeSignIn.tsx:61
-msgid "It seems you've used wrong sign in link, please try again."
-msgstr ""
+#~ msgid "It seems you've used wrong sign in link, please try again."
+#~ msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:122
+#: src/screens/league/leaguePreview.tsx:136
 msgid "Join"
 msgstr ""
 
@@ -350,11 +379,11 @@ msgstr ""
 msgid "Join Club"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:228
+#: src/screens/league/leaguePreview.tsx:242
 msgid "Join League"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:120
+#: src/screens/league/leaguePreview.tsx:134
 msgid "Join as a Player"
 msgstr ""
 
@@ -390,7 +419,7 @@ msgstr ""
 msgid "League Explorer"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:121
+#: src/screens/league/createLeague.tsx:124
 msgid "League Limit Reached"
 msgstr ""
 
@@ -398,7 +427,7 @@ msgstr ""
 #~ msgid "League Name"
 #~ msgstr ""
 
-#: src/screens/league/createLeague.tsx:158
+#: src/screens/league/createLeague.tsx:184
 msgid "League Name (required)"
 msgstr ""
 
@@ -415,15 +444,15 @@ msgstr ""
 msgid "League is full and matches can be scheduled"
 msgstr ""
 
-#: src/screens/league/league.tsx:44
+#: src/screens/league/league.tsx:45
 msgid "League link has expired or wrong"
 msgstr ""
 
-#: src/screens/league/league.tsx:44
+#: src/screens/league/league.tsx:45
 msgid "League not found"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:226
+#: src/screens/league/leaguePreview.tsx:240
 msgid "League not started"
 msgstr ""
 
@@ -460,7 +489,7 @@ msgstr ""
 msgid "Manage your received and sent request"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:139
+#: src/screens/league/leaguePreview.tsx:153
 msgid "Manager"
 msgstr ""
 
@@ -506,13 +535,13 @@ msgstr ""
 msgid "Match will be reviewed"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:249
-#: src/screens/league/createLeague.tsx:249
+#: src/screens/league/createLeague.tsx:275
+#: src/screens/league/createLeague.tsx:275
 msgid "Matches"
 msgstr ""
 
 #: src/screens/league/createClub.tsx:117
-#: src/screens/league/createLeague.tsx:158
+#: src/screens/league/createLeague.tsx:184
 msgid "Minimum {0} letters, no profanity"
 msgstr ""
 
@@ -528,10 +557,9 @@ msgstr ""
 msgid "New Requests"
 msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:80
-#: src/screens/auth/resetPassword.tsx:80
-#~ msgid "New password is not strong enough."
-#~ msgstr ""
+#: src/screens/auth/resetPassword.tsx:79
+msgid "New password is not strong enough."
+msgstr ""
 
 #: src/screens/club/club.tsx:50
 msgid "New requests"
@@ -599,7 +627,7 @@ msgstr ""
 msgid "No screenshots"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:59
+#: src/screens/auth/signUp.tsx:97
 msgid "No space character"
 msgstr ""
 
@@ -615,7 +643,7 @@ msgstr ""
 msgid "PL"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:103
+#: src/screens/auth/signUp.tsx:208
 msgid "PSN or Xbox Username"
 msgstr ""
 
@@ -627,29 +655,27 @@ msgstr ""
 msgid "Participated Players"
 msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:95
-#~ msgid "Password"
-#~ msgstr ""
+#: src/screens/auth/resetPassword.tsx:93
+#: src/screens/auth/signIn.tsx:123
+#: src/screens/auth/signUp.tsx:202
+msgid "Password"
+msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:67
-#: src/screens/auth/resetPassword.tsx:67
-#~ msgid "Password Changed"
-#~ msgstr ""
+#: src/screens/auth/resetPassword.tsx:66
+msgid "Password Changed"
+msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:69
-#: src/screens/auth/passwordRecovery.tsx:69
-#~ msgid "Password Reset"
-#~ msgstr ""
+#: src/screens/auth/passwordRecovery.tsx:67
+msgid "Password Reset"
+msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:77
-#: src/screens/auth/resetPassword.tsx:77
-#~ msgid "Password reset code has expired"
-#~ msgstr ""
+#: src/screens/auth/resetPassword.tsx:76
+msgid "Password reset code has expired"
+msgstr ""
 
-#: src/screens/auth/passwordRecovery.tsx:69
-#: src/screens/auth/passwordRecovery.tsx:69
-#~ msgid "Password reset link was send to your email"
-#~ msgstr ""
+#: src/screens/auth/passwordRecovery.tsx:67
+msgid "Password reset link was send to your email"
+msgstr ""
 
 #: src/screens/match/upcomingMatch.tsx:221
 msgid "Past Fixtures"
@@ -663,11 +689,11 @@ msgstr ""
 msgid "Pick Result"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:167
+#: src/screens/league/createLeague.tsx:193
 msgid "Platform"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:139
+#: src/screens/league/leaguePreview.tsx:153
 #: src/screens/match/finishedMatch.tsx:99
 msgid "Player"
 msgstr ""
@@ -685,15 +711,22 @@ msgstr ""
 msgid "Players uploaded no images"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:65
+#: src/screens/league/createLeague.tsx:55
 msgid "Please sign in first to create a league"
+msgstr ""
+
+#: src/screens/league/createLeague.tsx:138
+#: src/screens/league/createLeague.tsx:138
+#: src/screens/league/leaguePreview.tsx:113
+#: src/screens/league/leaguePreview.tsx:113
+msgid "Please verify your email before joining a league"
 msgstr ""
 
 #: src/screens/match/submitStats.tsx:192
 msgid "Problem processing image"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:253
+#: src/screens/league/createLeague.tsx:279
 msgid "Public League"
 msgstr ""
 
@@ -744,7 +777,7 @@ msgstr ""
 msgid "Remove Request"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:183
+#: src/screens/league/leaguePreview.tsx:197
 msgid "Removing League..."
 msgstr ""
 
@@ -761,7 +794,7 @@ msgstr ""
 msgid "Report Match"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:227
+#: src/screens/league/leaguePreview.tsx:241
 msgid "Request Sent"
 msgstr ""
 
@@ -769,9 +802,16 @@ msgstr ""
 msgid "Required Screenshots"
 msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:96
-#~ msgid "Reset Password"
-#~ msgstr ""
+#: src/screens/league/createLeague.tsx:140
+#: src/screens/league/createLeague.tsx:140
+#: src/screens/league/leaguePreview.tsx:115
+#: src/screens/league/leaguePreview.tsx:115
+msgid "Resend verification"
+msgstr ""
+
+#: src/screens/auth/resetPassword.tsx:94
+msgid "Reset Password"
+msgstr ""
 
 #: src/screens/match/upcomingMatch.tsx:79
 msgid "Resolve Match"
@@ -808,7 +848,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:167
+#: src/screens/league/createLeague.tsx:193
 msgid "Select Platform"
 msgstr ""
 
@@ -841,24 +881,28 @@ msgstr ""
 msgid "Share report with admin"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:142
-#: src/screens/league/createLeague.tsx:67
+#: src/screens/auth/signIn.tsx:124
+#: src/screens/league/createLeague.tsx:57
 msgid "Sign In"
 msgstr ""
 
-#: src/screens/auth/signUp.tsx:104
+#: src/screens/auth/signUp.tsx:209
 msgid "Sign Up"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:65
+#: src/screens/auth/signUp.tsx:219
+msgid "Sign in now"
+msgstr ""
+
+#: src/screens/league/createLeague.tsx:55
 msgid "Sign in to continue"
 msgstr ""
 
 #: src/screens/auth/completeSignIn.tsx:72
-msgid "Signing you in"
-msgstr ""
+#~ msgid "Signing you in"
+#~ msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:210
+#: src/screens/league/leaguePreview.tsx:224
 msgid "Social"
 msgstr ""
 
@@ -909,24 +953,23 @@ msgstr ""
 msgid "Team Limit Reached"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:217
-#: src/screens/league/createLeague.tsx:217
+#: src/screens/league/createLeague.tsx:243
+#: src/screens/league/createLeague.tsx:243
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "Teams"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:121
-#: src/screens/auth/signIn.tsx:121
+#: src/screens/auth/passwordRecovery.tsx:78
+#: src/screens/auth/signIn.tsx:103
 msgid "That email address is invalid"
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:127
-#: src/screens/auth/signIn.tsx:127
+#: src/screens/auth/signIn.tsx:109
 msgid "The password is invalid or the user does not have a password."
 msgstr ""
 
-#: src/screens/auth/signIn.tsx:124
-#: src/screens/auth/signIn.tsx:124
+#: src/screens/auth/passwordRecovery.tsx:81
+#: src/screens/auth/signIn.tsx:106
 msgid "There is no user with this email"
 msgstr ""
 
@@ -949,10 +992,10 @@ msgstr ""
 #: src/screens/auth/signIn.tsx:105
 #: src/screens/auth/signIn.tsx:105
 #: src/screens/auth/signIn.tsx:105
-msgid "Use the link that you have received in your email to sign in"
-msgstr ""
+#~ msgid "Use the link that you have received in your email to sign in"
+#~ msgstr ""
 
-#: src/screens/auth/signUp.tsx:103
+#: src/screens/auth/signUp.tsx:208
 msgid "Username"
 msgstr ""
 
@@ -970,14 +1013,14 @@ msgstr ""
 
 #: src/screens/auth/completeSignIn.tsx:45
 #: src/screens/auth/completeSignIn.tsx:61
-msgid "Wrong sign in link"
-msgstr ""
+#~ msgid "Wrong sign in link"
+#~ msgstr ""
 
 #: src/screens/leagueAdmin/clubs.tsx:184
 msgid "You can invite clubs from league page"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:120
+#: src/screens/league/leaguePreview.tsx:134
 msgid "You can join only as a player as this league is already full"
 msgstr ""
 
@@ -985,12 +1028,11 @@ msgstr ""
 msgid "You can schedule matches once the league has {teamNum} teams"
 msgstr ""
 
-#: src/screens/auth/resetPassword.tsx:67
-#: src/screens/auth/resetPassword.tsx:67
-#~ msgid "You can sign in with your new password"
-#~ msgstr ""
+#: src/screens/auth/resetPassword.tsx:66
+msgid "You can sign in with your new password"
+msgstr ""
 
-#: src/screens/league/createLeague.tsx:121
+#: src/screens/league/createLeague.tsx:124
 msgid "You cannot create more than one league"
 msgstr ""
 
@@ -1010,15 +1052,15 @@ msgstr ""
 msgid "Your player performance stats are now published"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:255
+#: src/screens/league/createLeague.tsx:281
 msgid "discord.com/abcde123"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:158
+#: src/screens/league/createLeague.tsx:184
 msgid "i.e. La Liga"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:256
+#: src/screens/league/createLeague.tsx:282
 msgid "twitter.com/proclubszone"
 msgstr ""
 
@@ -1026,14 +1068,14 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:229
+#: src/screens/league/createLeague.tsx:255
 msgid "{0} Match"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:234
-#: src/screens/league/createLeague.tsx:239
-#: src/screens/league/createLeague.tsx:244
-#: src/screens/league/createLeague.tsx:249
+#: src/screens/league/createLeague.tsx:260
+#: src/screens/league/createLeague.tsx:265
+#: src/screens/league/createLeague.tsx:270
+#: src/screens/league/createLeague.tsx:275
 msgid "{0} Matches"
 msgstr ""
 
@@ -1042,18 +1084,18 @@ msgstr ""
 msgid "{0} Submission"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:182
-#: src/screens/league/createLeague.tsx:187
-#: src/screens/league/createLeague.tsx:192
-#: src/screens/league/createLeague.tsx:197
-#: src/screens/league/createLeague.tsx:202
-#: src/screens/league/createLeague.tsx:207
-#: src/screens/league/createLeague.tsx:212
-#: src/screens/league/createLeague.tsx:217
+#: src/screens/league/createLeague.tsx:208
+#: src/screens/league/createLeague.tsx:213
+#: src/screens/league/createLeague.tsx:218
+#: src/screens/league/createLeague.tsx:223
+#: src/screens/league/createLeague.tsx:228
+#: src/screens/league/createLeague.tsx:233
+#: src/screens/league/createLeague.tsx:238
+#: src/screens/league/createLeague.tsx:243
 msgid "{0} Teams"
 msgstr ""
 
-#: src/screens/league/leaguePreview.tsx:207
+#: src/screens/league/leaguePreview.tsx:221
 msgid "{0} clubs / {1} matches"
 msgstr ""
 
