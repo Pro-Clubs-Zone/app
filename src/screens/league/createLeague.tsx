@@ -56,6 +56,20 @@ export default function CreateLeague({navigation}: Props) {
     twitter: '',
   });
 
+  const showSignInAlert = () => {
+    Alert.alert(
+      i18n._(t`Sign in to continue`),
+      i18n._(t`Please sign in first to create a league`),
+      [
+        {
+          text: i18n._(t`Sign In`),
+          onPress: () => navigation.navigate('Sign Up'),
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   useEffect(() => {
     if (userLeagues) {
       for (const league of Object.values(userLeagues)) {
@@ -68,17 +82,7 @@ export default function CreateLeague({navigation}: Props) {
 
   useEffect(() => {
     if (!uid) {
-      Alert.alert(
-        i18n._(t`Sign in to continue`),
-        i18n._(t`Please sign in first to create a league`),
-        [
-          {
-            text: i18n._(t`Sign In`),
-            onPress: () => navigation.navigate('Sign Up'),
-          },
-        ],
-        {cancelable: false},
-      );
+      showSignInAlert();
     }
   }, [navigation, uid]);
 
@@ -159,6 +163,10 @@ export default function CreateLeague({navigation}: Props) {
   };
 
   const onCreateLeague = async () => {
+    if (!uid) {
+      console.log('no uid');
+      return showSignInAlert();
+    }
     await user.currentUser.reload();
 
     if (user.uid && !user.emailVerified) {

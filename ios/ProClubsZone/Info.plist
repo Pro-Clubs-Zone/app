@@ -39,7 +39,6 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseDynamicLinksCustomDomains</key>
 	<array>
-		<string>https://l.proclubs.zone/?link</string>
 		<string>https://l.proclubs.zone/lgu</string>
 		<string>https://l.proclubs.zone/eml</string>
 	</array>

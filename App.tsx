@@ -23,7 +23,6 @@ import i18n from './src/utils/i18n';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import RNBootSplash from 'react-native-bootsplash';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {MatchProvider} from './src/context/matchContext';
 
 const App = () => {
@@ -39,11 +38,7 @@ const App = () => {
   };
 
   const linking = {
-    prefixes: [
-      'https://l.proclubs.zone',
-      'proclubs://',
-      'https://pro-clubs-zone-v2.firebaseapp.com',
-    ],
+    prefixes: ['https://l.proclubs.zone', 'proclubs://'],
     async getInitialURL() {
       const firUrl = await getFirUrl();
       const getLink = await Linking.getInitialURL();
@@ -58,7 +53,7 @@ const App = () => {
       if (getLink) {
         console.log('getLink', getLink);
         if (getLink.includes('firebaseapp')) {
-          await AsyncStorage.setItem('@storage_Url', getLink);
+          // await AsyncStorage.setItem('@storage_Url', getLink);
         }
         if (getLink.length > 34) {
           return getLink;
@@ -67,12 +62,15 @@ const App = () => {
     },
     subscribe(listener) {
       const onReceiveURL = async ({url}: {url: string}) => {
-        if (url.length > 34) {
-          listener(url);
-        }
-        if (url.includes('firebaseapp')) {
-          await AsyncStorage.setItem('@storage_Url', url);
-        }
+        console.log('receive url', url);
+        listener(url);
+        // if (url.length > 34) {
+        //   listener(url);
+        //   console.log('receive url22', url);
+        // }
+        // if (url.includes('firebaseapp')) {
+        //   //   await AsyncStorage.setItem('@storage_Url', url);
+        // }
       };
 
       Linking.addEventListener('url', onReceiveURL);
