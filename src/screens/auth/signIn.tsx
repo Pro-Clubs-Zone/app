@@ -6,8 +6,6 @@ import {
   ImageBackground,
   Pressable,
   TouchableWithoutFeedback,
-  Alert,
-  Linking,
 } from 'react-native';
 import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
@@ -22,7 +20,6 @@ import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
 import {StackActions} from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 //import {ILeague} from '../../utils/interface';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign In'>;
@@ -40,11 +37,13 @@ export default function SignIn({navigation}: Props) {
   // const redirectedData = route.params?.data as ILeague;
 
   const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [errorStates, setErrorStates] = useState({
-    email: '',
+    email: null,
+    password: null,
   });
 
   const popAction = StackActions.pop(2);
@@ -68,15 +67,18 @@ export default function SignIn({navigation}: Props) {
     }, 1000);
   };
 
-  const onChangeText = (text: string, field: 'email') => {
+  const onChangeText = (text: string, field: 'email' | 'password') => {
     switch (field) {
       case 'email':
         setEmail(text);
         break;
+      case 'password':
+        setPassword(text);
+        break;
     }
 
     if (errorStates[field]) {
-      setErrorStates({...errorStates, [field]: ''});
+      setErrorStates({...errorStates, [field]: null});
     }
   };
 
@@ -84,8 +86,9 @@ export default function SignIn({navigation}: Props) {
     const re = /\S+@\S+\.\S+/;
     const emailValid = re.test(email);
 
-    let errorStatus: Record<'email', string> = {
-      email: '',
+    let errorStatus: Record<'email' | 'password', null | string> = {
+      email: null,
+      password: null,
     };
 
     let noErrors = true;
@@ -99,6 +102,16 @@ export default function SignIn({navigation}: Props) {
       noErrors = false;
     }
 
+    if (password === '') {
+      errorStatus.password = i18n._(t`Field can't be empty`);
+      noErrors = false;
+    }
+
+    if (password.length < 6 && password !== '') {
+      errorStatus.password = i18n._(t`At least ${6} characters`);
+      noErrors = false;
+    }
+
     if (!noErrors) {
       setErrorStates(errorStatus);
       return false;
@@ -107,71 +120,32 @@ export default function SignIn({navigation}: Props) {
     return true;
   };
 
-  function onSignIn() {
-    fieldValidation().then(async (noErrors) => {
-      if (noErrors) {
-        setLoading(true);
-        await firAuth
-          .sendSignInLinkToEmail(email, {
-            android: {
-              packageName: 'com.proclubszone',
-              minimumVersion: '1',
-              installApp: true,
-            },
-            iOS: {
-              bundleId: 'com.proclubszone',
-            },
-            url: 'https://l.proclubs.zone/emu/',
-            dynamicLinkDomain: 'l.proclubs.zone',
-            handleCodeInApp: true,
-          })
-          .then(async () => {
-            //   const jsonLeagueData = JSON.stringify(redirectedData);
-            // const asyncLeagueData = ['@storage_LeagueData', jsonLeagueData];
-            //   const asyncRedirect = ['@storage_RedirectedFrom', redirectedFrom];
-            //            const asyncEmail = ['@storage_Email', email];
-            try {
-              await AsyncStorage.setItem('@storage_Email', email).then(() => {
-                Alert.alert(
-                  i18n._(t`Check your email`),
-                  i18n._(
-                    t`Use the link that you have received in your email to sign in`,
-                  ),
-                  [
-                    {
-                      text: i18n._(t`Close`),
-                      onPress: () => navigation.dispatch(popAction),
-                      style: 'cancel',
-                    },
-                  ],
-                  {cancelable: false},
-                );
-              });
-            } catch (e) {
-              console.log('problem creating user', e);
-            }
-          })
-          .catch((error) => {
-            setLoading(false);
+  const onSignIn = async () => {
+    const noErrors = await fieldValidation();
+    if (noErrors) {
+      setLoading(true);
+      try {
+        await firAuth.signInWithEmailAndPassword(email, password);
+      } catch (prcErr) {
+        setLoading(false);
 
-            if (error.code === 'auth/invalid-email') {
-              onShowToast(i18n._(t`That email address is invalid`));
-            }
-            if (error.code === 'auth/user-not-found') {
-              onShowToast(i18n._(t`There is no user with this email`));
-            }
-            if (error.code === 'auth/wrong-password') {
-              onShowToast(
-                i18n._(
-                  t`The password is invalid or the user does not have a password.`,
-                ),
-              );
-            }
-            console.error(error);
-          });
+        if (prcErr.code === 'auth/invalid-email') {
+          onShowToast(i18n._(t`That email address is invalid`));
+        }
+        if (prcErr.code === 'auth/user-not-found') {
+          onShowToast(i18n._(t`There is no user with this email`));
+        }
+        if (prcErr.code === 'auth/wrong-password') {
+          onShowToast(
+            i18n._(
+              t`The password is invalid or the user does not have a password.`,
+            ),
+          );
+        }
+        console.error(prcErr);
       }
-    });
-  }
+    }
+  };
 
   return (
     <ImageBackground source={{uri: 'main_bg'}} style={styles.backgroundImage}>
@@ -193,49 +167,96 @@ export default function SignIn({navigation}: Props) {
                 helper="example@gmail.com"
                 error={errorStates.email}
               />
+              <TextField
+                value={password}
+                placeholder={i18n._(t`Enter Password`)}
+                onChangeText={(text) => onChangeText(text, 'password')}
+                autoCorrect={false}
+                autoCapitalize="none"
+                label={i18n._(t`Password`)}
+                error={errorStates.password}
+                textContentType="password"
+                secureTextEntry={true}
+                //  blurOnSubmit={false}
+                //   secureTextEntry={true}
+                //  textContentType="password"
+                // fieldIco={visibility}
+                // onPressIco={changePwdType}
+              />
               <BigButtonOutlined
                 onPress={onSignIn}
                 title={i18n._(t`Sign In`)}
+                // disabled={
+                //   !email ||
+                //   !emailIsValid(email) ||
+                //   !password
+                // }
               />
-              {__DEV__ && (
-                <>
-                  <BigButtonOutlined
-                    onPress={() => firAuth.signInAnonymously()}
-                    title="Sign Anon"
-                  />
-                  <BigButtonOutlined
-                    onPress={() => {
-                      firAuth.createUserWithEmailAndPassword(email, '123456');
-                    }}
-                    title="Sign Up with email"
-                  />
-                  <BigButtonOutlined
-                    onPress={() => {
-                      firAuth.signInWithEmailAndPassword(email, '123456');
-                    }}
-                    title="Sign In with email"
-                  />
-                </>
-              )}
               <Pressable
-                onPress={() => {
-                  Linking.openURL('https://proclubs.zone/privacy-policy');
-                }}>
-                <View style={styles.privacyPolicy}>
+                onPress={() => navigation.navigate('Password Recovery')}>
+                <View style={styles.resetPass}>
                   <Trans>
                     <Text style={TEXT_STYLES.small}>
-                      By signing up you agree to our{' '}
-                      <Text style={{...TEXT_STYLES.small, fontWeight: 'bold'}}>
-                        Privacy Policy.
+                      <Trans>Forgot login details?</Trans>{' '}
+                      <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
+                        <Trans>Get help recovering it.</Trans>
                       </Text>
                     </Text>
                   </Trans>
                 </View>
               </Pressable>
+              {/* <View
+                style={{
+                  marginTop: verticalScale(24)
+                }}
+              >
+                <View style={styles.sep}>
+                  <View style={styles.sepLine} />
+                  <Text style={[TEXT_STYLES.small.display4, styles.sepText]}>
+                    <Trans>OR</Trans>
+                  </Text>
+                  <View style={styles.sepLine} />
+                </View>
+                <View
+                  style={{
+                    marginTop: verticalScale(24)
+                  }}
+                >
+                  <ExternalLogin
+                    onPress={onFbLoginPress.bind(this)}
+                    label={i18n._(
+                      t`Log in with ${
+                        selectedPlatform == "PSN" ? "Facebook" : "XBOX"
+                      }`
+                    )}
+                    platform={selectedPlatform}
+                  />
+                </View>
+              </View> */}
             </View>
           </View>
         </View>
       </TouchableWithoutFeedback>
+      <Pressable onPress={() => navigation.goBack()} style={{width: '100%'}}>
+        <View style={styles.footer}>
+          <Trans>
+            <Text style={TEXT_STYLES.small}>
+              <Trans>Don’t have an account?</Trans>{' '}
+              <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
+                <Trans>Sign up now.</Trans>
+              </Text>
+            </Text>
+          </Trans>
+        </View>
+      </Pressable>
+      {/* {openXBL && (
+        <XboxSignup
+          openModal={openXBL}
+          closeModal={() => setState({ openXBL: false })}
+          onSignInSuccess={createMicrosoftUser}
+          signupUrl={MS_OAUTH}
+        />
+      )} */}
     </ImageBackground>
   );
 }
@@ -272,6 +293,10 @@ const styles = ScaledSheet.create({
     width: '100%',
   },
   privacyPolicy: {
+    alignItems: 'center',
+    marginTop: '16@vs',
+  },
+  resetPass: {
     alignItems: 'center',
     marginTop: '16@vs',
   },

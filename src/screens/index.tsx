@@ -7,7 +7,7 @@ import {APP_COLORS, FONT_SIZES} from '../utils/designSystem';
 import {IconButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {LogBox, Platform} from 'react-native';
+import {LogBox} from 'react-native';
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
 
@@ -25,7 +25,8 @@ import Match from './match/match';
 import {RequestContext} from '../context/requestContext';
 import {AppContext} from '../context/appContext';
 import LeaguePreview from './league/leaguePreview';
-import CompleteSignIn from './auth/completeSignIn';
+import PasswordRecovery from './auth/passwordRecovery';
+import ResetPassword from './auth/resetPassword';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
 
@@ -33,7 +34,10 @@ export type AppNavStack = {
   Home: undefined;
   'Sign Up': undefined;
   'Sign In': undefined;
-  'Complete Sign In': undefined;
+  'Password Recovery': undefined;
+  'Reset Password': {
+    oobCode: string;
+  };
   Requests: undefined;
   'Create League': undefined;
   'League Explorer': undefined;
@@ -167,7 +171,7 @@ export default function AppIndex() {
           headerRight: () => (
             <IconButton
               name="account"
-              onPress={() => navigation.navigate('Sign In')}
+              onPress={() => navigation.navigate('Sign Up')}
             />
           ),
           animationTypeForReplace: 'pop',
@@ -175,13 +179,15 @@ export default function AppIndex() {
       />
 
       <Stack.Screen
-        name="Sign In"
-        component={SignIn}
+        name="Sign Up"
+        component={SignUp}
         options={{
           animationTypeForReplace: 'pop',
         }}
       />
-      <Stack.Screen name="Complete Sign In" component={CompleteSignIn} />
+      <Stack.Screen name="Sign In" component={SignIn} />
+      <Stack.Screen name="Password Recovery" component={PasswordRecovery} />
+      <Stack.Screen name="Reset Password" component={ResetPassword} />
       {commonStack}
     </Stack.Navigator>
   );
