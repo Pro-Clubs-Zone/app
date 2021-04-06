@@ -85,7 +85,7 @@ const App = () => {
       initialRouteName: 'Home',
       screens: {
         League: 'lgu/:leagueId',
-        'Complete Sign In': '',
+        'Reset Password': 'eml/',
       },
     },
   };
