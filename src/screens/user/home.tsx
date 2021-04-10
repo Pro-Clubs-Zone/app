@@ -270,7 +270,7 @@ export default function Home({navigation}: Props) {
           badgeNumber={userRequestCount}
           onPress={() => navigation.navigate('Requests')}
         />
-        {!user?.currentUser.emailVerified && (
+        {!user?.currentUser?.emailVerified && (
           <View style={styles.emailVerification}>
             <Text style={TEXT_STYLES.small}>
               {i18n._(t`Email is not verified`)}
@@ -280,7 +280,7 @@ export default function Home({navigation}: Props) {
               secondary
               onPress={async () => {
                 await user.currentUser.reload();
-                if (!user.currentUser.emailVerified) {
+                if (!user?.currentUser?.emailVerified) {
                   user.currentUser.sendEmailVerification();
                 }
               }}
