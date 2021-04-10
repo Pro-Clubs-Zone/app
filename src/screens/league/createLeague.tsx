@@ -167,26 +167,26 @@ export default function CreateLeague({navigation}: Props) {
       console.log('no uid');
       return showSignInAlert();
     }
-    await user.currentUser.reload();
+    // await user.currentUser.reload();
 
-    if (user.uid && !user.emailVerified) {
-      return Alert.alert(
-        i18n._(t`Email not verified`),
-        i18n._(t`Please verify your email before joining a league`),
-        [
-          {
-            text: i18n._(t`Resend verification`),
-            onPress: () => user.currentUser.sendEmailVerification(),
-            style: 'cancel',
-          },
-          {
-            text: i18n._(t`Close`),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: false},
-      );
-    }
+    // if (user.uid && !user.currentUser.emailVerified) {
+    //   return Alert.alert(
+    //     i18n._(t`Email not verified`),
+    //     i18n._(t`Please verify your email before joining a league`),
+    //     [
+    //       {
+    //         text: i18n._(t`Resend verification`),
+    //         onPress: () => user.currentUser.sendEmailVerification(),
+    //         style: 'cancel',
+    //       },
+    //       {
+    //         text: i18n._(t`Close`),
+    //         style: 'cancel',
+    //       },
+    //     ],
+    //     {cancelable: false},
+    //   );
+    // }
     const noErrors = await fieldValidation();
     if (noErrors) {
       setLoading(true);

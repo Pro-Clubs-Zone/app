@@ -27,6 +27,7 @@ import {NonModalLoading} from '../../components/loading';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import UpcomingMatchCard from '../../components/upcomingMatchCard';
 import {CardMedium} from '../../components/cards';
+import {MinButton} from '../../components/buttons';
 
 const db = firestore();
 
@@ -269,6 +270,23 @@ export default function Home({navigation}: Props) {
           badgeNumber={userRequestCount}
           onPress={() => navigation.navigate('Requests')}
         />
+        {!user?.currentUser.emailVerified && (
+          <View style={styles.emailVerification}>
+            <Text style={TEXT_STYLES.small}>
+              {i18n._(t`Email is not verified`)}
+            </Text>
+            <MinButton
+              title="resend"
+              secondary
+              onPress={async () => {
+                await user.currentUser.reload();
+                if (!user.currentUser.emailVerified) {
+                  user.currentUser.sendEmailVerification();
+                }
+              }}
+            />
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -290,5 +308,15 @@ const styles = ScaledSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: '8@vs',
+  },
+  emailVerification: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderRadius: 3,
+    backgroundColor: APP_COLORS.Red,
+    alignItems: 'center',
+    padding: '8@vs',
+    marginHorizontal: '4@vs',
+    marginVertical: '8@vs',
   },
 });
