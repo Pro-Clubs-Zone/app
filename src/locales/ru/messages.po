@@ -105,7 +105,7 @@ msgid "At least {0} characters"
 msgstr ""
 
 #: src/screens/league/createClub.tsx:48
-#: src/screens/league/createLeague.tsx:106
+#: src/screens/league/createLeague.tsx:107
 msgid "At least {0} letters"
 msgstr ""
 
@@ -157,7 +157,7 @@ msgstr ""
 #: src/screens/auth/passwordRecovery.tsx:69
 #: src/screens/auth/resetPassword.tsx:68
 #: src/screens/club/clubSettings.tsx:36
-#: src/screens/league/createLeague.tsx:126
+#: src/screens/league/createLeague.tsx:127
 #: src/screens/league/league.tsx:47
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
@@ -186,7 +186,7 @@ msgstr ""
 msgid "Club Name"
 msgstr ""
 
-#: src/screens/user/home.tsx:51
+#: src/screens/user/home.tsx:52
 #: src/screens/user/requests.tsx:93
 msgid "Club Requests"
 msgstr ""
@@ -275,7 +275,7 @@ msgstr ""
 msgid "Email is badly formatted"
 msgstr ""
 
-#: src/screens/user/home.tsx:201
+#: src/screens/user/home.tsx:202
 msgid "Email is not verified"
 msgstr ""
 
@@ -318,7 +318,7 @@ msgstr ""
 #: src/screens/auth/signUp.tsx:81
 #: src/screens/auth/signUp.tsx:89
 #: src/screens/league/createClub.tsx:44
-#: src/screens/league/createLeague.tsx:102
+#: src/screens/league/createLeague.tsx:103
 msgid "Field can't be empty"
 msgstr ""
 
@@ -343,8 +343,8 @@ msgstr ""
 msgid "If you want to participate in your own league"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:110
-#: src/screens/league/createLeague.tsx:114
+#: src/screens/league/createLeague.tsx:111
+#: src/screens/league/createLeague.tsx:115
 msgid "Invalid URL format"
 msgstr ""
 
@@ -423,7 +423,7 @@ msgstr ""
 msgid "League Explorer"
 msgstr "Лиги Мира"
 
-#: src/screens/league/createLeague.tsx:124
+#: src/screens/league/createLeague.tsx:125
 msgid "League Limit Reached"
 msgstr ""
 
@@ -431,11 +431,11 @@ msgstr ""
 #~ msgid "League Name"
 #~ msgstr ""
 
-#: src/screens/league/createLeague.tsx:189
+#: src/screens/league/createLeague.tsx:190
 msgid "League Name (required)"
 msgstr ""
 
-#: src/screens/user/home.tsx:96
+#: src/screens/user/home.tsx:97
 #: src/screens/user/requests.tsx:157
 msgid "League Requests"
 msgstr ""
@@ -489,7 +489,7 @@ msgstr ""
 msgid "Man of the Match"
 msgstr ""
 
-#: src/screens/user/home.tsx:198
+#: src/screens/user/home.tsx:199
 msgid "Manage your received and sent request"
 msgstr ""
 
@@ -539,13 +539,13 @@ msgstr ""
 msgid "Match will be reviewed"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:280
-#: src/screens/league/createLeague.tsx:280
+#: src/screens/league/createLeague.tsx:281
+#: src/screens/league/createLeague.tsx:281
 msgid "Matches"
 msgstr ""
 
 #: src/screens/league/createClub.tsx:117
-#: src/screens/league/createLeague.tsx:189
+#: src/screens/league/createLeague.tsx:190
 msgid "Minimum {0} letters, no profanity"
 msgstr ""
 
@@ -553,7 +553,7 @@ msgstr ""
 #~ msgid "More goals or assists than team has scored"
 #~ msgstr ""
 
-#: src/screens/user/home.tsx:198
+#: src/screens/user/home.tsx:199
 msgid "My Requests"
 msgstr ""
 
@@ -569,7 +569,7 @@ msgstr ""
 msgid "New requests"
 msgstr ""
 
-#: src/screens/user/home.tsx:167
+#: src/screens/user/home.tsx:168
 msgid "Next Matches"
 msgstr ""
 
@@ -607,7 +607,7 @@ msgstr ""
 msgid "No Public Leagues"
 msgstr ""
 
-#: src/screens/user/home.tsx:193
+#: src/screens/user/home.tsx:194
 msgid "No Upcoming Matches"
 msgstr ""
 
@@ -693,7 +693,7 @@ msgstr ""
 msgid "Pick Result"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:198
+#: src/screens/league/createLeague.tsx:199
 msgid "Platform"
 msgstr ""
 
@@ -715,7 +715,7 @@ msgstr ""
 msgid "Players uploaded no images"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:55
+#: src/screens/league/createLeague.tsx:56
 msgid "Please sign in first to create a league"
 msgstr ""
 
@@ -730,7 +730,7 @@ msgstr ""
 msgid "Problem processing image"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:284
+#: src/screens/league/createLeague.tsx:285
 msgid "Public League"
 msgstr ""
 
@@ -852,7 +852,7 @@ msgstr ""
 msgid "Select"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:198
+#: src/screens/league/createLeague.tsx:199
 msgid "Select Platform"
 msgstr ""
 
@@ -886,7 +886,7 @@ msgid "Share report with admin"
 msgstr ""
 
 #: src/screens/auth/signIn.tsx:124
-#: src/screens/league/createLeague.tsx:57
+#: src/screens/league/createLeague.tsx:58
 msgid "Sign In"
 msgstr ""
 
@@ -898,7 +898,7 @@ msgstr ""
 msgid "Sign in now"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:55
+#: src/screens/league/createLeague.tsx:56
 msgid "Sign in to continue"
 msgstr ""
 
@@ -957,8 +957,8 @@ msgstr ""
 msgid "Team Limit Reached"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:248
-#: src/screens/league/createLeague.tsx:248
+#: src/screens/league/createLeague.tsx:249
+#: src/screens/league/createLeague.tsx:249
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "Teams"
 msgstr ""
@@ -1040,7 +1040,7 @@ msgstr ""
 msgid "You can sign in with your new password"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:124
+#: src/screens/league/createLeague.tsx:125
 msgid "You cannot create more than one league"
 msgstr ""
 
@@ -1064,7 +1064,7 @@ msgstr ""
 msgid "discord.com/abcde123"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:189
+#: src/screens/league/createLeague.tsx:190
 msgid "i.e. La Liga"
 msgstr ""
 
@@ -1076,14 +1076,14 @@ msgstr ""
 msgid "{0}"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:260
+#: src/screens/league/createLeague.tsx:261
 msgid "{0} Match"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:265
-#: src/screens/league/createLeague.tsx:270
-#: src/screens/league/createLeague.tsx:275
-#: src/screens/league/createLeague.tsx:280
+#: src/screens/league/createLeague.tsx:266
+#: src/screens/league/createLeague.tsx:271
+#: src/screens/league/createLeague.tsx:276
+#: src/screens/league/createLeague.tsx:281
 msgid "{0} Matches"
 msgstr ""
 
@@ -1092,14 +1092,14 @@ msgstr ""
 msgid "{0} Submission"
 msgstr ""
 
-#: src/screens/league/createLeague.tsx:213
-#: src/screens/league/createLeague.tsx:218
-#: src/screens/league/createLeague.tsx:223
-#: src/screens/league/createLeague.tsx:228
-#: src/screens/league/createLeague.tsx:233
-#: src/screens/league/createLeague.tsx:238
-#: src/screens/league/createLeague.tsx:243
-#: src/screens/league/createLeague.tsx:248
+#: src/screens/league/createLeague.tsx:214
+#: src/screens/league/createLeague.tsx:219
+#: src/screens/league/createLeague.tsx:224
+#: src/screens/league/createLeague.tsx:229
+#: src/screens/league/createLeague.tsx:234
+#: src/screens/league/createLeague.tsx:239
+#: src/screens/league/createLeague.tsx:244
+#: src/screens/league/createLeague.tsx:249
 msgid "{0} Teams"
 msgstr ""
 
