@@ -155,7 +155,8 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         );
       })
       .catch((error) => {
-        console.log(error);
+        setLoading(false);
+        throw new Error(error);
       });
   };
 

@@ -380,9 +380,14 @@ export default function CreateLeague({navigation}: Props) {
           </View>
           <SwitchLabel
             title={i18n._(t`Public League`)}
-            subtitle={i18n._(t`Contact PRZ to enable this option`)}
-            disabled={true}
-            value={false}
+            subtitle={
+              user.currentUser.emailVerified
+                ? i18n._(t`Everyone can send requests to join`)
+                : i18n._(t`Verify your email to enable this option`)
+            }
+            disabled={!user.currentUser.emailVerified}
+            value={!data.private}
+            onValueChange={() => setData({...data, private: !data.private})}
           />
           <TextField
             value={data.description}

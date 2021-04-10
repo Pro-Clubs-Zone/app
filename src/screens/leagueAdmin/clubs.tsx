@@ -151,14 +151,18 @@ export default function Clubs({navigation}: Props) {
       }
       return club;
     });
-    await onHandleLeagueRequest(selectedClub, true).then(() => {
-      const leagueData = {...leagueContext.league};
-      leagueData.acceptedClubs += 1;
-      leagueContext.setLeague(leagueData);
-      setData(updatedList);
-      sortClubs(updatedList);
-      setLoading(false);
-    });
+    await onHandleLeagueRequest(selectedClub, true)
+      .then(() => {
+        const leagueData = {...leagueContext.league};
+        leagueData.acceptedClubs += 1;
+        leagueContext.setLeague(leagueData);
+        setData(updatedList);
+        sortClubs(updatedList);
+        setLoading(false);
+      })
+      .catch((requestError) => {
+        throw new Error(requestError);
+      });
   };
 
   const onDeclineClub = async (selectedClub: IClubRequestData) => {
