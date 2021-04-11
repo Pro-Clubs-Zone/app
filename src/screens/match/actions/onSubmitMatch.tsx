@@ -35,6 +35,7 @@ const submitMatch = async (
 
   let matchData: IMatch;
   let playerList: {[uid: string]: MatchPlayerData} = {};
+  let notSubmittedPlayers: string[] = [];
 
   players.forEach((player) => {
     playerList[player.id] = {
@@ -44,6 +45,7 @@ const submitMatch = async (
       motm: player.id === motm ?? false,
       club: player.club,
     };
+    notSubmittedPlayers.push(player.id);
   });
 
   await matchRef.get().then((res) => {
@@ -54,9 +56,11 @@ const submitMatch = async (
     submissions: {};
     players: {};
     motmSubmissions?: {};
+    notSubmittedPlayers: string[];
   } = {
     submissions: teamSubmission,
     players: playerList,
+    notSubmittedPlayers: notSubmittedPlayers,
   };
 
   if (motm !== undefined) {

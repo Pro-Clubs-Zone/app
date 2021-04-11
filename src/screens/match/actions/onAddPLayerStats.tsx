@@ -115,6 +115,13 @@ const addPlayerStats = async (
   batch.set(totalStatsRef, {[uid]: totalStats}, {merge: true});
   batch.set(matchStatsRef, {[match.matchId]: playerStats}, {merge: true});
   batch.set(matchRef, {players: matchPlayerData}, {merge: true});
+  batch.set(
+    matchRef,
+    {
+      notSubmittedPlayers: firestore.FieldValue.arrayRemove(uid),
+    },
+    {merge: true},
+  );
 
   await batch.commit().catch((err) => console.log('error', err));
 };
