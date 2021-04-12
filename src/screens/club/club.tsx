@@ -103,7 +103,6 @@ export default function Club({navigation, route}: Props) {
       playerList.push(playerInfo);
     }
 
-    console.log(playerList, 'playerList');
     setData(playerList);
     sortPlayers(playerList);
     setLoading(false);
@@ -113,31 +112,33 @@ export default function Club({navigation, route}: Props) {
     selectedPlayer: IPlayerRequestData,
     acceptRequest: boolean,
   ) => {
-    await handleClubRequest(
-      requests,
-      selectedPlayer,
-      requestSectionTitle,
-      acceptRequest,
-    )
-      .then((newData) => {
-        requestContext.setClubs(newData);
-        const currentCount = requestContext.requestCount;
-        requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
-      })
-      .then(() => {
-        const currentLeagueData = {...context.userLeagues};
-        if (acceptRequest) {
-          currentLeagueData[selectedPlayer.leagueId].clubs[
-            selectedPlayer.clubId
-          ].roster[selectedPlayer.playerId].accepted = true;
-        } else {
-          delete currentLeagueData[selectedPlayer.leagueId].clubs[
-            selectedPlayer.clubId
-          ].roster[selectedPlayer.playerId];
-        }
+    try {
+      const newData = await handleClubRequest(
+        requests,
+        selectedPlayer,
+        requestSectionTitle,
+        acceptRequest,
+      );
 
-        context.setUserLeagues(currentLeagueData);
-      });
+      requestContext.setClubs(newData);
+      const currentCount = requestContext.requestCount;
+      requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
+
+      const currentLeagueData = {...context.userLeagues};
+      if (acceptRequest) {
+        currentLeagueData[selectedPlayer.leagueId].clubs[
+          selectedPlayer.clubId
+        ].roster[selectedPlayer.playerId].accepted = true;
+      } else {
+        delete currentLeagueData[selectedPlayer.leagueId].clubs[
+          selectedPlayer.clubId
+        ].roster[selectedPlayer.playerId];
+      }
+
+      context.setUserLeagues(currentLeagueData);
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   const onAcceptPlayer = async (selectedPlayer: IPlayerRequestData) => {
@@ -178,21 +179,17 @@ export default function Club({navigation, route}: Props) {
       (player) => player.playerId !== selectedPlayer.playerId,
     );
 
-    removePlayer(selectedPlayer)
-      .then(() => {
-        const currentLeagueData = {...context.userLeagues};
+    await removePlayer(selectedPlayer);
+    const currentLeagueData = {...context.userLeagues};
+    delete currentLeagueData[selectedPlayer.leagueId].clubs[
+      selectedPlayer.clubId
+    ].roster[selectedPlayer.playerId];
 
-        delete currentLeagueData[selectedPlayer.leagueId].clubs[
-          selectedPlayer.clubId
-        ].roster[selectedPlayer.playerId];
+    context.setUserLeagues(currentLeagueData);
 
-        context.setUserLeagues(currentLeagueData);
-      })
-      .then(() => {
-        setData(updatedList);
-        sortPlayers(updatedList);
-        setLoading(false);
-      });
+    setData(updatedList);
+    sortPlayers(updatedList);
+    setLoading(false);
   };
 
   const onAcceptedPlayer = (player: IPlayerRequestData) => {

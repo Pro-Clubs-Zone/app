@@ -272,11 +272,10 @@ export default function LeagueStack({navigation, route}: Props) {
           animationEnabled: false,
         }}>
         <Stack.Screen name="League Preview" component={LeaguePreview} />
-        <Stack.Screen name="Create Club" component={CreateClub} />
         <Stack.Screen name="Join Club" component={JoinClub} />
         <Stack.Screen name="Sign In" component={SignIn} />
         <Stack.Screen name="Sign Up" component={SignUp} />
-        <Stack.Screen name="Club Settings" component={ClubSettings} />
+        {commonStack}
       </Stack.Navigator>
     );
   }

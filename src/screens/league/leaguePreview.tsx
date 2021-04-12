@@ -128,9 +128,9 @@ export default function LeaguePreview({navigation, route}: Props) {
           />
           {league.adminId !== user.uid && inLeague && isManager && (
             <IconButton
-              name="cog"
+              name="account-group"
               onPress={() =>
-                navigation.navigate('Club Settings', {
+                navigation.navigate('My Club', {
                   clubId: context.userData.leagues[leagueId].clubId,
                 })
               }

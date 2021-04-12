@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
-import {Alert, ScrollView, Share, Platform} from 'react-native';
+import {Alert, ScrollView} from 'react-native';
 import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
@@ -14,7 +14,6 @@ import {verticalScale} from 'react-native-size-matters';
 import FullScreenLoading from '../../components/loading';
 import {RouteProp} from '@react-navigation/native';
 import {StackActions, CommonActions} from '@react-navigation/native';
-import analytics from '@react-native-firebase/analytics';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {RequestContext} from '../../context/requestContext';
@@ -106,7 +105,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           {
             text: i18n._(t`Schedule`),
             onPress: () => {
-              setLoading(true);
               scheduleMatches();
             },
           },
@@ -135,29 +133,30 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   };
 
   const scheduleMatches = async () => {
-    const functionRef = firFunc.httpsCallable('scheduleMatches');
-    const league = leagueContext.league;
-    await functionRef({
-      matchNum: league.matchNum,
-      leagueId: leagueId,
-    })
-      .then(() => setLoading(false))
-      .then(() => {
-        navigation.dispatch(
-          CommonActions.reset({
-            index: 2,
-            routes: [
-              {name: 'Home'},
-              {name: 'League Explorer'},
-              {name: 'League', params: {leagueId: leagueId}},
-            ],
-          }),
-        );
-      })
-      .catch((error) => {
-        setLoading(false);
-        throw new Error(error);
+    try {
+      setLoading(true);
+      const functionRef = firFunc.httpsCallable('scheduleMatches');
+      const league = leagueContext.league;
+      await functionRef({
+        matchNum: league.matchNum,
+        leagueId: leagueId,
       });
+      setLoading(false);
+
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 2,
+          routes: [
+            {name: 'Home'},
+            {name: 'League Explorer'},
+            {name: 'League', params: {leagueId: leagueId}},
+          ],
+        }),
+      );
+    } catch (error) {
+      setLoading(false);
+      throw new Error(error);
+    }
   };
 
   if (loading) {
@@ -189,7 +188,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           //     ? i18n._(t`${clubRosterLength} Players`)
           //     : i18n._(t`No members except you`)
           // }
-          subTitle="Manage your current roster"
+          subTitle={i18n._(t`Manage your current roster`)}
           badgeNumber={clubReqCount}
         />
       ) : (

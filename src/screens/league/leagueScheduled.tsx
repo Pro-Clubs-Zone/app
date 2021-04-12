@@ -25,7 +25,7 @@ type Props = {
 
 export default function LeagueScheduled({navigation}: Props) {
   const [clubRequests, setClubReqests] = useState<number>(0);
-  const [clubRosterLength, setClubRosterLength] = useState<number>(0);
+  // const [clubRosterLength, setClubRosterLength] = useState<number>(0);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
@@ -38,8 +38,6 @@ export default function LeagueScheduled({navigation}: Props) {
     context.userLeagues[leagueId].conflictMatchesCount;
 
   useEffect(() => {
-    console.log('use effect running');
-
     const clubRoster =
       context.userLeagues[leagueId].clubs[userClub.clubId].roster;
     let requests = 0;
@@ -52,7 +50,7 @@ export default function LeagueScheduled({navigation}: Props) {
       }
     }
     setClubReqests(requests);
-    setClubRosterLength(roster);
+    //  setClubRosterLength(roster);
   }, []);
 
   return (
