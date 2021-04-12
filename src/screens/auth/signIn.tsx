@@ -239,14 +239,12 @@ export default function SignIn({navigation}: Props) {
       </TouchableWithoutFeedback>
       <Pressable onPress={() => navigation.goBack()} style={{width: '100%'}}>
         <View style={styles.footer}>
-          <Trans>
-            <Text style={TEXT_STYLES.small}>
-              <Trans>Don’t have an account?</Trans>{' '}
-              <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
-                <Trans>Sign up now.</Trans>
-              </Text>
+          <Text style={TEXT_STYLES.small}>
+            <Trans>Don’t have an account?</Trans>{' '}
+            <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
+              <Trans>Sign up now.</Trans>
             </Text>
-          </Trans>
+          </Text>
         </View>
       </Pressable>
       {/* {openXBL && (

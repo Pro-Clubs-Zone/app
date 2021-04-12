@@ -75,29 +75,35 @@ function ClubRequests() {
     sectionTitle: string,
     acceptRequest: boolean,
   ) => {
-    setLoading(true);
+    try {
+      setLoading(true);
+      const newData = await handleClubRequest(
+        data,
+        selectedPlayer,
+        sectionTitle,
+        acceptRequest,
+      );
+      setData(newData);
+      requestContext.setClubs(newData);
+      const currentCount = requestContext.requestCount;
+      requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
 
-    await handleClubRequest(data, selectedPlayer, sectionTitle, acceptRequest)
-      .then((newData) => {
-        setData(newData);
-        requestContext.setClubs(newData);
-        const currentCount = requestContext.requestCount;
-        requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
-      })
-      .then(() => {
-        const currentLeagueData = {...context.userLeagues};
-        if (acceptRequest) {
-          currentLeagueData[selectedPlayer.leagueId].clubs[
-            selectedPlayer.clubId
-          ].roster[selectedPlayer.playerId].accepted = true;
-        } else {
-          delete currentLeagueData[selectedPlayer.leagueId].clubs[
-            selectedPlayer.clubId
-          ].roster[selectedPlayer.playerId];
-        }
-        context.setUserLeagues(currentLeagueData);
-        setLoading(false);
-      });
+      const currentLeagueData = {...context.userLeagues};
+      if (acceptRequest) {
+        currentLeagueData[selectedPlayer.leagueId].clubs[
+          selectedPlayer.clubId
+        ].roster[selectedPlayer.playerId].accepted = true;
+      } else {
+        delete currentLeagueData[selectedPlayer.leagueId].clubs[
+          selectedPlayer.clubId
+        ].roster[selectedPlayer.playerId];
+      }
+      context.setUserLeagues(currentLeagueData);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      throw new Error(error);
+    }
   };
 
   const onOpenActionSheet = (item: IPlayerRequestData, title: string) => {
@@ -186,32 +192,35 @@ function LeagueRequests() {
         {cancelable: false},
       );
     }
+    try {
+      setLoading(true);
+      const newData = await handleLeagueRequest(
+        data,
+        selectedClub,
+        sectionTitle,
+        acceptRequest,
+      );
+      requestContext.setLeagues(newData);
+      const currentCount = requestContext.requestCount;
+      requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
+      setData(newData);
 
-    setLoading(true);
-
-    await handleLeagueRequest(data, selectedClub, sectionTitle, acceptRequest)
-      .then((newData) => {
-        requestContext.setLeagues(newData);
-        const currentCount = requestContext.requestCount;
-        requestContext.setLeagueCount(
-          currentCount === 1 ? 0 : currentCount - 1,
-        );
-        setData(newData);
-      })
-      .then(() => {
-        const currentLeagueData = {...context.userLeagues};
-        if (acceptRequest) {
-          currentLeagueData[selectedClub.leagueId].clubs[
-            selectedClub.clubId
-          ].accepted = true;
-        } else {
-          delete currentLeagueData[selectedClub.leagueId].clubs[
-            selectedClub.clubId
-          ];
-        }
-        context.setUserLeagues(currentLeagueData);
-        setLoading(false);
-      });
+      const currentLeagueData = {...context.userLeagues};
+      if (acceptRequest) {
+        currentLeagueData[selectedClub.leagueId].clubs[
+          selectedClub.clubId
+        ].accepted = true;
+      } else {
+        delete currentLeagueData[selectedClub.leagueId].clubs[
+          selectedClub.clubId
+        ];
+      }
+      context.setUserLeagues(currentLeagueData);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      throw new Error(error);
+    }
   };
 
   const onOpenActionSheet = (item: IClubRequestData, title: string) => {

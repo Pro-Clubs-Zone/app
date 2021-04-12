@@ -407,7 +407,7 @@ export default function CreateLeague({navigation}: Props) {
             keyboardType="url"
             autoCorrect={false}
             error={errorStates.discord}
-            helper={i18n._(t`discord.com/abcde123`)}
+            helper="discord.com/abcde123"
           />
           <TextField
             value={data.twitter}
@@ -418,7 +418,7 @@ export default function CreateLeague({navigation}: Props) {
             keyboardType="url"
             autoCorrect={false}
             error={errorStates.twitter}
-            helper={i18n._(t`twitter.com/proclubszone`)}
+            helper="twitter.com/proclubszone"
           />
         </FormContent>
         <BigButton
