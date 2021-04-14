@@ -24,17 +24,15 @@ export default function LeagueStandings() {
   const leagueId = leagueContext.leagueId;
 
   useEffect(() => {
-    console.log('standings');
+    const getStandings = async () => {
+      const standingsRef = db
+        .collection('leagues')
+        .doc(leagueId)
+        .collection('stats')
+        .doc('standings');
 
-    const standingsRef = db
-      .collection('leagues')
-      .doc(leagueId)
-      .collection('stats')
-      .doc('standings');
-
-    standingsRef
-      .get()
-      .then((doc) => {
+      try {
+        const doc = await standingsRef.get();
         const standingsData = doc.data() as {[id: string]: IClubStanding};
 
         let leagueStandings: StandingsList[] = [];
@@ -47,11 +45,38 @@ export default function LeagueStandings() {
           leagueStandings.push(clubStanding);
         }
         leagueStandings.sort((a, b) => {
-          return b.data.points - a.data.points;
+          // return b.data.points - a.data.points;
+          const aDiff = a.data.scored - a.data.conceded;
+          const bDiff = b.data.scored - b.data.conceded;
+
+          if (a.data.points > b.data.points) {
+            return -1;
+          }
+          if (a.data.points < b.data.points) {
+            return 1;
+          }
+          if (aDiff > bDiff) {
+            return -1;
+          }
+          if (aDiff < bDiff) {
+            return 1;
+          }
+          if (a.data.won > b.data.won) {
+            return -1;
+          }
+          if (a.data.won < b.data.won) {
+            return 1;
+          }
         });
         setStandings(leagueStandings);
-      })
-      .then(() => setLoading(false));
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        throw new Error(error);
+      }
+    };
+
+    getStandings();
   }, [leagueId]);
 
   return (
