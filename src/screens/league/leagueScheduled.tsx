@@ -34,23 +34,26 @@ export default function LeagueScheduled({navigation}: Props) {
   const userClub = context.userData.leagues[leagueId];
   const isAdmin = context.userData.leagues[leagueId].admin;
   const isManager = context.userData.leagues[leagueId].manager;
+  const isPlayer = context.userData.leagues[leagueId].clubId !== undefined;
   const conflictMatchesCount =
     context.userLeagues[leagueId].conflictMatchesCount;
 
   useEffect(() => {
-    const clubRoster =
-      context.userLeagues[leagueId].clubs[userClub.clubId].roster;
-    let requests = 0;
-    let roster = 0;
-    for (const request of Object.values(clubRoster)) {
-      if (!request.accepted) {
-        requests += 1;
-      } else {
-        roster += 1;
+    if (isManager) {
+      const clubRoster =
+        context.userLeagues[leagueId].clubs[userClub.clubId].roster;
+      let requests = 0;
+      let roster = 0;
+      for (const request of Object.values(clubRoster)) {
+        if (!request.accepted) {
+          requests += 1;
+        } else {
+          roster += 1;
+        }
       }
+      setClubReqests(requests);
+      //  setClubRosterLength(roster);
     }
-    setClubReqests(requests);
-    //  setClubRosterLength(roster);
   }, []);
 
   return (
@@ -83,7 +86,7 @@ export default function LeagueScheduled({navigation}: Props) {
         onPress={() => navigation.navigate('Stats')}
       />
 
-      {isManager && (
+      {isPlayer && (
         <CardSmallContainer>
           <CardSmall
             title={userClub.clubName}

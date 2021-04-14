@@ -18,6 +18,7 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {RequestContext} from '../../context/requestContext';
 import shareLeagueLink from '../league/actions/shareLink';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -140,6 +141,12 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       await functionRef({
         matchNum: league.matchNum,
         leagueId: leagueId,
+      });
+      await analytics().logEvent('schedule_league', {
+        platform: league.platform,
+        private: league.private,
+        teamNum: league.teamNum,
+        name: league.name,
       });
       setLoading(false);
 

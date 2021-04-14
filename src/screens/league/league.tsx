@@ -175,7 +175,7 @@ export default function LeagueStack({navigation, route}: Props) {
   }
 
   if (!notFound && leagueScheduled) {
-    if (inLeague) {
+    if (inLeague || isAdmin) {
       return (
         <Stack.Navigator
           screenOptions={{

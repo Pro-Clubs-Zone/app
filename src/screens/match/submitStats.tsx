@@ -221,19 +221,19 @@ export default function SubmitStats({navigation}: Props) {
 
         await addPlayerStats(matchData, ocrResult, uid, isGK);
         await uploadScreenshots();
-        analytics().logEvent('match_submit_stats');
+        await analytics().logEvent('match_submit_stats');
         showAlert(
           i18n._(t`Stats submitted`),
           i18n._(t`Your player performance stats are now published`),
           true,
         );
       } catch (error) {
-        console.log(error);
         showAlert(
           i18n._(t`Problem processing image`),
           i18n._(t`${error.message}`),
           false,
         );
+        throw new Error(error);
       }
     } else {
       showAlert(
