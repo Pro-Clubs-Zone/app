@@ -27,80 +27,78 @@ const getUserMatches = async (
         .doc(leagueId)
         .collection('matches');
 
-      await matchesSnapshot
-        .where('published', '==', true)
-        .where('notSubmittedPlayers', 'array-contains', uid)
-        .orderBy('id', 'asc')
-        .get()
-        .then((snapshot) => {
-          snapshot.forEach((doc) => {
-            const matchData = doc.data() as IMatch;
-            const matchId = doc.id;
-            const leagueData = userLeagues[leagueId];
-            const homeTeamName = leagueData.clubs[matchData.homeTeamId].name;
-            const awayTeamName = leagueData.clubs[matchData.awayTeamId].name;
+      try {
+        const publishedMatchesForPlayer = await matchesSnapshot
+          .where('published', '==', true)
+          .where('notSubmittedPlayers', 'array-contains', uid)
+          .orderBy('id', 'asc')
+          .get();
 
-            let match: IMatchNavData = {
-              ...matchData,
-              matchId: doc.id,
-              clubId: clubId,
-              manager: league.manager,
-              leagueId: leagueId,
-              leagueName: leagueData.name,
-              homeTeamName: homeTeamName,
-              awayTeamName: awayTeamName,
-              admin: admin,
-              //   statsSubmitted: false,
-            };
+        publishedMatchesForPlayer.forEach((doc) => {
+          const matchData = doc.data() as IMatch;
+          const matchId = doc.id;
+          const leagueData = userLeagues[leagueId];
+          const homeTeamName = leagueData.clubs[matchData.homeTeamId].name;
+          const awayTeamName = leagueData.clubs[matchData.awayTeamId].name;
 
-            const fixture: FixtureList = {
-              id: matchId,
-              data: match,
-            };
+          let match: IMatchNavData = {
+            ...matchData,
+            matchId: doc.id,
+            clubId: clubId,
+            manager: league.manager,
+            leagueId: leagueId,
+            leagueName: leagueData.name,
+            homeTeamName: homeTeamName,
+            awayTeamName: awayTeamName,
+            admin: admin,
+            //   statsSubmitted: false,
+          };
 
-            matches.push(fixture);
-          });
-        })
-        .then(async () => {
-          await matchesSnapshot
-            .where('teams', 'array-contains', clubId)
-            .where('published', '==', false)
-            .orderBy('id', 'asc')
-            .limit(4)
-            .get()
-            .then((snapshot) => {
-              snapshot.forEach((doc) => {
-                const matchData = doc.data() as IMatch;
-                const matchId = doc.id;
-                const leagueData = userLeagues[leagueId];
-                const homeTeamName =
-                  leagueData.clubs[matchData.homeTeamId].name;
-                const awayTeamName =
-                  leagueData.clubs[matchData.awayTeamId].name;
+          const fixture: FixtureList = {
+            id: matchId,
+            data: match,
+          };
 
-                let match: IMatchNavData = {
-                  ...matchData,
-                  matchId: doc.id,
-                  clubId: clubId,
-                  manager: league.manager,
-                  leagueId: leagueId,
-                  leagueName: leagueData.name,
-                  homeTeamName: homeTeamName,
-                  awayTeamName: awayTeamName,
-                  admin: admin,
-                  //  statsSubmitted: false,
-                };
+          matches.push(fixture);
+        });
 
-                const fixture: FixtureList = {
-                  id: matchId,
-                  data: match,
-                };
+        const upcomingMatches = await matchesSnapshot
+          .where('teams', 'array-contains', clubId)
+          .where('published', '==', false)
+          .orderBy('id', 'asc')
+          .limit(4)
+          .get();
 
-                matches.push(fixture);
-              });
-            });
-        })
-        .catch((err) => console.log('matches error', err));
+        upcomingMatches.forEach((doc) => {
+          const matchData = doc.data() as IMatch;
+          const matchId = doc.id;
+          const leagueData = userLeagues[leagueId];
+          const homeTeamName = leagueData.clubs[matchData.homeTeamId].name;
+          const awayTeamName = leagueData.clubs[matchData.awayTeamId].name;
+
+          let match: IMatchNavData = {
+            ...matchData,
+            matchId: doc.id,
+            clubId: clubId,
+            manager: league.manager,
+            leagueId: leagueId,
+            leagueName: leagueData.name,
+            homeTeamName: homeTeamName,
+            awayTeamName: awayTeamName,
+            admin: admin,
+            //  statsSubmitted: false,
+          };
+
+          const fixture: FixtureList = {
+            id: matchId,
+            data: match,
+          };
+
+          matches.push(fixture);
+        });
+      } catch (error) {
+        throw new Error(error);
+      }
     }
   }
 
