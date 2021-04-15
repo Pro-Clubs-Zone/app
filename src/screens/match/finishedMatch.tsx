@@ -31,6 +31,7 @@ import {MatchStackType} from './match';
 import getMatchImages from './actions/getMatchImages';
 import {IconButton, MinButton} from '../../components/buttons';
 import shareMatchDetails from './actions/shareMatchDetails';
+import skipStatsSubmission from '../club/actions/skipStatsSubmission';
 
 // type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -44,7 +45,9 @@ type Props = {
 };
 
 type FinishedMatchStack = {
-  Result: undefined;
+  Result: {
+    isPlayer: boolean;
+  };
   'Match Stats': undefined;
   'Player Stats': undefined;
 };
@@ -59,72 +62,113 @@ const Tab = createMaterialTopTabNavigator<FinishedMatchStack>();
 
 export default function FinishedMatch({navigation}: Props) {
   const matchContext = useContext(MatchContext);
+  const user = useContext(AuthContext);
+  const uid = user.uid;
+
+  const matchData: IMatchNavData = matchContext.match;
+
+  const isPlayer =
+    matchData.players &&
+    uid in matchData.players &&
+    matchData.players[uid].submitted === false;
+
+  const showSkipAlert = () => {
+    Alert.alert(
+      i18n._(t`Skip Stats Submission`),
+      i18n._(
+        t`You are about to skip stats submission for this match. This action can't be undone.`,
+      ),
+      [
+        {
+          text: i18n._(t`Skip Submission`),
+          onPress: async () => {
+            await skipStatsSubmission(
+              matchData.leagueId,
+              matchData.matchId,
+              uid,
+            );
+            navigation.goBack();
+          },
+          style: 'destructive',
+        },
+        {
+          text: i18n._(t`Close`),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   useLayoutEffect(() => {
-    const matchData: IMatchNavData = matchContext.match;
     navigation.setOptions({
       headerRight: () => (
-        <IconButton
-          name="message-alert-outline"
-          onPress={() => shareMatchDetails(matchData)}
-        />
+        <View
+          style={{
+            flexDirection: 'row',
+          }}>
+          {isPlayer && (
+            <IconButton name="account-cancel" onPress={() => showSkipAlert()} />
+          )}
+          <IconButton
+            name="message-alert-outline"
+            onPress={() => shareMatchDetails(matchData)}
+          />
+        </View>
       ),
     });
   }, [matchContext]);
 
   return (
     <Tab.Navigator lazy={true}>
-      <Tab.Screen name="Result" component={MatchResult} />
+      <Tab.Screen
+        name="Result"
+        component={MatchResult}
+        initialParams={{isPlayer: isPlayer}}
+      />
       <Tab.Screen name="Match Stats" component={MatchScreenshots} />
       <Tab.Screen name="Player Stats" component={PlayerScreenshots} />
     </Tab.Navigator>
   );
 }
 
-function MatchResult({navigation}: Props) {
-  const [isPlayer, setIsPlayer] = useState(false);
+function MatchResult({navigation, route}) {
   const [motm, setMotm] = useState<Partial<MatchPlayerData>>();
   const [goalscorers, setGoalscorers] = useState<MatchPlayerData[]>();
   const [loading, setLoading] = useState(true);
 
   const matchContext = useContext(MatchContext);
-  const user = useContext(AuthContext);
   const matchData: IMatchNavData = matchContext.match;
-  const uid = user.uid;
 
-  const getGoalscorers = () => {
-    const playersData = Object.values(matchData.players);
-    const matchGoalscorers = playersData.filter((player) => player.goals > 0);
-    setGoalscorers(matchGoalscorers);
-  };
-
-  const getMotm = () => {
-    if (matchData.motm) {
-      const motmPlayerId = matchData.motm;
-      const motmPlayer = matchData.players[motmPlayerId];
-      // console.log(motmPlayer);
-      setMotm({
-        username: motmPlayer.username,
-        club: motmPlayer.club,
-        rating: motmPlayer.rating,
-      });
-    }
-  };
+  const isPlayer = route.params.isPlayer;
 
   useEffect(() => {
+    const getGoalscorers = () => {
+      const playersData = Object.values(matchData.players);
+      const matchGoalscorers = playersData.filter((player) => player.goals > 0);
+      setGoalscorers(matchGoalscorers);
+    };
+
+    const getMotm = () => {
+      if (matchData.motm) {
+        const motmPlayerId = matchData.motm;
+        const motmPlayer = matchData.players[motmPlayerId];
+        // console.log(motmPlayer);
+        setMotm({
+          username: motmPlayer.username,
+          club: motmPlayer.club,
+          rating: motmPlayer.rating,
+        });
+      }
+    };
+
     if (matchData.players) {
       getMotm();
       getGoalscorers();
     }
-    if (
-      matchData.players &&
-      uid in matchData.players &&
-      matchData.players[uid].submitted === false
-    ) {
-      setIsPlayer(true);
-    }
+
     setLoading(false);
-  }, [matchContext]);
+  }, [matchData]);
 
   if (loading) {
     return <FullScreenLoading visible={loading} />;

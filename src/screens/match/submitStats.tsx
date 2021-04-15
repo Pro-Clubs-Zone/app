@@ -210,6 +210,13 @@ export default function SubmitStats({navigation}: Props) {
   };
 
   const onSubmitStats = async () => {
+    if (images.length === 0) {
+      return showAlert(
+        i18n._(t`No screenshot uploaded`),
+        i18n._(t`Please upload in-game screenshot taken from the console`),
+        false,
+      );
+    }
     if (images[0].width === 1920 && images[0].height === 1080) {
       setLoading(true);
       try {
@@ -230,7 +237,9 @@ export default function SubmitStats({navigation}: Props) {
       } catch (error) {
         showAlert(
           i18n._(t`Problem processing image`),
-          i18n._(t`${error.message}`),
+          i18n._(
+            t`Make sure you are uploading screenshot made in-game from your console`,
+          ),
           false,
         );
         throw new Error(error);
