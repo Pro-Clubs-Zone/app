@@ -4,7 +4,7 @@ import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
 import {LeagueContext} from '../../context/leagueContext';
-import {LeagueStackType} from '../league/league';
+import {LeagueStackType} from './league';
 import {
   CardMedium,
   CardSmall,
@@ -17,8 +17,9 @@ import {StackActions, CommonActions} from '@react-navigation/native';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {RequestContext} from '../../context/requestContext';
-import shareLeagueLink from '../league/actions/shareLink';
+import shareLeagueLink from './actions/shareLink';
 import analytics from '@react-native-firebase/analytics';
+import countLeagueRequests from './countLeagueRequests';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -65,25 +66,35 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   }, [navigation, newLeague]);
 
   useEffect(() => {
-    const leagueRequests = requestContext.leagues.filter(
-      (league) => league.title === leagueContext.league.name,
+    const [clubRequests, leagueRequests] = countLeagueRequests(
+      requestContext.leagues,
+      requestContext.clubs,
+      userLeague,
+      leagueContext.league.name,
     );
 
-    if (userLeague.manager) {
-      const clubRequests = requestContext.clubs.filter(
-        (club) =>
-          club.title ===
-          `${userLeague.clubName} / ${leagueContext.league.name}`,
-      );
+    setClubReqCount(clubRequests);
+    setLeagueReqCount(leagueRequests);
 
-      if (clubRequests.length !== 0) {
-        setClubReqCount(clubRequests[0].data.length);
-      }
-    }
+    // const leagueRequests = requestContext.leagues.filter(
+    //   (league) => league.title === leagueContext.league.name,
+    // );
 
-    if (leagueRequests.length !== 0) {
-      setLeagueReqCount(leagueRequests[0].data.length);
-    }
+    // if (userLeague.manager) {
+    //   const clubRequests = requestContext.clubs.filter(
+    //     (club) =>
+    //       club.title ===
+    //       `${userLeague.clubName} / ${leagueContext.league.name}`,
+    //   );
+
+    //   if (clubRequests.length !== 0) {
+    //     setClubReqCount(clubRequests[0].data.length);
+    //   }
+    // }
+
+    // if (leagueRequests.length !== 0) {
+    //   setLeagueReqCount(leagueRequests[0].data.length);
+    // }
   }, [requestContext]);
 
   //FIXME:

@@ -13,6 +13,8 @@ import {verticalScale} from 'react-native-size-matters';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import shareLeagueLink from './actions/shareLink';
+import {RequestContext} from '../../context/requestContext';
+import countLeagueRequests from './countLeagueRequests';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -24,36 +26,51 @@ type Props = {
 };
 
 export default function LeagueScheduled({navigation}: Props) {
-  const [clubRequests, setClubReqests] = useState<number>(0);
+  const [leagueReqCount, setLeagueReqCount] = useState(0);
+  const [clubReqCount, setClubReqCount] = useState(0);
+
   // const [clubRosterLength, setClubRosterLength] = useState<number>(0);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
+  const requestContext = useContext(RequestContext);
 
   const leagueId = leagueContext.leagueId;
   const userClub = context.userData.leagues[leagueId];
   const isAdmin = context.userData.leagues[leagueId].admin;
-  const isManager = context.userData.leagues[leagueId].manager;
+  // const isManager = context.userData.leagues[leagueId].manager;
   const isPlayer = context.userData.leagues[leagueId].clubId !== undefined;
+  const userLeague = context.userData!.leagues![leagueId];
+
   const conflictMatchesCount =
     context.userLeagues[leagueId].conflictMatchesCount;
 
   useEffect(() => {
-    if (isManager) {
-      const clubRoster =
-        context.userLeagues[leagueId].clubs[userClub.clubId].roster;
-      let requests = 0;
-      let roster = 0;
-      for (const request of Object.values(clubRoster)) {
-        if (!request.accepted) {
-          requests += 1;
-        } else {
-          roster += 1;
-        }
-      }
-      setClubReqests(requests);
-      //  setClubRosterLength(roster);
-    }
+    const [clubRequests, leagueRequests] = countLeagueRequests(
+      requestContext.leagues,
+      requestContext.clubs,
+      userLeague,
+      leagueContext.league.name,
+    );
+
+    setClubReqCount(clubRequests);
+    setLeagueReqCount(leagueRequests);
+
+    // if (isManager) {
+    //   const clubRoster =
+    //     context.userLeagues[leagueId].clubs[userClub.clubId].roster;
+    //   let requests = 0;
+    //   let roster = 0;
+    //   for (const request of Object.values(clubRoster)) {
+    //     if (!request.accepted) {
+    //       requests += 1;
+    //     } else {
+    //       roster += 1;
+    //     }
+    //   }
+    //   setClubReqests(requests);
+    //   //  setClubRosterLength(roster);
+    // }
   }, []);
 
   return (
@@ -63,13 +80,25 @@ export default function LeagueScheduled({navigation}: Props) {
       }}
       showsVerticalScrollIndicator={false}>
       {isAdmin && (
-        <CardMedium
-          title={i18n._(t`Report Center`)}
-          subTitle={i18n._(t`Review and resolve all conflicted matches`)}
-          badgeNumber={conflictMatchesCount}
-          onPress={() => navigation.navigate('Report Center')}
-        />
+        <CardSmallContainer>
+          <CardSmall
+            title={i18n._(t`Report Center`)}
+            subTitle={i18n._(t`Review and resolve all conflicted matches`)}
+            badgeNumber={conflictMatchesCount}
+            onPress={() => navigation.navigate('Report Center')}
+          />
+          <CardSmall
+            title={i18n._(t`League Clubs`)}
+            onPress={() => navigation.navigate('Clubs')}
+            badgeNumber={leagueReqCount}
+          />
+        </CardSmallContainer>
       )}
+      <CardMedium
+        title={i18n._(t`League Stats`)}
+        subTitle={i18n._(t`Check out the league leaders`)}
+        onPress={() => navigation.navigate('Stats')}
+      />
       <CardSmallContainer>
         <CardSmall
           title="Standings"
@@ -80,18 +109,13 @@ export default function LeagueScheduled({navigation}: Props) {
           onPress={() => navigation.navigate('Fixtures')}
         />
       </CardSmallContainer>
-      <CardMedium
-        title={i18n._(t`League Stats`)}
-        subTitle={i18n._(t`Check out the league leaders`)}
-        onPress={() => navigation.navigate('Stats')}
-      />
 
       {isPlayer && (
         <CardSmallContainer>
           <CardSmall
             title={userClub.clubName}
             // subTitle={`${clubRosterLength} club members`}
-            badgeNumber={clubRequests}
+            badgeNumber={clubReqCount}
             onPress={() =>
               navigation.navigate('My Club', {
                 clubId: userClub.clubId,

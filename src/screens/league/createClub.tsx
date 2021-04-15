@@ -12,8 +12,12 @@ import TextField from '../../components/textField';
 import FullScreenLoading from '../../components/loading';
 import {LeagueContext} from '../../context/leagueContext';
 import analytics from '@react-native-firebase/analytics';
-import {t} from '@lingui/macro';
+import {t, Trans} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import {Text, View} from 'react-native';
+import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
+import {verticalScale} from 'react-native-size-matters';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Create Club'>;
 
@@ -41,6 +45,7 @@ export default function CreateClub({route, navigation}: Props) {
   const uid = user.uid!;
   const isAdmin = route?.params?.isAdmin;
   const username = context.userData!.username;
+  const scheduled = route?.params?.scheduled;
 
   useEffect(() => {
     if (error.clubName && clubName !== '') {
@@ -153,7 +158,56 @@ export default function CreateClub({route, navigation}: Props) {
           helper={i18n._(t`Minimum ${4} letters, no profanity`)}
           maxLength={15}
         />
+        {scheduled && (
+          <View
+            style={{
+              padding: verticalScale(16),
+              borderWidth: 1,
+              borderColor: APP_COLORS.Accent,
+              borderRadius: 3,
+              marginTop: verticalScale(16),
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+
+                marginBottom: verticalScale(8),
+              }}>
+              <Icon
+                name="information-outline"
+                size={verticalScale(24)}
+                color={APP_COLORS.Accent}
+                style={{
+                  marginRight: verticalScale(8),
+                }}
+              />
+              <Text
+                style={[
+                  TEXT_STYLES.display4,
+                  {
+                    color: APP_COLORS.Accent,
+                  },
+                ]}>
+                Waiting List
+              </Text>
+            </View>
+            <Text
+              style={[
+                TEXT_STYLES.body,
+                {
+                  paddingLeft: verticalScale(32),
+                },
+              ]}>
+              <Trans>
+                As this league is already scheduled, you will be placed on the
+                waiting list until league admin accepts your club.
+              </Trans>
+            </Text>
+          </View>
+        )}
       </FormContent>
+
       <BigButton onPress={onCreateClub} title={i18n._(t`Create Club`)} />
     </FormView>
   );

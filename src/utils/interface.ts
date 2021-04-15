@@ -74,6 +74,7 @@ export interface FixtureList extends IFlatList {
 export interface ILeagueProps {
   isAdmin: boolean;
   newLeague: boolean;
+  scheduled?: boolean;
 }
 
 export interface IMatchNavData extends IMatch {

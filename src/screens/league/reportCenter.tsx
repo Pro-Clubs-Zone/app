@@ -5,14 +5,14 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
 // import {IMatchNavData} from '../../utils/interface';
 // import {AppContext} from '../../context/appContext';
-import {LeagueStackType} from '../league/league';
+import {LeagueStackType} from './league';
 import {LeagueContext} from '../../context/leagueContext';
 import {ListSeparator} from '../../components/listItems';
 import EmptyState from '../../components/emptyState';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FixtureItem from '../../components/fixtureItems';
-import useGetMatches from '../league/actions/useGetMatches';
+import useGetMatches from './actions/useGetMatches';
 import {MinButton} from '../../components/buttons';
 
 type ScreenNavigationProp = StackNavigationProp<

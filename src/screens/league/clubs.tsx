@@ -17,7 +17,7 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import {CommonActions} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
-import {LeagueStackType} from '../league/league';
+import {LeagueStackType} from './league';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 //type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -133,7 +133,7 @@ export default function Clubs({navigation}: Props) {
       return Alert.alert(
         i18n._(t`Team Limit Reached`),
         i18n._(
-          t`Can't accept club due to league team limit. Either remove accepted teams or decline this request.`,
+          t`Can't accept club due to league team limit. Either remove accepted clubs or decline this request.`,
         ),
         [
           {
@@ -207,7 +207,9 @@ export default function Clubs({navigation}: Props) {
 
     Alert.alert(
       i18n._(t`Remove Club`),
-      i18n._(t`After removal, you will be to moved the home screen`),
+      i18n._(
+        t`You are about to remove your club. This actions can't be undone.`,
+      ),
       [
         {
           text: i18n._(t`Remove`),

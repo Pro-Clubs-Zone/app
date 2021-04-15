@@ -18,14 +18,14 @@ import i18n from '../../utils/i18n';
 import {t} from '@lingui/macro';
 // Screens
 import LeaguePreview from './leaguePreview';
-import LeaguePreSeason from '../leagueAdmin/leaguePreSeason';
+import LeaguePreSeason from './leaguePreSeason';
 import LeagueScheduled from './leagueScheduled';
-import ReportCenter from '../leagueAdmin/reportCenter';
+import ReportCenter from './reportCenter';
 import Match from '../match/match';
 import LeagueStandings from './standings';
 import Fixtures from './fixtures';
 import JoinClub from './joinClub';
-import Clubs from '../leagueAdmin/clubs';
+import Clubs from './clubs';
 import CreateClub from './createClub';
 import Club from '../club/club';
 import ClubSettings from '../club/clubSettings';
@@ -231,6 +231,7 @@ export default function LeagueStack({navigation, route}: Props) {
           <Stack.Screen name="Sign In" component={SignIn} />
           <Stack.Screen name="Sign Up" component={SignUp} />
           <Stack.Screen name="Join Club" component={JoinClub} />
+          {commonStack}
         </Stack.Navigator>
       );
     }

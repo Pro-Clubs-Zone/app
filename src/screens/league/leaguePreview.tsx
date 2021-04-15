@@ -42,7 +42,7 @@ export default function LeaguePreview({navigation, route}: Props) {
   const league = leagueContext.league;
   const leagueId = leagueContext.leagueId;
   const scheduled = league.scheduled;
-  const leagueComplete = league.acceptedClubs === league.teamNum;
+  // const leagueComplete = league.acceptedClubs === league.teamNum;
   const isManager = context?.userData?.leagues?.[leagueId]?.manager;
 
   const infoMode = route.params?.infoMode;
@@ -144,46 +144,6 @@ export default function LeaguePreview({navigation, route}: Props) {
     });
   }, [context, leagueContext]);
 
-  const onCheckUserInLeague = async () => {
-    // const userLeague = context.userData?.leagues?.[leagueId];
-
-    // if (userLeague) {
-    //   setAccepted(userLeague.accepted);
-    //   return userInLeague();
-    // } else {
-
-    if (scheduled || leagueComplete) {
-      return showJoinAsPlayer();
-    } else {
-      return showUserTypeSelection();
-    }
-    // }
-  };
-
-  const showJoinAsPlayer = () => {
-    Alert.alert(
-      i18n._(t`Join as a Player`),
-      i18n._(t`You can join only as a player as this league is already full`),
-      [
-        {
-          text: i18n._(t`Join`),
-          onPress: () => {
-            if (user.uid) {
-              navigation.navigate('Join Club');
-            } else {
-              navigation.navigate('Sign Up');
-            }
-          },
-        },
-        {
-          text: i18n._(t`Cancel`),
-          style: 'cancel',
-        },
-      ],
-      {cancelable: false},
-    );
-  };
-
   const showUserTypeSelection = () => {
     const options = [i18n._(t`Manager`), i18n._(t`Player`), i18n._(t`Cancel`)];
     const cancelButtonIndex = 2;
@@ -200,6 +160,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               navigation.navigate('Create Club', {
                 isAdmin: false,
                 newLeague: false,
+                scheduled: scheduled,
               });
             } else {
               navigation.navigate('Sign Up');
@@ -326,7 +287,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               : i18n._(t`Join League`)
           }
           disabled={joined}
-          onPress={() => onCheckUserInLeague()}
+          onPress={() => showUserTypeSelection()}
         />
       )}
     </View>
