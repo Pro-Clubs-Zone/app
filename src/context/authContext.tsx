@@ -25,8 +25,9 @@ const AuthProvider = (props: any) => {
         setDisplayName(firUser.displayName);
         setEmailVerified(firUser.emailVerified);
         setCurrentUser(firUser);
-        console.log(firUser.emailVerified);
+        console.log('user, verified', firUser.emailVerified);
       } else {
+        console.log('no user');
         setUid(null);
         setDisplayName(null);
         setEmailVerified(null);
@@ -35,7 +36,7 @@ const AuthProvider = (props: any) => {
     }
     const subscriber = firAuth.onUserChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount
-  }, [uid]);
+  }, []);
 
   return (
     <AuthContext.Provider

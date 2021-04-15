@@ -343,25 +343,37 @@ export default function CreateLeague({navigation}: Props) {
                 onDonePress={() => {
                   setData({...data, matchNum: tempData.matchNum});
                 }}
+                // items={[
+                //   {
+                //     label: i18n._(t`${1} Match`),
+                //     value: 1,
+                //     color: pickerItemColor,
+                //   },
+                //   {
+                //     label: i18n._(t`${2} Matches`),
+                //     value: 2,
+                //     color: pickerItemColor,
+                //   },
+                //   {
+                //     label: i18n._(t`${3} Matches`),
+                //     value: 3,
+                //     color: pickerItemColor,
+                //   },
+                //   {
+                //     label: i18n._(t`${4} Matches`),
+                //     value: 4,
+                //     color: pickerItemColor,
+                //   },
+                // ]}
                 items={[
                   {
-                    label: i18n._(t`${1} Match`),
+                    label: i18n._(t`Single`),
                     value: 1,
                     color: pickerItemColor,
                   },
                   {
-                    label: i18n._(t`${2} Matches`),
+                    label: i18n._(t`Home/Away`),
                     value: 2,
-                    color: pickerItemColor,
-                  },
-                  {
-                    label: i18n._(t`${3} Matches`),
-                    value: 3,
-                    color: pickerItemColor,
-                  },
-                  {
-                    label: i18n._(t`${4} Matches`),
-                    value: 4,
                     color: pickerItemColor,
                   },
                 ]}
@@ -369,9 +381,13 @@ export default function CreateLeague({navigation}: Props) {
                   Platform.OS === 'ios' ? tempData.matchNum : data.matchNum
                 }>
                 <TextField
-                  value={i18n._(t`${data.matchNum} Matches`)}
-                  placeholder={i18n._(t`Matches`)}
-                  label={i18n._(t`Matches`)}
+                  value={
+                    data.matchNum === 1
+                      ? i18n._(t`Single`)
+                      : i18n._(t`Home/Away`)
+                  }
+                  placeholder={i18n._(t`Rounds`)}
+                  label={i18n._(t`Rounds`)}
                   fieldIco="chevron-down"
                   editable={false}
                 />

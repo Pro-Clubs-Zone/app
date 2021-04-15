@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
-import {ScrollView, View, Alert, ImageURISource, Share} from 'react-native';
+import {ScrollView, View, Alert, ImageURISource} from 'react-native';
 import {IMatchNavData} from '../../utils/interface';
 import onConflictResolve from './actions/onConflictResolve';
 import {AppContext} from '../../context/appContext';
@@ -96,9 +96,14 @@ export default function UpcomingMatch({navigation}: Props) {
 
   const onResolveMatch = () => {
     const resolveMatch = async (result: string) => {
-      setLoading(i18n._(t`Submitting Match...`));
-      await onConflictResolve(matchData, result, true);
-      showSuccessAlert();
+      try {
+        setLoading(i18n._(t`Submitting Match...`));
+        await onConflictResolve(matchData, result, true);
+        await analytics().logEvent('match_resolve_outcome');
+        showSuccessAlert();
+      } catch (error) {
+        throw new Error(error);
+      }
     };
 
     const showAlert = (result: string) => {
@@ -228,11 +233,15 @@ export default function UpcomingMatch({navigation}: Props) {
   };
 
   const onSelectResult = async (teamID: string) => {
-    setLoading(i18n._(t`Submitting Match...`));
-    await onConflictResolve(matchData, teamID);
-    await analytics().logEvent('match_resolve_conflict');
-    decrementConflictCounter();
-    showSuccessAlert();
+    try {
+      setLoading(i18n._(t`Submitting Match...`));
+      await onConflictResolve(matchData, teamID);
+      await analytics().logEvent('match_resolve_conflict');
+      decrementConflictCounter();
+      showSuccessAlert();
+    } catch (error) {
+      throw new Error(error);
+    }
   };
 
   return (

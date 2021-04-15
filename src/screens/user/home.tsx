@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
-import {Text, View, FlatList, ScrollView} from 'react-native';
+import {Text, View, FlatList, ScrollView, Alert} from 'react-native';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
@@ -46,6 +46,22 @@ export default function Home({navigation}: Props) {
   const requestContext = useContext(RequestContext);
 
   const uid = user.uid;
+
+  const showResendAlert = () => {
+    Alert.alert(
+      i18n._(t`Verification link sent`),
+      i18n._(
+        t`Check your email for verification link. Also make sure to check Spam folder.`,
+      ),
+      [
+        {
+          text: i18n._(t`Close`),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
 
   const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
     let requests: IClubRequest[] = [];
@@ -178,7 +194,6 @@ export default function Home({navigation}: Props) {
         getClubRequests(userLeagues);
         getLeagueRequests(userLeagues);
       } else {
-        console.log('no leagues', loading);
         context.setUserData(userInfo);
       }
       setLoading(false);
@@ -272,19 +287,38 @@ export default function Home({navigation}: Props) {
         />
         {!user?.currentUser?.emailVerified && (
           <View style={styles.emailVerification}>
-            <Text style={TEXT_STYLES.small}>
+            <Text
+              style={[
+                TEXT_STYLES.body,
+                {
+                  paddingLeft: verticalScale(8),
+                  paddingTop: verticalScale(4),
+                },
+              ]}>
               {i18n._(t`Email is not verified`)}
             </Text>
-            <MinButton
-              title="resend"
-              secondary
-              onPress={async () => {
-                await user.currentUser.reload();
-                if (!user?.currentUser?.emailVerified) {
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingTop: verticalScale(16),
+              }}>
+              <MinButton
+                title={i18n._(t`Resend`)}
+                secondary
+                onPress={() => {
                   user.currentUser.sendEmailVerification();
-                }
-              }}
-            />
+                  showResendAlert();
+                }}
+              />
+              <MinButton
+                title={i18n._(t`I've verified`)}
+                secondary
+                onPress={() => {
+                  user.currentUser.reload();
+                }}
+              />
+            </View>
           </View>
         )}
       </ScrollView>
@@ -310,11 +344,9 @@ const styles = ScaledSheet.create({
     paddingHorizontal: '8@vs',
   },
   emailVerification: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     borderRadius: 3,
     backgroundColor: APP_COLORS.Red,
-    alignItems: 'center',
     padding: '8@vs',
     marginHorizontal: '4@vs',
     marginVertical: '8@vs',

@@ -89,7 +89,7 @@ export default function AppIndex() {
     if (user.uid) {
       crashlytics().setUserId(uid!);
     }
-  }, [user]);
+  }, []);
 
   const onSignOut = () => {
     firAuth.signOut().then(() => {

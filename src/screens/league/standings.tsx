@@ -45,7 +45,6 @@ export default function LeagueStandings() {
           leagueStandings.push(clubStanding);
         }
         leagueStandings.sort((a, b) => {
-          // return b.data.points - a.data.points;
           const aDiff = a.data.scored - a.data.conceded;
           const bDiff = b.data.scored - b.data.conceded;
 
