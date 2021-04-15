@@ -42,7 +42,7 @@ type SignIn = {data?: {}; redirectedFrom?: string | null};
 
 export type LeagueStackType = {
   'League Scheduled': ILeagueProps;
-  Clubs: undefined;
+  Clubs: ILeagueProps;
   'League Preview': {
     infoMode: boolean;
   };
@@ -103,27 +103,28 @@ export default function LeagueStack({navigation, route}: Props) {
   };
 
   useEffect(() => {
-    const leagueRef = db.collection('leagues').doc(leagueId);
+    const getLeagueData = async () => {
+      try {
+        const leagueRef = db.collection('leagues').doc(leagueId);
+        let leagueInfo: ILeague;
+        const leagueDoc = await leagueRef.get();
 
-    let leagueInfo: ILeague;
-
-    leagueRef
-      .get()
-      .then((doc) => {
-        if (!doc.exists) {
+        if (!leagueDoc.exists) {
           setNotFound(true);
           showNotFound();
         } else {
-          leagueInfo = doc.data() as ILeague;
+          leagueInfo = leagueDoc.data() as ILeague;
           leagueContext.setLeagueId(leagueId);
           leagueContext.setLeague(leagueInfo);
           setLeague(leagueInfo);
         }
-      })
-      .then(() => {
         setLoading(false);
-      });
-  }, [leagueId]);
+      } catch (error) {
+        throw new Error(error);
+      }
+    };
+    getLeagueData();
+  }, [leagueContext]);
 
   useEffect(() => {
     const userData = context.userData;

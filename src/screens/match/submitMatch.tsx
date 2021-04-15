@@ -336,7 +336,6 @@ export default function SubmitMatch({navigation}: Props) {
         onRequestClose={() => setImageViewerVisible(false)}
       />
       <Select
-        subKey="players"
         items={roster}
         uniqueKey="id"
         displayKey="username"
@@ -344,6 +343,10 @@ export default function SubmitMatch({navigation}: Props) {
         onSelectedItemsChange={(item) => setTempSelectedPlayer(item)}
         onConfirm={onConfirmSeletion}
         ref={ref}
+        single={false}
+        showFooter={true}
+        title={i18n._(t`Roster`)}
+        buttonTitle={i18n._(t`Confirm`)}
       />
       <Toast message={toastMessage} visible={showToast} success={false} />
 

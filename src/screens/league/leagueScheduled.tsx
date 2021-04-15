@@ -89,7 +89,13 @@ export default function LeagueScheduled({navigation}: Props) {
           />
           <CardSmall
             title={i18n._(t`League Clubs`)}
-            onPress={() => navigation.navigate('Clubs')}
+            onPress={() =>
+              navigation.navigate('Clubs', {
+                isAdmin: isAdmin,
+                newLeague: false,
+                scheduled: true,
+              })
+            }
             badgeNumber={leagueReqCount}
           />
         </CardSmallContainer>

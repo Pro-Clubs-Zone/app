@@ -54,59 +54,65 @@ const Header = ({title, onCancel}: {title: string; onCancel: () => void}) => (
   </View>
 );
 
-const Select = forwardRef((props: SectionedMultiSelectProps<any>, ref) => (
-  // <Modal visible={visible} transparent>
-  //   <View style={styles.container}>
-  //     <SafeAreaView style={styles.content}>
-  //       <View style={styles.header}>
-  //         <Text style={TEXT_STYLES.body}>Title</Text>
-  //         <IconButton name="close" onPress={onClose} color="white" />
-  //       </View>
-
-  <SectionedMultiSelect
-    showDropDowns={false}
-    showChips={false}
-    showCancelButton={false}
-    hideConfirm={true}
-    hideSearch={true}
-    IconRenderer={Icon}
-    icons={icons}
-    single={false}
-    hideSelect
-    ref={ref}
-    modalSupportedOrientations={['portrait']}
-    modalWithSafeAreaView={true}
-    alwaysShowSelectText={true}
-    headerComponent={
-      <Header title="Roster" onCancel={() => ref?.current?._toggleSelector()} />
-    }
-    stickyFooterComponent={
-      <BigButton title="Confirm" onPress={props.onConfirm} />
-    }
-    selectedIconComponent={
-      <Icon
-        name="check"
-        size={verticalScale(16)}
-        color={APP_COLORS.Accent}
-        style={{marginRight: verticalScale(4)}}
-      />
-    }
-    styles={{
-      container: styles.content,
-      item: styles.item,
-      scrollView: {paddingHorizontal: 0},
-      separator: {backgroundColor: APP_COLORS.Secondary},
-      itemText: [
-        TEXT_STYLES.body,
-        {
-          fontWeight: 'normal',
-        },
-      ],
-    }}
-    colors={{itemBackground: APP_COLORS.Primary}}
-    {...props}
-  />
-));
+const Select = forwardRef(
+  (
+    props: {
+      showFooter: boolean;
+      title: string;
+      buttonTitle?: string;
+    } & SectionedMultiSelectProps<any>,
+    ref,
+  ) => (
+    //@ts-ignore
+    <SectionedMultiSelect
+      showDropDowns={false}
+      showChips={false}
+      showCancelButton={false}
+      hideConfirm={true}
+      hideSearch={true}
+      IconRenderer={Icon}
+      icons={icons}
+      hideSelect
+      ref={ref}
+      modalSupportedOrientations={['portrait']}
+      modalWithSafeAreaView={true}
+      alwaysShowSelectText={true}
+      headerComponent={
+        <Header
+          title={props.title}
+          onCancel={() => ref?.current?._toggleSelector()}
+        />
+      }
+      stickyFooterComponent={
+        props.showFooter ? (
+          <BigButton title={props.buttonTitle} onPress={props.onConfirm} />
+        ) : null
+      }
+      selectedIconComponent={
+        <Icon
+          name="check"
+          size={verticalScale(16)}
+          color={APP_COLORS.Accent}
+          style={{marginRight: verticalScale(4)}}
+        />
+      }
+      styles={{
+        container: styles.content,
+        item: styles.item,
+        scrollView: {paddingHorizontal: 0},
+        separator: {backgroundColor: APP_COLORS.Secondary},
+        itemText: [
+          TEXT_STYLES.body,
+          {
+            fontWeight: 'normal',
+          },
+        ],
+      }}
+      colors={{itemBackground: APP_COLORS.Primary}}
+      {...props}
+    />
+  ),
+);
 
 //---------- Stylesheet ----------//
 
