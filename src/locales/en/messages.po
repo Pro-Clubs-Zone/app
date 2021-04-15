@@ -76,7 +76,7 @@ msgstr ""
 msgid "Are you sure you want to pick {0} as a winner?"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:236
+#: src/screens/match/finishedMatch.tsx:256
 msgid "Are you sure you want to remove player stats submission for this match?"
 msgstr ""
 
@@ -166,8 +166,9 @@ msgstr ""
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/clubs.tsx:102
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:87
-#: src/screens/match/finishedMatch.tsx:226
-#: src/screens/match/finishedMatch.tsx:242
+#: src/screens/match/finishedMatch.tsx:51
+#: src/screens/match/finishedMatch.tsx:246
+#: src/screens/match/finishedMatch.tsx:262
 #: src/screens/match/submitMatch.tsx:134
 #: src/screens/match/submitMatch.tsx:206
 #: src/screens/match/submitStats.tsx:108
@@ -178,7 +179,7 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:115
+#: src/screens/match/finishedMatch.tsx:135
 msgid "Club"
 msgstr ""
 
@@ -339,8 +340,8 @@ msgstr ""
 msgid "Get Reset Link"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:129
-#: src/screens/match/finishedMatch.tsx:133
+#: src/screens/match/finishedMatch.tsx:149
+#: src/screens/match/finishedMatch.tsx:153
 msgid "Goals"
 msgstr ""
 
@@ -349,7 +350,7 @@ msgstr ""
 msgid "Home/Away"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:230
+#: src/screens/match/submitStats.tsx:233
 msgid "I played as a Goalkeeper"
 msgstr ""
 
@@ -503,7 +504,11 @@ msgstr ""
 msgid "MOTM"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:91
+#: src/screens/match/submitStats.tsx:194
+msgid "Make sure you are uploading screenshot made in-game from your console"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:111
 msgid "Man of the Match"
 msgstr ""
 
@@ -519,8 +524,8 @@ msgstr ""
 msgid "Manager"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:185
-#: src/screens/match/finishedMatch.tsx:189
+#: src/screens/match/finishedMatch.tsx:205
+#: src/screens/match/finishedMatch.tsx:209
 msgid "Manager uploaded no images"
 msgstr ""
 
@@ -613,7 +618,7 @@ msgstr ""
 msgid "No Fixtures"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:125
+#: src/screens/match/finishedMatch.tsx:145
 msgid "No MOTM"
 msgstr ""
 
@@ -633,8 +638,8 @@ msgstr ""
 msgid "No Upcoming Matches"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:130
-#: src/screens/match/finishedMatch.tsx:134
+#: src/screens/match/finishedMatch.tsx:150
+#: src/screens/match/finishedMatch.tsx:154
 msgid "No goalscorers"
 msgstr ""
 
@@ -646,10 +651,15 @@ msgstr ""
 msgid "No players yet"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:185
-#: src/screens/match/finishedMatch.tsx:189
-#: src/screens/match/finishedMatch.tsx:291
-#: src/screens/match/finishedMatch.tsx:295
+#: src/screens/match/submitStats.tsx:178
+#: src/screens/match/submitStats.tsx:178
+msgid "No screenshot uploaded"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:205
+#: src/screens/match/finishedMatch.tsx:209
+#: src/screens/match/finishedMatch.tsx:311
+#: src/screens/match/finishedMatch.tsx:315
 msgid "No screenshots"
 msgstr ""
 
@@ -661,7 +671,7 @@ msgstr ""
 msgid "No stats available"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:228
+#: src/screens/match/submitStats.tsx:231
 msgid "Options"
 msgstr ""
 
@@ -720,25 +730,30 @@ msgid "Platform"
 msgstr ""
 
 #: src/screens/league/leaguePreview.tsx:139
-#: src/screens/match/finishedMatch.tsx:99
+#: src/screens/match/finishedMatch.tsx:119
 msgid "Player"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:209
+#: src/screens/match/submitStats.tsx:212
 msgid "Player Performance"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:261
+#: src/screens/match/finishedMatch.tsx:281
 msgid "Player performance stats submission for this match was removed"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:291
-#: src/screens/match/finishedMatch.tsx:295
+#: src/screens/match/finishedMatch.tsx:311
+#: src/screens/match/finishedMatch.tsx:315
 msgid "Players uploaded no images"
 msgstr ""
 
 #: src/screens/league/createLeague.tsx:56
 msgid "Please sign in first to create a league"
+msgstr ""
+
+#: src/screens/match/submitStats.tsx:178
+#: src/screens/match/submitStats.tsx:178
+msgid "Please upload in-game screenshot taken from the console"
 msgstr ""
 
 #: src/screens/league/createLeague.tsx:138
@@ -748,7 +763,7 @@ msgstr ""
 #~ msgid "Please verify your email before joining a league"
 #~ msgstr ""
 
-#: src/screens/match/submitStats.tsx:191
+#: src/screens/match/submitStats.tsx:194
 msgid "Problem processing image"
 msgstr ""
 
@@ -756,7 +771,7 @@ msgstr ""
 msgid "Public League"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:120
+#: src/screens/match/finishedMatch.tsx:140
 msgid "Rating"
 msgstr ""
 
@@ -779,7 +794,7 @@ msgstr ""
 #: src/screens/club/club.tsx:139
 #: src/screens/club/clubSettings.tsx:44
 #: src/screens/leagueAdmin/clubs.tsx:159
-#: src/screens/match/finishedMatch.tsx:238
+#: src/screens/match/finishedMatch.tsx:258
 #: src/screens/user/requests.tsx:225
 msgid "Remove"
 msgstr ""
@@ -795,7 +810,7 @@ msgstr ""
 msgid "Remove Player"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:284
+#: src/screens/match/finishedMatch.tsx:304
 msgid "Remove Player Stat"
 msgstr ""
 
@@ -807,7 +822,7 @@ msgstr ""
 msgid "Removing League..."
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:236
+#: src/screens/match/finishedMatch.tsx:256
 msgid "Removing player stats"
 msgstr ""
 
@@ -946,20 +961,28 @@ msgstr ""
 msgid "Single"
 msgstr ""
 
+#: src/screens/match/finishedMatch.tsx:41
+msgid "Skip Stats Submission"
+msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:43
+msgid "Skip Submission"
+msgstr ""
+
 #: src/screens/league/leaguePreview.tsx:210
 msgid "Social"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:267
+#: src/screens/match/finishedMatch.tsx:287
 #: src/screens/match/submitMatch.tsx:204
 msgid "Something went wrong"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:188
+#: src/screens/match/submitStats.tsx:191
 msgid "Stats submitted"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:261
+#: src/screens/match/finishedMatch.tsx:281
 msgid "Submission Removed"
 msgstr ""
 
@@ -971,8 +994,8 @@ msgstr ""
 msgid "Submit Match"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:87
-#: src/screens/match/submitStats.tsx:233
+#: src/screens/match/finishedMatch.tsx:107
+#: src/screens/match/submitStats.tsx:236
 msgid "Submit Stats"
 msgstr ""
 
@@ -982,7 +1005,7 @@ msgstr ""
 msgid "Submitting Match..."
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:200
+#: src/screens/match/submitStats.tsx:203
 msgid "Submitting Performance Stats..."
 msgstr ""
 
@@ -1017,7 +1040,7 @@ msgstr ""
 msgid "There is no user with this email"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:196
+#: src/screens/match/submitStats.tsx:199
 msgid "There is something wrong with your image. Please send this image to your league admin or PRZ team"
 msgstr ""
 
@@ -1059,7 +1082,7 @@ msgstr ""
 msgid "W"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:196
+#: src/screens/match/submitStats.tsx:199
 msgid "Wrong image"
 msgstr ""
 
@@ -1067,6 +1090,10 @@ msgstr ""
 #: src/screens/auth/completeSignIn.tsx:61
 #~ msgid "Wrong sign in link"
 #~ msgstr ""
+
+#: src/screens/match/finishedMatch.tsx:41
+msgid "You are about to skip stats submission for this match. This action can't be undone."
+msgstr ""
 
 #: src/screens/leagueAdmin/clubs.tsx:188
 msgid "You can invite clubs from league page"
@@ -1100,7 +1127,7 @@ msgstr ""
 msgid "You have selected more than 11 players for this match"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:188
+#: src/screens/match/submitStats.tsx:191
 msgid "Your player performance stats are now published"
 msgstr ""
 
@@ -1117,8 +1144,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/screens/match/submitStats.tsx:191
-msgid "{0}"
-msgstr ""
+#~ msgid "{0}"
+#~ msgstr ""
 
 #: src/screens/league/createLeague.tsx:261
 #~ msgid "{0} Match"
@@ -1151,8 +1178,8 @@ msgstr ""
 msgid "{0} clubs / {1} matches"
 msgstr ""
 
-#: src/screens/match/finishedMatch.tsx:129
-#: src/screens/match/finishedMatch.tsx:133
+#: src/screens/match/finishedMatch.tsx:149
+#: src/screens/match/finishedMatch.tsx:153
 msgid "{0} goalscorers"
 msgstr ""
 
