@@ -247,6 +247,21 @@ export default function SubmitMatch({navigation}: Props) {
     try {
       const noFieldErrors = await fieldValidation();
       if (noFieldErrors) {
+        if (selectedPlayers.length === 0) {
+          return Alert.alert(
+            i18n._(t`No players added`),
+            i18n._(
+              t`Please select all the participated players from your roster to submit the match.`,
+            ),
+            [
+              {
+                text: i18n._(t`Close`),
+                style: 'cancel',
+              },
+            ],
+            {cancelable: false},
+          );
+        }
         setLoading(true);
         const [submissionResult] = await Promise.all([
           submitMatch(homeScore, awayScore, matchData, selectedPlayers, motm),
@@ -264,6 +279,7 @@ export default function SubmitMatch({navigation}: Props) {
         [
           {
             text: i18n._(t`Close`),
+            style: 'cancel',
             onPress: () => {
               setLoading(false);
             },
