@@ -33,7 +33,6 @@ const submitMatch = async (
     .collection('matches')
     .doc(initialMatchData.matchId);
 
-  let matchData: IMatch;
   let playerList: {[uid: string]: MatchPlayerData} = {};
   let notSubmittedPlayers: string[] = [];
 
@@ -48,21 +47,24 @@ const submitMatch = async (
     notSubmittedPlayers.push(player.id);
   });
 
-  await matchRef.get().then((res) => {
-    matchData = res.data() as IMatch;
-  });
+  const matchDoc = await matchRef.get();
+  let matchData: IMatch = matchDoc.data() as IMatch;
 
   let submissionData: {
     submissions: {};
-    players: {};
+    players?: {};
     motmSubmissions?: {};
-    notSubmittedPlayers: string[];
+    notSubmittedPlayers?: any;
   } = {
     submissions: teamSubmission,
-    players: playerList,
-    notSubmittedPlayers: notSubmittedPlayers,
   };
 
+  if (players.length > 0) {
+    submissionData.players = playerList;
+    submissionData.notSubmittedPlayers = firestore.FieldValue.arrayUnion(
+      ...notSubmittedPlayers,
+    );
+  }
   if (motm !== undefined) {
     submissionData.motmSubmissions = motmSubmission;
   }

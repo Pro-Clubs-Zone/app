@@ -248,18 +248,12 @@ export default function SubmitMatch({navigation}: Props) {
       const noFieldErrors = await fieldValidation();
       if (noFieldErrors) {
         setLoading(true);
-        await uploadScreenshots();
-        const submissionResult = await submitMatch(
-          homeScore,
-          awayScore,
-          matchData,
-          selectedPlayers,
-          motm,
-        );
-        if (selectedPlayers.length > 0) {
-          await addMatchStats(matchData, selectedPlayers);
-        }
-        await analytics().logEvent('match_submit_score');
+        const [submissionResult] = await Promise.all([
+          submitMatch(homeScore, awayScore, matchData, selectedPlayers, motm),
+          addMatchStats(matchData, selectedPlayers),
+          uploadScreenshots(),
+          analytics().logEvent('match_submit_score'),
+        ]);
         updateContextShowAlert(submissionResult);
       }
     } catch (error) {
@@ -277,6 +271,7 @@ export default function SubmitMatch({navigation}: Props) {
         ],
         {cancelable: false},
       );
+      throw new Error(error);
     }
   };
 
