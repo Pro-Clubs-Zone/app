@@ -34,6 +34,7 @@ import Select from '../../components/select';
 import addMatchStats from './actions/onAddMatchStats';
 import Toast from '../../components/toast';
 import {PlayerStatsInfo} from '../../utils/interface';
+import {AuthContext} from '../../context/authContext';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
 
@@ -66,10 +67,12 @@ export default function SubmitMatch({navigation}: Props) {
 
   const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
+  const user = useContext(AuthContext);
 
   const matchData = matchContext.match;
   const leagueId = matchData.leagueId;
   const clubId = matchData.clubId;
+  const uid = user.currentUser.uid;
 
   const ref = useRef(null);
 
@@ -141,13 +144,34 @@ export default function SubmitMatch({navigation}: Props) {
       (match) => match.id === matchData.matchId,
     );
 
+    const teamSubmission = {
+      [matchData.clubId]: {
+        [matchData.homeTeamId]: Number(homeScore),
+        [matchData.awayTeamId]: Number(awayScore),
+      },
+    };
+
     if (foundUserMatch.length !== 0) {
-      let notPublishedMatches = context.userMatches.filter(
+      let updatedUserMatches = context.userMatches.filter(
         (match) => match.id !== matchData.matchId,
       );
 
       if (submissionResult === 'Success') {
-        context.setUserMatches(notPublishedMatches);
+        const userParticipated = selectedPlayers.some(
+          (player) => player.id === uid,
+        );
+
+        if (userParticipated) {
+          foundUserMatch[0].data.notSubmittedPlayers.push(uid);
+          foundUserMatch[0].data.published = true;
+          foundUserMatch[0].data.submissions = {
+            ...foundUserMatch[0].data.submissions,
+            ...teamSubmission,
+          };
+          updatedUserMatches.unshift(foundUserMatch[0]);
+        }
+
+        context.setUserMatches(updatedUserMatches);
       }
       if (
         submissionResult === 'First Submission' ||
@@ -155,13 +179,8 @@ export default function SubmitMatch({navigation}: Props) {
       ) {
         let userUpcomingMatch = {...foundUserMatch[0]};
         userUpcomingMatch.data.conflict = conflict;
-        userUpcomingMatch.data.submissions = {
-          [matchData.clubId]: {
-            [matchData.homeTeamId]: Number(homeScore),
-            [matchData.awayTeamId]: Number(awayScore),
-          },
-        };
-        const updatedMatchList = [userUpcomingMatch, ...notPublishedMatches];
+        userUpcomingMatch.data.submissions = teamSubmission;
+        const updatedMatchList = [userUpcomingMatch, ...updatedUserMatches];
         context.setUserMatches(updatedMatchList);
       }
     }
@@ -247,19 +266,28 @@ export default function SubmitMatch({navigation}: Props) {
     try {
       const noFieldErrors = await fieldValidation();
       if (noFieldErrors) {
-        setLoading(true);
-        await uploadScreenshots();
-        const submissionResult = await submitMatch(
-          homeScore,
-          awayScore,
-          matchData,
-          selectedPlayers,
-          motm,
-        );
-        if (selectedPlayers.length > 0) {
-          await addMatchStats(matchData, selectedPlayers);
+        if (selectedPlayers.length === 0) {
+          return Alert.alert(
+            i18n._(t`No players added`),
+            i18n._(
+              t`Please select all the participated players from your roster to submit the match.`,
+            ),
+            [
+              {
+                text: i18n._(t`Close`),
+                style: 'cancel',
+              },
+            ],
+            {cancelable: false},
+          );
         }
-        await analytics().logEvent('match_submit_score');
+        setLoading(true);
+        const [submissionResult] = await Promise.all([
+          submitMatch(homeScore, awayScore, matchData, selectedPlayers, motm),
+          addMatchStats(matchData, selectedPlayers),
+          uploadScreenshots(),
+          analytics().logEvent('match_submit_score'),
+        ]);
         updateContextShowAlert(submissionResult);
       }
     } catch (error) {
@@ -270,6 +298,7 @@ export default function SubmitMatch({navigation}: Props) {
         [
           {
             text: i18n._(t`Close`),
+            style: 'cancel',
             onPress: () => {
               setLoading(false);
             },
@@ -277,6 +306,7 @@ export default function SubmitMatch({navigation}: Props) {
         ],
         {cancelable: false},
       );
+      throw new Error(error);
     }
   };
 
