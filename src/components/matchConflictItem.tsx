@@ -9,7 +9,6 @@ import i18n from '../utils/i18n';
 
 type Props = {
   motm?: string;
-  resultConflict: boolean;
   homeTeam: string;
   awayTeam: string;
   homeScore: number;
@@ -18,7 +17,6 @@ type Props = {
   onShowProof: () => void;
   header: string;
   proofDisabled: boolean;
-  motmConflict: boolean;
 };
 
 //---------- Conflict Item ----------//
@@ -27,15 +25,11 @@ const MatchConflictItem = (props: Props) => (
   <View style={styles.conflictContainer}>
     <View>
       <ListHeading col1={props.header} />
-      {props.resultConflict && (
-        <>
-          <OneLine title={props.homeTeam} key1={props.homeScore} />
-          <OneLine title={props.awayTeam} key1={props.awayScore} />
-        </>
-      )}
-      {props.motmConflict && (
-        <OneLine title={i18n._(t`MOTM`)} rightIcon="check" />
-      )}
+
+      <OneLine title={props.homeTeam} key1={props.homeScore} />
+      <OneLine title={props.awayTeam} key1={props.awayScore} />
+
+      {props.motm && <OneLine title={i18n._(t`MOTM`)} rightIcon="check" />}
     </View>
     <View style={styles.conflictButtons}>
       <MinButton

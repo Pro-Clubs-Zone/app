@@ -264,7 +264,7 @@ export default function UpcomingMatch({navigation}: Props) {
           navigation.navigate('Submit Match');
         }}
       />
-      {(matchData.conflict || matchData.motmConflict) && matchData.admin ? (
+      {matchData.submissions && matchData.admin ? (
         <MatchConflict
           data={matchData}
           onSelectHome={() => {
@@ -345,37 +345,43 @@ const MatchConflict = ({
       stickyHeaderIndices={[0]}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={{paddingBottom: verticalScale(32)}}>
-      <ListHeading col1={i18n._(t`Conflict Match`)} />
+      <ListHeading
+        col1={
+          data.conflict
+            ? i18n._(t`Conflict Match`)
+            : i18n._(t`Match Submissions`)
+        }
+      />
       <View
         style={{
           padding: verticalScale(16),
         }}>
-        <MatchConflictItem
-          header={i18n._(t`${data.homeTeamName} Submission`)}
-          homeTeam={data.homeTeamName}
-          awayTeam={data.awayTeamName}
-          homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
-          awayScore={data.submissions[data.homeTeamId][data.awayTeamId]}
-          motm={data.motmSubmissions?.[data.homeTeamId]}
-          onPickResult={onSelectHome}
-          onShowProof={onShowProofHome}
-          proofDisabled={homeProofDisabled}
-          resultConflict={data.conflict}
-          motmConflict={data.motmConflict}
-        />
-        <MatchConflictItem
-          header={i18n._(t`${data.awayTeamName} Submission`)}
-          homeTeam={data.homeTeamName}
-          awayTeam={data.awayTeamName}
-          homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}
-          awayScore={data.submissions[data.awayTeamId][data.awayTeamId]}
-          motm={data.motmSubmissions?.[data.awayTeamId]}
-          onPickResult={onSelectAway}
-          onShowProof={onShowProofAway}
-          proofDisabled={awayProofDisabled}
-          resultConflict={data.conflict}
-          motmConflict={data.motmConflict}
-        />
+        {data.submissions[data.homeTeamId] && (
+          <MatchConflictItem
+            header={i18n._(t`${data.homeTeamName} Submission`)}
+            homeTeam={data.homeTeamName}
+            awayTeam={data.awayTeamName}
+            homeScore={data.submissions[data.homeTeamId][data.homeTeamId]}
+            awayScore={data.submissions[data.homeTeamId][data.awayTeamId]}
+            motm={data.motmSubmissions?.[data.homeTeamId]}
+            onPickResult={onSelectHome}
+            onShowProof={onShowProofHome}
+            proofDisabled={homeProofDisabled}
+          />
+        )}
+        {data.submissions[data.awayTeamId] && (
+          <MatchConflictItem
+            header={i18n._(t`${data.awayTeamName} Submission`)}
+            homeTeam={data.homeTeamName}
+            awayTeam={data.awayTeamName}
+            homeScore={data.submissions[data.awayTeamId][data.homeTeamId]}
+            awayScore={data.submissions[data.awayTeamId][data.awayTeamId]}
+            motm={data.motmSubmissions?.[data.awayTeamId]}
+            onPickResult={onSelectAway}
+            onShowProof={onShowProofAway}
+            proofDisabled={awayProofDisabled}
+          />
+        )}
       </View>
     </ScrollView>
   );
