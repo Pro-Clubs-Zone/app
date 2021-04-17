@@ -5,7 +5,7 @@ import {AuthContext} from '../../context/authContext';
 import {IClub, IUserLeague} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-import {LeagueStackType} from './league';
+import {LeagueStackType} from '../league/league';
 import {FormView, FormContent} from '../../components/templates';
 import {BigButton} from '../../components/buttons';
 import TextField from '../../components/textField';
@@ -109,10 +109,13 @@ export default function CreateClub({route, navigation}: Props) {
           },
           {merge: true},
         );
-        await batch.commit().then(async () => {
-          await analytics().logJoinGroup({
-            group_id: leagueContext.leagueId,
-          });
+        try {
+          await Promise.all([
+            batch.commit(),
+            analytics().logJoinGroup({
+              group_id: leagueContext.leagueId,
+            }),
+          ]);
           let updateLeagueInfo = {...leagueContext.league};
           updateLeagueInfo.acceptedClubs += 1;
           leagueContext.setLeague(updateLeagueInfo);
@@ -136,7 +139,12 @@ export default function CreateClub({route, navigation}: Props) {
           context.setUserLeagues(userLeagues);
           setLoading(false);
           navigation.goBack();
-        });
+        } catch (err) {
+          console.log(err);
+
+          setLoading(false);
+          throw new Error(err);
+        }
       }
     });
   };

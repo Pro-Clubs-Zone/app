@@ -90,7 +90,7 @@ function UpcomingFixtures({navigation}: Props) {
         //   offset: verticalScale(65) * index,
         //   index,
         // })}
-        ListFooterComponent={() =>
+        ListFooterComponent={
           getMatches.data.length !== 0 &&
           !getMatches.allLoaded && (
             <View
@@ -155,7 +155,7 @@ export function PastFixtures({navigation}: Props) {
       //   offset: verticalScale(65) * index,
       //   index,
       // })}
-      ListFooterComponent={() =>
+      ListFooterComponent={
         getMatches.data.length !== 0 &&
         !getMatches.allLoaded && (
           <View

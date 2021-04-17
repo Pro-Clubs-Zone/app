@@ -127,7 +127,7 @@ export default function Stats() {
             stats[stat].sort((a, b) => b.value - a.value);
           }
 
-          dataStructure[dataStructureIndex].data = stats[stat].slice(0, 10);
+          dataStructure[dataStructureIndex].data = stats[stat].slice(0, 5);
         };
 
         addStats('goals', player.goals, 0);

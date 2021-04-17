@@ -19,6 +19,7 @@ import {CommonActions} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueStackType} from './league';
 import Select from '../../components/select';
+import swapClubs from '../club/actions/swapClubs';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -118,7 +119,7 @@ export default function Clubs({navigation, route}: Props) {
         {
           text: i18n._(t`Confirm Swap`),
           onPress: async () => {
-            console.log('swap teams');
+            swapClubs({oldClub, newClub: newClub[0]});
           },
           style: 'destructive',
         },

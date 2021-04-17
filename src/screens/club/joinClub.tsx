@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
 import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
-import {LeagueStackType} from './league';
+import {LeagueStackType} from '../league/league';
 import FullScreenLoading from '../../components/loading';
 import {ListHeading, TwoLine, ListSeparator} from '../../components/listItems';
 import {verticalScale} from 'react-native-size-matters';
