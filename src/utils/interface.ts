@@ -106,6 +106,7 @@ export interface IMatch {
   motmConflict: boolean;
   result?: {[team: string]: number};
   players?: {[id: string]: MatchPlayerData};
+  notSubmittedPlayers?: string[];
 }
 
 export interface ISectionList {

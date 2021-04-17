@@ -25,12 +25,13 @@ import ScreenshotUploader from '../../components/screenshots';
 import {launchImageLibrary} from 'react-native-image-picker';
 import ImageView from 'react-native-image-viewing';
 import storage, {firebase} from '@react-native-firebase/storage';
-import Toast from '../../components/toast';
+// import Toast from '../../components/toast';
 import SwitchLabel from '../../components/switch';
 import addPlayerStats from './actions/onAddPLayerStats';
 import {AuthContext} from '../../context/authContext';
 import readImage from './actions/readImage';
 import ImageEditor from '@react-native-community/image-editor';
+import {AppContext} from '../../context/appContext';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Stats'>;
 
@@ -107,9 +108,10 @@ export default function SubmitStats({navigation}: Props) {
   const [images, setImages] = useState<ImageURISource[]>([]);
   const [imageViewerVisible, setImageViewerVisible] = useState(false);
   const [currentImage, setCurrentImage] = useState(0);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState('');
+  // const [showToast, setShowToast] = useState(false);
+  // const [toastMessage, setToastMessage] = useState('');
 
+  const context = useContext(AppContext);
   const matchContext = useContext(MatchContext);
   const auth = useContext(AuthContext);
 
@@ -224,11 +226,24 @@ export default function SubmitStats({navigation}: Props) {
           updateProfilePic();
         }
         const ocrResult = await readImage(images[0].uri, isGK);
-        console.log(ocrResult);
+        //        console.log(ocrResult);
+        await Promise.all([
+          addPlayerStats(matchData, ocrResult, uid, isGK),
+          uploadScreenshots(),
+          analytics().logEvent('match_submit_stats'),
+        ]);
+        // Remove submitted match from context
+        let foundUserMatch = context.userMatches.some(
+          (match) => match.id === matchData.matchId,
+        );
+        if (foundUserMatch) {
+          let updatedUserMatches = context.userMatches.filter(
+            (match) => match.id !== matchData.matchId,
+          );
 
-        await addPlayerStats(matchData, ocrResult, uid, isGK);
-        await uploadScreenshots();
-        await analytics().logEvent('match_submit_stats');
+          context.setUserMatches(updatedUserMatches);
+        }
+
         showAlert(
           i18n._(t`Stats submitted`),
           i18n._(t`Your player performance stats are now published`),
@@ -267,7 +282,7 @@ export default function SubmitStats({navigation}: Props) {
         visible={imageViewerVisible}
         onRequestClose={() => setImageViewerVisible(false)}
       />
-      <Toast message={toastMessage} visible={showToast} success={false} />
+      {/* <Toast message={toastMessage} visible={showToast} success={false} /> */}
 
       <ScrollView
         bounces={false}

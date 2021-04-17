@@ -151,7 +151,7 @@ export default function CreateLeague({navigation}: Props) {
   const showLimitAlert = () => {
     Alert.alert(
       i18n._(t`League Limit Reached`),
-      i18n._(t`You cannot create more than one league`),
+      i18n._(t`Contact PRZ to create more than one league.`),
       [
         {
           text: i18n._(t`Close`),
@@ -396,12 +396,14 @@ export default function CreateLeague({navigation}: Props) {
           </View>
           <SwitchLabel
             title={i18n._(t`Public League`)}
-            subtitle={
-              user?.currentUser?.emailVerified
-                ? i18n._(t`Everyone can send requests to join`)
-                : i18n._(t`Verify your email to enable this option`)
-            }
-            disabled={!user?.currentUser?.emailVerified}
+            // subtitle={
+            //   user?.currentUser?.emailVerified
+            //     ? i18n._(t`Everyone can send requests to join`)
+            //     : i18n._(t`Verify your email to enable this option`)
+            // }
+            subtitle={i18n._(t`Contact PRZ to enable this option`)}
+            // disabled={!user?.currentUser?.emailVerified}
+            disabled={true}
             value={!data.private}
             onValueChange={() => setData({...data, private: !data.private})}
           />
