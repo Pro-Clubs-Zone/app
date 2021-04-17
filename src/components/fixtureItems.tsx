@@ -11,6 +11,7 @@ type Props = {
   homeTeamScore?: number | '-';
   awayTeamScore?: number | '-';
   conflict: boolean;
+  hasSubmission: boolean;
   onPress: () => void;
 };
 
@@ -21,56 +22,64 @@ const FixtureItem = ({
   homeTeamScore = '-',
   awayTeamScore = '-',
   conflict,
+  hasSubmission,
   onPress,
 }: Props) => (
   <Pressable onPress={onPress}>
     <View style={styles.fixture}>
-      <View
-        style={[
-          styles.status,
-          {
-            borderRightColor: conflict ? APP_COLORS.Red : APP_COLORS.Primary,
-          },
-        ]}>
-        {conflict ? (
-          <Icon name="alert" size={verticalScale(20)} color={APP_COLORS.Red} />
+      <View style={styles.id}>
+        <Text numberOfLines={1} style={TEXT_STYLES.small}>
+          {matchId}
+        </Text>
+      </View>
+      <View style={styles.teams}>
+        <View style={styles.teamCol}>
+          <Text style={TEXT_STYLES.body}>{homeTeamName}</Text>
+          <Text style={TEXT_STYLES.body}>{awayTeamName}</Text>
+        </View>
+        {conflict || hasSubmission ? (
+          <View style={styles.status}>
+            {conflict && (
+              <Icon
+                name="alert"
+                size={verticalScale(24)}
+                color={APP_COLORS.Red}
+              />
+            )}
+            {hasSubmission && (
+              <Icon
+                name="account-check"
+                size={verticalScale(24)}
+                color={APP_COLORS.Accent}
+              />
+            )}
+          </View>
         ) : (
-          <View style={styles.dateTime}>
-            <Text numberOfLines={1} style={TEXT_STYLES.small}>
-              {matchId}
+          <View style={styles.resultCol}>
+            <Text
+              style={[
+                TEXT_STYLES.body,
+                {
+                  textAlign: 'right',
+                  color: APP_COLORS.Accent,
+                  fontWeight: 'bold',
+                },
+              ]}>
+              {homeTeamScore}
+            </Text>
+            <Text
+              style={[
+                TEXT_STYLES.body,
+                {
+                  textAlign: 'right',
+                  color: APP_COLORS.Accent,
+                  fontWeight: 'bold',
+                },
+              ]}>
+              {awayTeamScore}
             </Text>
           </View>
         )}
-      </View>
-      <View style={styles.teams}>
-        <View style={styles.teamRow}>
-          <Text style={TEXT_STYLES.body}>{homeTeamName}</Text>
-          <Text
-            style={[
-              TEXT_STYLES.body,
-              {
-                textAlign: 'right',
-                color: APP_COLORS.Accent,
-                fontWeight: 'bold',
-              },
-            ]}>
-            {homeTeamScore}
-          </Text>
-        </View>
-        <View style={styles.teamRow}>
-          <Text style={TEXT_STYLES.body}>{awayTeamName}</Text>
-          <Text
-            style={[
-              TEXT_STYLES.body,
-              {
-                textAlign: 'right',
-                color: APP_COLORS.Accent,
-                fontWeight: 'bold',
-              },
-            ]}>
-            {awayTeamScore}
-          </Text>
-        </View>
       </View>
     </View>
   </Pressable>
@@ -86,29 +95,38 @@ const styles = ScaledSheet.create({
     height: '64@vs',
     alignItems: 'center',
   },
-  teamRow: {
+  teamCol: {
     flex: 1,
-    flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  status: {
+  resultCol: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  id: {
     borderRightWidth: 1,
+    borderColor: APP_COLORS.Primary,
     marginRight: '16@vs',
     width: '40@vs',
     height: '48@vs',
     flexDirection: 'row',
     alignItems: 'center',
     paddingLeft: '8@vs',
-    //   overflow: 'hidden',
-  },
-  dateTime: {
     marginLeft: '8@vs',
     maxWidth: '56@vs',
+    //   overflow: 'hidden',
+  },
+
+  status: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   teams: {
     flex: 1,
-    justifyContent: 'space-around',
-    paddingVertical: '8@vs',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    height: '100%',
+    paddingVertical: verticalScale(8),
   },
 });
 
