@@ -20,6 +20,7 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueStackType} from './league';
 import Select from '../../components/select';
 import swapClubs from '../club/actions/swapClubs';
+import {AuthContext} from '../../context/authContext';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -38,6 +39,8 @@ export default function Clubs({navigation, route}: Props) {
   const context = useContext(AppContext);
   const requestContext = useContext(RequestContext);
   const leagueContext = useContext(LeagueContext);
+  const user = useContext(AuthContext);
+
   const {showActionSheetWithOptions} = useActionSheet();
 
   const ref = useRef(null);
@@ -102,7 +105,37 @@ export default function Clubs({navigation, route}: Props) {
     setLoading(false);
   }, [context]);
 
+  const onClubSwap = async (
+    oldClub: IClubRequestData,
+    newClub: IClubRequestData,
+  ) => {
+    setLoading(true);
+    try {
+      await swapClubs({oldClub, newClub});
+      await user.currentUser.reload();
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      throw new Error(error);
+    }
+  };
+
   const onConfirmClubSwap = (oldClub: IClubRequestData, swapClubId: string) => {
+    const isAdmin = adminId === oldClub.managerId;
+
+    if (isAdmin) {
+      return Alert.alert(
+        i18n._(t`Can't swap admin club`),
+        i18n._(t`Currently admins can't swap their own club`),
+        [
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
     const newClub = sectionedData[1].data.filter(
       (club) => club.clubId === swapClubId,
     );
@@ -118,9 +151,7 @@ export default function Clubs({navigation, route}: Props) {
         },
         {
           text: i18n._(t`Confirm Swap`),
-          onPress: async () => {
-            swapClubs({oldClub, newClub: newClub[0]});
-          },
+          onPress: () => onClubSwap(oldClub, newClub[0]),
           style: 'destructive',
         },
       ],

@@ -7,6 +7,7 @@ import SectionedMultiSelect, {
 } from 'react-native-sectioned-multi-select';
 import {BigButton, IconButton} from './buttons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import EmptyState from './emptyState';
 
 const icons = {
   search: {
@@ -70,6 +71,16 @@ const Select = forwardRef(
       showCancelButton={false}
       hideConfirm={true}
       hideSearch={true}
+      noItemsComponent={() => (
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            paddingTop: verticalScale(32),
+          }}>
+          <Text style={TEXT_STYLES.display4}>No Items</Text>
+        </View>
+      )}
       IconRenderer={Icon}
       icons={icons}
       hideSelect

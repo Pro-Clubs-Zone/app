@@ -6,10 +6,9 @@ type Props = {
   newClub: IClubRequestData;
 };
 
-const db = firestore();
-const batch = db.batch();
-
 const swapClubs = async ({oldClub, newClub}: Props) => {
+  const db = firestore();
+  const batch = db.batch();
   const leagueId = oldClub.leagueId;
   const clubRef = db.collection('leagues').doc(leagueId).collection('clubs');
 
@@ -52,7 +51,7 @@ const swapClubs = async ({oldClub, newClub}: Props) => {
     );
   }
 
-  await batch.commit().catch((err) => console.log(err));
+  await batch.commit();
 };
 
 export default swapClubs;
