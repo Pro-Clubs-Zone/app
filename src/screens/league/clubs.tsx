@@ -50,7 +50,7 @@ export default function Clubs({navigation, route}: Props) {
   const adminId = leagueContext.league.adminId;
   const userLeagues = context.userLeagues!;
 
-  const scheduled = route.params.scheduled;
+  const scheduled = route?.params?.scheduled;
 
   const sortClubs = (clubs: IClubRequestData[]) => {
     const acceptedClubList: ILeagueRequest = {

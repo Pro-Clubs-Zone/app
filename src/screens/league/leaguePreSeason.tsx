@@ -224,7 +224,13 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       <CardSmallContainer>
         <CardSmall
           title={i18n._(t`League Clubs`)}
-          onPress={() => navigation.navigate('Clubs')}
+          onPress={() =>
+            navigation.navigate('Clubs', {
+              scheduled: false,
+              isAdmin: true,
+              newLeague: false,
+            })
+          }
           badgeNumber={leagueReqCount}
         />
         <CardSmall
