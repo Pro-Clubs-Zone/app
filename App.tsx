@@ -24,6 +24,7 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import RNBootSplash from 'react-native-bootsplash';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {MatchProvider} from './src/context/matchContext';
+import {ArticlesProvider} from './src/context/articlesContext';
 
 const App = () => {
   const routeNameRef = useRef();
@@ -126,9 +127,11 @@ const App = () => {
                         });
                       }
                     }}>
-                    <ActionSheetProvider>
-                      <AppIndex />
-                    </ActionSheetProvider>
+                    <ArticlesProvider>
+                      <ActionSheetProvider>
+                        <AppIndex />
+                      </ActionSheetProvider>
+                    </ArticlesProvider>
                   </NavigationContainer>
                 </MatchProvider>
               </LeagueProvider>

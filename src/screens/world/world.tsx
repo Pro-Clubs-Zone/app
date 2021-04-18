@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
+import {View} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import {CardMedium} from '../../components/cards';

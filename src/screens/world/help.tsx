@@ -1,11 +1,12 @@
-import React, {useEffect, useState} from 'react';
-import {View, FlatList} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {FlatList} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
-import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {TwoLine} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
-const {createClient} = require('contentful/dist/contentful.browser.min.js');
+import useContentfulConfig from './actions/useContentfulConfig';
+import {Article} from '../../utils/interface';
+import {ArticlesContext} from '../../context/articlesContext';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Help'>;
 
@@ -13,41 +14,39 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-type Article = {
-  fields: {
-    title: string;
-    body: string;
-    tags: string[];
-  };
-  metadata: {};
-  sys: {
-    id: string;
-  };
-};
-
 export default function Help({navigation}: Props) {
   const [data, setData] = useState<Article[]>();
   const [loading, setLoading] = useState(true);
+
+  const contentfulClient = useContentfulConfig();
+  const articlesContext = useContext(ArticlesContext);
+
   useEffect(() => {
-    const client = createClient({
-      // This is the space ID. A space is like a project folder in Contentful terms
-      space: 'wi1z1u1iwrjl',
-      // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-      accessToken: 'glmyUCNVQfpdUe-pOpcNdbcn2nhllp-dNhAOu0o8ArY',
-    });
     const getArticles = async () => {
-      const articles = await client.getEntries();
+      const articles = await contentfulClient.getEntries();
       let articlesList: Article[] = [];
 
       for (const article of articles.items) {
         articlesList.push(article);
+        console.log(article);
       }
 
       setData(articlesList);
       setLoading(false);
     };
     getArticles();
-  }, [navigation]);
+  }, [contentfulClient]);
+
+  const onSelectArticle = async (id: string) => {
+    const selectedArticle = data.filter((article) => article.sys.id === id);
+
+    articlesContext.setArticles(selectedArticle);
+
+    navigation.navigate('Help Article', {
+      id,
+    });
+  };
+
   return (
     <>
       <FullScreenLoading visible={loading} />
@@ -58,7 +57,7 @@ export default function Help({navigation}: Props) {
           <TwoLine
             title={item.fields.title}
             sub={item.fields.tags.join(', ')}
-            onPress={() => navigation.navigate('Help Article')}
+            onPress={() => onSelectArticle(item.sys.id)}
           />
         )}
       />

@@ -21,6 +21,7 @@ import firestore from '@react-native-firebase/firestore';
 import {IUser} from '../../utils/interface';
 import {AppContext} from '../../context/appContext';
 import Toast from '../../components/toast';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign Up'>;
 // type ScreenRouteProp = RouteProp<AppNavStack, 'Sign Up'>;
@@ -167,6 +168,9 @@ function SignUp({navigation}: Props) {
           firAuth.currentUser.updateProfile(userProfile),
           createDbEntry(userData),
           userData.user.sendEmailVerification(),
+          analytics().logSignUp({
+            method: 'email',
+          }),
         ]);
         //   setLoading(false);
         // const onCreateLeague = async () => {

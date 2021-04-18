@@ -54,7 +54,9 @@ export type AppNavStack = {
   };
   World: undefined;
   Help: undefined;
-  'Help Article': undefined;
+  'Help Article': {
+    id: string;
+  };
   'App Info': undefined;
 };
 

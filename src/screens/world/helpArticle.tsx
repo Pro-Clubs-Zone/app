@@ -1,16 +1,19 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {View, Text} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
-import {TwoLine} from '../../components/listItems';
-import FullScreenLoading from '../../components/loading';
-const {createClient} = require('contentful/dist/contentful.browser.min.js');
+import {RouteProp} from '@react-navigation/native';
+import {ArticlesContext} from '../../context/articlesContext';
+import {TEXT_STYLES} from '../../utils/designSystem';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Help Article'>;
+type ScreenRouteProp = RouteProp<AppNavStack, 'Help Article'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
 };
 
 type Article = {
@@ -25,10 +28,24 @@ type Article = {
   };
 };
 
-export default function HelpArticle({navigation}: Props) {
+export default function HelpArticle({navigation, route}: Props) {
+  const articleId = route.params.id;
+  const articlesContext = useContext(ArticlesContext);
+  const selectedArticle = articlesContext.articles.filter(
+    (article) => article.sys.id === articleId,
+  );
+  const article = selectedArticle[0].fields;
+
+  useEffect(() => {
+    analytics().logSelectContent({
+      content_type: 'help_article',
+      item_id: articleId,
+    });
+  }, [articleId]);
+
   return (
     <View>
-      <Text>Article</Text>
+      <Text style={TEXT_STYLES.display4}>{article.title}</Text>
     </View>
   );
 }
