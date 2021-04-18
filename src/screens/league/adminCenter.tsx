@@ -12,12 +12,11 @@ import EmptyState from '../../components/emptyState';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FixtureItem from '../../components/fixtureItems';
-import useGetMatches from './actions/useGetMatches';
-import {MinButton} from '../../components/buttons';
+import useMatchData from './actions/useGetMatches';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
-  'Report Center'
+  'Admin Center'
 >;
 
 type Props = {
@@ -26,7 +25,7 @@ type Props = {
 
 const db = firestore();
 
-export default function ReportCenter({navigation}: Props) {
+export default function AdminCenter({navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
@@ -36,21 +35,28 @@ export default function ReportCenter({navigation}: Props) {
     .doc(leagueId)
     .collection('matches');
 
-  const query = leagueRef
+  const singleSubmissionsQuery = leagueRef
+    .where('published', '==', false)
+    .where('submissionCount', '==', 1);
+
+  const conflictSubmissionsQuery = leagueRef
     .where('published', '==', false)
     .where('conflict', 'in', [true]);
 
-  const getMatches = useGetMatches(leagueId, query);
+  const singleSubmissions = useMatchData(leagueId, singleSubmissionsQuery);
+  const conflictMatches = useMatchData(leagueId, conflictSubmissionsQuery);
+  const matchData = [...singleSubmissions.data, ...conflictMatches.data];
 
   return (
     <FlatList
-      data={getMatches.data}
+      data={matchData}
       renderItem={({item}) => (
         <FixtureItem
           matchId={item.data.id}
           homeTeamName={item.data.homeTeamName}
           awayTeamName={item.data.awayTeamName}
           conflict={item.data.conflict}
+          hasSubmission={item.data.submissionCount === 1}
           onPress={() =>
             navigation.navigate('Match', {
               matchData: item.data,
@@ -61,20 +67,27 @@ export default function ReportCenter({navigation}: Props) {
       )}
       keyExtractor={(item) => item.data.matchId}
       ItemSeparatorComponent={() => <ListSeparator />}
-      ListEmptyComponent={() => <EmptyState title={i18n._(t`No Fixtures`)} />}
+      ListEmptyComponent={() => (
+        <EmptyState
+          title={i18n._(t`No fixtures`)}
+          body={i18n._(
+            t`All conflicted and single-submission fixtures will appear here`,
+          )}
+        />
+      )}
       contentContainerStyle={{
-        justifyContent: getMatches.data.length === 0 ? 'center' : null,
+        justifyContent: matchData.length === 0 ? 'center' : null,
         flexGrow: 1,
       }}
-      ListFooterComponent={() =>
-        getMatches.data.length !== 0 &&
-        !getMatches.allLoaded && (
-          <MinButton
-            title={i18n._(t`Load more`)}
-            onPress={getMatches.onLoadMore}
-          />
-        )
-      }
+      // ListFooterComponent={() =>
+      //   matchData.data.length !== 0 &&
+      //   !matchData.allLoaded && (
+      //     <MinButton
+      //       title={i18n._(t`Load more`)}
+      //       onPress={matchData.onLoadMore}
+      //     />
+      //   )
+      // }
     />
   );
 }

@@ -82,10 +82,10 @@ export default function LeagueScheduled({navigation}: Props) {
       {isAdmin && (
         <CardSmallContainer>
           <CardSmall
-            title={i18n._(t`Report Center`)}
+            title={i18n._(t`Admin Center`)}
             subTitle={i18n._(t`Review and resolve all conflicted matches`)}
             badgeNumber={conflictMatchesCount}
-            onPress={() => navigation.navigate('Report Center')}
+            onPress={() => navigation.navigate('Admin Center')}
           />
           <CardSmall
             title={i18n._(t`League Clubs`)}

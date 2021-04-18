@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useContext, useEffect} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
@@ -20,7 +20,7 @@ import {t} from '@lingui/macro';
 import LeaguePreview from './leaguePreview';
 import LeaguePreSeason from './leaguePreSeason';
 import LeagueScheduled from './leagueScheduled';
-import ReportCenter from './reportCenter';
+import AdminCenter from './adminCenter';
 import Match from '../match/match';
 import LeagueStandings from './standings';
 import Fixtures from './fixtures';
@@ -54,7 +54,7 @@ export type LeagueStackType = {
   Match: {matchData: IMatchNavData; upcoming: boolean};
   'My Club': ClubProps;
   'Club Settings': ClubProps;
-  'Report Center': ILeagueProps;
+  'Admin Center': ILeagueProps;
   'Sign In': undefined;
   'Sign Up': undefined;
   Stats: undefined;
@@ -217,7 +217,7 @@ export default function LeagueStack({navigation, route}: Props) {
             component={Match}
             options={{headerShown: false}}
           />
-          <Stack.Screen name="Report Center" component={ReportCenter} />
+          <Stack.Screen name="Admin Center" component={AdminCenter} />
           {commonStack}
         </Stack.Navigator>
       );

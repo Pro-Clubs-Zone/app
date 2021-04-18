@@ -55,8 +55,10 @@ const submitMatch = async (
     players?: {};
     motmSubmissions?: {};
     notSubmittedPlayers?: any;
+    submissionCount: any;
   } = {
     submissions: teamSubmission,
+    submissionCount: firestore.FieldValue.increment(1),
   };
 
   if (players.length > 0) {

@@ -108,6 +108,7 @@ export interface IMatch {
   result?: {[team: string]: number};
   players?: {[id: string]: MatchPlayerData};
   notSubmittedPlayers?: string[];
+  submissionCount: number;
 }
 
 export interface ISectionList {

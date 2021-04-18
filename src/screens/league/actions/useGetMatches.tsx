@@ -67,14 +67,14 @@ const useGetMatches = (
       }
     });
     return subscriber;
-  }, []);
+  }, [context]);
 
   const onLoadMore = async () => {
     setLoading(true);
     const nextPage = query
       .orderBy('id', 'asc')
       .startAfter(lastVisible)
-      .limit(queryLimit);
+      .limit(10);
 
     await nextPage
       .get()
