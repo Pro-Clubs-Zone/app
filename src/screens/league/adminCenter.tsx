@@ -13,6 +13,7 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import FixtureItem from '../../components/fixtureItems';
 import useMatchData from './actions/useGetMatches';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -48,46 +49,51 @@ export default function AdminCenter({navigation}: Props) {
   const matchData = [...singleSubmissions.data, ...conflictMatches.data];
 
   return (
-    <FlatList
-      data={matchData}
-      renderItem={({item}) => (
-        <FixtureItem
-          matchId={item.data.id}
-          homeTeamName={item.data.homeTeamName}
-          awayTeamName={item.data.awayTeamName}
-          conflict={item.data.conflict}
-          hasSubmission={item.data.submissionCount === 1}
-          onPress={() =>
-            navigation.navigate('Match', {
-              matchData: item.data,
-              upcoming: true,
-            })
-          }
-        />
-      )}
-      keyExtractor={(item) => item.data.matchId}
-      ItemSeparatorComponent={() => <ListSeparator />}
-      ListEmptyComponent={() => (
-        <EmptyState
-          title={i18n._(t`No fixtures`)}
-          body={i18n._(
-            t`All conflicted and single-submission fixtures will appear here`,
-          )}
-        />
-      )}
-      contentContainerStyle={{
-        justifyContent: matchData.length === 0 ? 'center' : null,
-        flexGrow: 1,
-      }}
-      // ListFooterComponent={() =>
-      //   matchData.data.length !== 0 &&
-      //   !matchData.allLoaded && (
-      //     <MinButton
-      //       title={i18n._(t`Load more`)}
-      //       onPress={matchData.onLoadMore}
-      //     />
-      //   )
-      // }
-    />
+    <>
+      <FullScreenLoading
+        visible={singleSubmissions.loading || conflictMatches.loading}
+      />
+      <FlatList
+        data={matchData}
+        renderItem={({item}) => (
+          <FixtureItem
+            matchId={item.data.id}
+            homeTeamName={item.data.homeTeamName}
+            awayTeamName={item.data.awayTeamName}
+            conflict={item.data.conflict}
+            hasSubmission={item.data.submissionCount === 1}
+            onPress={() =>
+              navigation.navigate('Match', {
+                matchData: item.data,
+                upcoming: true,
+              })
+            }
+          />
+        )}
+        keyExtractor={(item) => item.data.matchId}
+        ItemSeparatorComponent={() => <ListSeparator />}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title={i18n._(t`No fixtures`)}
+            body={i18n._(
+              t`All conflicted and single-submission fixtures will appear here`,
+            )}
+          />
+        )}
+        contentContainerStyle={{
+          justifyContent: matchData.length === 0 ? 'center' : null,
+          flexGrow: 1,
+        }}
+        // ListFooterComponent={() =>
+        //   matchData.data.length !== 0 &&
+        //   !matchData.allLoaded && (
+        //     <MinButton
+        //       title={i18n._(t`Load more`)}
+        //       onPress={matchData.onLoadMore}
+        //     />
+        //   )
+        // }
+      />
+    </>
   );
 }

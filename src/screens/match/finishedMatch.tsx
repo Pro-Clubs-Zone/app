@@ -32,6 +32,7 @@ import getMatchImages from './actions/getMatchImages';
 import {IconButton, MinButton} from '../../components/buttons';
 import shareMatchDetails from './actions/shareMatchDetails';
 import skipStatsSubmission from '../club/actions/skipStatsSubmission';
+import {AppContext} from '../../context/appContext';
 
 // type ScreenRouteProp = RouteProp<MatchStackType, 'Finished Match'>;
 type ScreenNavigationProp = StackNavigationProp<
@@ -62,6 +63,7 @@ const Tab = createMaterialTopTabNavigator<FinishedMatchStack>();
 
 export default function FinishedMatch({navigation}: Props) {
   const matchContext = useContext(MatchContext);
+  const context = useContext(AppContext);
   const user = useContext(AuthContext);
   const uid = user.uid;
 
@@ -72,6 +74,21 @@ export default function FinishedMatch({navigation}: Props) {
     uid in matchData.players &&
     matchData.players[uid].submitted === false;
 
+  const onSkipSubmission = async () => {
+    await skipStatsSubmission(matchData.leagueId, matchData.matchId, uid);
+    // Remove submitted match from context
+    let foundUserMatch = context.userMatches.some(
+      (match) => match.id === matchData.matchId,
+    );
+    if (foundUserMatch) {
+      let updatedUserMatches = context.userMatches.filter(
+        (match) => match.id !== matchData.matchId,
+      );
+
+      context.setUserMatches(updatedUserMatches);
+    }
+    navigation.goBack();
+  };
   const showSkipAlert = () => {
     Alert.alert(
       i18n._(t`Skip Stats Submission`),
@@ -81,14 +98,7 @@ export default function FinishedMatch({navigation}: Props) {
       [
         {
           text: i18n._(t`Skip Submission`),
-          onPress: async () => {
-            await skipStatsSubmission(
-              matchData.leagueId,
-              matchData.matchId,
-              uid,
-            );
-            navigation.goBack();
-          },
+          onPress: () => onSkipSubmission(),
           style: 'destructive',
         },
         {
