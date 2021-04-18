@@ -36,6 +36,7 @@
     "@react-navigation/material-top-tabs": "^5.3.11",
     "@react-navigation/native": "^5.9.0",
     "@react-navigation/stack": "^5.13.0",
+    "contentful": "^8.2.1",
     "react": "16.13.1",
     "react-native": "0.63.3",
     "react-native-bootsplash": "^3.2.0",

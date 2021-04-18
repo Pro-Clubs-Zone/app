@@ -27,6 +27,9 @@ import {AppContext} from '../context/appContext';
 import LeaguePreview from './league/leaguePreview';
 import PasswordRecovery from './auth/passwordRecovery';
 import ResetPassword from './auth/resetPassword';
+import World from './world/world';
+import Help from './world/help';
+import HelpArticle from './world/helpArticle';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
 
@@ -49,6 +52,10 @@ export type AppNavStack = {
   'League Preview': {
     infoMode: boolean;
   };
+  World: undefined;
+  Help: undefined;
+  'Help Article': undefined;
+  'App Info': undefined;
 };
 
 const db = firestore();
@@ -64,7 +71,6 @@ export default function AppIndex() {
   // const debug = true;
 
   const uid = user.uid;
-  const displayName = user.displayName;
 
   useLayoutEffect(() => {
     crashlytics().log('App mounted.');
@@ -119,6 +125,8 @@ export default function AppIndex() {
         component={LeagueStack}
         options={{headerShown: false}}
       />
+      <Stack.Screen name="Help" component={Help} />
+      <Stack.Screen name="Help Article" component={HelpArticle} />
     </>
   );
 
@@ -130,28 +138,23 @@ export default function AppIndex() {
           headerBackTitleVisible: false,
           animationEnabled: false,
         }}>
-        {!displayName && <Stack.Screen name="Sign Up" component={SignUp} />}
-        {displayName && (
-          <>
-            <Stack.Screen
-              name="Home"
-              component={HomeTabs}
-              options={{
-                animationTypeForReplace: 'pop',
-                headerRight: () => (
-                  <IconButton name="logout-variant" onPress={onSignOut} />
-                ),
-              }}
-            />
+        <Stack.Screen
+          name="Home"
+          component={UserTabs}
+          options={{
+            animationTypeForReplace: 'pop',
+            headerRight: () => (
+              <IconButton name="logout-variant" onPress={onSignOut} />
+            ),
+          }}
+        />
 
-            <Stack.Screen
-              name="Match"
-              component={Match}
-              options={{headerShown: false}}
-            />
-            {commonStack}
-          </>
-        )}
+        <Stack.Screen
+          name="Match"
+          component={Match}
+          options={{headerShown: false}}
+        />
+        {commonStack}
       </Stack.Navigator>
     );
   }
@@ -165,7 +168,7 @@ export default function AppIndex() {
       }}>
       <Stack.Screen
         name="Home"
-        component={Leagues}
+        component={GuestTabs}
         options={({navigation}) => ({
           title: 'Leagues',
           headerRight: () => (
@@ -193,7 +196,7 @@ export default function AppIndex() {
   );
 }
 
-const HomeTabs = () => {
+const UserTabs = () => {
   const Tab = createBottomTabNavigator();
   const requestContext = useContext(RequestContext);
   const context = useContext(AppContext);
@@ -257,6 +260,51 @@ const HomeTabs = () => {
                 ),
               }
         }
+      />
+      <Tab.Screen
+        name="World"
+        component={World}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <Icon name="earth" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
+
+const GuestTabs = () => {
+  const Tab = createBottomTabNavigator();
+
+  return (
+    <Tab.Navigator
+      tabBarOptions={{
+        style: {
+          backgroundColor: APP_COLORS.Secondary,
+        },
+        activeTintColor: APP_COLORS.Accent,
+        inactiveTintColor: APP_COLORS.Gray,
+        allowFontScaling: true,
+        labelPosition: 'beside-icon',
+      }}>
+      <Tab.Screen
+        name="Leagues"
+        component={Leagues}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <Icon name="trophy-variant" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="World"
+        component={World}
+        options={{
+          tabBarIcon: ({color, size}) => (
+            <Icon name="earth" color={color} size={size} />
+          ),
+        }}
       />
     </Tab.Navigator>
   );
