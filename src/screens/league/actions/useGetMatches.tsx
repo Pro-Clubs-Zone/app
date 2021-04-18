@@ -27,7 +27,7 @@ const useGetMatches = (
   useEffect(() => {
     const firstPage = query.orderBy('id', 'asc').limit(queryLimit);
     const subscriber = firstPage.onSnapshot((snapshot) => {
-      if (!snapshot?.empty) {
+      if (!snapshot.empty) {
         let matches: FixtureList[] = [];
         let lastVisibleDoc: any = null;
         lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
