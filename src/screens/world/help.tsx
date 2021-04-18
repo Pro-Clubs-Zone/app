@@ -7,6 +7,7 @@ import FullScreenLoading from '../../components/loading';
 import useContentfulConfig from './actions/useContentfulConfig';
 import {Article} from '../../utils/interface';
 import {ArticlesContext} from '../../context/articlesContext';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Help'>;
 
@@ -34,13 +35,23 @@ export default function Help({navigation}: Props) {
       setData(articlesList);
       setLoading(false);
     };
-    getArticles();
+    try {
+      getArticles();
+    } catch (error) {
+      setLoading(false);
+      throw new Error(error);
+    }
   }, [contentfulClient]);
 
   const onSelectArticle = async (id: string) => {
     const selectedArticle = data.filter((article) => article.sys.id === id);
 
     articlesContext.setArticles(selectedArticle);
+
+    await analytics().logSelectContent({
+      content_type: 'help_article',
+      item_id: id,
+    });
 
     navigation.navigate('Help Article', {
       id,

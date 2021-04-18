@@ -10,6 +10,7 @@ export interface Article {
     title: string;
     body: string;
     tags: string[];
+    related: Article[];
   };
   metadata: {};
   sys: {

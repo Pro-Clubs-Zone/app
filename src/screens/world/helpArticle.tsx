@@ -1,5 +1,5 @@
-import React, {useContext, useEffect} from 'react';
-import {View, Text} from 'react-native';
+import React, {useContext} from 'react';
+import {View, Text, ScrollView, useWindowDimensions} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
@@ -7,6 +7,10 @@ import {RouteProp} from '@react-navigation/native';
 import {ArticlesContext} from '../../context/articlesContext';
 import {TEXT_STYLES} from '../../utils/designSystem';
 import analytics from '@react-native-firebase/analytics';
+import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
+import {Document} from '@contentful/rich-text-types';
+import HTML from 'react-native-render-html';
+import {TwoLine} from '../../components/listItems';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Help Article'>;
 type ScreenRouteProp = RouteProp<AppNavStack, 'Help Article'>;
@@ -16,36 +20,58 @@ type Props = {
   route: ScreenRouteProp;
 };
 
-type Article = {
-  fields: {
-    title: string;
-    body: string;
-    tags: string[];
-  };
-  metadata: {};
-  sys: {
-    id: string;
-  };
-};
-
 export default function HelpArticle({navigation, route}: Props) {
   const articleId = route.params.id;
   const articlesContext = useContext(ArticlesContext);
-  const selectedArticle = articlesContext.articles.filter(
+  const viewedArticle = articlesContext.articles.filter(
     (article) => article.sys.id === articleId,
   );
-  const article = selectedArticle[0].fields;
+  const article = viewedArticle[0].fields;
+  const html = documentToHtmlString((article.body as unknown) as Document);
+  console.log(html);
 
-  useEffect(() => {
-    analytics().logSelectContent({
+  const related = article.related;
+  const windowWidth = useWindowDimensions().width;
+
+  const onSelectRelated = async (id: string) => {
+    const selectedArticle = related.filter(
+      (relatedArticle) => relatedArticle.sys.id === id,
+    );
+
+    const newArticleList = [...articlesContext.articles, ...selectedArticle];
+
+    articlesContext.setArticles(newArticleList);
+    await analytics().logSelectContent({
       content_type: 'help_article',
-      item_id: articleId,
+      item_id: id,
     });
-  }, [articleId]);
+    navigation.push('Help Article', {
+      id,
+    });
+  };
 
   return (
-    <View>
+    <ScrollView
+      style={{
+        padding: verticalScale(16),
+      }}>
       <Text style={TEXT_STYLES.display4}>{article.title}</Text>
-    </View>
+      <HTML
+        source={{html}}
+        contentWidth={windowWidth}
+        baseFontStyle={{fontSize: verticalScale(14), color: 'white'}}
+      />
+      <View>
+        {related &&
+          related.map((relatedArticle) => (
+            <TwoLine
+              key={relatedArticle.sys.id}
+              title={relatedArticle.fields.title}
+              sub={relatedArticle.fields.tags.join(', ')}
+              onPress={() => onSelectRelated(relatedArticle.sys.id)}
+            />
+          ))}
+      </View>
+    </ScrollView>
   );
 }
