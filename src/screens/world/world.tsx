@@ -5,6 +5,7 @@ import {AppNavStack} from '../index';
 import {CardMedium} from '../../components/cards';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'World'>;
 
