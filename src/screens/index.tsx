@@ -1,16 +1,27 @@
-import React, {useContext, useLayoutEffect} from 'react';
+import React, {useContext, useLayoutEffect, useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {AuthContext} from '../context/authContext';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {APP_COLORS, FONT_SIZES} from '../utils/designSystem';
+import {APP_COLORS, FONT_SIZES, TEXT_STYLES} from '../utils/designSystem';
+import {verticalScale} from 'react-native-size-matters';
 import {IconButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {LogBox, Linking} from 'react-native';
+import {
+  LogBox,
+  Linking,
+  SafeAreaView,
+  Text,
+  View,
+  Pressable,
+  Platform,
+} from 'react-native';
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
 import VersionCheck from 'react-native-version-check';
+import {t} from '@lingui/macro';
+import i18n from '../utils/i18n';
 
 // Screens
 import Home from './user/home';
@@ -34,6 +45,13 @@ import HelpArticle from './world/helpArticle';
 import AppInfo from './world/appInfo';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
+
+type AppInfo = {
+  isNeeded: boolean;
+  currentVersion: string;
+  latestVersion: string;
+  storeUrl: string;
+};
 
 export type AppNavStack = {
   Home: undefined;
@@ -67,6 +85,7 @@ const firAuth = auth();
 const firFunc = functions();
 
 export default function AppIndex() {
+  const [appInfo, setAppInfo] = useState<AppInfo>();
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
   const requests = useContext(RequestContext);
@@ -101,11 +120,13 @@ export default function AppIndex() {
     }
 
     const checkAppUpdate = async () => {
-      // await VersionCheck.needUpdate().then((res) => {
-      //   console.log(res); // false
-      // });
-      const name = await VersionCheck.getAppStoreUrl();
-      console.log(name);
+      const appUpdate = await VersionCheck.needUpdate({
+        packageName: 'com.proclubszone',
+        forceUpdate: true,
+      });
+      if (appUpdate.isNeeded) {
+        setAppInfo(appUpdate);
+      }
     };
     checkAppUpdate();
   }, []);
@@ -149,6 +170,79 @@ export default function AppIndex() {
       />
     </>
   );
+
+  if (appInfo) {
+    return (
+      <SafeAreaView
+        style={{
+          backgroundColor: APP_COLORS.Dark,
+          flex: 1,
+          justifyContent: 'center',
+        }}>
+        <Pressable
+          onPress={() => Linking.openURL(appInfo.storeUrl)}
+          style={{
+            paddingHorizontal: verticalScale(16),
+          }}>
+          <View
+            style={{
+              borderRadius: 3,
+              padding: verticalScale(24),
+              paddingBottom: verticalScale(16),
+              paddingRight: verticalScale(16),
+              backgroundColor: APP_COLORS.Accent,
+            }}>
+            <Text
+              style={[
+                TEXT_STYLES.display3,
+                {
+                  color: APP_COLORS.Primary,
+                },
+              ]}>
+              {i18n._(t`New app version available.`)}
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+
+                marginTop: verticalScale(16),
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Icon
+                  name={Platform.OS === 'ios' ? 'apple' : 'google-play'}
+                  color={APP_COLORS.Primary}
+                  style={{
+                    marginRight: verticalScale(4),
+                  }}
+                  size={verticalScale(16)}
+                />
+                <Text
+                  style={[
+                    TEXT_STYLES.small,
+                    {
+                      color: APP_COLORS.Primary,
+                    },
+                  ]}>
+                  {i18n._(t`Update now to continue`)}
+                </Text>
+              </View>
+              <Icon
+                name="arrow-right-circle-outline"
+                color={APP_COLORS.Primary}
+                size={verticalScale(24)}
+              />
+            </View>
+          </View>
+        </Pressable>
+      </SafeAreaView>
+    );
+  }
 
   if (uid) {
     return (
