@@ -10,7 +10,9 @@ const swapClubs = async ({oldClub, newClub}: Props) => {
   const db = firestore();
   const batch = db.batch();
   const leagueId = oldClub.leagueId;
-  const clubRef = db.collection('leagues').doc(leagueId).collection('clubs');
+  const leagueRef = db.collection('leagues').doc(leagueId);
+  const clubRef = leagueRef.collection('clubs');
+  const standingsRef = leagueRef.collection('stats').doc('standings');
 
   const usersRef = db.collection('users');
 
@@ -23,6 +25,11 @@ const swapClubs = async ({oldClub, newClub}: Props) => {
     roster: {...newClub.roster},
   };
 
+  batch.set(
+    standingsRef,
+    {[oldClub.clubId]: {name: newClub.name}},
+    {merge: true},
+  );
   batch.set(clubRef.doc(oldClub.clubId), newClubData);
   batch.delete(clubRef.doc(newClub.clubId));
 
