@@ -556,6 +556,8 @@ PODS:
     - React-Core
   - react-native-tesseract-ocr (2.0.1):
     - React
+  - react-native-version-check (3.4.2):
+    - React
   - React-RCTActionSheet (0.63.3):
     - React-Core/RCTActionSheetHeaders (= 0.63.3)
   - React-RCTAnimation (0.63.3):
@@ -722,6 +724,7 @@ DEPENDENCIES:
   - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-tesseract-ocr (from `../node_modules/react-native-tesseract-ocr`)
+  - react-native-version-check (from `../node_modules/react-native-version-check`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -820,6 +823,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-tesseract-ocr:
     :path: "../node_modules/react-native-tesseract-ocr"
+  react-native-version-check:
+    :path: "../node_modules/react-native-version-check"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -929,6 +934,7 @@ SPEC CHECKSUMS:
   react-native-pager-view: d728200ac02cad7ccacc5903d0b65ff7b8c00cde
   react-native-safe-area-context: e471852c5ed67eea4b10c5d9d43c1cebae3b231d
   react-native-tesseract-ocr: 2872fcdecbe0b97dccc7e81b79c22a9c251e3b2b
+  react-native-version-check: 9f9332ff4552fb00e0bd15b097a8d302b2b8413b
   React-RCTActionSheet: 53ea72699698b0b47a6421cb1c8b4ab215a774aa
   React-RCTAnimation: 1befece0b5183c22ae01b966f5583f42e69a83c2
   React-RCTBlob: 0b284339cbe4b15705a05e2313a51c6d8b51fa40

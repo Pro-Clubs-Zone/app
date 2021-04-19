@@ -17,7 +17,15 @@ export default function World({navigation}: Props) {
     <View style={{flex: 1}}>
       <CardMedium
         title={i18n._(t`Help`)}
+        subTitle={i18n._(t`Find answers to most frequently asked questions.`)}
         onPress={() => navigation.navigate('Help')}
+      />
+      <CardMedium
+        title={i18n._(t`Get in touch`)}
+        onPress={() => navigation.navigate('App Info')}
+        subTitle={i18n._(
+          t`Found a bug, have a feature request or just want to stay up-to-date? Reach us out.`,
+        )}
       />
     </View>
   );

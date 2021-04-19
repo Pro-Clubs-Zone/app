@@ -7,9 +7,10 @@ import {APP_COLORS, FONT_SIZES} from '../utils/designSystem';
 import {IconButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
 import crashlytics from '@react-native-firebase/crashlytics';
-import {LogBox} from 'react-native';
+import {LogBox, Linking} from 'react-native';
 import functions from '@react-native-firebase/functions';
 import firestore from '@react-native-firebase/firestore';
+import VersionCheck from 'react-native-version-check';
 
 // Screens
 import Home from './user/home';
@@ -30,6 +31,7 @@ import ResetPassword from './auth/resetPassword';
 import World from './world/world';
 import Help from './world/help';
 import HelpArticle from './world/helpArticle';
+import AppInfo from './world/appInfo';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
 
@@ -97,6 +99,15 @@ export default function AppIndex() {
     if (user.uid) {
       crashlytics().setUserId(uid!);
     }
+
+    const checkAppUpdate = async () => {
+      // await VersionCheck.needUpdate().then((res) => {
+      //   console.log(res); // false
+      // });
+      const name = await VersionCheck.getAppStoreUrl();
+      console.log(name);
+    };
+    checkAppUpdate();
   }, []);
 
   const onSignOut = () => {
@@ -129,6 +140,13 @@ export default function AppIndex() {
       />
       <Stack.Screen name="Help" component={Help} />
       <Stack.Screen name="Help Article" component={HelpArticle} />
+      <Stack.Screen
+        name="App Info"
+        component={AppInfo}
+        options={{
+          title: 'Get in touch',
+        }}
+      />
     </>
   );
 
