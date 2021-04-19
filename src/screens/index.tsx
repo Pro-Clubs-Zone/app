@@ -5,7 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {APP_COLORS, FONT_SIZES, TEXT_STYLES} from '../utils/designSystem';
 import {verticalScale} from 'react-native-size-matters';
-import {IconButton} from '../components/buttons';
+import {IconButton, MinButton} from '../components/buttons';
 import auth from '@react-native-firebase/auth';
 import crashlytics from '@react-native-firebase/crashlytics';
 import {
@@ -86,6 +86,7 @@ const firFunc = functions();
 
 export default function AppIndex() {
   const [appInfo, setAppInfo] = useState<AppInfo>();
+  const [showAlert, setShowAlert] = useState(false);
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
   const requests = useContext(RequestContext);
@@ -125,6 +126,7 @@ export default function AppIndex() {
       });
       if (appUpdate.isNeeded) {
         setAppInfo(appUpdate);
+        setShowAlert(true);
       }
     };
     checkAppUpdate();
@@ -170,7 +172,7 @@ export default function AppIndex() {
     </>
   );
 
-  if (appInfo) {
+  if (appInfo && showAlert) {
     return (
       <SafeAreaView
         style={{
@@ -182,6 +184,7 @@ export default function AppIndex() {
           onPress={() => Linking.openURL(appInfo.storeUrl)}
           style={{
             paddingHorizontal: verticalScale(16),
+            marginBottom: verticalScale(56),
           }}>
           <View
             style={{
@@ -239,6 +242,13 @@ export default function AppIndex() {
             </View>
           </View>
         </Pressable>
+        <View>
+          <MinButton
+            title={i18n._(t`Later`)}
+            onPress={() => setShowAlert(false)}
+            secondary
+          />
+        </View>
       </SafeAreaView>
     );
   }
