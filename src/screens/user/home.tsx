@@ -199,7 +199,12 @@ export default function Home({navigation}: Props) {
       setLoading(false);
     };
     if (user) {
-      fetchData();
+      try {
+        fetchData();
+      } catch (error) {
+        setLoading(false);
+        throw new Error(error);
+      }
     }
   }, [user]);
 

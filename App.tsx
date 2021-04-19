@@ -53,9 +53,9 @@ const App = () => {
 
       if (getLink) {
         console.log('getLink', getLink);
-        if (getLink.includes('firebaseapp')) {
-          // await AsyncStorage.setItem('@storage_Url', getLink);
-        }
+        // if (getLink.includes('firebaseapp')) {
+        //   // await AsyncStorage.setItem('@storage_Url', getLink);
+        // }
         if (getLink.length > 34) {
           return getLink;
         }
@@ -64,11 +64,10 @@ const App = () => {
     subscribe(listener) {
       const onReceiveURL = async ({url}: {url: string}) => {
         console.log('receive url', url);
-        listener(url);
-        // if (url.length > 34) {
-        //   listener(url);
-        //   console.log('receive url22', url);
-        // }
+        //  listener(url);
+        if (url.length > 34) {
+          listener(url);
+        }
         // if (url.includes('firebaseapp')) {
         //   //   await AsyncStorage.setItem('@storage_Url', url);
         // }

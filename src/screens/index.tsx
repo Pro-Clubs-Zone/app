@@ -94,7 +94,6 @@ export default function AppIndex() {
   // const debug = true;
 
   const uid = user.uid;
-
   useLayoutEffect(() => {
     crashlytics().log('App mounted.');
     if (__DEV__) {
@@ -284,7 +283,7 @@ export default function AppIndex() {
         name="Home"
         component={GuestTabs}
         options={({navigation}) => ({
-          title: 'Leagues',
+          title: 'Home',
           headerRight: () => (
             <IconButton
               name="account"
@@ -320,6 +319,7 @@ const UserTabs = () => {
 
   return (
     <Tab.Navigator
+      initialRouteName="Home"
       tabBarOptions={{
         style: {
           backgroundColor: APP_COLORS.Secondary,
@@ -403,7 +403,7 @@ const GuestTabs = () => {
         labelPosition: 'beside-icon',
       }}>
       <Tab.Screen
-        name="Leagues"
+        name="League "
         component={Leagues}
         options={{
           tabBarIcon: ({color, size}) => (

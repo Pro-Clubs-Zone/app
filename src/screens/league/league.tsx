@@ -124,7 +124,7 @@ export default function LeagueStack({navigation, route}: Props) {
       }
     };
     getLeagueData();
-  }, [leagueContext]);
+  }, []);
 
   useEffect(() => {
     const userData = context.userData;

@@ -43,7 +43,7 @@ export default function LeagueScheduled({navigation}: Props) {
   const userLeague = context.userData!.leagues![leagueId];
 
   const conflictMatchesCount =
-    context.userLeagues[leagueId].conflictMatchesCount;
+    context.userLeagues?.[leagueId].conflictMatchesCount;
 
   useEffect(() => {
     const [clubRequests, leagueRequests] = countLeagueRequests(
