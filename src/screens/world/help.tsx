@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {AppNavStack} from '../index';
-import {TwoLine} from '../../components/listItems';
+import {ListSeparator, TwoLine} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
 import useContentfulConfig from './actions/useContentfulConfig';
 import {Article} from '../../utils/interface';
@@ -64,6 +64,7 @@ export default function Help({navigation}: Props) {
       <FlatList
         data={data}
         keyExtractor={(item) => item.sys.id}
+        ItemSeparatorComponent={() => <ListSeparator />}
         renderItem={({item}) => (
           <TwoLine
             title={item.fields.title}

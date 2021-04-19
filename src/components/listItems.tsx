@@ -207,7 +207,13 @@ export const OneLine = ({
 
 export const TwoLine = (props: TwoLineProps) => (
   <Pressable onPress={props.onPress} disabled={props.disabled}>
-    <View style={styles.listBg}>
+    <View
+      style={[
+        styles.listBg,
+        {
+          minHeight: verticalScale(72),
+        },
+      ]}>
       <View
         style={{
           flexDirection: 'row',
@@ -249,6 +255,7 @@ export const TwoLine = (props: TwoLineProps) => (
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'flex-start',
+              marginBottom: verticalScale(4),
             }}>
             <Text
               style={[
@@ -338,7 +345,7 @@ const styles = ScaledSheet.create({
     justifyContent: 'space-between',
     padding: '16@vs',
     backgroundColor: APP_COLORS.Dark,
-    height: '72@vs',
+
     alignItems: 'center',
   },
   flagBig: {
