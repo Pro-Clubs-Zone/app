@@ -147,10 +147,14 @@ export default function LeagueStack({navigation, route}: Props) {
         crashlytics().setAttributes({
           leagueId: leagueId,
           role: role,
+          leagueName: league.name,
+          clubName: userData?.leagues?.[leagueId]?.clubName,
         }),
         analytics().logEvent('league_view', {
           leagueId: leagueId,
           role: role,
+          leagueName: league.name,
+          clubName: userData?.leagues?.[leagueId]?.clubName,
         }),
       ]);
     };

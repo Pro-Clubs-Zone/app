@@ -50,7 +50,7 @@ export default function Help({navigation}: Props) {
 
     await analytics().logSelectContent({
       content_type: 'help_article',
-      item_id: id,
+      item_id: selectedArticle[0].fields.title,
     });
 
     navigation.navigate('Help Article', {
