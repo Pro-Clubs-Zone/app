@@ -96,7 +96,6 @@ export default function AppIndex() {
 
   const uid = user.uid;
   useLayoutEffect(() => {
-    crashlytics().log('App mounted.');
     if (__DEV__) {
       const localAddress = '192.168.0.178';
       console.log('dev');

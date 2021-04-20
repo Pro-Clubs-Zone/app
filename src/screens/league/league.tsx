@@ -32,6 +32,7 @@ import ClubSettings from '../club/clubSettings';
 import SignIn from '../auth/signIn';
 import Stats from './stats';
 import SignUp from '../auth/signUp';
+import analytics from '@react-native-firebase/analytics';
 
 interface ClubProps {
   clubId: string;
@@ -132,31 +133,34 @@ export default function LeagueStack({navigation, route}: Props) {
 
     let role: string = 'guest';
 
-    if (user) {
-      if (userData) {
-        const userDataLeague = userData.leagues?.[leagueId];
-        role = userDataLeague?.admin
-          ? 'admin'
-          : userDataLeague?.manager
-          ? 'manager'
-          : 'player';
+    if (user && userData) {
+      const userDataLeague = userData.leagues?.[leagueId];
+      role = userDataLeague?.admin
+        ? 'admin'
+        : userDataLeague?.manager
+        ? 'manager'
+        : 'player';
+    }
+
+    const log = async () => {
+      await Promise.all([
         crashlytics().setAttributes({
           leagueId: leagueId,
           role: role,
-        });
-      }
-    } else {
-      crashlytics().setAttributes({
-        leagueId: leagueId,
-        role: role,
-      });
-    }
+        }),
+        analytics().logEvent('league_view', {
+          leagueId: leagueId,
+          role: role,
+        }),
+      ]);
+    };
 
     const userInLeague =
       (userData?.leagues && userData.leagues[leagueId]?.accepted) ?? false;
     const scheduled = league?.scheduled ?? false;
     const userAdmin = userData ? league?.adminId === uid : false;
 
+    log();
     setLeagueScheduled(scheduled);
     setIsAdmin(userAdmin);
     setInLeague(userInLeague);

@@ -1,5 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
 import {IClub, IClubRequestData} from '../../../utils/interface';
+import analytics from '@react-native-firebase/analytics';
 
 type Props = {
   oldClub: IClubRequestData;
@@ -58,7 +59,12 @@ const swapClubs = async ({oldClub, newClub}: Props) => {
     );
   }
 
-  await batch.commit();
+  await Promise.all([
+    batch.commit(),
+    analytics().logEvent('swap_clubs', {
+      leagueId: leagueId,
+    }),
+  ]);
 };
 
 export default swapClubs;
