@@ -96,11 +96,9 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
   },
   teamCol: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   resultCol: {
-    flex: 1,
     justifyContent: 'space-between',
   },
   id: {

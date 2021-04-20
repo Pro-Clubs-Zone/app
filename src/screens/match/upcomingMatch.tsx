@@ -235,9 +235,10 @@ export default function UpcomingMatch({navigation}: Props) {
   const onSelectResult = async (teamID: string) => {
     try {
       setLoading(i18n._(t`Submitting Match...`));
-      await onConflictResolve(matchData, teamID);
+      const conflict = matchData.conflict || matchData.motmConflict;
+      await onConflictResolve(matchData, teamID, !conflict);
       await analytics().logEvent('match_resolve_conflict');
-      if (matchData.conflict || matchData.motmConflict) {
+      if (conflict) {
         decrementConflictCounter();
       }
       showSuccessAlert();

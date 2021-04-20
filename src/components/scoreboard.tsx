@@ -50,7 +50,10 @@ const ScoreBoard = ({
         <View style={styles.firstRow}>
           <Team teamName={data.homeTeamName} />
 
-          <View>
+          <View
+            style={{
+              flex: 3,
+            }}>
             {!editable ? (
               <View
                 style={{
@@ -68,14 +71,16 @@ const ScoreBoard = ({
                     {homeTeamScore} - {awayTeamScore}
                   </Text>
                 )}
-                <Text
-                  style={[
-                    TEXT_STYLES.body,
-                    {
-                      textAlign: 'center',
-                    },
-                  ]}>
-                  {`${data.leagueName} \n`}
+                <View>
+                  <Text
+                    style={[
+                      TEXT_STYLES.body,
+                      {
+                        textAlign: 'center',
+                      },
+                    ]}>
+                    {data.leagueName}
+                  </Text>
                   <Text
                     style={[
                       TEXT_STYLES.small,
@@ -85,7 +90,7 @@ const ScoreBoard = ({
                     ]}>
                     Division One
                   </Text>
-                </Text>
+                </View>
                 {/*   <Text
                 style={[
                   TEXT_STYLES.small,
@@ -154,6 +159,7 @@ const styles = ScaledSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     width: '72@vs',
+    flex: 2,
   },
   teamLogo: {
     height: '56@vs',

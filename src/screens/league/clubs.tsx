@@ -112,6 +112,7 @@ export default function Clubs({navigation, route}: Props) {
     setLoading(true);
     try {
       await swapClubs({oldClub, newClub});
+      requestContext.setLeagueCount(requestContext.requestCount - 1);
       await user.currentUser.reload();
       setLoading(false);
     } catch (error) {

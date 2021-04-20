@@ -26,8 +26,8 @@ type Props = {
 };
 
 export default function LeagueScheduled({navigation}: Props) {
-  const [leagueReqCount, setLeagueReqCount] = useState(0);
-  const [clubReqCount, setClubReqCount] = useState(0);
+  // const [leagueReqCount, setLeagueReqCount] = useState(0);
+  // const [clubReqCount, setClubReqCount] = useState(0);
 
   // const [clubRosterLength, setClubRosterLength] = useState<number>(0);
 
@@ -45,33 +45,12 @@ export default function LeagueScheduled({navigation}: Props) {
   const conflictMatchesCount =
     context.userLeagues?.[leagueId].conflictMatchesCount;
 
-  useEffect(() => {
-    const [clubRequests, leagueRequests] = countLeagueRequests(
-      requestContext.leagues,
-      requestContext.clubs,
-      userLeague,
-      leagueContext.league.name,
-    );
-
-    setClubReqCount(clubRequests);
-    setLeagueReqCount(leagueRequests);
-
-    // if (isManager) {
-    //   const clubRoster =
-    //     context.userLeagues[leagueId].clubs[userClub.clubId].roster;
-    //   let requests = 0;
-    //   let roster = 0;
-    //   for (const request of Object.values(clubRoster)) {
-    //     if (!request.accepted) {
-    //       requests += 1;
-    //     } else {
-    //       roster += 1;
-    //     }
-    //   }
-    //   setClubReqests(requests);
-    //   //  setClubRosterLength(roster);
-    // }
-  }, []);
+  const [clubRequests, leagueRequests] = countLeagueRequests(
+    requestContext.leagues,
+    requestContext.clubs,
+    userLeague,
+    leagueContext.league.name,
+  );
 
   return (
     <ScrollView
@@ -96,7 +75,7 @@ export default function LeagueScheduled({navigation}: Props) {
                 scheduled: true,
               })
             }
-            badgeNumber={leagueReqCount}
+            badgeNumber={leagueRequests}
           />
         </CardSmallContainer>
       )}
@@ -121,7 +100,7 @@ export default function LeagueScheduled({navigation}: Props) {
           <CardSmall
             title={userClub.clubName}
             // subTitle={`${clubRosterLength} club members`}
-            badgeNumber={clubReqCount}
+            badgeNumber={clubRequests}
             onPress={() =>
               navigation.navigate('My Club', {
                 clubId: userClub.clubId,
