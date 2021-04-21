@@ -162,8 +162,10 @@ export default function LeagueStack({navigation, route}: Props) {
     const userInLeague =
       (userData?.leagues && userData.leagues[leagueId]?.accepted) ?? false;
     const scheduled = league?.scheduled ?? false;
-    const userAdmin = userData ? league?.adminId === uid : false;
-
+    const userAdmin =
+      userData &&
+      league &&
+      Object.keys(league.admins).some((adminUid) => adminUid === uid);
     log();
     setLeagueScheduled(scheduled);
     setIsAdmin(userAdmin);

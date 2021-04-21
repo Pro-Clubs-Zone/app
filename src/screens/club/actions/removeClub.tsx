@@ -1,10 +1,10 @@
 import firestore from '@react-native-firebase/firestore';
-import {IClubRosterMember} from '../../../utils/interface';
+import {IClubRosterMember, ILeagueAdmin} from '../../../utils/interface';
 
 const removeClub = async (
   leagueId: string,
   clubId: string,
-  adminId: string,
+  admins: ILeagueAdmin,
   clubRoster: {[uid: string]: IClubRosterMember},
 ) => {
   const db = firestore();
@@ -16,7 +16,10 @@ const removeClub = async (
 
   for (const playerId of Object.keys(clubRoster)) {
     const playerRef = db.collection('users').doc(playerId);
-    if (playerId === adminId) {
+    const isAdmin = Object.keys(admins).some(
+      (adminUid) => adminUid === playerId,
+    );
+    if (isAdmin) {
       batch.update(playerRef, {
         ['leagues.' + leagueId + '.manager']: firestore.FieldValue.delete(),
         ['leagues.' + leagueId + '.clubId']: firestore.FieldValue.delete(),

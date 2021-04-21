@@ -1,5 +1,5 @@
-import React, {useContext} from 'react';
-import {FlatList} from 'react-native';
+import React, {useContext, useLayoutEffect} from 'react';
+import {FlatList, Alert} from 'react-native';
 import {StackNavigationProp} from '@react-navigation/stack';
 // import {RouteProp} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
@@ -14,6 +14,8 @@ import i18n from '../../utils/i18n';
 import FixtureItem from '../../components/fixtureItems';
 import useMatchData from './actions/useGetMatches';
 import FullScreenLoading from '../../components/loading';
+import {IconButton} from '../../components/buttons';
+import functions from '@react-native-firebase/functions';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -25,9 +27,57 @@ type Props = {
 };
 
 const db = firestore();
+const firFunc = functions();
 
 export default function AdminCenter({navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
+
+  const onInviteAdmin = async () => {
+    const inviteAdmin = firFunc.httpsCallable('inviteAdmin');
+    try {
+      await inviteAdmin({
+        email: 'zyrafd@prz.com',
+        leagueId: leagueId,
+        leagueName: leagueContext.league.name,
+        ownerUsername: Object.values(leagueContext.league.admins).filter(
+          (admin) => admin.owner === true,
+        )[0].username,
+      });
+      Alert.alert(
+        i18n._(t`User invited`),
+        i18n._(
+          t`Confirmation is sent to user's email. Once confirmed, user will become an admin.`,
+        ),
+        [
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    } catch {
+      Alert.alert(
+        i18n._(t`Can't invite the user`),
+        i18n._(t`User is not registered or not verified his email yet`),
+        [
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+          },
+        ],
+        {cancelable: false},
+      );
+    }
+  };
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton name="information" onPress={() => onInviteAdmin()} />
+      ),
+    });
+  }, [leagueContext]);
 
   const leagueId = leagueContext.leagueId;
 

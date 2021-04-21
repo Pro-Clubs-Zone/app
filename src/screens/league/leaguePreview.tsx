@@ -47,12 +47,18 @@ export default function LeaguePreview({navigation, route}: Props) {
 
   const infoMode = route.params?.infoMode;
 
+  const isAdmin = Object.keys(league.admins).some(
+    (adminUid) => adminUid === user.uid,
+  );
+  const ownerId = league.ownerId;
+  const isOwner = ownerId === user.uid;
+
   const onDeleteLeague = () => {
     const deleteLeague = async () => {
       const deleteUserLeague = functions().httpsCallable('deleteLeague');
       await deleteUserLeague({
         leagueId,
-        leagueAdminId: leagueContext.league.adminId,
+        leagueOwnerId: ownerId,
       });
     };
 
@@ -126,7 +132,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               shareLeagueLink(league.name, leagueId);
             }}
           />
-          {league.adminId !== user.uid && inLeague && isManager && (
+          {!isAdmin && inLeague && isManager && (
             <IconButton
               name="account-group"
               onPress={() =>
@@ -136,7 +142,7 @@ export default function LeaguePreview({navigation, route}: Props) {
               }
             />
           )}
-          {league.adminId === user.uid && (
+          {isOwner && (
             <IconButton name="delete-forever" onPress={onDeleteLeague} />
           )}
         </View>
@@ -242,7 +248,11 @@ export default function LeaguePreview({navigation, route}: Props) {
         />
         <InfoItem
           icon="account"
-          value={league.adminUsername}
+          value={
+            Object.values(league.admins).filter(
+              (admin) => admin.owner === true,
+            )[0].username
+          }
           label={i18n._(t`Admin`)}
         />
         {!!league.discord && (

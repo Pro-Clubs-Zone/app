@@ -71,6 +71,24 @@ export default function CreateLeague({navigation}: Props) {
   };
 
   useEffect(() => {
+    if (!uid) {
+      return showSignInAlert();
+    }
+
+    setData({
+      ...data,
+      admins: {
+        [uid]: {
+          username: user.displayName,
+          owner: true,
+        },
+      },
+
+      ownerId: uid,
+    });
+  }, [user]);
+
+  useEffect(() => {
     if (userLeagues) {
       for (const league of Object.values(userLeagues)) {
         if (league.admin) {
@@ -79,12 +97,6 @@ export default function CreateLeague({navigation}: Props) {
       }
     }
   }, [userLeagues]);
-
-  useEffect(() => {
-    if (!uid) {
-      showSignInAlert();
-    }
-  }, [navigation, uid]);
 
   const onChangeText = (
     text: string,
@@ -190,9 +202,8 @@ export default function CreateLeague({navigation}: Props) {
     const noErrors = await fieldValidation();
     if (noErrors) {
       setLoading(true);
-      const username = userData!.username;
       try {
-        const leagueId = await createLeague(data, uid, username);
+        const leagueId = await createLeague(data, uid);
         let updatedUserData = {...context.userData!};
         let updatedUserLeagues = {...context.userLeagues};
 
@@ -201,6 +212,7 @@ export default function CreateLeague({navigation}: Props) {
           [leagueId]: {
             admin: true,
             manager: false,
+            owner: true,
           },
         };
 

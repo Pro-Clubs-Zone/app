@@ -47,7 +47,7 @@ export default function Clubs({navigation, route}: Props) {
 
   const requests = requestContext.leagues;
   const leagueId = leagueContext.leagueId;
-  const adminId = leagueContext.league.adminId;
+  const admins = leagueContext.league.admins;
   const userLeagues = context.userLeagues!;
 
   const scheduled = route?.params?.scheduled;
@@ -122,7 +122,9 @@ export default function Clubs({navigation, route}: Props) {
   };
 
   const onConfirmClubSwap = (oldClub: IClubRequestData, swapClubId: string) => {
-    const isAdmin = adminId === oldClub.managerId;
+    const isAdmin = Object.keys(admins).some(
+      (adminUid) => adminUid === oldClub.managerId,
+    );
 
     if (isAdmin) {
       return Alert.alert(
@@ -164,32 +166,34 @@ export default function Clubs({navigation, route}: Props) {
     selectedClub: IClubRequestData,
     acceptRequest: boolean,
   ) => {
-    await handleLeagueRequest(
-      requests,
-      selectedClub,
-      userLeagues[leagueId].name,
-      acceptRequest,
-    )
-      .then((newData) => {
-        requestContext.setLeagues(newData);
-        const currentCount = requestContext.requestCount;
-        requestContext.setLeagueCount(
-          currentCount === 1 ? 0 : currentCount - 1,
-        );
-      })
-      .then(() => {
-        const currentLeagueData = {...userLeagues};
-        if (acceptRequest) {
-          currentLeagueData[selectedClub.leagueId].clubs![
-            selectedClub.clubId
-          ].accepted = true;
-        } else {
-          delete currentLeagueData[selectedClub.leagueId].clubs![
-            selectedClub.clubId
-          ];
-        }
-        context.setUserLeagues(currentLeagueData);
-      });
+    try {
+      const newRequestData = await handleLeagueRequest(
+        requests,
+        selectedClub,
+        userLeagues[leagueId].name,
+        acceptRequest,
+      );
+
+      requestContext.setLeagues(newRequestData);
+      const currentCount = requestContext.requestCount;
+      requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
+
+      const currentLeagueData = {...userLeagues};
+      if (acceptRequest) {
+        currentLeagueData[selectedClub.leagueId].clubs![
+          selectedClub.clubId
+        ].accepted = true;
+      } else {
+        delete currentLeagueData[selectedClub.leagueId].clubs![
+          selectedClub.clubId
+        ];
+      }
+      context.setUserLeagues(currentLeagueData);
+    } catch (error) {
+      console.log(error);
+
+      throw new Error(error);
+    }
   };
 
   const onAcceptClub = async (selectedClub: IClubRequestData) => {
@@ -285,7 +289,7 @@ export default function Clubs({navigation, route}: Props) {
           text: i18n._(t`Remove`),
           onPress: async () => {
             setLoading(true);
-            await removeClub(leagueId, club.clubId, adminId, clubRoster);
+            await removeClub(leagueId, club.clubId, admins, clubRoster);
             navigation.dispatch(
               CommonActions.reset({
                 index: 1,

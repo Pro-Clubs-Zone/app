@@ -168,7 +168,6 @@ export interface IClubRequestData extends IClub {
 }
 
 export interface ILeague {
-  adminUsername: string;
   name: string;
   description?: string;
   discord?: string;
@@ -177,14 +176,22 @@ export interface ILeague {
   teamNum: number;
   acceptedClubs: number;
   matchNum: number;
-  adminId: string;
   private: boolean;
   scheduled: boolean;
   created: Timestamp;
+  admins: ILeagueAdmin;
   clubs?: {
     [club: string]: IClub;
   };
   conflictMatchesCount: 0;
+  ownerId: string;
+}
+
+export interface ILeagueAdmin {
+  [uid: string]: {
+    owner: boolean;
+    username: string;
+  };
 }
 
 export interface IClubRosterMember {
@@ -208,6 +215,7 @@ export interface IUserLeague {
   admin?: boolean;
   accepted?: boolean;
   clubName?: string;
+  owner?: boolean;
 }
 
 export interface IUser {

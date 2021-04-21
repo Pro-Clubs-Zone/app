@@ -148,7 +148,10 @@ export default function Home({navigation}: Props) {
 
             myLeagueRequests.data.push(myLeagueRequestData);
           }
-          if (club.accepted === false && league.adminId === uid) {
+          if (
+            club.accepted === false &&
+            Object.keys(league.admins).some((adminUid) => adminUid === uid)
+          ) {
             leagueData.title = league.name;
 
             let clubData: IClubRequestData = {
