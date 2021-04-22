@@ -25,9 +25,7 @@ const AuthProvider = (props: any) => {
         setDisplayName(firUser.displayName);
         setEmailVerified(firUser.emailVerified);
         setCurrentUser(firUser);
-        console.log('user, verified', firUser.emailVerified);
       } else {
-        console.log('no user');
         setUid(null);
         setDisplayName(null);
         setEmailVerified(null);

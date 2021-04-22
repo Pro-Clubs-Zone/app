@@ -251,7 +251,7 @@ function SignUp({navigation}: Props) {
                 autoCorrect={false}
                 autoCapitalize="none"
                 label={i18n._(t`E-mail`)}
-                returnKeyType="next"
+                returnKeyType="default"
                 //    onBlur={checkEmailFormat}
 
                 helper="example@gmail.com"
