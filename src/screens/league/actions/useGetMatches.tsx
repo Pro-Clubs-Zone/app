@@ -25,7 +25,7 @@ const useGetMatches = (
   const queryLimit = 5;
 
   useEffect(() => {
-    const firstPage = query.orderBy('id', 'asc').limit(queryLimit);
+    const firstPage = query.limit(queryLimit);
     const subscriber = firstPage.onSnapshot((snapshot) => {
       if (!snapshot.empty) {
         let matches: FixtureList[] = [];
@@ -71,10 +71,7 @@ const useGetMatches = (
 
   const onLoadMore = async () => {
     setLoading(true);
-    const nextPage = query
-      .orderBy('id', 'asc')
-      .startAfter(lastVisible)
-      .limit(10);
+    const nextPage = query.startAfter(lastVisible).limit(10);
 
     await nextPage
       .get()

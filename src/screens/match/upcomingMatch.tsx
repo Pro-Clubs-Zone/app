@@ -108,7 +108,7 @@ export default function UpcomingMatch({navigation}: Props) {
 
     const showAlert = (result: string) => {
       Alert.alert(
-        i18n._(t`Resolve Match`),
+        i18n._(t`WARNING: Resolve Match`),
         i18n._(
           t`Are you sure you want to pick ${
             result === 'home'
@@ -116,13 +116,13 @@ export default function UpcomingMatch({navigation}: Props) {
               : result === 'away'
               ? matchData.awayTeamName
               : 'no team'
-          } as a winner?`,
+          } as a winner? Take this action only when team(s) didn't show up`,
         ),
         [
           {
             text: i18n._(t`Confirm`),
             onPress: () => resolveMatch(result),
-            style: 'default',
+            style: 'destructive',
           },
           {
             text: i18n._(t`Cancel`),

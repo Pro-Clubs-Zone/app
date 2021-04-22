@@ -55,7 +55,8 @@ function UpcomingFixtures({navigation}: Props) {
 
   const query = leagueRef
     .where('published', '==', false)
-    .where('conflict', 'in', [true, false]);
+    .where('conflict', 'in', [true, false])
+    .orderBy('id', 'asc');
 
   const getMatches = useGetMatches(leagueId, query);
 
@@ -121,7 +122,8 @@ export function PastFixtures({navigation}: Props) {
 
   const query = leagueRef
     .where('published', '==', true)
-    .where('conflict', 'in', [false]);
+    .where('conflict', 'in', [false])
+    .orderBy('id', 'desc');
 
   const getMatches = useGetMatches(leagueId, query);
 
@@ -136,6 +138,7 @@ export function PastFixtures({navigation}: Props) {
           homeTeamScore={item.data.result![item.data.homeTeamId]}
           awayTeamScore={item.data.result![item.data.awayTeamId]}
           conflict={false}
+          hasSubmission={false}
           onPress={() =>
             navigation.navigate('Match', {
               matchData: item.data,

@@ -50,11 +50,13 @@ export default function AdminCenter({navigation}: Props) {
 
   const singleSubmissionsQuery = leagueRef
     .where('published', '==', false)
-    .where('submissionCount', '==', 1);
+    .where('submissionCount', '==', 1)
+    .orderBy('id', 'asc');
 
   const conflictSubmissionsQuery = leagueRef
     .where('published', '==', false)
-    .where('conflict', 'in', [true]);
+    .where('conflict', 'in', [true])
+    .orderBy('id', 'asc');
 
   const singleSubmissions = useMatchData(leagueId, singleSubmissionsQuery);
   const conflictMatches = useMatchData(leagueId, conflictSubmissionsQuery);

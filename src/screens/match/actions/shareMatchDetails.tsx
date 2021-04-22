@@ -4,15 +4,13 @@ import i18n from '../../../utils/i18n';
 import {t} from '@lingui/macro';
 
 const shareMatchDetails = async (matchData: IMatchNavData) => {
-  const content = `PRZ Match Report:\nLeague Name: ${
+  const content = `--- PRZ MATCH REPORT ---\nLeague Name: ${
     matchData.leagueName
-  },\nLeague ID: ${matchData.leagueId.slice(
-    0,
-    5,
-  )},\nMatch ID: ${matchData.matchId.slice(
-    0,
-    5,
-  )},\nPlease describe the issue:\n`;
+  },\nLeague ID: ${matchData.leagueId.slice(0, 5)},\nMatch ID: ${
+    matchData.id
+  },\nHome Team: ${matchData.homeTeamName},\nAway Team: ${
+    matchData.awayTeamName
+  }\n--- --- ---`;
   await Share.share(
     {
       message: content,

@@ -28,6 +28,7 @@ import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import UpcomingMatchCard from '../../components/upcomingMatchCard';
 import {CardMedium} from '../../components/cards';
 import {MinButton} from '../../components/buttons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const db = firestore();
 
@@ -221,11 +222,14 @@ export default function Home({navigation}: Props) {
       .name;
     return rivalName;
   };
+
+  const userLeagues = context?.userLeagues && Object.keys(context.userLeagues);
+
   if (loading) {
     return <NonModalLoading visible={true} />;
   }
   return (
-    <View style={{flex: 1}}>
+    <ScrollView>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={TEXT_STYLES.caption}>
@@ -241,34 +245,58 @@ export default function Home({navigation}: Props) {
             {user.displayName}
           </Text>
         </View>
+
         {context?.userMatches.length !== 0 ? (
-          <FlatList
-            data={context.userMatches}
-            horizontal={true}
-            contentContainerStyle={styles.scrollContainer}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({item}) => (
-              <UpcomingMatchCard
-                clubName={
-                  context.userLeagues![item.data.leagueId].clubs![
-                    item.data.clubId
-                  ].name
-                }
-                rivalName={getRivalsName(item.data)}
-                leagueName={item.data.leagueName}
-                onPress={() =>
-                  navigation.navigate('Match', {
-                    matchData: item.data,
-                    upcoming: !item.data.published,
-                  })
-                }
-                submitted={!!item.data.submissions?.[item.data.clubId]}
-                conflict={item.data.conflict || item.data.motmConflict}
-                published={item.data.published}
-              />
+          <>
+            {userLeagues.map(
+              (userLeague) =>
+                context.userLeagues[userLeague].scheduled && (
+                  <FlatList
+                    key={userLeague}
+                    data={context.userMatches.filter(
+                      (league) => league.data.leagueId === userLeague,
+                    )}
+                    horizontal={true}
+                    contentContainerStyle={styles.scrollContainer}
+                    showsHorizontalScrollIndicator={false}
+                    renderItem={({item}) => (
+                      <UpcomingMatchCard
+                        clubName={
+                          context.userLeagues![item.data.leagueId].clubs![
+                            item.data.clubId
+                          ].name
+                        }
+                        rivalName={getRivalsName(item.data)}
+                        leagueName={item.data.leagueName}
+                        onPress={() =>
+                          navigation.navigate('Match', {
+                            matchData: item.data,
+                            upcoming: !item.data.published,
+                          })
+                        }
+                        submitted={!!item.data.submissions}
+                        conflict={item.data.conflict || item.data.motmConflict}
+                        published={item.data.published}
+                      />
+                    )}
+                    keyExtractor={(item) => item.id}
+                  />
+                ),
             )}
-            keyExtractor={(item) => item.id}
-          />
+            <View style={styles.submissionInfo}>
+              <Icon
+                name="information-outline"
+                size={verticalScale(16)}
+                color={APP_COLORS.Accent}
+                style={{
+                  marginRight: verticalScale(4),
+                }}
+              />
+              <Text style={TEXT_STYLES.small}>
+                <Trans>Submit matches even when you lost.</Trans>
+              </Text>
+            </View>
+          </>
         ) : (
           <View
             style={{
@@ -286,51 +314,50 @@ export default function Home({navigation}: Props) {
           </View>
         )}
       </View>
-      <ScrollView>
-        <CardMedium
-          title={i18n._(t`My Requests`)}
-          subTitle={i18n._(t`Manage your received and sent request`)}
-          badgeNumber={userRequestCount}
-          onPress={() => navigation.navigate('Requests')}
-        />
-        {!user?.currentUser?.emailVerified && (
-          <View style={styles.emailVerification}>
-            <Text
-              style={[
-                TEXT_STYLES.body,
-                {
-                  paddingLeft: verticalScale(8),
-                  paddingTop: verticalScale(4),
-                },
-              ]}>
-              {i18n._(t`Email is not verified`)}
-            </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingTop: verticalScale(16),
-              }}>
-              <MinButton
-                title={i18n._(t`Resend`)}
-                secondary
-                onPress={() => {
-                  user.currentUser.sendEmailVerification();
-                  showResendAlert();
-                }}
-              />
-              <MinButton
-                title={i18n._(t`I've verified`)}
-                secondary
-                onPress={() => {
-                  user.currentUser.reload();
-                }}
-              />
-            </View>
+
+      <CardMedium
+        title={i18n._(t`My Requests`)}
+        subTitle={i18n._(t`Manage your received and sent request`)}
+        badgeNumber={userRequestCount}
+        onPress={() => navigation.navigate('Requests')}
+      />
+      {!user?.currentUser?.emailVerified && (
+        <View style={styles.emailVerification}>
+          <Text
+            style={[
+              TEXT_STYLES.body,
+              {
+                paddingLeft: verticalScale(8),
+                paddingTop: verticalScale(4),
+              },
+            ]}>
+            {i18n._(t`Email is not verified`)}
+          </Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              paddingTop: verticalScale(16),
+            }}>
+            <MinButton
+              title={i18n._(t`Resend`)}
+              secondary
+              onPress={() => {
+                user.currentUser.sendEmailVerification();
+                showResendAlert();
+              }}
+            />
+            <MinButton
+              title={i18n._(t`I've verified`)}
+              secondary
+              onPress={() => {
+                user.currentUser.reload();
+              }}
+            />
           </View>
-        )}
-      </ScrollView>
-    </View>
+        </View>
+      )}
+    </ScrollView>
   );
 }
 
@@ -339,7 +366,7 @@ export default function Home({navigation}: Props) {
 const styles = ScaledSheet.create({
   container: {
     backgroundColor: APP_COLORS.Primary,
-    height: '128@vs',
+    minHeight: '128@vs',
   },
   header: {
     flexDirection: 'row',
@@ -350,6 +377,7 @@ const styles = ScaledSheet.create({
   },
   scrollContainer: {
     paddingHorizontal: '8@vs',
+    paddingBottom: '24@vs',
   },
   emailVerification: {
     flexDirection: 'column',
@@ -358,5 +386,10 @@ const styles = ScaledSheet.create({
     padding: '8@vs',
     marginHorizontal: '4@vs',
     marginVertical: '8@vs',
+  },
+  submissionInfo: {
+    flexDirection: 'row',
+    paddingBottom: '16@vs',
+    paddingHorizontal: '12@vs',
   },
 });
