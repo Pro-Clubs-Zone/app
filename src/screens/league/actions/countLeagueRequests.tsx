@@ -1,4 +1,8 @@
-import {IUserLeague, IClubRequest, ILeagueRequest} from '../../utils/interface';
+import {
+  IUserLeague,
+  IClubRequest,
+  ILeagueRequest,
+} from '../../../utils/interface';
 
 const countLeagueRequests = (
   leagues: ILeagueRequest[],

@@ -14,7 +14,7 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import shareLeagueLink from './actions/shareLink';
 import {RequestContext} from '../../context/requestContext';
-import countLeagueRequests from './countLeagueRequests';
+import countLeagueRequests from './actions/countLeagueRequests';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,

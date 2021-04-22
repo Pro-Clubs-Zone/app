@@ -33,6 +33,7 @@ import SignIn from '../auth/signIn';
 import Stats from './stats';
 import SignUp from '../auth/signUp';
 import analytics from '@react-native-firebase/analytics';
+import LeagueTeam from './leagueTeam';
 
 interface ClubProps {
   clubId: string;
@@ -59,6 +60,7 @@ export type LeagueStackType = {
   'Sign In': undefined;
   'Sign Up': undefined;
   Stats: undefined;
+  'League Team': undefined;
 };
 
 const Stack = createStackNavigator<LeagueStackType>();
@@ -228,6 +230,7 @@ export default function LeagueStack({navigation, route}: Props) {
             options={{headerShown: false}}
           />
           <Stack.Screen name="Admin Center" component={AdminCenter} />
+          <Stack.Screen name="League Team" component={LeagueTeam} />
           {commonStack}
         </Stack.Navigator>
       );

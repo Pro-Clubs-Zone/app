@@ -19,7 +19,7 @@ import i18n from '../../utils/i18n';
 import {RequestContext} from '../../context/requestContext';
 import shareLeagueLink from './actions/shareLink';
 import analytics from '@react-native-firebase/analytics';
-import countLeagueRequests from './countLeagueRequests';
+import countLeagueRequests from './actions/countLeagueRequests';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -116,6 +116,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
         [
           {
             text: i18n._(t`Schedule`),
+            style: 'destructive',
             onPress: () => {
               scheduleMatches();
             },
