@@ -9,7 +9,7 @@ import i18n from '../../utils/i18n';
 import FullScreenLoading from '../../components/loading';
 import firestore from '@react-native-firebase/firestore';
 import {LeagueStackType} from './league';
-import {IFlatList} from '../../utils/interface';
+import {IFlatList, IUser} from '../../utils/interface';
 import {IconButton, MinButton} from '../../components/buttons';
 import functions from '@react-native-firebase/functions';
 import {AppContext} from '../../context/appContext';
@@ -33,6 +33,7 @@ interface Admins extends IFlatList {
 
 const db = firestore();
 const firFunc = functions();
+const batch = db.batch();
 
 export default function LeagueTeam({navigation}: Props) {
   const [data, setData] = useState<Admins[]>([]);
@@ -160,6 +161,73 @@ export default function LeagueTeam({navigation}: Props) {
     setData(adminsList);
   }, [leagueContext]);
 
+  const onRemoveAdmin = (uid: string) => {
+    Alert.alert(
+      i18n._(t`Remove admin`),
+      i18n._(t`Are you sure you want to remove selected admin?`),
+      [
+        {
+          text: i18n._(t`Remove`),
+          style: 'destructive',
+          onPress: () => removeAdmin(uid),
+        },
+        {
+          text: i18n._(t`Close`),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
+  const removeAdmin = async (uid: string) => {
+    const leagueRef = db.collection('leagues').doc(leagueId);
+    const userRef = db.collection('users').doc(uid);
+
+    setLoading(true);
+
+    try {
+      const getUserData = await userRef.get();
+      const userData = getUserData.data() as IUser;
+      const userHasClub = userData.leagues[leagueId].clubId;
+
+      let dataToUpdate: any = {admin: false};
+
+      if (!userHasClub) {
+        dataToUpdate = firestore.FieldValue.delete();
+      }
+
+      batch.set(
+        leagueRef,
+        {
+          admins: {
+            [uid]: firestore.FieldValue.delete(),
+          },
+        },
+        {merge: true},
+      );
+
+      batch.set(
+        userRef,
+        {
+          leagues: {
+            [leagueId]: dataToUpdate,
+          },
+        },
+        {merge: true},
+      );
+
+      await batch.commit();
+      const leagueData = {...leagueContext.league};
+      delete leagueData.admins[uid];
+      leagueContext.setLeague(leagueData);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      throw new Error(error);
+    }
+  };
+
   if (loading) {
     return <FullScreenLoading visible={true} />;
   }
@@ -216,7 +284,7 @@ export default function LeagueTeam({navigation}: Props) {
           <OneLine
             title={item.data.username}
             rightIcon={isOwner ? (!item.data.owner ? 'delete' : null) : null}
-            onPress={() => console.log('remove')}
+            onIconPress={() => onRemoveAdmin(item.id)}
           />
         )}
         keyExtractor={(item) => item.id}
