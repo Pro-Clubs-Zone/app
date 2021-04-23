@@ -144,7 +144,7 @@ export default function LeagueTeam({navigation}: Props) {
         ),
       });
     }
-  }, [context]);
+  }, [isOwner]);
 
   useEffect(() => {
     const admins = Object.entries(leagueContext.league.admins);

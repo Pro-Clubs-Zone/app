@@ -103,7 +103,7 @@ export default function Clubs({navigation, route}: Props) {
     }
 
     setLoading(false);
-  }, [context]);
+  }, [leagueId]);
 
   const onClubSwap = async (
     oldClub: IClubRequestData,

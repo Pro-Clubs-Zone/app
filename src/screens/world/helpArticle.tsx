@@ -48,9 +48,9 @@ export default function HelpArticle({navigation, route}: Props) {
     const newArticleList = [...articlesContext.articles, ...selectedArticle];
 
     articlesContext.setArticles(newArticleList);
-    await analytics().logSelectContent({
-      content_type: 'help_article',
-      item_id: selectedArticle[0].fields.title,
+    await analytics().logEvent('help_article', {
+      name: selectedArticle[0].fields.title,
+      id: id,
     });
     navigation.push('Help Article', {
       id,

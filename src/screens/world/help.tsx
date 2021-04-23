@@ -24,23 +24,25 @@ export default function Help({navigation}: Props) {
 
   useEffect(() => {
     const getArticles = async () => {
-      const articles = await contentfulClient.getEntries();
-      let articlesList: Article[] = [];
+      try {
+        if (contentfulClient) {
+          const articles = await contentfulClient.getEntries();
+          let articlesList: Article[] = [];
 
-      for (const article of articles.items) {
-        articlesList.push(article);
-        console.log(article);
+          for (const article of articles.items) {
+            articlesList.push(article);
+            console.log(article);
+          }
+
+          setData(articlesList);
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
+        throw new Error(error);
       }
-
-      setData(articlesList);
-      setLoading(false);
     };
-    try {
-      getArticles();
-    } catch (error) {
-      setLoading(false);
-      throw new Error(error);
-    }
+    getArticles();
   }, [contentfulClient]);
 
   const onSelectArticle = async (id: string) => {
@@ -48,9 +50,9 @@ export default function Help({navigation}: Props) {
 
     articlesContext.setArticles(selectedArticle);
 
-    await analytics().logSelectContent({
-      content_type: 'help_article',
-      item_id: selectedArticle[0].fields.title,
+    await analytics().logEvent('help_article', {
+      name: selectedArticle[0].fields.title,
+      id: id,
     });
 
     navigation.navigate('Help Article', {
@@ -58,21 +60,22 @@ export default function Help({navigation}: Props) {
     });
   };
 
+  if (loading) {
+    return <FullScreenLoading visible={true} />;
+  }
+
   return (
-    <>
-      <FullScreenLoading visible={loading} />
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.sys.id}
-        ItemSeparatorComponent={() => <ListSeparator />}
-        renderItem={({item}) => (
-          <TwoLine
-            title={item.fields.title}
-            sub={item.fields.tags.join(', ')}
-            onPress={() => onSelectArticle(item.sys.id)}
-          />
-        )}
-      />
-    </>
+    <FlatList
+      data={data}
+      keyExtractor={(item) => item.sys.id}
+      ItemSeparatorComponent={() => <ListSeparator />}
+      renderItem={({item}) => (
+        <TwoLine
+          title={item.fields.title}
+          sub={item.fields.tags.join(', ')}
+          onPress={() => onSelectArticle(item.sys.id)}
+        />
+      )}
+    />
   );
 }

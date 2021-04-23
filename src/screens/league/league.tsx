@@ -123,11 +123,12 @@ export default function LeagueStack({navigation, route}: Props) {
         }
         setLoading(false);
       } catch (error) {
+        setLoading(false);
         throw new Error(error);
       }
     };
     getLeagueData();
-  }, []);
+  }, [leagueContext, leagueId]);
 
   useEffect(() => {
     const userData = context.userData;
@@ -158,7 +159,9 @@ export default function LeagueStack({navigation, route}: Props) {
           leagueName: league.name,
           clubName: userData?.leagues?.[leagueId]?.clubName,
         }),
-      ]);
+      ]).catch((logErr) => {
+        throw new Error(logErr);
+      });
     };
 
     const userInLeague =
@@ -172,7 +175,7 @@ export default function LeagueStack({navigation, route}: Props) {
     setLeagueScheduled(scheduled);
     setIsAdmin(userAdmin);
     setInLeague(userInLeague);
-  }, [league, context]);
+  }, [league]);
 
   const commonStack = (
     <>
@@ -200,7 +203,7 @@ export default function LeagueStack({navigation, route}: Props) {
             component={LeagueScheduled}
             options={{
               animationTypeForReplace: 'pop',
-              title: league!.name,
+              title: league.name,
               headerRight: () => (
                 <IconButton
                   name="information"

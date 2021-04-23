@@ -106,7 +106,7 @@ export default function Club({navigation, route}: Props) {
     setData(playerList);
     sortPlayers(playerList);
     setLoading(false);
-  }, [context]);
+  }, [leagueId, clubId]);
 
   const onHandlePlayerRequest = async (
     selectedPlayer: IPlayerRequestData,

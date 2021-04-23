@@ -106,7 +106,7 @@ export default function SubmitMatch({navigation}: Props) {
     }
 
     setRoster(rosterItems);
-  }, [context]);
+  }, [leagueId, context.userData, context.userLeagues]);
 
   const onShowToast = (message: string) => {
     setShowToast(true);
@@ -258,7 +258,25 @@ export default function SubmitMatch({navigation}: Props) {
       );
       const pathToFile = image.uri;
       const task = reference.putFile(pathToFile);
-      await task.then(() => console.log('image uploaded'));
+      await task
+        .then(() => console.log('image uploaded'))
+        .catch((storageErr) => {
+          Alert.alert(
+            i18n._(t`Something went wrong`),
+            i18n._(t`If this issue occurs often, please report to us.`),
+            [
+              {
+                text: i18n._(t`Close`),
+                style: 'cancel',
+                onPress: () => {
+                  setLoading(false);
+                },
+              },
+            ],
+            {cancelable: false},
+          );
+          throw new Error(storageErr);
+        });
     }
   };
 
@@ -294,7 +312,7 @@ export default function SubmitMatch({navigation}: Props) {
       console.log('something wrong with uploading', error);
       Alert.alert(
         i18n._(t`Something went wrong`),
-        error.message,
+        i18n._(t`If this issue occurs often, please report to us.`),
         [
           {
             text: i18n._(t`Close`),

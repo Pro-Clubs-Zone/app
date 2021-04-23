@@ -118,7 +118,7 @@ export default function SubmitStats({navigation}: Props) {
   const matchData = matchContext.match;
   const uid = auth.uid;
 
-  const showAlert = (title, body, success) => {
+  const showAlert = (title: string, body: string, success: boolean) => {
     Alert.alert(
       title,
       body,
@@ -180,7 +180,16 @@ export default function SubmitStats({navigation}: Props) {
       );
       const pathToFile = image.uri;
       const task = reference.putFile(pathToFile);
-      await task.then(() => console.log('image uploaded'));
+      await task
+        .then(() => console.log('image uploaded'))
+        .catch((storageErr) => {
+          showAlert(
+            i18n._(t`Something went wrong`),
+            i18n._(t`If this issue occurs often, please report to us.`),
+            false,
+          );
+          throw new Error(storageErr);
+        });
     }
   };
 
@@ -199,9 +208,15 @@ export default function SubmitStats({navigation}: Props) {
         const task = reference.putFile(pathToFile);
         await task.then(() => console.log('profile pic uploaded'));
       })
-      .catch((error) =>
-        console.log('Error caught while cropping profile pic', error),
-      );
+      .catch((cropError) => {
+        console.log('Error caught while cropping profile pic', cropError);
+        showAlert(
+          i18n._(t`Something went wrong`),
+          i18n._(t`If this issue occurs often, please report to us.`),
+          false,
+        );
+        throw new Error(cropError);
+      });
   };
 
   const onRemoveThumb = (seletectedThumbIndex: number) => {
@@ -230,7 +245,9 @@ export default function SubmitStats({navigation}: Props) {
         await Promise.all([
           addPlayerStats(matchData, ocrResult, uid, isGK),
           uploadScreenshots(),
-          analytics().logEvent('match_submit_stats'),
+          analytics().logEvent('match_submit_stats', {
+            leagueId: matchData.leagueId,
+          }),
         ]);
         // Remove submitted match from context
         let foundUserMatch = context.userMatches.some(

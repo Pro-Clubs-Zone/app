@@ -67,7 +67,7 @@ const useGetMatches = (
       }
     });
     return subscriber;
-  }, [context]);
+  }, [league]);
 
   const onLoadMore = async () => {
     setLoading(true);
@@ -85,6 +85,7 @@ const useGetMatches = (
             const matchId = doc.id;
             const awayTeamName = league.clubs[matchData.awayTeamId].name;
             const homeTeamName = league.clubs[matchData.homeTeamId].name;
+            console.log(awayTeamName, homeTeamName);
 
             const match: IMatchNavData = {
               ...matchData,

@@ -86,7 +86,7 @@ const firFunc = functions();
 
 export default function AppIndex() {
   const [appInfo, setAppInfo] = useState<AppInfo>();
-  const [showAlert, setShowAlert] = useState(false);
+  //const [showAlert, setShowAlert] = useState(false);
   const Stack = createStackNavigator<AppNavStack>();
   const user = useContext(AuthContext);
   const requests = useContext(RequestContext);
@@ -125,7 +125,7 @@ export default function AppIndex() {
       });
       if (appUpdate.isNeeded) {
         setAppInfo(appUpdate);
-        setShowAlert(true);
+        //     setShowAlert(true);
       }
     };
     checkAppUpdate();
@@ -171,7 +171,7 @@ export default function AppIndex() {
     </>
   );
 
-  if (appInfo && showAlert) {
+  if (appInfo) {
     return (
       <SafeAreaView
         style={{
@@ -241,13 +241,13 @@ export default function AppIndex() {
             </View>
           </View>
         </Pressable>
-        <View>
+        {/* <View>
           <MinButton
             title={i18n._(t`Later`)}
             onPress={() => setShowAlert(false)}
             secondary
           />
-        </View>
+        </View> */}
       </SafeAreaView>
     );
   }
