@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/screens/match/submitMatch.tsx:288
+#: src/screens/match/submitMatch.tsx:301
 msgid "1. Facts - 2. Events - 3. Online Player ID List"
 msgstr ""
 
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Accepted Clubs"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:313
+#: src/screens/match/submitMatch.tsx:326
 msgid "Add Players"
 msgstr ""
 
@@ -206,9 +206,11 @@ msgstr ""
 #: src/screens/match/finishedMatch.tsx:255
 #: src/screens/match/finishedMatch.tsx:271
 #: src/screens/match/submitMatch.tsx:145
-#: src/screens/match/submitMatch.tsx:206
-#: src/screens/match/submitMatch.tsx:225
-#: src/screens/match/submitMatch.tsx:206
+#: src/screens/match/submitMatch.tsx:201
+#: src/screens/match/submitMatch.tsx:201
+#: src/screens/match/submitMatch.tsx:219
+#: src/screens/match/submitMatch.tsx:238
+#: src/screens/match/submitMatch.tsx:219
 #: src/screens/match/submitStats.tsx:110
 #: src/screens/match/upcomingMatch.tsx:64
 #: src/screens/user/home.tsx:39
@@ -247,7 +249,7 @@ msgstr ""
 msgid "Communication"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:272
+#: src/screens/match/submitMatch.tsx:285
 #: src/screens/match/upcomingMatch.tsx:91
 msgid "Confirm"
 msgstr ""
@@ -345,7 +347,7 @@ msgstr ""
 msgid "Email is badly formatted"
 msgstr ""
 
-#: src/screens/user/home.tsx:232
+#: src/screens/user/home.tsx:233
 msgid "Email is not verified"
 msgstr ""
 
@@ -428,12 +430,22 @@ msgstr ""
 msgid "Home/Away"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:243
+#: src/screens/match/submitStats.tsx:254
 msgid "I played as a Goalkeeper"
 msgstr ""
 
-#: src/screens/user/home.tsx:243
+#: src/screens/user/home.tsx:244
 msgid "I've verified"
+msgstr ""
+
+#: src/screens/match/submitMatch.tsx:199
+#: src/screens/match/submitMatch.tsx:199
+#: src/screens/match/submitMatch.tsx:236
+#: src/screens/match/submitStats.tsx:159
+#: src/screens/match/submitStats.tsx:159
+#: src/screens/match/submitStats.tsx:179
+#: src/screens/match/submitStats.tsx:179
+msgid "If this issue occurs often, please report to us."
 msgstr ""
 
 #: src/screens/league/leaguePreSeason.tsx:151
@@ -509,8 +521,8 @@ msgid "L"
 msgstr ""
 
 #: src/screens/index.tsx:164
-msgid "Later"
-msgstr ""
+#~ msgid "Later"
+#~ msgstr ""
 
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "League"
@@ -586,11 +598,11 @@ msgid "Loading"
 msgstr ""
 
 #: src/components/matchConflictItem.tsx:17
-#: src/screens/match/submitMatch.tsx:302
+#: src/screens/match/submitMatch.tsx:315
 msgid "MOTM"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:204
+#: src/screens/match/submitStats.tsx:215
 msgid "Make sure you are uploading screenshot made in-game from your console"
 msgstr ""
 
@@ -602,7 +614,7 @@ msgstr ""
 msgid "Manage your current roster"
 msgstr ""
 
-#: src/screens/user/home.tsx:223
+#: src/screens/user/home.tsx:224
 msgid "Manage your received and sent request"
 msgstr ""
 
@@ -670,7 +682,7 @@ msgstr ""
 #~ msgid "More goals or assists than team has scored"
 #~ msgstr ""
 
-#: src/screens/user/home.tsx:223
+#: src/screens/user/home.tsx:224
 msgid "My Requests"
 msgstr ""
 
@@ -728,7 +740,7 @@ msgstr ""
 msgid "No Public Leagues"
 msgstr ""
 
-#: src/screens/user/home.tsx:218
+#: src/screens/user/home.tsx:219
 msgid "No Upcoming Matches"
 msgstr ""
 
@@ -745,8 +757,8 @@ msgstr ""
 #~ msgid "No members except you"
 #~ msgstr ""
 
-#: src/screens/match/submitMatch.tsx:204
-#: src/screens/match/submitMatch.tsx:204
+#: src/screens/match/submitMatch.tsx:217
+#: src/screens/match/submitMatch.tsx:217
 msgid "No players added"
 msgstr ""
 
@@ -754,8 +766,8 @@ msgstr ""
 msgid "No players yet"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:180
-#: src/screens/match/submitStats.tsx:180
+#: src/screens/match/submitStats.tsx:189
+#: src/screens/match/submitStats.tsx:189
 msgid "No screenshot uploaded"
 msgstr ""
 
@@ -774,7 +786,7 @@ msgstr ""
 msgid "No stats available"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:241
+#: src/screens/match/submitStats.tsx:252
 msgid "Options"
 msgstr ""
 
@@ -790,7 +802,7 @@ msgstr ""
 msgid "PTS"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:302
+#: src/screens/match/submitMatch.tsx:315
 msgid "Participated Players"
 msgstr ""
 
@@ -837,7 +849,7 @@ msgstr ""
 msgid "Player"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:222
+#: src/screens/match/submitStats.tsx:233
 msgid "Player Performance"
 msgstr ""
 
@@ -850,8 +862,8 @@ msgstr ""
 msgid "Players uploaded no images"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:204
-#: src/screens/match/submitMatch.tsx:204
+#: src/screens/match/submitMatch.tsx:217
+#: src/screens/match/submitMatch.tsx:217
 msgid "Please select all the participated players from your roster to submit the match."
 msgstr ""
 
@@ -859,8 +871,8 @@ msgstr ""
 msgid "Please sign in first to create a league"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:180
-#: src/screens/match/submitStats.tsx:180
+#: src/screens/match/submitStats.tsx:189
+#: src/screens/match/submitStats.tsx:189
 msgid "Please upload in-game screenshot taken from the console"
 msgstr ""
 
@@ -871,7 +883,7 @@ msgstr ""
 #~ msgid "Please verify your email before joining a league"
 #~ msgstr ""
 
-#: src/screens/match/submitStats.tsx:204
+#: src/screens/match/submitStats.tsx:215
 msgid "Problem processing image"
 msgstr ""
 
@@ -956,7 +968,7 @@ msgstr ""
 msgid "Required Screenshots"
 msgstr ""
 
-#: src/screens/user/home.tsx:239
+#: src/screens/user/home.tsx:240
 msgid "Resend"
 msgstr ""
 
@@ -985,7 +997,7 @@ msgid "Review and resolve all conflicted matches"
 msgstr ""
 
 #: src/screens/club/club.tsx:46
-#: src/screens/match/submitMatch.tsx:272
+#: src/screens/match/submitMatch.tsx:285
 msgid "Roster"
 msgstr ""
 
@@ -1092,11 +1104,17 @@ msgid "Social"
 msgstr ""
 
 #: src/screens/match/finishedMatch.tsx:296
-#: src/screens/match/submitMatch.tsx:223
+#: src/screens/match/submitMatch.tsx:199
+#: src/screens/match/submitMatch.tsx:199
+#: src/screens/match/submitMatch.tsx:236
+#: src/screens/match/submitStats.tsx:159
+#: src/screens/match/submitStats.tsx:159
+#: src/screens/match/submitStats.tsx:179
+#: src/screens/match/submitStats.tsx:179
 msgid "Something went wrong"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:201
+#: src/screens/match/submitStats.tsx:212
 msgid "Stats submitted"
 msgstr ""
 
@@ -1108,26 +1126,26 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:316
+#: src/screens/match/submitMatch.tsx:329
 msgid "Submit Match"
 msgstr ""
 
 #: src/screens/match/finishedMatch.tsx:116
-#: src/screens/match/submitStats.tsx:246
+#: src/screens/match/submitStats.tsx:257
 msgid "Submit Stats"
 msgstr ""
 
-#: src/screens/user/home.tsx:206
+#: src/screens/user/home.tsx:207
 msgid "Submit matches even when you lost."
 msgstr ""
 
-#: src/screens/match/submitMatch.tsx:270
+#: src/screens/match/submitMatch.tsx:283
 #: src/screens/match/upcomingMatch.tsx:75
 #: src/screens/match/upcomingMatch.tsx:174
 msgid "Submitting Match..."
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:213
+#: src/screens/match/submitStats.tsx:224
 msgid "Submitting Performance Stats..."
 msgstr ""
 
@@ -1166,7 +1184,7 @@ msgstr ""
 msgid "There is no user with this email"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:209
+#: src/screens/match/submitStats.tsx:220
 msgid "There is something wrong with your image. Please send this image to your league admin or PRZ team"
 msgstr ""
 
@@ -1224,7 +1242,7 @@ msgstr ""
 msgid "WARNING: Resolve Match"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:209
+#: src/screens/match/submitStats.tsx:220
 msgid "Wrong image"
 msgstr ""
 
@@ -1277,7 +1295,7 @@ msgstr ""
 msgid "You have selected more than 11 players for this match"
 msgstr ""
 
-#: src/screens/match/submitStats.tsx:201
+#: src/screens/match/submitStats.tsx:212
 msgid "Your player performance stats are now published"
 msgstr ""
 
