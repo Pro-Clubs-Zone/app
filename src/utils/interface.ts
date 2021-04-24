@@ -11,6 +11,24 @@ export interface Article {
     body: string;
     tags: string[];
     related: Article[];
+    images?: {
+      fields: {
+        title: string;
+        file: {
+          url: string;
+          details: {
+            image: {
+              width: number;
+              height: number;
+            };
+          };
+          fileName: string;
+        };
+      };
+      sys: {
+        id: string;
+      };
+    }[];
   };
   metadata: {};
   sys: {

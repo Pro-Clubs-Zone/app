@@ -250,7 +250,8 @@ export default function Home({navigation}: Props) {
           <>
             {userLeagues.map(
               (userLeague) =>
-                context.userLeagues[userLeague].scheduled && (
+                context.userLeagues[userLeague].scheduled &&
+                context.userData.leagues[userLeague].clubId && (
                   <FlatList
                     key={userLeague}
                     data={context.userMatches.filter(
