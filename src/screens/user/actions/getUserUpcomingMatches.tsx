@@ -7,10 +7,9 @@ import {
 } from '../../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
 
-const getUserMatches = async (
+const getUserUpcomingMatches = async (
   userData: IUser,
   userLeagues: {[id: string]: ILeague},
-  uid: string,
 ): Promise<FixtureList[]> => {
   const db = firestore();
   let matches: FixtureList[] = [];
@@ -28,39 +27,39 @@ const getUserMatches = async (
         .collection('matches');
 
       try {
-        const publishedMatchesForPlayer = await matchesSnapshot
-          .where('published', '==', true)
-          .where('notSubmittedPlayers', 'array-contains', uid)
-          .orderBy('id', 'asc')
-          .get();
+        // const publishedMatchesForPlayer = await matchesSnapshot
+        //   .where('published', '==', true)
+        //   .where('notSubmittedPlayers', 'array-contains', uid)
+        //   .orderBy('id', 'asc')
+        //   .get();
 
-        publishedMatchesForPlayer.forEach((doc) => {
-          const matchData = doc.data() as IMatch;
-          const matchId = doc.id;
-          const leagueData = userLeagues[leagueId];
-          const homeTeamName = leagueData.clubs[matchData.homeTeamId].name;
-          const awayTeamName = leagueData.clubs[matchData.awayTeamId].name;
+        // publishedMatchesForPlayer.forEach((doc) => {
+        //   const matchData = doc.data() as IMatch;
+        //   const matchId = doc.id;
+        //   const leagueData = userLeagues[leagueId];
+        //   const homeTeamName = leagueData.clubs[matchData.homeTeamId].name;
+        //   const awayTeamName = leagueData.clubs[matchData.awayTeamId].name;
 
-          let match: IMatchNavData = {
-            ...matchData,
-            matchId: doc.id,
-            clubId: clubId,
-            manager: league.manager,
-            leagueId: leagueId,
-            leagueName: leagueData.name,
-            homeTeamName: homeTeamName,
-            awayTeamName: awayTeamName,
-            admin: admin,
-            //   statsSubmitted: false,
-          };
+        //   let match: IMatchNavData = {
+        //     ...matchData,
+        //     matchId: doc.id,
+        //     clubId: clubId,
+        //     manager: league.manager,
+        //     leagueId: leagueId,
+        //     leagueName: leagueData.name,
+        //     homeTeamName: homeTeamName,
+        //     awayTeamName: awayTeamName,
+        //     admin: admin,
+        //     //   statsSubmitted: false,
+        //   };
 
-          const fixture: FixtureList = {
-            id: matchId,
-            data: match,
-          };
+        //   const fixture: FixtureList = {
+        //     id: matchId,
+        //     data: match,
+        //   };
 
-          matches.push(fixture);
-        });
+        //   matches.push(fixture);
+        // });
 
         const upcomingMatches = await matchesSnapshot
           .where('teams', 'array-contains', clubId)
@@ -105,4 +104,4 @@ const getUserMatches = async (
   return matches;
 };
 
-export default getUserMatches;
+export default getUserUpcomingMatches;

@@ -17,7 +17,7 @@ import {
   IClubRequestData,
   IPlayerRequestData,
 } from '../../utils/interface';
-import getUserMatches from './actions/getUserMatches';
+import getUserUpcomingMatches from './actions/getUserUpcomingMatches';
 import getLeaguesClubs from './actions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
@@ -29,6 +29,7 @@ import UpcomingMatchCard from '../../components/upcomingMatchCard';
 import {CardMedium} from '../../components/cards';
 import {MinButton} from '../../components/buttons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import useGetUserPublishedMatches from './actions/useGetUserPublishedMatches';
 
 const db = firestore();
 
@@ -47,6 +48,8 @@ export default function Home({navigation}: Props) {
   const requestContext = useContext(RequestContext);
 
   const uid = user.uid;
+
+  const userMatches = useGetUserPublishedMatches(uid);
 
   const showResendAlert = () => {
     Alert.alert(
@@ -189,10 +192,9 @@ export default function Home({navigation}: Props) {
         const {updatedUserData, userLeagues} = leagueAndClubsData;
         context.setUserData(updatedUserData);
         context.setUserLeagues(userLeagues);
-        const matchesData = await getUserMatches(
+        const matchesData = await getUserUpcomingMatches(
           updatedUserData,
           userLeagues,
-          uid,
         );
         context.setUserMatches(matchesData);
         getClubRequests(userLeagues);
@@ -225,7 +227,24 @@ export default function Home({navigation}: Props) {
 
   const userLeagues = context?.userLeagues && Object.keys(context.userLeagues);
 
-  if (loading) {
+  const allUserMatches = (userLeague: string) => {
+    let upcomingMatches = [
+      ...context.userMatches.filter(
+        (league) => league.data.leagueId === userLeague,
+      ),
+    ];
+    userMatches.data.forEach((publishedMatch) => {
+      const updatedUpcomingMatches = upcomingMatches.filter((upcomingMatch) => {
+        return upcomingMatch.id !== publishedMatch.id;
+      });
+
+      upcomingMatches = updatedUpcomingMatches;
+    });
+
+    return [...userMatches.data, ...upcomingMatches];
+  };
+
+  if (loading && userMatches.loading) {
     return <NonModalLoading visible={true} />;
   }
   return (
@@ -233,7 +252,7 @@ export default function Home({navigation}: Props) {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={TEXT_STYLES.caption}>
-            <Trans>Next Matches</Trans>
+            <Trans>My Matches</Trans>
           </Text>
           <Text
             style={[
@@ -254,9 +273,7 @@ export default function Home({navigation}: Props) {
                 context.userData.leagues[userLeague].clubId && (
                   <FlatList
                     key={userLeague}
-                    data={context.userMatches.filter(
-                      (league) => league.data.leagueId === userLeague,
-                    )}
+                    data={allUserMatches(userLeague)}
                     horizontal={true}
                     contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
