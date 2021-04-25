@@ -49,7 +49,7 @@ export default function Home({navigation}: Props) {
 
   const uid = user.uid;
 
-  const userMatches = useGetUserPublishedMatches(uid);
+  const publishedMatches = useGetUserPublishedMatches(uid);
 
   const showResendAlert = () => {
     Alert.alert(
@@ -182,7 +182,7 @@ export default function Home({navigation}: Props) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const userRef = db.collection('users').doc(uid!);
+      const userRef = db.collection('users').doc(uid);
       let userInfo: IUser;
       setLoading(true);
       const doc = await userRef.get();
@@ -227,13 +227,18 @@ export default function Home({navigation}: Props) {
 
   const userLeagues = context?.userLeagues && Object.keys(context.userLeagues);
 
-  const allUserMatches = (userLeague: string) => {
+  const allUserMatches = (leagueId: string) => {
     let upcomingMatches = [
       ...context.userMatches.filter(
-        (league) => league.data.leagueId === userLeague,
+        (league) => league.data.leagueId === leagueId,
       ),
     ];
-    userMatches.data.forEach((publishedMatch) => {
+
+    const publishedMatchesByLeague = publishedMatches.data.filter(
+      (leagueMatch) => leagueMatch.data.leagueId === leagueId,
+    );
+
+    publishedMatchesByLeague.forEach((publishedMatch) => {
       const updatedUpcomingMatches = upcomingMatches.filter((upcomingMatch) => {
         return upcomingMatch.id !== publishedMatch.id;
       });
@@ -241,10 +246,10 @@ export default function Home({navigation}: Props) {
       upcomingMatches = updatedUpcomingMatches;
     });
 
-    return [...userMatches.data, ...upcomingMatches];
+    return [...publishedMatchesByLeague, ...upcomingMatches];
   };
 
-  if (loading && userMatches.loading) {
+  if (loading && publishedMatches.loading) {
     return <NonModalLoading visible={true} />;
   }
   return (
@@ -265,15 +270,16 @@ export default function Home({navigation}: Props) {
           </Text>
         </View>
 
-        {context?.userMatches.length !== 0 ? (
+        {context?.userMatches.length !== 0 ||
+        publishedMatches.data.length !== 0 ? (
           <>
             {userLeagues.map(
-              (userLeague) =>
-                context.userLeagues[userLeague].scheduled &&
-                context.userData.leagues[userLeague].clubId && (
+              (userLeagueId) =>
+                context.userLeagues[userLeagueId].scheduled &&
+                context.userData.leagues[userLeagueId].clubId && (
                   <FlatList
-                    key={userLeague}
-                    data={allUserMatches(userLeague)}
+                    key={userLeagueId}
+                    data={allUserMatches(userLeagueId)}
                     horizontal={true}
                     contentContainerStyle={styles.scrollContainer}
                     showsHorizontalScrollIndicator={false}
