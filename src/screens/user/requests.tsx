@@ -1,7 +1,5 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {SectionList, Alert} from 'react-native';
-import {AuthContext} from '../../context/authContext';
-import {RequestContext} from '../../context/requestContext';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {
@@ -9,6 +7,7 @@ import {
   IMyRequests,
   IPlayerRequestData,
   ISentRequest,
+  IUser,
 } from '../../utils/interface';
 import {
   ListHeading,
@@ -25,7 +24,7 @@ import FullScreenLoading from '../../components/loading';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import useGetLeagueRequests from './actions/useGetLeagueRequests';
-import useGetClubRequests from './actions/useGetLeagueRequests copy';
+import useGetClubRequests from './actions/useGetClubRequests';
 import {RouteProp} from '@react-navigation/native';
 import {AppNavStack} from '../index';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -41,13 +40,7 @@ type Props = {
 };
 
 export default function Requests({navigation, route}: Props) {
-  // const requestContext = useContext(RequestContext);
-  // const myClubReq = requestContext.myClubRequests?.data.length ?? 0;
-  //  const myLeagueReq = requestContext.myLeagueRequests?.data.length ?? 0;
-
   const uid = route.params.uid;
-  const leagueRequests = useGetLeagueRequests();
-  const clubRequests = useGetClubRequests(uid);
 
   return (
     <Tab.Navigator lazy={true}>
@@ -55,7 +48,7 @@ export default function Requests({navigation, route}: Props) {
         name="Club"
         component={ClubRequests}
         options={{
-          title: i18n._(t`Club - ${clubRequests.count}`),
+          title: i18n._(t`Club`),
         }}
         initialParams={{uid}}
       />
@@ -63,15 +56,17 @@ export default function Requests({navigation, route}: Props) {
         name="League"
         component={LeagueRequests}
         options={{
-          title: i18n._(t`League - ${leagueRequests.count}`),
+          title: i18n._(t`League`),
         }}
+        initialParams={{uid}}
       />
       <Tab.Screen
         name="Sent"
         component={MySentRequests}
         options={{
-          title: i18n._(t`Sent - ${5}`),
+          title: i18n._(t`Sent`),
         }}
+        initialParams={{uid}}
       />
     </Tab.Navigator>
   );
@@ -100,10 +95,6 @@ function ClubRequests({navigation, route}) {
         sectionTitle,
         acceptRequest,
       );
-      // setData(newData);
-      // requestContext.setClubs(newData);
-      // const currentCount = requestContext.requestCount;
-      // requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
 
       const currentLeagueData = {...context.userLeagues};
       if (acceptRequest) {
@@ -179,16 +170,12 @@ function ClubRequests({navigation, route}) {
   );
 }
 
-function LeagueRequests() {
+function LeagueRequests({navigation, route}) {
   const context = useContext(AppContext);
-  // const requestContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
-  // const requests: ILeagueRequest[] = requestContext.leagues;
-
-  //const [data, setData] = useState<ILeagueRequest[]>(requests);
-
+  const uid = route.params.uid;
   const [loading, setLoading] = useState(false);
-  const leagueRequests = useGetLeagueRequests();
+  const leagueRequests = useGetLeagueRequests(uid);
 
   const onHandleLeagueRequest = async (
     selectedClub: IClubRequestData,
@@ -219,10 +206,6 @@ function LeagueRequests() {
         sectionTitle,
         acceptRequest,
       );
-      //   requestContext.setLeagues(newData);
-      //   const currentCount = requestContext.requestCount;
-      //  requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
-      //  setData(newData);
 
       const currentLeagueData = {...context.userLeagues};
       if (acceptRequest) {
@@ -302,86 +285,115 @@ function LeagueRequests() {
   );
 }
 
-function MySentRequests() {
+function MySentRequests({navigation, route}) {
+  const [data, setData] = useState<IMyRequests[]>([]);
+  const [loading, setLoading] = useState(true);
   const db = firestore();
   const batch = db.batch();
-  const requestContext = useContext(RequestContext);
-  const user = useContext(AuthContext);
 
-  const clubRequests: IMyRequests = requestContext.myClubRequests;
-  const leagueRequests: IMyRequests = requestContext.myLeagueRequests;
+  const context = useContext(AppContext);
+  const uid = route.params.uid;
 
-  let requests: IMyRequests[] = [];
+  const userRef = db.collection('users').doc(uid);
 
-  clubRequests && requests.push(clubRequests);
-  leagueRequests && requests.push(leagueRequests);
+  useEffect(() => {
+    const getSentRequests = userRef.onSnapshot((snapshot) => {
+      if (!snapshot.exists) {
+        return setLoading(false);
+      }
+      const player = snapshot.data() as IUser;
+      const requests: IMyRequests[] = [];
 
-  const [data, setData] = useState<IMyRequests[]>(requests);
+      for (const [leagueId, league] of Object.entries(player.leagues)) {
+        const leagueName = context.userLeagues[leagueId].name;
+        let requestData: IMyRequests = {
+          title: '',
+          data: [],
+        };
 
-  const uid = user?.uid;
+        if (!league.accepted) {
+          const myRequestData: ISentRequest = {
+            accepted: league.accepted,
+            clubId: league.clubId,
+            leagueId: leagueId,
+            leagueName: leagueName,
+            clubName: league.clubName,
+            manager: league.manager,
+          };
+          if (league.manager) {
+            if (requests.length === 0) {
+              requestData = {
+                title: i18n._(t`League Requests`),
+                data: [myRequestData],
+              };
+              requests.push(requestData);
+            } else {
+              requests.map((section, index) => {
+                if (section.title === 'League Requests') {
+                  requests[index].data.push(myRequestData);
+                } else {
+                  requestData = {
+                    title: i18n._(t`League Requests`),
+                    data: [myRequestData],
+                  };
+                  requests.push(requestData);
+                }
+              });
+            }
+          } else {
+            if (requests.length === 0) {
+              requestData = {
+                title: i18n._(t`Club Requests`),
+                data: [myRequestData],
+              };
+              requests.push(requestData);
+            } else {
+              requests.map((section, index) => {
+                if (section.title === 'Club Requests') {
+                  requests[index].data.push(myRequestData);
+                } else {
+                  requestData = {
+                    title: i18n._(t`Club Requests`),
+                    data: [myRequestData],
+                  };
+                  requests.push(requestData);
+                }
+              });
+            }
+          }
+        }
+      }
+      setData(requests);
+      setLoading(false);
+    });
+    return getSentRequests;
+  }, [context.userLeagues]);
 
-  const onCancelRequestConfirm = async (
-    myRequest: ISentRequest,
-    sectionTitle: string,
-  ) => {
+  const onCancelRequestConfirm = async (myRequest: ISentRequest) => {
+    setLoading(true);
     const clubRef = db
       .collection('leagues')
       .doc(myRequest.leagueId)
       .collection('clubs')
       .doc(myRequest.clubId);
 
-    const userRef = db.collection('users').doc(uid);
-
-    const sectionIndex = data.findIndex(
-      (section) => section.title === sectionTitle,
-    );
-
-    const newData = [...data];
-
-    if (sectionTitle === 'Club Requests') {
-      const openClubRequests = data[sectionIndex].data.filter((club) => {
-        return club.clubId !== myRequest.clubId;
-      });
-
-      newData[sectionIndex].data = openClubRequests;
-
-      if (openClubRequests.length === 0) {
-        newData.splice(sectionIndex, 1);
-      }
-
-      setData(newData);
-
-      requestContext?.setMyClubRequests(newData[sectionIndex]);
-
+    if (!myRequest.manager) {
       batch.update(clubRef, {
         ['roster.' + uid]: firestore.FieldValue.delete(),
       });
-      batch.update(userRef, {
-        ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
-      });
     } else {
-      const openLeagueRequests = data[sectionIndex].data.filter((league) => {
-        return league.leagueId !== myRequest.leagueId;
-      });
-
-      newData[sectionIndex].data = openLeagueRequests;
-
-      if (openLeagueRequests.length === 0) {
-        newData.splice(sectionIndex, 1);
-      }
-
-      setData(newData);
-      requestContext?.setMyLeagueRequests(newData[sectionIndex]);
-
       batch.delete(clubRef);
-      batch.update(userRef, {
-        ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
-      });
     }
+
+    batch.update(userRef, {
+      ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
+    });
+
     await batch.commit();
+    setLoading(false);
   };
 
-  const onCancelRequest = (item: ISentRequest, title: string) => {
+  const onCancelRequest = (item: ISentRequest) => {
     Alert.alert(
       i18n._(t`Remove Request`),
       i18n._(t`Are you sure you want to remove your sent request?`),
@@ -389,7 +401,7 @@ function MySentRequests() {
         {
           text: i18n._(t`Remove`),
           onPress: () => {
-            onCancelRequestConfirm(item, title);
+            onCancelRequestConfirm(item);
           },
           style: 'destructive',
         },
@@ -403,31 +415,34 @@ function MySentRequests() {
   };
 
   return (
-    <SectionList
-      sections={data}
-      stickySectionHeadersEnabled={true}
-      keyExtractor={(item) => item.clubId}
-      renderItem={({item, section}) => (
-        <OneLine
-          title={item.clubName}
-          onIconPress={() => onCancelRequest(item, section.title)}
-          rightIcon="minus-circle"
-        />
-      )}
-      ItemSeparatorComponent={() => <ListSeparator />}
-      renderSectionHeader={({section: {title, key}}) => (
-        <ListHeading key={key} col1={title} />
-      )}
-      ListEmptyComponent={() => (
-        <EmptyState
-          title={i18n._(t`Sent Requests`)}
-          body={i18n._(t`All your sent requests will appear here`)}
-        />
-      )}
-      contentContainerStyle={{
-        flexGrow: 1,
-        justifyContent: data.length === 0 ? 'center' : null,
-      }}
-    />
+    <>
+      <FullScreenLoading visible={loading} />
+      <SectionList
+        sections={data}
+        stickySectionHeadersEnabled={true}
+        keyExtractor={(item) => item.clubId}
+        renderItem={({item}) => (
+          <OneLine
+            title={item.clubName}
+            onIconPress={() => onCancelRequest(item)}
+            rightIcon="minus-circle"
+          />
+        )}
+        ItemSeparatorComponent={() => <ListSeparator />}
+        renderSectionHeader={({section: {title, key}}) => (
+          <ListHeading key={key} col1={title} />
+        )}
+        ListEmptyComponent={() => (
+          <EmptyState
+            title={i18n._(t`Sent Requests`)}
+            body={i18n._(t`All your sent requests will appear here`)}
+          />
+        )}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: data.length === 0 ? 'center' : null,
+        }}
+      />
+    </>
   );
 }

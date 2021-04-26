@@ -163,6 +163,7 @@ export interface ISentRequest {
   leagueId: string;
   leagueName: string;
   playerId?: string;
+  manager: boolean;
 }
 
 export interface IClubRequest extends ISectionList {
@@ -225,6 +226,7 @@ export interface IClub {
     [uid: string]: IClubRosterMember;
   };
   created: Timestamp;
+  leagueOwnerId: string;
 }
 
 export interface IUserLeague {

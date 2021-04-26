@@ -2,11 +2,10 @@ import React, {useContext, useEffect, useState} from 'react';
 import {Text, View, FlatList, ScrollView, Alert} from 'react-native';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
-import {RequestContext} from '../../context/requestContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
 import {IUser, IMatchNavData} from '../../utils/interface';
-import getUserUpcomingMatches from './actions/useGetClubRequests';
+import getUserUpcomingMatches from './actions/useGetUserUpcomingMatches';
 import getLeaguesClubs from './actions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
@@ -20,7 +19,7 @@ import {MinButton} from '../../components/buttons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useGetUserPublishedMatches from './actions/useGetUserPublishedMatches';
 import useGetLeagueRequests from './actions/useGetLeagueRequests';
-import useGetClubRequests from './actions/useGetLeagueRequests copy';
+import useGetClubRequests from './actions/useGetClubRequests';
 
 const db = firestore();
 
@@ -35,12 +34,11 @@ export default function Home({navigation}: Props) {
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
-  const requestContext = useContext(RequestContext);
 
   const uid = user.uid;
 
   const publishedMatches = useGetUserPublishedMatches(uid);
-  const leagueRequests = useGetLeagueRequests();
+  const leagueRequests = useGetLeagueRequests(uid);
   const clubRequests = useGetClubRequests(uid);
 
   console.log(clubRequests);
