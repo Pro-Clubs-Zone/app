@@ -61,7 +61,9 @@ export type AppNavStack = {
   'Reset Password': {
     oobCode: string;
   };
-  Requests: undefined;
+  Requests: {
+    uid: string;
+  };
   'Create League': undefined;
   'League Explorer': undefined;
   Leagues: undefined;

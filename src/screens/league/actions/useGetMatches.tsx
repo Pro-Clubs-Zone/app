@@ -31,6 +31,9 @@ const useGetMatches = (
         let matches: FixtureList[] = [];
         let lastVisibleDoc: any = null;
         lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
+        if (snapshot.empty) {
+          return setLoading(false);
+        }
 
         snapshot.forEach((doc) => {
           const matchData = doc.data() as IMatch;

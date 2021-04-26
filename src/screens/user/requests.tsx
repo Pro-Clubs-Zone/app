@@ -5,9 +5,7 @@ import {RequestContext} from '../../context/requestContext';
 import firestore from '@react-native-firebase/firestore';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {
-  IClubRequest,
   IClubRequestData,
-  ILeagueRequest,
   IMyRequests,
   IPlayerRequestData,
   ISentRequest,
@@ -26,49 +24,68 @@ import handleLeagueRequest from '../club/actions/handleLeagueRequest';
 import FullScreenLoading from '../../components/loading';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import useGetLeagueRequests from './actions/useGetLeagueRequests';
+import useGetClubRequests from './actions/useGetLeagueRequests copy';
+import {RouteProp} from '@react-navigation/native';
+import {AppNavStack} from '../index';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function Requests() {
-  const requestContext = useContext(RequestContext);
-  const myClubReq = requestContext.myClubRequests?.data.length ?? 0;
-  const myLeagueReq = requestContext.myLeagueRequests?.data.length ?? 0;
-  const mySentRequests = myClubReq + myLeagueReq;
+type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Requests'>;
+type ScreenRouteProp = RouteProp<AppNavStack, 'Requests'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+  route: ScreenRouteProp;
+};
+
+export default function Requests({navigation, route}: Props) {
+  // const requestContext = useContext(RequestContext);
+  // const myClubReq = requestContext.myClubRequests?.data.length ?? 0;
+  //  const myLeagueReq = requestContext.myLeagueRequests?.data.length ?? 0;
+
+  const uid = route.params.uid;
+  const leagueRequests = useGetLeagueRequests();
+  const clubRequests = useGetClubRequests(uid);
+
   return (
     <Tab.Navigator lazy={true}>
       <Tab.Screen
         name="Club"
         component={ClubRequests}
         options={{
-          title: i18n._(t`Club - ${requestContext.clubs.length}`),
+          title: i18n._(t`Club - ${clubRequests.count}`),
         }}
+        initialParams={{uid}}
       />
       <Tab.Screen
         name="League"
         component={LeagueRequests}
         options={{
-          title: i18n._(t`League - ${requestContext.leagues.length}`),
+          title: i18n._(t`League - ${leagueRequests.count}`),
         }}
       />
       <Tab.Screen
         name="Sent"
         component={MySentRequests}
         options={{
-          title: i18n._(t`Sent - ${mySentRequests}`),
+          title: i18n._(t`Sent - ${5}`),
         }}
       />
     </Tab.Navigator>
   );
 }
 
-function ClubRequests() {
-  const requestContext = useContext(RequestContext);
+function ClubRequests({navigation, route}) {
   const {showActionSheetWithOptions} = useActionSheet();
-  const requests: IClubRequest[] = requestContext.clubs;
   const context = useContext(AppContext);
 
-  const [data, setData] = useState<IClubRequest[]>(() => requests);
+  const uid = route.params.uid;
+
   const [loading, setLoading] = useState(false);
+
+  const clubRequests = useGetClubRequests(uid);
 
   const onHandlePlayerRequest = async (
     selectedPlayer: IPlayerRequestData,
@@ -77,16 +94,16 @@ function ClubRequests() {
   ) => {
     try {
       setLoading(true);
-      const newData = await handleClubRequest(
-        data,
+      await handleClubRequest(
+        clubRequests.data,
         selectedPlayer,
         sectionTitle,
         acceptRequest,
       );
-      setData(newData);
-      requestContext.setClubs(newData);
-      const currentCount = requestContext.requestCount;
-      requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
+      // setData(newData);
+      // requestContext.setClubs(newData);
+      // const currentCount = requestContext.requestCount;
+      // requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
 
       const currentLeagueData = {...context.userLeagues};
       if (acceptRequest) {
@@ -132,9 +149,9 @@ function ClubRequests() {
 
   return (
     <>
-      <FullScreenLoading visible={loading} />
+      <FullScreenLoading visible={loading || clubRequests.loading} />
       <SectionList
-        sections={data}
+        sections={clubRequests.data}
         stickySectionHeadersEnabled={true}
         keyExtractor={(item) => item.playerId}
         renderItem={({item, section}) => (
@@ -155,7 +172,7 @@ function ClubRequests() {
         )}
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: data.length === 0 ? 'center' : null,
+          justifyContent: clubRequests.data.length === 0 ? 'center' : null,
         }}
       />
     </>
@@ -164,12 +181,14 @@ function ClubRequests() {
 
 function LeagueRequests() {
   const context = useContext(AppContext);
-  const requestContext = useContext(RequestContext);
+  // const requestContext = useContext(RequestContext);
   const {showActionSheetWithOptions} = useActionSheet();
-  const requests: ILeagueRequest[] = requestContext.leagues;
+  // const requests: ILeagueRequest[] = requestContext.leagues;
 
-  const [data, setData] = useState<ILeagueRequest[]>(requests);
+  //const [data, setData] = useState<ILeagueRequest[]>(requests);
+
   const [loading, setLoading] = useState(false);
+  const leagueRequests = useGetLeagueRequests();
 
   const onHandleLeagueRequest = async (
     selectedClub: IClubRequestData,
@@ -194,16 +213,16 @@ function LeagueRequests() {
     }
     try {
       setLoading(true);
-      const newData = await handleLeagueRequest(
-        data,
+      await handleLeagueRequest(
+        leagueRequests.data,
         selectedClub,
         sectionTitle,
         acceptRequest,
       );
-      requestContext.setLeagues(newData);
-      const currentCount = requestContext.requestCount;
-      requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
-      setData(newData);
+      //   requestContext.setLeagues(newData);
+      //   const currentCount = requestContext.requestCount;
+      //  requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
+      //  setData(newData);
 
       const currentLeagueData = {...context.userLeagues};
       if (acceptRequest) {
@@ -218,6 +237,8 @@ function LeagueRequests() {
       context.setUserLeagues(currentLeagueData);
       setLoading(false);
     } catch (error) {
+      console.log(error);
+
       setLoading(false);
       throw new Error(error);
     }
@@ -249,9 +270,9 @@ function LeagueRequests() {
 
   return (
     <>
-      <FullScreenLoading visible={loading} />
+      <FullScreenLoading visible={loading || leagueRequests.loading} />
       <SectionList
-        sections={data}
+        sections={leagueRequests.data}
         stickySectionHeadersEnabled={true}
         keyExtractor={(item) => item.clubId}
         renderItem={({item, section}) => (
@@ -274,7 +295,7 @@ function LeagueRequests() {
         )}
         contentContainerStyle={{
           flexGrow: 1,
-          justifyContent: data.length === 0 ? 'center' : null,
+          justifyContent: leagueRequests.data.length === 0 ? 'center' : null,
         }}
       />
     </>

@@ -5,19 +5,8 @@ import {AuthContext} from '../../context/authContext';
 import {RequestContext} from '../../context/requestContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
-import {
-  IClubRosterMember,
-  IClubRequest,
-  ILeague,
-  ILeagueRequest,
-  ISentRequest,
-  IMyRequests,
-  IUser,
-  IMatchNavData,
-  IClubRequestData,
-  IPlayerRequestData,
-} from '../../utils/interface';
-import getUserUpcomingMatches from './actions/getUserUpcomingMatches';
+import {IUser, IMatchNavData} from '../../utils/interface';
+import getUserUpcomingMatches from './actions/useGetClubRequests';
 import getLeaguesClubs from './actions/getUserLeagueClubs';
 import {AppNavStack} from '../index';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
@@ -30,6 +19,8 @@ import {CardMedium} from '../../components/cards';
 import {MinButton} from '../../components/buttons';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import useGetUserPublishedMatches from './actions/useGetUserPublishedMatches';
+import useGetLeagueRequests from './actions/useGetLeagueRequests';
+import useGetClubRequests from './actions/useGetLeagueRequests copy';
 
 const db = firestore();
 
@@ -41,7 +32,6 @@ type Props = {
 
 export default function Home({navigation}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [userRequestCount, setUserRequestCount] = useState<number>(0);
 
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -50,6 +40,10 @@ export default function Home({navigation}: Props) {
   const uid = user.uid;
 
   const publishedMatches = useGetUserPublishedMatches(uid);
+  const leagueRequests = useGetLeagueRequests();
+  const clubRequests = useGetClubRequests(uid);
+
+  console.log(clubRequests);
 
   const showResendAlert = () => {
     Alert.alert(
@@ -67,118 +61,118 @@ export default function Home({navigation}: Props) {
     );
   };
 
-  const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
-    let requests: IClubRequest[] = [];
-    let requestCount = 0;
-    let myClubRequests: IMyRequests = {
-      title: '',
-      data: [],
-    };
+  // const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
+  //   let requests: IClubRequest[] = [];
+  //   let requestCount = 0;
+  //   let myClubRequests: IMyRequests = {
+  //     title: '',
+  //     data: [],
+  //   };
 
-    for (const [leagueId, league] of Object.entries(data)) {
-      let clubData: IClubRequest = {
-        title: '',
-        data: [],
-      };
-      if (league.clubs) {
-        for (const [clubId, club] of Object.entries(league.clubs)) {
-          const roster: {[uid: string]: IClubRosterMember} = club.roster;
-          for (const [playerId, player] of Object.entries(roster)) {
-            if (playerId === uid && player.accepted === false) {
-              myClubRequests.title = i18n._(t`Club Requests`);
+  //   for (const [leagueId, league] of Object.entries(data)) {
+  //     let clubData: IClubRequest = {
+  //       title: '',
+  //       data: [],
+  //     };
+  //     if (league.clubs) {
+  //       for (const [clubId, club] of Object.entries(league.clubs)) {
+  //         const roster: {[uid: string]: IClubRosterMember} = club.roster;
+  //         for (const [playerId, player] of Object.entries(roster)) {
+  //           if (playerId === uid && player.accepted === false) {
+  //             myClubRequests.title = i18n._(t`Club Requests`);
 
-              let myClubRequestData: ISentRequest = {
-                accepted: player.accepted,
-                clubId: clubId,
-                leagueId: leagueId,
-                leagueName: league.name,
-                clubName: club.name,
-                playerId: playerId,
-              };
-              myClubRequests.data = [...myClubRequests.data, myClubRequestData];
-            }
-            if (player.accepted === false && club.managerId === uid) {
-              let playerData: IPlayerRequestData = {
-                ...player,
-                clubId: clubId,
-                leagueId: leagueId,
-                playerId: playerId,
-              };
+  //             let myClubRequestData: ISentRequest = {
+  //               accepted: player.accepted,
+  //               clubId: clubId,
+  //               leagueId: leagueId,
+  //               leagueName: league.name,
+  //               clubName: club.name,
+  //               playerId: playerId,
+  //             };
+  //             myClubRequests.data = [...myClubRequests.data, myClubRequestData];
+  //           }
+  //           if (player.accepted === false && club.managerId === uid) {
+  //             let playerData: IPlayerRequestData = {
+  //               ...player,
+  //               clubId: clubId,
+  //               leagueId: leagueId,
+  //               playerId: playerId,
+  //             };
 
-              clubData.title = club.name + ' / ' + league.name;
-              clubData.data = [...clubData.data, playerData];
-              requestCount++;
-            }
-          }
-        }
-        if (clubData.data.length !== 0) {
-          requests.push(clubData);
-        }
-      }
-    }
-    requestContext.setClubCount(requestCount);
-    requestContext.setClubs(requests);
-    if (myClubRequests.data.length !== 0) {
-      requestContext.setMyClubRequests(myClubRequests);
-    }
-  };
+  //             clubData.title = club.name + ' / ' + league.name;
+  //             clubData.data = [...clubData.data, playerData];
+  //             requestCount++;
+  //           }
+  //         }
+  //       }
+  //       if (clubData.data.length !== 0) {
+  //         requests.push(clubData);
+  //       }
+  //     }
+  //   }
+  //   requestContext.setClubCount(requestCount);
+  //   requestContext.setClubs(requests);
+  //   if (myClubRequests.data.length !== 0) {
+  //     requestContext.setMyClubRequests(myClubRequests);
+  //   }
+  // };
 
-  const getLeagueRequests = (data: {[leagueId: string]: ILeague}) => {
-    let requests: ILeagueRequest[] = [];
-    let myLeagueRequests: IMyRequests = {
-      title: '',
-      data: [],
-    };
+  // const getLeagueRequests = (data: {[leagueId: string]: ILeague}) => {
+  //   let requests: ILeagueRequest[] = [];
+  //   let myLeagueRequests: IMyRequests = {
+  //     title: '',
+  //     data: [],
+  //   };
 
-    let requestCount = 0;
+  //   let requestCount = 0;
 
-    for (const [leagueId, league] of Object.entries(data)) {
-      let leagueData: ILeagueRequest = {
-        title: '',
-        data: [],
-      };
-      if (league.clubs) {
-        for (const [clubId, club] of Object.entries(league.clubs)) {
-          if (club.managerId === uid && club.accepted === false) {
-            myLeagueRequests.title = i18n._(t`League Requests`);
+  //   for (const [leagueId, league] of Object.entries(data)) {
+  //     let leagueData: ILeagueRequest = {
+  //       title: '',
+  //       data: [],
+  //     };
+  //     if (league.clubs) {
+  //       for (const [clubId, club] of Object.entries(league.clubs)) {
+  //         if (club.managerId === uid && club.accepted === false) {
+  //           myLeagueRequests.title = i18n._(t`League Requests`);
 
-            let myLeagueRequestData: ISentRequest = {
-              accepted: club.accepted,
-              clubId: clubId,
-              leagueId: leagueId,
-              leagueName: league.name,
-              clubName: club.name,
-            };
+  //           let myLeagueRequestData: ISentRequest = {
+  //             accepted: club.accepted,
+  //             clubId: clubId,
+  //             leagueId: leagueId,
+  //             leagueName: league.name,
+  //             clubName: club.name,
+  //           };
 
-            myLeagueRequests.data.push(myLeagueRequestData);
-          }
-          if (
-            club.accepted === false &&
-            Object.keys(league.admins).some((adminUid) => adminUid === uid)
-          ) {
-            leagueData.title = league.name;
+  //           myLeagueRequests.data.push(myLeagueRequestData);
+  //         }
+  //         if (
+  //           club.accepted === false &&
+  //           Object.keys(league.admins).some((adminUid) => adminUid === uid)
+  //         ) {
+  //           leagueData.title = league.name;
 
-            let clubData: IClubRequestData = {
-              ...club,
-              leagueId: leagueId,
-              clubId: clubId,
-            };
-            leagueData.data = [...leagueData.data, clubData];
-            requestCount++;
-          }
-        }
-        if (leagueData.data.length !== 0) {
-          requests.push(leagueData);
-        }
-      }
-    }
+  //           let clubData: IClubRequestData = {
+  //             ...club,
+  //             leagueId: leagueId,
+  //             clubId: clubId,
+  //           };
+  //           leagueData.data = [...leagueData.data, clubData];
+  //           requestCount++;
+  //         }
+  //       }
+  //       if (leagueData.data.length !== 0) {
+  //         requests.push(leagueData);
+  //       }
+  //     }
+  //   }
 
-    requestContext.setLeagueCount(requestCount);
-    requestContext.setLeagues(requests);
-    if (myLeagueRequests.data.length !== 0) {
-      requestContext.setMyLeagueRequests(myLeagueRequests);
-    }
-  };
+  //   requestContext.setLeagueCount(requestCount);
+  //   requestContext.setLeagues(requests);
+  //   if (myLeagueRequests.data.length !== 0) {
+  //     requestContext.setMyLeagueRequests(myLeagueRequests);
+  //   }
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -198,7 +192,7 @@ export default function Home({navigation}: Props) {
         );
         context.setUserMatches(matchesData);
         getClubRequests(userLeagues);
-        getLeagueRequests(userLeagues);
+        //    getLeagueRequests(userLeagues);
       } else {
         context.setUserData(userInfo);
       }
@@ -214,9 +208,7 @@ export default function Home({navigation}: Props) {
     }
   }, [user]);
 
-  useEffect(() => {
-    setUserRequestCount(requestContext.requestCount);
-  }, [requestContext]);
+  const requestCount = clubRequests.count + leagueRequests.count;
 
   const getRivalsName = (match: IMatchNavData) => {
     const rivalId = match.teams!.filter((teamId) => teamId !== match.clubId);
@@ -342,8 +334,12 @@ export default function Home({navigation}: Props) {
       <CardMedium
         title={i18n._(t`My Requests`)}
         subTitle={i18n._(t`Manage your received and sent request`)}
-        badgeNumber={userRequestCount}
-        onPress={() => navigation.navigate('Requests')}
+        badgeNumber={requestCount}
+        onPress={() =>
+          navigation.navigate('Requests', {
+            uid,
+          })
+        }
       />
       {!user?.currentUser?.emailVerified && (
         <View style={styles.emailVerification}>

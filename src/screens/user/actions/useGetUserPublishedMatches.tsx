@@ -5,14 +5,13 @@ import firestore from '@react-native-firebase/firestore';
 
 const useGetUserPublishedMatches = (uid: string) => {
   const [data, setData] = useState<FixtureList[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const context = useContext(AppContext);
 
   const db = firestore();
 
   useEffect(() => {
-    console.log('use effect ran run');
     const publishedMatchesForPlayer = db
       .collectionGroup('matches')
       .where('published', '==', true)
@@ -21,11 +20,12 @@ const useGetUserPublishedMatches = (uid: string) => {
       .limit(4);
 
     if (context.userData && context.userLeagues) {
+      setLoading(true);
       const subscriber = publishedMatchesForPlayer.onSnapshot((snapshot) => {
-        console.log('snaphot run');
-
         let matches: FixtureList[] = [];
-
+        if (snapshot.empty) {
+          return setLoading(false);
+        }
         snapshot.forEach((doc) => {
           const matchData = doc.data() as IMatch;
           const matchId = doc.id;
