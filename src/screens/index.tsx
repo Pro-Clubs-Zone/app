@@ -126,7 +126,6 @@ export default function AppIndex() {
       try {
         if (appUpdate?.isNeeded) {
           setAppInfo(appUpdate);
-          //     setShowAlert(true);
         }
       } catch (error) {
         throw new Error(error);

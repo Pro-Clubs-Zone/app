@@ -27,40 +27,6 @@ const getUserUpcomingMatches = async (
         .collection('matches');
 
       try {
-        // const publishedMatchesForPlayer = await matchesSnapshot
-        //   .where('published', '==', true)
-        //   .where('notSubmittedPlayers', 'array-contains', uid)
-        //   .orderBy('id', 'asc')
-        //   .get();
-
-        // publishedMatchesForPlayer.forEach((doc) => {
-        //   const matchData = doc.data() as IMatch;
-        //   const matchId = doc.id;
-        //   const leagueData = userLeagues[leagueId];
-        //   const homeTeamName = leagueData.clubs[matchData.homeTeamId].name;
-        //   const awayTeamName = leagueData.clubs[matchData.awayTeamId].name;
-
-        //   let match: IMatchNavData = {
-        //     ...matchData,
-        //     matchId: doc.id,
-        //     clubId: clubId,
-        //     manager: league.manager,
-        //     leagueId: leagueId,
-        //     leagueName: leagueData.name,
-        //     homeTeamName: homeTeamName,
-        //     awayTeamName: awayTeamName,
-        //     admin: admin,
-        //     //   statsSubmitted: false,
-        //   };
-
-        //   const fixture: FixtureList = {
-        //     id: matchId,
-        //     data: match,
-        //   };
-
-        //   matches.push(fixture);
-        // });
-
         const upcomingMatches = await matchesSnapshot
           .where('teams', 'array-contains', clubId)
           .where('published', '==', false)
