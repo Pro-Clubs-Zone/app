@@ -86,6 +86,7 @@ export default function CreateClub({route, navigation}: Props) {
             },
           },
           created: firestore.Timestamp.now(),
+          leagueId: leagueId,
         };
         const userInfo: IUserLeague = {
           clubId: clubRef.id,

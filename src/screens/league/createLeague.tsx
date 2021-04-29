@@ -331,6 +331,26 @@ export default function CreateLeague({navigation}: Props) {
                     value: 16,
                     color: pickerItemColor,
                   },
+                  {
+                    label: i18n._(t`${18} Teams`),
+                    value: 18,
+                    color: pickerItemColor,
+                  },
+                  {
+                    label: i18n._(t`${20} Teams`),
+                    value: 20,
+                    color: pickerItemColor,
+                  },
+                  {
+                    label: i18n._(t`${22} Teams`),
+                    value: 22,
+                    color: pickerItemColor,
+                  },
+                  {
+                    label: i18n._(t`${24} Teams`),
+                    value: 24,
+                    color: pickerItemColor,
+                  },
                 ]}
                 value={Platform.OS === 'ios' ? tempData.teamNum : data.teamNum}>
                 <TextField

@@ -123,9 +123,12 @@ export default function AppIndex() {
         packageName: 'com.proclubszone',
         forceUpdate: true,
       });
-      if (appUpdate.isNeeded) {
-        setAppInfo(appUpdate);
-        //     setShowAlert(true);
+      try {
+        if (appUpdate?.isNeeded) {
+          setAppInfo(appUpdate);
+        }
+      } catch (error) {
+        throw new Error(error);
       }
     };
     checkAppUpdate();

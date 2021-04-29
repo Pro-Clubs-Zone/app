@@ -181,8 +181,6 @@ export interface IPlayerRequestData extends IClubRosterMember {
 
 export interface IClubRequestData extends IClub {
   clubId: string;
-  leagueId: string;
-  managerId: string;
 }
 
 export interface ILeague {
@@ -225,6 +223,7 @@ export interface IClub {
     [uid: string]: IClubRosterMember;
   };
   created: Timestamp;
+  leagueId: string;
 }
 
 export interface IUserLeague {

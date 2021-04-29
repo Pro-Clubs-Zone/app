@@ -65,7 +65,7 @@ export default function Club({navigation, route}: Props) {
   };
 
   const playerRequests: IClubRequest = {
-    title: i18n._(t`New requests`),
+    title: i18n._(t`New Requests`),
     data: [],
   };
 

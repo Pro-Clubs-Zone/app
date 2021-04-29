@@ -156,7 +156,7 @@ export default function LeagueStack({navigation, route}: Props) {
         analytics().logEvent('league_view', {
           leagueId: leagueId,
           role: role,
-          leagueName: league.name,
+          leagueName: league?.name,
           clubName: userData?.leagues?.[leagueId]?.clubName,
         }),
       ]).catch((logErr) => {
