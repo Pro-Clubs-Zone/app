@@ -84,9 +84,6 @@ export default function HelpArticle({navigation, route}: Props) {
         <HTML
           source={{html}}
           contentWidth={windowWidth - verticalScale(16)}
-          containerStyle={{
-            marginBottom: verticalScale(-16),
-          }}
           baseFontStyle={TEXT_STYLES.body}
           tagsStyles={{
             h2: {

@@ -24,6 +24,7 @@ const swapClubs = async ({oldClub, newClub}: Props) => {
     managerUsername: newClub.managerUsername,
     name: newClub.name,
     roster: {...newClub.roster},
+    leagueId: newClub.leagueId,
   };
 
   batch.set(
