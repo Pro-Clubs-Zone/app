@@ -1,29 +1,29 @@
 import {setupI18n} from '@lingui/core';
-import ruTranslation from '../locales/ru/messages.js';
+// import ruTranslation from '../locales/ru/messages.js';
 import enTranslation from '../locales/en/messages.js';
-import {en, ru} from 'make-plural';
+import esTranslations from '../locales/es/messages.js';
+import {en, es} from 'make-plural';
 
 const i18n = setupI18n({
   locale: 'en',
   localeData: {
-    ru: {
-      plurals: ru,
-    },
     en: {
       plurals: en,
     },
+    es: {
+      plurals: es,
+    },
   },
   messages: {
-    en: ruTranslation.messages,
-    ru: enTranslation.messages,
+    en: enTranslation.messages,
   },
 });
 
-i18n.load('en', enTranslation.messages);
 // i18n.loadLocaleData('ru', {
 //   plurals: ru,
 // });
-i18n.activate('en');
+// i18n.load('es', esTranslations.messages);
+// i18n.activate('es');
 
 export default i18n;
 

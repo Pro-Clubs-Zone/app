@@ -195,14 +195,12 @@ export default function SignIn({navigation}: Props) {
               <Pressable
                 onPress={() => navigation.navigate('Password Recovery')}>
                 <View style={styles.resetPass}>
-                  <Trans>
-                    <Text style={TEXT_STYLES.small}>
-                      <Trans>Forgot login details?</Trans>{' '}
-                      <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
-                        <Trans>Get help recovering it.</Trans>
-                      </Text>
+                  <Text style={TEXT_STYLES.small}>
+                    <Trans>Forgot login details?</Trans>{' '}
+                    <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
+                      <Trans>Get help recovering it.</Trans>
                     </Text>
-                  </Trans>
+                  </Text>
                 </View>
               </Pressable>
               {/* <View

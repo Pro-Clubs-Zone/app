@@ -415,7 +415,7 @@ const GuestTabs = () => {
         labelPosition: 'beside-icon',
       }}>
       <Tab.Screen
-        name="League "
+        name="Leagues "
         component={Leagues}
         options={{
           tabBarIcon: ({color, size}) => (

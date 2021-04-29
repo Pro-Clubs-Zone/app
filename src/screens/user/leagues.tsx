@@ -64,7 +64,9 @@ export default function Leagues({navigation}: Props) {
       {data.length !== 0 && (
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text style={TEXT_STYLES.caption}>My Leagues & Clubs</Text>
+            <Text style={TEXT_STYLES.caption}>
+              {i18n._(t`My Leagues & Clubs`)}
+            </Text>
           </View>
           <FlatList
             data={data}
