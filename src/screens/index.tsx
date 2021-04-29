@@ -114,8 +114,6 @@ export default function AppIndex() {
       LogBox.ignoreLogs(['DevTools failed to load SourceMap:']); // Ignore log notification by message
     }
 
-    console.log('use effect from index', user);
-
     if (user.uid) {
       crashlytics().setUserId(uid!);
     }
@@ -125,11 +123,16 @@ export default function AppIndex() {
         packageName: 'com.proclubszone',
         forceUpdate: true,
       });
-      if (appUpdate.isNeeded) {
-        setAppInfo(appUpdate);
-        //     setShowAlert(true);
+      try {
+        if (appUpdate?.isNeeded) {
+          setAppInfo(appUpdate);
+          //     setShowAlert(true);
+        }
+      } catch (error) {
+        throw new Error(error);
       }
     };
+
     checkAppUpdate();
   }, []);
 

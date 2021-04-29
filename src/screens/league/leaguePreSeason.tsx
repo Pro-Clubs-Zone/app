@@ -20,6 +20,9 @@ import {RequestContext} from '../../context/requestContext';
 import shareLeagueLink from './actions/shareLink';
 import analytics from '@react-native-firebase/analytics';
 import countLeagueRequests from './actions/countLeagueRequests';
+import useGetLeagueRequests from '../user/actions/useGetLeagueRequests';
+import {AuthContext} from '../../context/authContext';
+import useGetClubRequests from '../user/actions/useGetClubRequests';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -35,13 +38,15 @@ const firFunc = functions();
 
 export default function LeaguePreSeason({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [leagueReqCount, setLeagueReqCount] = useState(0);
-  const [clubReqCount, setClubReqCount] = useState(0);
+  //  const [leagueReqCount, setLeagueReqCount] = useState(0);
+  //  const [clubReqCount, setClubReqCount] = useState(0);
   // const [clubRosterLength, setClubRosterLength] = useState(1);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
-  const requestContext = useContext(RequestContext);
+  const user = useContext(AuthContext);
+  const uid = user.uid;
+  // const requestContext = useContext(RequestContext);
 
   const leagueId = leagueContext.leagueId;
   const teamNum = leagueContext.league.teamNum;
@@ -49,6 +54,20 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const leagueComplete = teamNum === acceptedClubs;
   const userLeague = context.userData!.leagues![leagueId];
   const newLeague = route.params.newLeague;
+
+  const leagueRequests = useGetLeagueRequests(uid);
+  const clubRequests = useGetClubRequests(uid);
+
+  const currentLeagueRequestCount = leagueRequests.data.filter((league) => {
+    return league.title === leagueContext.league.name + ' - ' + 'New Requests';
+  })[0]?.data.length;
+
+  // const currentClubRequestCount = clubRequests.data.filter((leagueClub) => {
+  //   if (userLeague.manager) {
+  //     leagueClub.title ===
+  //       userLeague.clubName + ' / ' + leagueContext.league.name;
+  //   }
+  // })[0].data.length;
 
   useLayoutEffect(() => {
     if (newLeague) {
@@ -64,38 +83,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       });
     }
   }, [navigation, newLeague]);
-
-  useEffect(() => {
-    const [clubRequests, leagueRequests] = countLeagueRequests(
-      requestContext.leagues,
-      requestContext.clubs,
-      userLeague,
-      leagueContext.league.name,
-    );
-
-    setClubReqCount(clubRequests);
-    setLeagueReqCount(leagueRequests);
-
-    // const leagueRequests = requestContext.leagues.filter(
-    //   (league) => league.title === leagueContext.league.name,
-    // );
-
-    // if (userLeague.manager) {
-    //   const clubRequests = requestContext.clubs.filter(
-    //     (club) =>
-    //       club.title ===
-    //       `${userLeague.clubName} / ${leagueContext.league.name}`,
-    //   );
-
-    //   if (clubRequests.length !== 0) {
-    //     setClubReqCount(clubRequests[0].data.length);
-    //   }
-    // }
-
-    // if (leagueRequests.length !== 0) {
-    //   setLeagueReqCount(leagueRequests[0].data.length);
-    // }
-  }, [requestContext]);
 
   //FIXME:
   // useEffect(() => {
@@ -178,13 +165,8 @@ export default function LeaguePreSeason({navigation, route}: Props) {
     }
   };
 
-  if (loading) {
-    return (
-      <FullScreenLoading
-        visible={true}
-        label={i18n._(t`Scheduling Matches...`)}
-      />
-    );
+  if (loading || leagueRequests.loading || clubRequests.loading) {
+    return <FullScreenLoading visible={true} label={i18n._(t`Loading`)} />;
   }
 
   return (
@@ -208,7 +190,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           //     : i18n._(t`No members except you`)
           // }
           subTitle={i18n._(t`Manage your current roster`)}
-          badgeNumber={clubReqCount}
+          //   badgeNumber={currentClubRequestCount}
         />
       ) : (
         <CardMedium
@@ -232,7 +214,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
               newLeague: false,
             })
           }
-          badgeNumber={leagueReqCount}
+          badgeNumber={currentLeagueRequestCount}
         />
         <CardSmall
           title={i18n._(t`Invite Clubs`)}

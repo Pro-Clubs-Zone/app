@@ -6,7 +6,8 @@ import {
 } from '../../../utils/interface';
 import {AppContext} from '../../../context/appContext';
 import firestore from '@react-native-firebase/firestore';
-
+import {t} from '@lingui/macro';
+import i18n from '../../../utils/i18n';
 const useGetLeagueRequests = (uid: string) => {
   const [data, setData] = useState<ILeagueRequest[]>([]);
   const [loading, setLoading] = useState(false);
@@ -19,17 +20,17 @@ const useGetLeagueRequests = (uid: string) => {
 
   useEffect(() => {
     if (context.userLeagues) {
-      const ownerIds: string[] = [];
-      for (const league of Object.values(context.userLeagues)) {
+      const leagueIds: string[] = [];
+      for (const [leagueId, league] of Object.entries(context.userLeagues)) {
         if (league.admins[uid] !== undefined) {
-          ownerIds.push(league.ownerId);
+          leagueIds.push(leagueId);
         }
       }
-      if (ownerIds.length !== 0) {
+      if (leagueIds.length !== 0) {
         setLoading(true);
         const query = db
           .collectionGroup('clubs')
-          .where('leagueOwnerId', 'in', ownerIds)
+          .where('leagueId', 'in', leagueIds)
           .where('accepted', '==', false);
 
         const getRequests = query.onSnapshot((snapshot) => {
@@ -57,17 +58,17 @@ const useGetLeagueRequests = (uid: string) => {
 
             if (requests.length === 0) {
               leagueData = {
-                title: leagueName,
+                title: leagueName + ' - ' + i18n._(t`New Requests`),
                 data: [clubData],
               };
               requests.push(leagueData);
             } else {
               requests.map((request, index) => {
-                if (request.title === leagueName) {
+                if (request.title === leagueName + ' - ' + 'New Requests') {
                   requests[index].data.push(clubData);
                 } else {
                   leagueData = {
-                    title: leagueName,
+                    title: leagueName + ' - ' + i18n._(t`New Requests`),
                     data: [clubData],
                   };
                   requests.push(leagueData);

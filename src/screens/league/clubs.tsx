@@ -21,6 +21,7 @@ import {LeagueStackType} from './league';
 import Select from '../../components/select';
 import swapClubs from '../club/actions/swapClubs';
 import {AuthContext} from '../../context/authContext';
+import useGetLeagueRequests from '../user/actions/useGetLeagueRequests';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -49,10 +50,32 @@ export default function Clubs({navigation, route}: Props) {
   const leagueId = leagueContext.leagueId;
   const admins = leagueContext.league.admins;
   const userLeagues = context.userLeagues!;
+  const uid = user.uid;
 
   const scheduled = route?.params?.scheduled;
 
+  const leagueRequests = useGetLeagueRequests(uid);
+  const currentLeagueRequests = leagueRequests.data.filter((league) => {
+    return league.title === leagueContext.league.name + ' - ' + 'New Requests';
+  });
+
+  // if (!leagueRequests.loading && leagueRequests.count !== 0) {
+  //   currentLeagueRequests = leagueRequests.data.filter((league) => {
+  //     return league.title === leagueContext.league.name;
+  //   });
+  //   if (currentLeagueRequests.length !== 0) {
+  //     currentLeagueRequests[0].title = 'New Requests';
+  //   }
+  // }
+
+  // const newRequests = {
+  //   title: 'new',
+  //   data: currentLeagueRequests?.[0]?.data,
+  // };
+
   const sortClubs = (clubs: IClubRequestData[]) => {
+    console.log('run sort');
+
     const acceptedClubList: ILeagueRequest = {
       title: i18n._(t`Accepted Clubs`),
       data: [],
@@ -66,10 +89,12 @@ export default function Clubs({navigation, route}: Props) {
     clubs.forEach((club) => {
       if (club.accepted) {
         acceptedClubList.data.push(club);
-      } else {
-        clubRequestList.data.push(club);
       }
     });
+
+    // if (currentLeagueRequests[0].data.length !== 0) {
+    //   clubRequestList.data = currentLeagueRequests[0].data;
+    // }
 
     let sortedClubs: ILeagueRequest[] = [];
 
@@ -84,6 +109,8 @@ export default function Clubs({navigation, route}: Props) {
 
   useEffect(() => {
     const clubs = userLeagues[leagueId].clubs;
+
+    console.log('leagueReg', leagueRequests);
 
     let clubList: IClubRequestData[] = [];
     let clubInfo: IClubRequestData;
@@ -213,19 +240,19 @@ export default function Clubs({navigation, route}: Props) {
       );
     }
     setLoading(true);
-    const updatedList: IClubRequestData[] = data.map((club) => {
-      if (club.clubId === selectedClub.clubId) {
-        club.accepted = true;
-      }
-      return club;
-    });
+    // const updatedList: IClubRequestData[] = data.map((club) => {
+    //   if (club.clubId === selectedClub.clubId) {
+    //     club.accepted = true;
+    //   }
+    //   return club;
+    // });
     await onHandleLeagueRequest(selectedClub, true)
       .then(() => {
         const leagueData = {...leagueContext.league};
         leagueData.acceptedClubs += 1;
         leagueContext.setLeague(leagueData);
-        setData(updatedList);
-        sortClubs(updatedList);
+        // setData(updatedList);
+        // sortClubs(updatedList);
         setLoading(false);
       })
       .catch((requestError) => {
@@ -310,9 +337,9 @@ export default function Clubs({navigation, route}: Props) {
 
   return (
     <>
-      <FullScreenLoading visible={loading} />
+      <FullScreenLoading visible={loading || leagueRequests.loading} />
       <Select
-        items={sectionedData[1]?.data}
+        items={sectionedData[0]?.data}
         uniqueKey="clubId"
         displayKey="name"
         onSelectedItemsChange={(item) =>
@@ -326,7 +353,7 @@ export default function Clubs({navigation, route}: Props) {
         title={i18n._(t`New Requests`)}
       />
       <SectionList
-        sections={sectionedData}
+        sections={[...sectionedData, ...currentLeagueRequests]}
         keyExtractor={(item) => item.clubId}
         renderItem={({item}) => (
           <TwoLine

@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {ScrollView} from 'react-native';
 import {LeagueStackType} from './league';
 import {StackNavigationProp} from '@react-navigation/stack';
@@ -36,11 +36,11 @@ export default function LeagueScheduled({navigation}: Props) {
   const requestContext = useContext(RequestContext);
 
   const leagueId = leagueContext.leagueId;
-  const userClub = context.userData.leagues[leagueId];
-  const isAdmin = context.userData.leagues[leagueId].admin;
-  // const isManager = context.userData.leagues[leagueId].manager;
-  const isPlayer = context.userData.leagues[leagueId].clubId !== undefined;
   const userLeague = context.userData!.leagues![leagueId];
+
+  const isAdmin = userLeague.admin;
+  // const isManager = context.userData.leagues[leagueId].manager;
+  const isPlayer = userLeague.clubId !== undefined;
 
   const conflictMatchesCount =
     context.userLeagues?.[leagueId].conflictMatchesCount;
@@ -98,13 +98,13 @@ export default function LeagueScheduled({navigation}: Props) {
       {isPlayer && (
         <CardSmallContainer>
           <CardSmall
-            title={userClub.clubName}
+            title={userLeague.clubName}
             // subTitle={`${clubRosterLength} club members`}
             badgeNumber={clubRequests}
             onPress={() =>
               navigation.navigate('My Club', {
-                clubId: userClub.clubId,
-                manager: userClub.manager,
+                clubId: userLeague.clubId,
+                manager: userLeague.manager,
               })
             }
           />

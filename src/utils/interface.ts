@@ -226,7 +226,7 @@ export interface IClub {
     [uid: string]: IClubRosterMember;
   };
   created: Timestamp;
-  leagueOwnerId: string;
+  leagueId: string;
 }
 
 export interface IUserLeague {

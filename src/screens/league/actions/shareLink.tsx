@@ -45,7 +45,7 @@ const shareLeagueLink = (leagueName: string, leagueId: string) => {
           title: message,
         },
         {
-          dialogTitle: i18n._(t`Invite clubs`),
+          dialogTitle: i18n._(t`Invite Clubs`),
         },
       );
       if (result.action === Share.sharedAction) {

@@ -59,119 +59,6 @@ export default function Home({navigation}: Props) {
     );
   };
 
-  // const getClubRequests = (data: {[leagueId: string]: ILeague}) => {
-  //   let requests: IClubRequest[] = [];
-  //   let requestCount = 0;
-  //   let myClubRequests: IMyRequests = {
-  //     title: '',
-  //     data: [],
-  //   };
-
-  //   for (const [leagueId, league] of Object.entries(data)) {
-  //     let clubData: IClubRequest = {
-  //       title: '',
-  //       data: [],
-  //     };
-  //     if (league.clubs) {
-  //       for (const [clubId, club] of Object.entries(league.clubs)) {
-  //         const roster: {[uid: string]: IClubRosterMember} = club.roster;
-  //         for (const [playerId, player] of Object.entries(roster)) {
-  //           if (playerId === uid && player.accepted === false) {
-  //             myClubRequests.title = i18n._(t`Club Requests`);
-
-  //             let myClubRequestData: ISentRequest = {
-  //               accepted: player.accepted,
-  //               clubId: clubId,
-  //               leagueId: leagueId,
-  //               leagueName: league.name,
-  //               clubName: club.name,
-  //               playerId: playerId,
-  //             };
-  //             myClubRequests.data = [...myClubRequests.data, myClubRequestData];
-  //           }
-  //           if (player.accepted === false && club.managerId === uid) {
-  //             let playerData: IPlayerRequestData = {
-  //               ...player,
-  //               clubId: clubId,
-  //               leagueId: leagueId,
-  //               playerId: playerId,
-  //             };
-
-  //             clubData.title = club.name + ' / ' + league.name;
-  //             clubData.data = [...clubData.data, playerData];
-  //             requestCount++;
-  //           }
-  //         }
-  //       }
-  //       if (clubData.data.length !== 0) {
-  //         requests.push(clubData);
-  //       }
-  //     }
-  //   }
-  //   requestContext.setClubCount(requestCount);
-  //   requestContext.setClubs(requests);
-  //   if (myClubRequests.data.length !== 0) {
-  //     requestContext.setMyClubRequests(myClubRequests);
-  //   }
-  // };
-
-  // const getLeagueRequests = (data: {[leagueId: string]: ILeague}) => {
-  //   let requests: ILeagueRequest[] = [];
-  //   let myLeagueRequests: IMyRequests = {
-  //     title: '',
-  //     data: [],
-  //   };
-
-  //   let requestCount = 0;
-
-  //   for (const [leagueId, league] of Object.entries(data)) {
-  //     let leagueData: ILeagueRequest = {
-  //       title: '',
-  //       data: [],
-  //     };
-  //     if (league.clubs) {
-  //       for (const [clubId, club] of Object.entries(league.clubs)) {
-  //         if (club.managerId === uid && club.accepted === false) {
-  //           myLeagueRequests.title = i18n._(t`League Requests`);
-
-  //           let myLeagueRequestData: ISentRequest = {
-  //             accepted: club.accepted,
-  //             clubId: clubId,
-  //             leagueId: leagueId,
-  //             leagueName: league.name,
-  //             clubName: club.name,
-  //           };
-
-  //           myLeagueRequests.data.push(myLeagueRequestData);
-  //         }
-  //         if (
-  //           club.accepted === false &&
-  //           Object.keys(league.admins).some((adminUid) => adminUid === uid)
-  //         ) {
-  //           leagueData.title = league.name;
-
-  //           let clubData: IClubRequestData = {
-  //             ...club,
-  //             leagueId: leagueId,
-  //             clubId: clubId,
-  //           };
-  //           leagueData.data = [...leagueData.data, clubData];
-  //           requestCount++;
-  //         }
-  //       }
-  //       if (leagueData.data.length !== 0) {
-  //         requests.push(leagueData);
-  //       }
-  //     }
-  //   }
-
-  //   requestContext.setLeagueCount(requestCount);
-  //   requestContext.setLeagues(requests);
-  //   if (myLeagueRequests.data.length !== 0) {
-  //     requestContext.setMyLeagueRequests(myLeagueRequests);
-  //   }
-  // };
-
   useEffect(() => {
     const fetchData = async () => {
       const userRef = db.collection('users').doc(uid);
@@ -189,8 +76,6 @@ export default function Home({navigation}: Props) {
           userLeagues,
         );
         context.setUserMatches(matchesData);
-        getClubRequests(userLeagues);
-        //    getLeagueRequests(userLeagues);
       } else {
         context.setUserData(userInfo);
       }
@@ -239,7 +124,12 @@ export default function Home({navigation}: Props) {
     return [...publishedMatchesByLeague, ...upcomingMatches];
   };
 
-  if (loading && publishedMatches.loading) {
+  if (
+    loading ||
+    publishedMatches.loading ||
+    leagueRequests.loading ||
+    clubRequests.loading
+  ) {
     return <NonModalLoading visible={true} />;
   }
   return (
