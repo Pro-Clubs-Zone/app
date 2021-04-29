@@ -1,7 +1,7 @@
 import {setupI18n} from '@lingui/core';
 // import ruTranslation from '../locales/ru/messages.js';
 import enTranslation from '../locales/en/messages.js';
-import esTranslations from '../locales/es/messages.js';
+//import esTranslations from '../locales/es/messages.js';
 import {en, es} from 'make-plural';
 
 const i18n = setupI18n({

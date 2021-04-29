@@ -115,6 +115,7 @@ export default function Clubs({navigation, route}: Props) {
       requestContext.setLeagueCount(requestContext.requestCount - 1);
       await user.currentUser.reload();
       setLoading(false);
+      navigation.goBack();
     } catch (error) {
       setLoading(false);
       throw new Error(error);

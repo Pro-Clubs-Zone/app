@@ -12,7 +12,6 @@ const useGetUserPublishedMatches = (uid: string) => {
   const db = firestore();
 
   useEffect(() => {
-    console.log('use effect ran run');
     const publishedMatchesForPlayer = db
       .collectionGroup('matches')
       .where('published', '==', true)
@@ -23,8 +22,6 @@ const useGetUserPublishedMatches = (uid: string) => {
     if (context.userData && context.userLeagues) {
       setLoading(true);
       const subscriber = publishedMatchesForPlayer.onSnapshot((snapshot) => {
-        console.log('snaphot run');
-
         let matches: FixtureList[] = [];
         if (snapshot.empty) {
           return setLoading(false);
