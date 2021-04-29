@@ -39,44 +39,49 @@ const useGetLeagueRequests = (uid: string) => {
           if (snapshot.empty) {
             return setLoading(false);
           }
-          snapshot.forEach((doc) => {
+          snapshot.docChanges().forEach((change) => {
+            const doc = change.doc;
             const leagueId: string = doc.ref.parent.parent.id;
             const leagueName = context.userLeagues[leagueId].name;
             const club = doc.data() as IClub;
             const clubId = doc.id;
 
-            let leagueData: ILeagueRequest = {
-              title: '',
-              data: [],
-            };
-
-            let clubData: IClubRequestData = {
-              ...club,
-              leagueId: leagueId,
-              clubId: clubId,
-            };
-
-            if (requests.length === 0) {
-              leagueData = {
-                title: leagueName + ' - ' + i18n._(t`New Requests`),
-                data: [clubData],
+            if (change.type === 'added') {
+              let leagueData: ILeagueRequest = {
+                title: '',
+                data: [],
               };
-              requests.push(leagueData);
+
+              let clubData: IClubRequestData = {
+                ...club,
+                clubId: clubId,
+              };
+
+              if (requests.length === 0) {
+                leagueData = {
+                  title: leagueName + ' - ' + i18n._(t`New Requests`),
+                  data: [clubData],
+                };
+                requests.push(leagueData);
+              } else {
+                requests.map((request, index) => {
+                  if (request.title === leagueName + ' - ' + 'New Requests') {
+                    requests[index].data.push(clubData);
+                  } else {
+                    leagueData = {
+                      title: leagueName + ' - ' + i18n._(t`New Requests`),
+                      data: [clubData],
+                    };
+                    requests.push(leagueData);
+                  }
+                });
+              }
+              requestCount++;
             } else {
-              requests.map((request, index) => {
-                if (request.title === leagueName + ' - ' + 'New Requests') {
-                  requests[index].data.push(clubData);
-                } else {
-                  leagueData = {
-                    title: leagueName + ' - ' + i18n._(t`New Requests`),
-                    data: [clubData],
-                  };
-                  requests.push(leagueData);
-                }
-              });
+              console.log('doc removed baby', club);
             }
-            requestCount++;
           });
+
           setData(requests);
           setCount(requestCount);
           setLoading(false);

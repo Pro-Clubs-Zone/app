@@ -46,7 +46,6 @@ export default function Clubs({navigation, route}: Props) {
 
   const ref = useRef(null);
 
-  const requests = requestContext.leagues;
   const leagueId = leagueContext.leagueId;
   const admins = leagueContext.league.admins;
   const userLeagues = context.userLeagues!;
@@ -58,20 +57,6 @@ export default function Clubs({navigation, route}: Props) {
   const currentLeagueRequests = leagueRequests.data.filter((league) => {
     return league.title === leagueContext.league.name + ' - ' + 'New Requests';
   });
-
-  // if (!leagueRequests.loading && leagueRequests.count !== 0) {
-  //   currentLeagueRequests = leagueRequests.data.filter((league) => {
-  //     return league.title === leagueContext.league.name;
-  //   });
-  //   if (currentLeagueRequests.length !== 0) {
-  //     currentLeagueRequests[0].title = 'New Requests';
-  //   }
-  // }
-
-  // const newRequests = {
-  //   title: 'new',
-  //   data: currentLeagueRequests?.[0]?.data,
-  // };
 
   const sortClubs = (clubs: IClubRequestData[]) => {
     console.log('run sort');
@@ -194,26 +179,30 @@ export default function Clubs({navigation, route}: Props) {
     acceptRequest: boolean,
   ) => {
     try {
-      const newRequestData = await handleLeagueRequest(
-        requests,
-        selectedClub,
-        userLeagues[leagueId].name,
-        acceptRequest,
-      );
+      await handleLeagueRequest(selectedClub, acceptRequest);
 
-      requestContext.setLeagues(newRequestData);
-      const currentCount = requestContext.requestCount;
-      requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
+      //   requestContext.setLeagues(newRequestData);
+      //  const currentCount = requestContext.requestCount;
+      //    /  requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
 
       const currentLeagueData = {...userLeagues};
+      const currentClub = currentLeagueData[selectedClub.leagueId].clubs![
+        selectedClub.clubId
+      ];
       if (acceptRequest) {
-        currentLeagueData[selectedClub.leagueId].clubs![
-          selectedClub.clubId
-        ].accepted = true;
+        if (currentClub !== undefined) {
+          currentClub.accepted = true;
+        } else {
+          currentLeagueData[selectedClub.leagueId].clubs[
+            selectedClub.clubId
+          ] = selectedClub;
+        }
       } else {
-        delete currentLeagueData[selectedClub.leagueId].clubs![
-          selectedClub.clubId
-        ];
+        if (currentClub !== undefined) {
+          delete currentLeagueData[selectedClub.leagueId].clubs![
+            selectedClub.clubId
+          ];
+        }
       }
       context.setUserLeagues(currentLeagueData);
     } catch (error) {
@@ -240,17 +229,17 @@ export default function Clubs({navigation, route}: Props) {
       );
     }
     setLoading(true);
-    // const updatedList: IClubRequestData[] = data.map((club) => {
-    //   if (club.clubId === selectedClub.clubId) {
-    //     club.accepted = true;
-    //   }
-    //   return club;
-    // });
+    const updatedList: IClubRequestData[] = data.map((club) => {
+      if (club.clubId === selectedClub.clubId) {
+        club.accepted = true;
+      }
+      return club;
+    });
     await onHandleLeagueRequest(selectedClub, true)
       .then(() => {
-        const leagueData = {...leagueContext.league};
-        leagueData.acceptedClubs += 1;
-        leagueContext.setLeague(leagueData);
+        //    const leagueData = {...leagueContext.league};
+        //    leagueData.acceptedClubs += 1;
+        //    leagueContext.setLeague(leagueData);
         // setData(updatedList);
         // sortClubs(updatedList);
         setLoading(false);
@@ -277,6 +266,8 @@ export default function Clubs({navigation, route}: Props) {
     const options = [i18n._(t`Accept`), i18n._(t`Decline`), i18n._(t`Cancel`)];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
+
+    console.log('club', club);
 
     showActionSheetWithOptions(
       {
@@ -339,7 +330,7 @@ export default function Clubs({navigation, route}: Props) {
     <>
       <FullScreenLoading visible={loading || leagueRequests.loading} />
       <Select
-        items={sectionedData[0]?.data}
+        items={currentLeagueRequests[0]?.data}
         uniqueKey="clubId"
         displayKey="name"
         onSelectedItemsChange={(item) =>
