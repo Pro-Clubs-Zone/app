@@ -178,12 +178,13 @@ export default function AppIndex() {
         name="Settings"
         component={Settings}
         options={({navigation}) => ({
-          headerRight: () => (
-            <IconButton
-              name="logout-variant"
-              onPress={() => onSignOut(navigation.goBack())}
-            />
-          ),
+          headerRight: () =>
+            uid && (
+              <IconButton
+                name="logout-variant"
+                onPress={() => onSignOut(navigation.goBack())}
+              />
+            ),
         })}
       />
     </>
@@ -314,10 +315,19 @@ export default function AppIndex() {
         options={({navigation}) => ({
           title: 'Home',
           headerRight: () => (
-            <IconButton
-              name="account"
-              onPress={() => navigation.navigate('Sign Up')}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
+              <IconButton
+                name="cog"
+                onPress={() => navigation.navigate('Settings')}
+              />
+              <IconButton
+                name="account"
+                onPress={() => navigation.navigate('Sign Up')}
+              />
+            </View>
           ),
           animationTypeForReplace: 'pop',
         })}
