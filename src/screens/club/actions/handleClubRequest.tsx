@@ -1,11 +1,16 @@
 import firestore from '@react-native-firebase/firestore';
-import {IClubRequest, IPlayerRequestData} from '../../../utils/interface';
+import {
+  IClubRequest,
+  IPlayerRequestData,
+  Transfer,
+} from '../../../utils/interface';
 
 const handleClubRequest = async (
   data: IClubRequest[],
-  {playerId, clubId, leagueId}: IPlayerRequestData,
+  {playerId, clubId, leagueId, username}: IPlayerRequestData,
   sectionTitle: string,
   acceptRequest: boolean,
+  clubName: string,
 ) => {
   const db = firestore();
   const batch = db.batch();
@@ -16,6 +21,21 @@ const handleClubRequest = async (
     .doc(leagueId)
     .collection('clubs')
     .doc(clubId);
+  const transfersRef = db
+    .collection('leagues')
+    .doc(leagueId)
+    .collection('stats')
+    .doc('transfers');
+
+  const transferItem: {[playerId: string]: Transfer} = {
+    [firestore.Timestamp.now().toMillis()]: {
+      clubId,
+      clubName,
+      username,
+      joined: true,
+      playerId,
+    },
+  };
 
   const sectionIndex = data.findIndex(
     (section) => section.title === sectionTitle,
@@ -39,6 +59,7 @@ const handleClubRequest = async (
     batch.update(playerRef, {
       ['leagues.' + leagueId + '.accepted']: true,
     });
+    batch.set(transfersRef, transferItem, {merge: true});
   } else {
     batch.update(playerRef, {
       [`leagues.${leagueId}`]: firestore.FieldValue.delete(),

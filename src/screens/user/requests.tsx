@@ -77,11 +77,14 @@ function ClubRequests() {
   ) => {
     try {
       setLoading(true);
+      const clubName =
+        context.userData.leagues[selectedPlayer.leagueId].clubName;
       const newData = await handleClubRequest(
         data,
         selectedPlayer,
         sectionTitle,
         acceptRequest,
+        clubName,
       );
       setData(newData);
       requestContext.setClubs(newData);

@@ -5,6 +5,14 @@ export type DocumentData = FirebaseFirestoreTypes.DocumentData;
 export type DocumentSnapshot = FirebaseFirestoreTypes.DocumentSnapshot;
 export type Timestamp = FirebaseFirestoreTypes.Timestamp;
 
+export interface Transfer {
+  username: string;
+  clubName: string;
+  clubId: string;
+  playerId: string;
+  joined: boolean;
+}
+
 export interface Article {
   fields: {
     title: string;

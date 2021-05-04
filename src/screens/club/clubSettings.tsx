@@ -36,6 +36,7 @@ export default function ClubSettings({route, navigation}: Props) {
   const isManager = context.userData!.leagues![leagueId].manager;
   const admins = leagueContext.league.admins;
   const leagueScheduled = leagueContext.league.scheduled;
+  const clubName = context.userData.leagues[leagueId].clubName;
 
   const onRemoveClub = async () => {
     if (leagueScheduled) {
@@ -91,7 +92,7 @@ export default function ClubSettings({route, navigation}: Props) {
         {
           text: i18n._(t`Leave`),
           onPress: () => {
-            removePlayer({leagueId, playerId, clubId}).then(() => {
+            removePlayer({leagueId, playerId, clubId, clubName}).then(() => {
               navigation.dispatch(
                 CommonActions.reset({
                   index: 1,
