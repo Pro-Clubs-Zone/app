@@ -235,11 +235,18 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           badgeNumber={leagueReqCount}
         />
         <CardSmall
-          title={i18n._(t`Invite Clubs`)}
-          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+          title={i18n._(t`Transfer History`)}
+          onPress={() =>
+            navigation.navigate('Transfer History', {
+              leagueId: leagueId,
+            })
+          }
         />
       </CardSmallContainer>
-
+      <CardMedium
+        title={i18n._(t`Invite Clubs`)}
+        onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+      />
       <CardMedium
         onPress={onScheduleMatches}
         title={i18n._(t`Schedule Matches`)}

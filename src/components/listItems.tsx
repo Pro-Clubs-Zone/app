@@ -245,6 +245,15 @@ export const TwoLine = (props: TwoLineProps) => (
               />
             </View>
             ) */}
+        {props.leftIcon && (
+          <View style={styles.leftIcon}>
+            <Icon
+              name={props.leftIcon}
+              size={verticalScale(24)}
+              color={props.iconColor}
+            />
+          </View>
+        )}
         <View
           style={{
             justifyContent: 'center',

@@ -34,6 +34,7 @@ import Stats from './stats';
 import SignUp from '../auth/signUp';
 import analytics from '@react-native-firebase/analytics';
 import LeagueTeam from './leagueTeam';
+import TransferHistory from './transferHistory';
 
 interface ClubProps {
   clubId: string;
@@ -61,6 +62,9 @@ export type LeagueStackType = {
   'Sign Up': undefined;
   Stats: undefined;
   'League Team': undefined;
+  'Transfer History': {
+    leagueId: string;
+  };
 };
 
 const Stack = createStackNavigator<LeagueStackType>();
@@ -234,6 +238,7 @@ export default function LeagueStack({navigation, route}: Props) {
           />
           <Stack.Screen name="Admin Center" component={AdminCenter} />
           <Stack.Screen name="League Team" component={LeagueTeam} />
+          <Stack.Screen name="Transfer History" component={TransferHistory} />
           {commonStack}
         </Stack.Navigator>
       );
@@ -279,6 +284,7 @@ export default function LeagueStack({navigation, route}: Props) {
             ),
           }}
         />
+        <Stack.Screen name="Transfer History" component={TransferHistory} />
         {commonStack}
       </Stack.Navigator>
     );
