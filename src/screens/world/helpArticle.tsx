@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -19,6 +19,8 @@ import {documentToHtmlString} from '@contentful/rich-text-html-renderer';
 import {Document} from '@contentful/rich-text-types';
 import HTML from 'react-native-render-html';
 import {ListHeading} from '../../components/listItems';
+import {Article} from '../../utils/interface';
+import FullScreenLoading from '../../components/loading';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Help Article'>;
 type ScreenRouteProp = RouteProp<AppNavStack, 'Help Article'>;
@@ -29,23 +31,29 @@ type Props = {
 };
 
 export default function HelpArticle({navigation, route}: Props) {
+  const [articleData, setArticleData] = useState();
+  const [html, setHtml] = useState('');
+  const [loading, setLoading] = useState(true);
+
   const articleId = route.params.id;
-  const articlesContext = useContext(ArticlesContext);
-  const viewedArticle = articlesContext.articles.filter(
-    (article) => article.sys.id === articleId,
-  );
-  const article = viewedArticle[0].fields;
-  const html = documentToHtmlString((article.body as unknown) as Document);
-
-  const images = article.images;
-
-  const related = article.related;
   const windowWidth = useWindowDimensions().width;
+  const articlesContext = useContext(ArticlesContext);
 
-  console.log(html);
+  useEffect(() => {
+    const viewedArticle = articlesContext.articles.filter(
+      (article) => article.sys.id === articleId,
+    );
+    const article = viewedArticle[0].fields;
+    //  const images = article.images;
+    //  const related = article.related;
+    const body = documentToHtmlString((article.body as unknown) as Document);
+    setArticleData(article);
+    setHtml(body);
+    setLoading(false);
+  }, [articlesContext, articleId]);
 
   const onSelectRelated = async (id: string) => {
-    const selectedArticle = related.filter(
+    const selectedArticle = articleData.related.filter(
       (relatedArticle) => relatedArticle.sys.id === id,
     );
 
@@ -60,6 +68,10 @@ export default function HelpArticle({navigation, route}: Props) {
       id,
     });
   };
+
+  if (loading) {
+    return <FullScreenLoading visible={true} />;
+  }
 
   return (
     <ScrollView
@@ -79,7 +91,7 @@ export default function HelpArticle({navigation, route}: Props) {
               marginBottom: verticalScale(16),
             },
           ]}>
-          {article.title}
+          {articleData.title}
         </Text>
         <HTML
           source={{html}}
@@ -134,13 +146,13 @@ export default function HelpArticle({navigation, route}: Props) {
             ),
           }}
         />
-        {images?.length && (
+        {articleData.images?.length && (
           <View
             style={{
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            {images.map((image) => (
+            {articleData.images.map((image) => (
               <Image
                 source={{
                   uri: 'https:' + image.fields.file.url,
@@ -159,14 +171,14 @@ export default function HelpArticle({navigation, route}: Props) {
           </View>
         )}
       </View>
-      {related && (
+      {articleData.related && (
         <>
           <ListHeading col1="Related Articles" />
           <View
             style={{
               padding: verticalScale(16),
             }}>
-            {related.map((relatedArticle) => (
+            {articleData.related.map((relatedArticle) => (
               <RelatedArticle
                 key={relatedArticle.sys.id}
                 title={relatedArticle.fields.title}
