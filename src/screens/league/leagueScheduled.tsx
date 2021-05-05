@@ -96,36 +96,32 @@ export default function LeagueScheduled({navigation}: Props) {
       </CardSmallContainer>
 
       {isPlayer && (
-        <>
-          <CardMedium
-            title={userClub.clubName}
-            // subTitle={`${clubRosterLength} club members`}
-            badgeNumber={clubRequests}
-            onPress={() =>
-              navigation.navigate('My Club', {
-                clubId: userClub.clubId,
-                manager: userClub.manager,
-              })
-            }
-          />
-          <CardSmallContainer>
-            <CardSmall
-              title={i18n._(t`Transfer History`)}
-              onPress={() =>
-                navigation.navigate('Transfer History', {
-                  leagueId: leagueId,
-                })
-              }
-            />
-            <CardSmall
-              title={i18n._(t`Invite Players`)}
-              onPress={() =>
-                shareLeagueLink(leagueContext.league.name, leagueId)
-              }
-            />
-          </CardSmallContainer>
-        </>
+        <CardMedium
+          title={userClub.clubName}
+          // subTitle={`${clubRosterLength} club members`}
+          badgeNumber={clubRequests}
+          onPress={() =>
+            navigation.navigate('My Club', {
+              clubId: userClub.clubId,
+              manager: userClub.manager,
+            })
+          }
+        />
       )}
+      <CardSmallContainer>
+        <CardSmall
+          title={i18n._(t`Transfer History`)}
+          onPress={() =>
+            navigation.navigate('Transfer History', {
+              leagueId: leagueId,
+            })
+          }
+        />
+        <CardSmall
+          title={i18n._(t`Invite Players`)}
+          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+        />
+      </CardSmallContainer>
     </ScrollView>
   );
 }
