@@ -15,7 +15,8 @@
     "android-debug": "npx react-native run-android --variant=devDebug --appIdSuffix=dev",
     "android-release": "npx react-native run-android --variant=devRelease --appIdSuffix=dev",
     "android-assemble": "cd android && ./gradlew clean && ./gradlew assembleProdRelease",
-    "version": "lingui extract && lingui compile && react-native-version"
+    "lingui": "lingui extract && lingui compile",
+    "version": "react-native-version"
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^14.1.2",
