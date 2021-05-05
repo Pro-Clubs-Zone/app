@@ -118,6 +118,7 @@ export default function Club({navigation, route}: Props) {
         selectedPlayer,
         requestSectionTitle,
         acceptRequest,
+        club.clubName,
       );
 
       requestContext.setClubs(newData);
@@ -137,6 +138,8 @@ export default function Club({navigation, route}: Props) {
 
       context.setUserLeagues(currentLeagueData);
     } catch (error) {
+      console.log(error);
+
       throw new Error(error);
     }
   };
@@ -179,7 +182,7 @@ export default function Club({navigation, route}: Props) {
       (player) => player.playerId !== selectedPlayer.playerId,
     );
 
-    await removePlayer(selectedPlayer);
+    await removePlayer({...selectedPlayer, clubName: club.clubName});
     const currentLeagueData = {...context.userLeagues};
     delete currentLeagueData[selectedPlayer.leagueId].clubs[
       selectedPlayer.clubId

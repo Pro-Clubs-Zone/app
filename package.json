@@ -1,6 +1,6 @@
 {
   "name": "ProClubsZone",
-  "version": "2.2.1",
+  "version": "2.4.1",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -15,13 +15,14 @@
     "android-debug": "npx react-native run-android --variant=devDebug --appIdSuffix=dev",
     "android-release": "npx react-native run-android --variant=devRelease --appIdSuffix=dev",
     "android-assemble": "cd android && ./gradlew clean && ./gradlew assembleProdRelease",
-    "version": "lingui extract && lingui compile && react-native-version"
+    "lingui": "lingui extract && lingui compile",
+    "version": "react-native-version"
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^14.1.2",
     "@expo/react-native-action-sheet": "^3.9.0",
     "@lingui/react": "^3.8.10",
-    "@react-native-async-storage/async-storage": "^1.15.2",
+    "@react-native-async-storage/async-storage": "^1.15.4",
     "@react-native-community/image-editor": "^2.3.0",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/analytics": "^11.3.2",

@@ -89,24 +89,21 @@ function ClubRequests({navigation, route}) {
   ) => {
     try {
       setLoading(true);
-      await handleClubRequest(
-        clubRequests.data,
-        selectedPlayer,
-        sectionTitle,
-        acceptRequest,
-      );
+      const clubName =
+        context.userData.leagues[selectedPlayer.leagueId].clubName;
+      await handleClubRequest(selectedPlayer, acceptRequest, clubName);
 
-      const currentLeagueData = {...context.userLeagues};
-      if (acceptRequest) {
-        currentLeagueData[selectedPlayer.leagueId].clubs[
-          selectedPlayer.clubId
-        ].roster[selectedPlayer.playerId].accepted = true;
-      } else {
-        delete currentLeagueData[selectedPlayer.leagueId].clubs[
-          selectedPlayer.clubId
-        ].roster[selectedPlayer.playerId];
-      }
-      context.setUserLeagues(currentLeagueData);
+      // const currentLeagueData = {...context.userLeagues};
+      // if (acceptRequest) {
+      //   currentLeagueData[selectedPlayer.leagueId].clubs[
+      //     selectedPlayer.clubId
+      //   ].roster[selectedPlayer.playerId].accepted = true;
+      // } else {
+      //   delete currentLeagueData[selectedPlayer.leagueId].clubs[
+      //     selectedPlayer.clubId
+      //   ].roster[selectedPlayer.playerId];
+      // }
+      // context.setUserLeagues(currentLeagueData);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -179,7 +176,6 @@ function LeagueRequests({navigation, route}) {
 
   const onHandleLeagueRequest = async (
     selectedClub: IClubRequestData,
-    sectionTitle: string,
     acceptRequest: boolean,
   ) => {
     const userLeague = context.userLeagues[selectedClub.leagueId];
@@ -200,12 +196,7 @@ function LeagueRequests({navigation, route}) {
     }
     try {
       setLoading(true);
-      await handleLeagueRequest(
-        leagueRequests.data,
-        selectedClub,
-        sectionTitle,
-        acceptRequest,
-      );
+      await handleLeagueRequest(selectedClub, acceptRequest);
 
       const currentLeagueData = {...context.userLeagues};
       if (acceptRequest) {
@@ -241,10 +232,10 @@ function LeagueRequests({navigation, route}) {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            onHandleLeagueRequest(item, title, true);
+            onHandleLeagueRequest(item, true);
             break;
           case 1:
-            onHandleLeagueRequest(item, title, false);
+            onHandleLeagueRequest(item, false);
             break;
         }
       },

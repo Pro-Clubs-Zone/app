@@ -74,7 +74,7 @@ export default function AdminCenter({navigation}: Props) {
             matchId={item.data.id}
             homeTeamName={item.data.homeTeamName}
             awayTeamName={item.data.awayTeamName}
-            conflict={item.data.conflict}
+            conflict={item.data.conflict || item.data.motmConflict}
             hasSubmission={item.data.submissionCount === 1}
             onPress={() =>
               navigation.navigate('Match', {

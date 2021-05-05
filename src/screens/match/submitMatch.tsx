@@ -429,7 +429,7 @@ export default function SubmitMatch({navigation}: Props) {
           <ScreenshotUploader
             thumbsCount={3}
             description={i18n._(
-              t`1. Facts - 2. Events - 3. Online Player ID List`,
+              t`1. Facts - 2. Player Ratings - 3. Player ID List`,
             )}
             images={images}
             multiple={true}

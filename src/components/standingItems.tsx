@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Pressable, Text, View} from 'react-native';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
 import {Trans} from '@lingui/macro';
@@ -15,8 +15,10 @@ export const TableRow = ({
   dif = 0,
   pts = 0,
   position = 1,
+  profile,
 }) => (
-  <View
+  <Pressable
+    onPress={profile}
     style={[
       styles.listBg,
       {
@@ -57,7 +59,7 @@ export const TableRow = ({
         {pts}
       </Text>
     </View>
-  </View>
+  </Pressable>
 );
 
 //---------- Standing Table Header ----------//

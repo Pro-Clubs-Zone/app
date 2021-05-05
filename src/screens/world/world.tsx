@@ -5,7 +5,6 @@ import {AppNavStack} from '../index';
 import {CardMedium} from '../../components/cards';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'World'>;
 
@@ -25,7 +24,7 @@ export default function World({navigation}: Props) {
         title={i18n._(t`Get in touch`)}
         onPress={() => navigation.navigate('App Info')}
         subTitle={i18n._(
-          t`Found a bug, have a feature request or just want to stay up-to-date? Reach us out.`,
+          t`Report bugs, request features or just come to say hi!`,
         )}
       />
     </View>

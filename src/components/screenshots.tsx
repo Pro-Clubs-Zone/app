@@ -163,15 +163,21 @@ function MultipleThumbs({
           ]}>
           <Trans>Required Screenshots</Trans>
         </Text>
-        <Text
-          style={[
-            TEXT_STYLES.small,
-            {
-              color: APP_COLORS.Gray,
-            },
-          ]}>
-          {description}
-        </Text>
+        <View
+          style={{
+            paddingHorizontal: verticalScale(8),
+          }}>
+          <Text
+            style={[
+              TEXT_STYLES.small,
+              {
+                color: APP_COLORS.Gray,
+                textAlign: 'center',
+              },
+            ]}>
+            {description}
+          </Text>
+        </View>
       </View>
     </View>
   );

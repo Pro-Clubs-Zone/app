@@ -1,128 +1,70 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2020-12-26 21:16+0100\n"
-"Mime-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: @lingui/cli\n"
-"Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-
-#: src/screens/match/submitMatch.tsx:301
-#~ msgid "1. Facts - 2. Events - 3. Online Player ID List"
-#~ msgstr ""
-
-#: src/screens/match/submitMatch.tsx:301
-msgid "1. Facts - 2. Player Ratings - 3. Player ID List"
-msgstr ""
+"X-Generator: POEditor.com\n"
+"Project-Id-Version: Pro Clubs Zone\n"
+"Language: es\n"
 
 #: src/screens/auth/signUp.tsx:230
-#~ msgid "<0>Already have an account? <1>Log in now.</1></0>"
-#~ msgstr ""
-
 #: src/screens/auth/signIn.tsx:156
-#~ msgid "<0>By signing up you agree to our <1>Privacy Policy.</1></0>"
-#~ msgstr ""
-
 #: src/screens/auth/signIn.tsx:144
-#~ msgid "<0>Don’t have an account? <1>Sign up now.</1></0>"
-#~ msgstr ""
-
 #: src/screens/auth/signIn.tsx:127
-#~ msgid "<0>Forgot login details? <1>Get help recovering it.</1></0>"
-#~ msgstr ""
-
 #: src/screens/club/club.tsx:153
 #: src/screens/league/clubs.tsx:181
 #: src/screens/user/requests.tsx:76
 #: src/screens/user/requests.tsx:142
 msgid "Accept"
-msgstr ""
+msgstr "Aceptar"
 
 #: src/screens/league/clubs.tsx:47
 msgid "Accepted Clubs"
-msgstr ""
+msgstr "Clubes aceptados"
 
 #: src/screens/match/submitMatch.tsx:326
 msgid "Add Players"
-msgstr ""
+msgstr "Añadir jugadores"
 
 #: src/screens/league/leaguePreview.tsx:179
 msgid "Admin"
-msgstr ""
-
-#: src/screens/league/leagueScheduled.tsx:32
-msgid "Admin Center"
-msgstr ""
-
-#: src/screens/leagueAdmin/clubs.tsx:157
-#~ msgid "After removal, you will be to moved the home screen"
-#~ msgstr ""
-
-#: src/screens/league/adminCenter.tsx:43
-msgid "All conflicted and single-submission fixtures will appear here"
-msgstr ""
+msgstr "Admin"
 
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "All new leagues are private by default. You can join one if you have an invitation code."
-msgstr ""
-
-#: src/screens/league/transferHistory.tsx:63
-msgid "All transfer history will appear here"
-msgstr ""
+msgstr "Todas las ligas nuevas son privadas por defecto. Puedes unirte a una si tienes un código de invitación."
 
 #: src/screens/user/requests.tsx:238
 msgid "All your sent requests will appear here"
-msgstr ""
+msgstr "Todas las solicitudes enviadas aparecerán aquí"
 
 #: src/screens/auth/signUp.tsx:221
 msgid "Already have an account?"
-msgstr ""
+msgstr "¿Ya tiene una cuenta?"
 
 #: src/screens/club/clubSettings.tsx:65
 msgid "Are you sure you want to leave this club? This action can't be undone"
-msgstr ""
-
-#: src/screens/match/upcomingMatch.tsx:85
-#~ msgid "Are you sure you want to pick {0} as a winner?"
-#~ msgstr ""
-
-#: src/screens/match/upcomingMatch.tsx:85
-msgid "Are you sure you want to pick {0} as a winner? Take this action only when team(s) didn't show up"
-msgstr ""
+msgstr "¿Estás seguro de que quieres dejar este club? Esta acción no se puede deshacer"
 
 #: src/screens/match/finishedMatch.tsx:265
 msgid "Are you sure you want to remove player stats submission for this match?"
-msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:119
-msgid "Are you sure you want to remove selected admin?"
-msgstr ""
+msgstr "¿Estás seguro de que quieres eliminar el envío de estadísticas de los jugadores para este partido?"
 
 #: src/screens/club/club.tsx:138
 msgid "Are you sure you want to remove this player?"
-msgstr ""
+msgstr "¿Está seguro de que quiere eliminar este jugador?"
 
 #: src/screens/club/clubSettings.tsx:44
 msgid "Are you sure you want to remove your club? This action can't be undone"
-msgstr ""
+msgstr "¿Estás seguro de que quieres eliminar tu club? Esta acción no se puede deshacer"
 
 #: src/screens/user/requests.tsx:224
 msgid "Are you sure you want to remove your sent request?"
-msgstr ""
+msgstr "¿Está seguro de que quiere eliminar su solicitud enviada?"
 
 #: src/screens/league/leaguePreSeason.tsx:80
 msgid "Are you sure you want to schedule matches and start the league?"
-msgstr ""
-
-#: src/screens/club/createClub.tsx:162
-msgid "As this league is already scheduled, you will be placed on the waiting list until league admin accepts your club."
-msgstr ""
+msgstr "¿Estás seguro de que quieres programar los partidos y empezar la liga?"
 
 #: src/screens/auth/resetPassword.tsx:51
 #: src/screens/auth/signIn.tsx:84
@@ -130,34 +72,21 @@ msgstr ""
 #: src/screens/auth/signUp.tsx:94
 #: src/screens/auth/signUp.tsx:206
 msgid "At least {0} characters"
-msgstr ""
+msgstr "Al menos {0} caracteres"
 
 #: src/screens/club/createClub.tsx:53
 #: src/screens/league/createLeague.tsx:112
 msgid "At least {0} letters"
-msgstr ""
+msgstr "Al menos {0} letras"
 
 #: src/screens/user/requests.tsx:112
 #: src/screens/user/requests.tsx:112
 msgid "Can't accept club due to league team limit. Either remove accepted teams or decline this request."
-msgstr ""
-
-#: src/screens/league/clubs.tsx:144
-#: src/screens/league/clubs.tsx:144
-msgid "Can't accept club due to league team limit. Remove or swap accepted clubs, or decline this request."
-msgstr ""
+msgstr "No se puede aceptar el club debido al límite de equipos de la liga. Retira los equipos aceptados o rechaza esta solicitud."
 
 #: src/screens/match/submitStats.tsx:136
 msgid "Can't access storage"
-msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:84
-msgid "Can't invite the user"
-msgstr ""
-
-#: src/screens/league/clubs.tsx:102
-msgid "Can't swap admin club"
-msgstr ""
+msgstr "No se puede acceder al almacenamiento"
 
 #: src/screens/club/club.tsx:147
 #: src/screens/club/club.tsx:153
@@ -177,26 +106,13 @@ msgstr ""
 #: src/screens/user/requests.tsx:142
 #: src/screens/user/requests.tsx:233
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: src/screens/league/joinClub.tsx:108
 #: src/screens/user/leagueExplorer.tsx:36
-#~ msgid "Check out later"
-#~ msgstr ""
-
 #: src/screens/league/leagueScheduled.tsx:39
 msgid "Check out the league leaders"
-msgstr ""
-
-#: src/screens/auth/signIn.tsx:105
-#: src/screens/auth/signIn.tsx:105
-#: src/screens/auth/signIn.tsx:105
-#~ msgid "Check your email"
-#~ msgstr ""
-
-#: src/screens/user/home.tsx:39
-msgid "Check your email for verification link. Also make sure to check Spam folder."
-msgstr ""
+msgstr "Consulta los líderes de la liga"
 
 #: src/screens/auth/passwordRecovery.tsx:69
 #: src/screens/auth/resetPassword.tsx:68
@@ -225,176 +141,131 @@ msgstr ""
 #: src/screens/user/requests.tsx:114
 #: src/screens/user/requests.tsx:114
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #: src/screens/match/finishedMatch.tsx:144
 msgid "Club"
-msgstr ""
+msgstr "Club"
 
 #: src/screens/user/requests.tsx:34
 msgid "Club - {0}"
-msgstr ""
+msgstr "Club - {0}"
 
 #: src/screens/club/createClub.tsx:131
 #: src/screens/club/createClub.tsx:131
 msgid "Club Name"
-msgstr ""
+msgstr "Nombre del club"
 
 #: src/screens/user/home.tsx:63
 #: src/screens/user/requests.tsx:96
 msgid "Club Requests"
-msgstr ""
+msgstr "Solicitudes de los clubes"
 
 #: src/screens/club/joinClub.tsx:107
 msgid "Clubs"
-msgstr ""
+msgstr "Clubes"
 
 #: src/screens/match/upcomingMatch.tsx:235
 msgid "Coming Soon"
-msgstr ""
+msgstr "Próximamente"
 
 #: src/screens/league/leaguePreview.tsx:180
 msgid "Communication"
-msgstr ""
+msgstr "Comunicación"
 
 #: src/screens/match/submitMatch.tsx:285
 #: src/screens/match/upcomingMatch.tsx:91
 msgid "Confirm"
-msgstr ""
-
-#: src/screens/league/clubs.tsx:116
-msgid "Confirm Swap"
-msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:75
-msgid "Confirmation is sent to user's email. Once confirmed, user will become an admin."
-msgstr ""
+msgstr "Confirmar"
 
 #: src/screens/match/upcomingMatch.tsx:242
 msgid "Conflict Match"
-msgstr ""
-
-#: src/screens/match/upcomingMatch.tsx:102
-#~ msgid "Conflict Resolved"
-#~ msgstr ""
-
-#: src/screens/league/createLeague.tsx:130
-msgid "Contact PRZ to create more than one league."
-msgstr ""
-
-#: src/screens/league/createLeague.tsx:331
-msgid "Contact PRZ to enable this option"
-msgstr ""
+msgstr "Partido del Conflicto"
 
 #: src/screens/club/createClub.tsx:170
 msgid "Create Club"
-msgstr ""
+msgstr "Crear un club"
 
 #: src/screens/league/createLeague.tsx:342
 #: src/screens/user/leagues.tsx:54
 msgid "Create League"
-msgstr ""
+msgstr "Crear Liga"
 
 #: src/screens/league/leaguePreSeason.tsx:151
 msgid "Create Your Club"
-msgstr ""
-
-#: src/screens/league/clubs.tsx:102
-msgid "Currently admins can't swap their own club"
-msgstr ""
+msgstr "Crea tu club"
 
 #: src/screens/club/joinClub.tsx:107
 msgid "Currently this league has no accepted clubs. Check out later"
-msgstr ""
+msgstr "Actualmente esta liga no tiene clubes aceptados. Compruébalo más adelante"
 
 #: src/components/standingItems.tsx:76
 msgid "D"
-msgstr ""
-
-#: src/screens/league/transferHistory.tsx:63
-msgid "Day/Month"
-msgstr ""
+msgstr "D"
 
 #: src/screens/club/club.tsx:153
 #: src/screens/league/clubs.tsx:181
 #: src/screens/user/requests.tsx:76
 #: src/screens/user/requests.tsx:142
 msgid "Decline"
-msgstr ""
+msgstr "Declinación"
 
 #: src/screens/league/leaguePreview.tsx:52
 msgid "Delete League?"
-msgstr ""
+msgstr "¿Borrar la Liga?"
 
 #: src/screens/league/createLeague.tsx:334
 msgid "Describe your league and its rules"
-msgstr ""
+msgstr "Describa su liga y sus reglas"
 
 #: src/screens/league/createLeague.tsx:222
-#~ msgid "Describe your league in a few sentences..."
-#~ msgstr ""
-
 #: src/screens/league/createLeague.tsx:334
 msgid "Description"
-msgstr ""
-
-#: src/screens/auth/signIn.tsx:143
-msgid "Don’t have an account?"
-msgstr ""
+msgstr "Descripción"
 
 #: src/screens/auth/passwordRecovery.tsx:94
 #: src/screens/auth/signIn.tsx:122
 #: src/screens/auth/signUp.tsx:201
 msgid "E-mail"
-msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:182
-msgid "Email"
-msgstr ""
+msgstr "Correo electrónico"
 
 #: src/screens/auth/passwordRecovery.tsx:48
 #: src/screens/auth/signIn.tsx:72
 #: src/screens/auth/signUp.tsx:74
 #: src/screens/league/leagueTeam.tsx:49
 msgid "Email is badly formatted"
-msgstr ""
+msgstr "El correo electrónico está mal formateado"
 
 #: src/screens/user/home.tsx:249
 msgid "Email is not verified"
-msgstr ""
+msgstr "El correo electrónico no está verificado"
 
 #: src/screens/league/createLeague.tsx:138
 #: src/screens/league/createLeague.tsx:138
 #: src/screens/league/leaguePreview.tsx:113
 #: src/screens/league/leaguePreview.tsx:113
-#~ msgid "Email not verified"
-#~ msgstr ""
-
 #: src/screens/auth/passwordRecovery.tsx:94
 #: src/screens/auth/signIn.tsx:122
 #: src/screens/auth/signUp.tsx:201
 #: src/screens/league/leagueTeam.tsx:182
 msgid "Enter E-mail"
-msgstr ""
+msgstr "Introduzca el correo electrónico"
 
 #: src/screens/auth/resetPassword.tsx:93
 #: src/screens/auth/signIn.tsx:123
 #: src/screens/auth/signUp.tsx:206
 msgid "Enter Password"
-msgstr ""
+msgstr "Introduzca la contraseña"
 
 #: src/components/scoreboard.tsx:71
 msgid "Enter Score"
-msgstr ""
+msgstr "Introduzca la puntuación"
 
 #: src/screens/auth/signUp.tsx:212
 msgid "Enter Username"
-msgstr ""
+msgstr "Introduzca el nombre de usuario"
 
 #: src/screens/league/createLeague.tsx:300
-#~ msgid "Everyone can send requests to join"
-#~ msgstr ""
-
 #: src/screens/auth/passwordRecovery.tsx:52
 #: src/screens/auth/resetPassword.tsx:47
 #: src/screens/auth/signIn.tsx:76
@@ -406,558 +277,383 @@ msgstr ""
 #: src/screens/league/createLeague.tsx:108
 #: src/screens/league/leagueTeam.tsx:53
 msgid "Field can't be empty"
-msgstr ""
-
-#: src/screens/world/world.tsx:8
-msgid "Find answers to most frequently asked questions."
-msgstr ""
-
-#: src/screens/auth/signIn.tsx:128
-msgid "Forgot login details?"
-msgstr ""
+msgstr "El campo no puede estar vacío"
 
 #: src/screens/world/world.tsx:9
-#~ msgid "Found a bug, have a feature request or just want to stay up-to-date? Reach us out."
-#~ msgstr ""
-
 #: src/components/standingItems.tsx:82
 msgid "GD"
-msgstr ""
+msgstr "GD"
 
 #: src/screens/auth/passwordRecovery.tsx:95
 msgid "Get Reset Link"
-msgstr ""
-
-#: src/screens/auth/signIn.tsx:130
-msgid "Get help recovering it."
-msgstr ""
-
-#: src/screens/world/world.tsx:9
-msgid "Get in touch"
-msgstr ""
+msgstr "Obtener el enlace de reinicio"
 
 #: src/screens/match/finishedMatch.tsx:158
 #: src/screens/match/finishedMatch.tsx:162
 msgid "Goals"
-msgstr ""
-
-#: src/screens/world/world.tsx:8
-msgid "Help"
-msgstr ""
-
-#: src/screens/league/createLeague.tsx:314
-#: src/screens/league/createLeague.tsx:321
-msgid "Home/Away"
-msgstr ""
+msgstr "Objetivos"
 
 #: src/screens/match/submitStats.tsx:254
 msgid "I played as a Goalkeeper"
-msgstr ""
-
-#: src/screens/user/home.tsx:260
-msgid "I've verified"
-msgstr ""
-
-#: src/screens/match/submitMatch.tsx:199
-#: src/screens/match/submitMatch.tsx:199
-#: src/screens/match/submitMatch.tsx:236
-#: src/screens/match/submitStats.tsx:159
-#: src/screens/match/submitStats.tsx:159
-#: src/screens/match/submitStats.tsx:179
-#: src/screens/match/submitStats.tsx:179
-msgid "If this issue occurs often, please report to us."
-msgstr ""
+msgstr "He jugado como portero"
 
 #: src/screens/league/leaguePreSeason.tsx:151
 msgid "If you want to participate in your own league"
-msgstr ""
+msgstr "Si quieres participar en tu propia liga"
 
 #: src/screens/league/createLeague.tsx:116
 #: src/screens/league/createLeague.tsx:120
 msgid "Invalid URL format"
-msgstr ""
+msgstr "Formato de URL inválido"
 
 #: src/screens/league/actions/shareLink.tsx:45
 #: src/screens/league/actions/shareLink.tsx:45
 #: src/screens/league/leaguePreSeason.tsx:162
 msgid "Invite Clubs"
-msgstr ""
+msgstr "Invitar a los clubes"
 
 #: src/screens/league/leagueScheduled.tsx:56
 msgid "Invite Players"
-msgstr ""
-
-#: src/screens/league/actions/shareLink.tsx:45
-#: src/screens/league/actions/shareLink.tsx:45
-#~ msgid "Invite clubs"
-#~ msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:178
-msgid "Invite new admin"
-msgstr ""
+msgstr "Invitar a los jugadores"
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:115
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:115
-#~ msgid "Invite people"
-#~ msgstr ""
-
 #: src/screens/league/leaguePreview.tsx:52
 msgid "It is impossible to recover deleted league. After removal the app will restart"
-msgstr ""
+msgstr "Es imposible recuperar la liga borrada. Después de la eliminación, la aplicación se reiniciará"
 
 #: src/screens/auth/completeSignIn.tsx:45
 #: src/screens/auth/completeSignIn.tsx:61
-#~ msgid "It seems you've used wrong sign in link, please try again."
-#~ msgstr ""
-
 #: src/screens/league/leaguePreview.tsx:122
-#~ msgid "Join"
-#~ msgstr ""
-
 #: src/screens/club/joinClub.tsx:92
 msgid "Join Club"
-msgstr ""
+msgstr "Únete al Club"
 
 #: src/screens/league/leaguePreview.tsx:199
 msgid "Join League"
-msgstr ""
+msgstr "Únase a la Liga"
 
 #: src/screens/league/leaguePreview.tsx:120
-#~ msgid "Join as a Player"
-#~ msgstr ""
-
 #: src/screens/user/leagues.tsx:55
 msgid "Join leagues that are open to public"
-msgstr ""
+msgstr "Únase a las ligas abiertas al público"
 
 #: src/screens/leagueAdmin/leaguePreSeason.tsx:139
-#~ msgid "Join {0} on Pro Clubs Zone!"
-#~ msgstr ""
-
 #: src/screens/league/actions/shareLink.tsx:38
 msgid "Join {leagueName} on Pro Clubs Zone!"
-msgstr ""
+msgstr "¡Únete a {leagueName} en Pro Clubs Zone!"
 
 #: src/components/standingItems.tsx:79
 msgid "L"
-msgstr ""
-
-#: src/screens/user/settings.tsx:63
-#: src/screens/user/settings.tsx:63
-msgid "Language"
-msgstr ""
+msgstr "L"
 
 #: src/screens/index.tsx:164
-#~ msgid "Later"
-#~ msgstr ""
-
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "League"
-msgstr ""
+msgstr "Liga"
 
 #: src/screens/user/requests.tsx:37
 msgid "League - {0}"
-msgstr ""
+msgstr "Liga - {0}"
 
 #: src/screens/league/leaguePreSeason.tsx:153
 #: src/screens/league/leagueScheduled.tsx:33
 msgid "League Clubs"
-msgstr ""
+msgstr "Clubes de la Liga"
 
 #: src/screens/user/leagues.tsx:55
 msgid "League Explorer"
-msgstr ""
+msgstr "Explorador de la Liga"
 
 #: src/screens/league/createLeague.tsx:130
 msgid "League Limit Reached"
-msgstr ""
+msgstr "Límite de la liga alcanzado"
 
 #: src/screens/league/createLeague.tsx:127
-#~ msgid "League Name"
-#~ msgstr ""
-
 #: src/screens/league/createLeague.tsx:195
 msgid "League Name (required)"
-msgstr ""
+msgstr "Nombre de la liga (obligatorio)"
 
 #: src/screens/user/home.tsx:108
 #: src/screens/user/requests.tsx:162
 msgid "League Requests"
-msgstr ""
+msgstr "Solicitudes de la Liga"
 
 #: src/screens/league/leagueScheduled.tsx:39
 msgid "League Stats"
-msgstr ""
+msgstr "Estadísticas de la liga"
 
 #: src/screens/league/leaguePreSeason.tsx:164
 msgid "League is full and matches can be scheduled"
-msgstr ""
+msgstr "La liga está llena y se pueden programar partidos"
 
 #: src/screens/league/league.tsx:58
 msgid "League link has expired or wrong"
-msgstr ""
+msgstr "El enlace de la liga ha caducado o es erróneo"
 
 #: src/screens/league/league.tsx:58
 msgid "League not found"
-msgstr ""
+msgstr "Liga no encontrada"
 
 #: src/screens/league/leaguePreview.tsx:197
 msgid "League not started"
-msgstr ""
+msgstr "Liga no iniciada"
 
 #: src/screens/club/clubSettings.tsx:67
 msgid "Leave"
-msgstr ""
+msgstr "Deja"
 
 #: src/screens/club/clubSettings.tsx:93
 msgid "Leave Club"
-msgstr ""
+msgstr "Dejar el club"
 
 #: src/screens/league/fixtures.tsx:53
 #: src/screens/league/fixtures.tsx:85
 msgid "Load more"
-msgstr ""
+msgstr "Cargar más"
 
 #: src/components/loading.tsx:24
 #: src/components/loading.tsx:38
 #: src/screens/match/upcomingMatch.tsx:150
 msgid "Loading"
-msgstr ""
+msgstr "Cargando"
 
 #: src/components/matchConflictItem.tsx:17
 #: src/screens/match/submitMatch.tsx:315
 msgid "MOTM"
-msgstr ""
-
-#: src/screens/match/submitStats.tsx:215
-msgid "Make sure you are uploading screenshot made in-game from your console"
-msgstr ""
+msgstr "MOTM"
 
 #: src/screens/match/finishedMatch.tsx:120
 msgid "Man of the Match"
-msgstr ""
-
-#: src/screens/league/clubs.tsx:235
-msgid "Manage"
-msgstr ""
-
-#: src/screens/league/leaguePreSeason.tsx:148
-msgid "Manage your current roster"
-msgstr ""
+msgstr "Hombre del partido"
 
 #: src/screens/user/home.tsx:240
 msgid "Manage your received and sent request"
-msgstr ""
+msgstr "Gestionar las solicitudes recibidas y enviadas"
 
 #: src/screens/league/leaguePreview.tsx:109
 msgid "Manager"
-msgstr ""
+msgstr "Director técnico "
 
 #: src/screens/match/finishedMatch.tsx:214
 #: src/screens/match/finishedMatch.tsx:218
 msgid "Manager uploaded no images"
-msgstr ""
+msgstr "El entrenador no ha subido ninguna imagen"
 
 #: src/screens/user/home.tsx:218
-#~ msgid "Manager your received and sent request"
-#~ msgstr ""
-
 #: src/screens/match/upcomingMatch.tsx:55
 msgid "Match Resolved"
-msgstr ""
-
-#: src/screens/match/finishedMatch.tsx:36
-#~ msgid "Match Stats & Info"
-#~ msgstr ""
-
-#: src/screens/match/upcomingMatch.tsx:243
-msgid "Match Submissions"
-msgstr ""
+msgstr "Partido resuelto"
 
 #: src/screens/match/submitMatch.tsx:106
 msgid "Match cannot be published due to conflict."
-msgstr ""
+msgstr "El partido no puede ser publicado debido a un conflicto."
 
 #: src/screens/match/upcomingMatch.tsx:104
 msgid "Match is a draw"
-msgstr ""
+msgstr "El partido es un empate"
 
 #: src/screens/match/submitMatch.tsx:165
 msgid "Match scores are missing"
-msgstr ""
+msgstr "Faltan los resultados de los partidos"
 
 #: src/screens/match/submitMatch.tsx:102
 #: src/screens/match/upcomingMatch.tsx:56
 msgid "Match was published with the selected result"
-msgstr ""
+msgstr "Se ha publicado el partido con el resultado seleccionado"
 
 #: src/screens/match/submitMatch.tsx:111
 msgid "Match will be published once opponent submits their result"
-msgstr ""
+msgstr "El partido se publicará una vez que el oponente envíe su resultado"
 
 #: src/screens/match/submitMatch.tsx:105
 msgid "Match will be reviewed"
-msgstr ""
+msgstr "El partido será revisado"
 
 #: src/screens/league/createLeague.tsx:281
 #: src/screens/league/createLeague.tsx:281
-#~ msgid "Matches"
-#~ msgstr ""
-
 #: src/screens/club/createClub.tsx:131
 #: src/screens/league/createLeague.tsx:195
 msgid "Minimum {0} letters, no profanity"
-msgstr ""
-
-#: src/screens/match/submitMatch.tsx:176
-#~ msgid "More goals or assists than team has scored"
-#~ msgstr ""
-
-#: src/screens/user/leagues.tsx:42
-msgid "My Leagues & Clubs"
-msgstr ""
-
-#: src/screens/user/home.tsx:199
-msgid "My Matches"
-msgstr ""
+msgstr "Mínimo {0} letras, sin blasfemia"
 
 #: src/screens/user/home.tsx:240
 msgid "My Requests"
-msgstr ""
+msgstr "Mis peticiones"
 
 #: src/screens/club/club.tsx:50
 #: src/screens/league/clubs.tsx:51
 #: src/screens/league/clubs.tsx:230
 msgid "New Requests"
-msgstr ""
-
-#: src/screens/index.tsx:144
-msgid "New app version available."
-msgstr ""
+msgstr "Nuevas solicitudes"
 
 #: src/screens/auth/resetPassword.tsx:79
 msgid "New password is not strong enough."
-msgstr ""
+msgstr "La nueva contraseña no es lo suficientemente fuerte."
 
 #: src/screens/club/club.tsx:50
-#~ msgid "New requests"
-#~ msgstr ""
-
 #: src/screens/user/home.tsx:184
-#~ msgid "Next Matches"
-#~ msgstr ""
-
 #: src/screens/club/joinClub.tsx:107
 msgid "No Accepted Clubs"
-msgstr ""
+msgstr "Clubes no aceptados"
 
 #: src/components/userLeagueCard.tsx:29
 msgid "No Club"
-msgstr ""
+msgstr "Ningún club"
 
 #: src/screens/league/clubs.tsx:235
 msgid "No Clubs in League"
-msgstr ""
+msgstr "No hay clubes en la liga"
 
 #: src/screens/league/fixtures.tsx:40
 #: src/screens/league/fixtures.tsx:72
 msgid "No Fixtures"
-msgstr ""
+msgstr "No hay cruces"
 
 #: src/screens/match/finishedMatch.tsx:154
 msgid "No MOTM"
-msgstr ""
+msgstr "No hay MOTM"
 
 #: src/screens/league/stats.tsx:101
-#~ msgid "No Players yet"
-#~ msgstr ""
-
 #: src/components/matchConflictItem.tsx:20
 msgid "No Proof"
-msgstr ""
+msgstr "No hay pruebas"
 
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "No Public Leagues"
-msgstr ""
+msgstr "No hay ligas públicas"
 
 #: src/screens/league/transferHistory.tsx:63
-msgid "No Transfers"
-msgstr ""
-
-#: src/screens/league/transferHistory.tsx:63
-#~ msgid "No Trasfers"
-#~ msgstr ""
-
 #: src/screens/user/home.tsx:235
 msgid "No Upcoming Matches"
-msgstr ""
-
-#: src/screens/league/adminCenter.tsx:43
-msgid "No fixtures"
-msgstr ""
+msgstr "No hay próximos partidos"
 
 #: src/screens/match/finishedMatch.tsx:159
 #: src/screens/match/finishedMatch.tsx:163
 msgid "No goalscorers"
-msgstr ""
-
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:157
-#~ msgid "No members except you"
-#~ msgstr ""
-
-#: src/screens/match/submitMatch.tsx:217
-#: src/screens/match/submitMatch.tsx:217
-msgid "No players added"
-msgstr ""
+msgstr "Sin goleadores"
 
 #: src/screens/league/stats.tsx:134
 msgid "No players yet"
-msgstr ""
-
-#: src/screens/match/submitStats.tsx:189
-#: src/screens/match/submitStats.tsx:189
-msgid "No screenshot uploaded"
-msgstr ""
+msgstr "Todavía no hay jugadores"
 
 #: src/screens/match/finishedMatch.tsx:214
 #: src/screens/match/finishedMatch.tsx:218
 #: src/screens/match/finishedMatch.tsx:320
 #: src/screens/match/finishedMatch.tsx:324
 msgid "No screenshots"
-msgstr ""
+msgstr "No hay capturas de pantalla"
 
 #: src/screens/auth/signUp.tsx:98
 msgid "No space character"
-msgstr ""
+msgstr "Sin carácter de espacio"
 
 #: src/screens/league/stats.tsx:136
 msgid "No stats available"
-msgstr ""
+msgstr "No hay estadísticas disponibles"
 
 #: src/screens/match/submitStats.tsx:252
 msgid "Options"
-msgstr ""
+msgstr "Opciones"
 
 #: src/components/standingItems.tsx:70
 msgid "PL"
-msgstr ""
+msgstr "PL"
 
 #: src/screens/auth/signUp.tsx:212
 msgid "PSN or Xbox Username"
-msgstr ""
+msgstr "Nombre de usuario de PSN o Xbox"
 
 #: src/components/standingItems.tsx:91
 msgid "PTS"
-msgstr ""
+msgstr "PTS"
 
 #: src/screens/match/submitMatch.tsx:315
 msgid "Participated Players"
-msgstr ""
+msgstr "Jugadores participantes"
 
 #: src/screens/auth/resetPassword.tsx:93
 #: src/screens/auth/signIn.tsx:123
 #: src/screens/auth/signUp.tsx:206
 msgid "Password"
-msgstr ""
+msgstr "Contraseña"
 
 #: src/screens/auth/resetPassword.tsx:66
 msgid "Password Changed"
-msgstr ""
+msgstr "Contraseña cambiada"
 
 #: src/screens/auth/passwordRecovery.tsx:67
 msgid "Password Reset"
-msgstr ""
+msgstr "Restablecimiento de la contraseña"
 
 #: src/screens/auth/resetPassword.tsx:76
 msgid "Password reset code has expired"
-msgstr ""
+msgstr "El código de restablecimiento de la contraseña ha caducado"
 
 #: src/screens/auth/passwordRecovery.tsx:67
 msgid "Password reset link was send to your email"
-msgstr ""
+msgstr "El enlace para restablecer la contraseña fue enviado a su correo electrónico"
 
 #: src/screens/match/upcomingMatch.tsx:235
 msgid "Past Fixtures"
-msgstr ""
+msgstr "Partidos anteriores"
 
 #: src/components/matchConflictItem.tsx:29
-#~ msgid "Pick Player"
-#~ msgstr ""
-
 #: src/components/matchConflictItem.tsx:21
 msgid "Pick Result"
-msgstr ""
+msgstr "Resultado de la selección"
 
 #: src/screens/league/createLeague.tsx:204
 msgid "Platform"
-msgstr ""
+msgstr "Plataforma"
 
 #: src/screens/league/leaguePreview.tsx:109
 #: src/screens/match/finishedMatch.tsx:128
 msgid "Player"
-msgstr ""
+msgstr "Jugador"
 
 #: src/screens/match/submitStats.tsx:233
 msgid "Player Performance"
-msgstr ""
+msgstr "Rendimiento de los jugadores"
 
 #: src/screens/match/finishedMatch.tsx:290
 msgid "Player performance stats submission for this match was removed"
-msgstr ""
+msgstr "Se ha eliminado el envío de estadísticas de rendimiento de los jugadores para este partido"
 
 #: src/screens/match/finishedMatch.tsx:320
 #: src/screens/match/finishedMatch.tsx:324
 msgid "Players uploaded no images"
-msgstr ""
-
-#: src/screens/match/submitMatch.tsx:217
-#: src/screens/match/submitMatch.tsx:217
-msgid "Please select all the participated players from your roster to submit the match."
-msgstr ""
+msgstr "Los jugadores no han subido ninguna imagen"
 
 #: src/screens/league/createLeague.tsx:55
 msgid "Please sign in first to create a league"
-msgstr ""
-
-#: src/screens/match/submitStats.tsx:189
-#: src/screens/match/submitStats.tsx:189
-msgid "Please upload in-game screenshot taken from the console"
-msgstr ""
+msgstr "Por favor, regístrese primero para crear una liga"
 
 #: src/screens/league/createLeague.tsx:138
 #: src/screens/league/createLeague.tsx:138
 #: src/screens/league/leaguePreview.tsx:113
 #: src/screens/league/leaguePreview.tsx:113
-#~ msgid "Please verify your email before joining a league"
-#~ msgstr ""
-
 #: src/screens/match/submitStats.tsx:215
 msgid "Problem processing image"
-msgstr ""
+msgstr "Problema de procesamiento de la imagen"
 
 #: src/screens/league/createLeague.tsx:325
 msgid "Public League"
-msgstr ""
+msgstr "Liga pública"
 
 #: src/screens/match/finishedMatch.tsx:149
 msgid "Rating"
-msgstr ""
+msgstr "Clasificación"
 
 #: src/screens/user/requests.tsx:93
-#~ msgid "Receive club requests will appear here"
-#~ msgstr ""
-
 #: src/screens/user/requests.tsx:157
-#~ msgid "Receive league requests will appear here"
-#~ msgstr ""
-
 #: src/screens/user/requests.tsx:96
 msgid "Received club requests will appear here"
-msgstr ""
+msgstr "Las solicitudes de clubes recibidas aparecerán aquí"
 
 #: src/screens/user/requests.tsx:162
 msgid "Received league requests will appear here"
-msgstr ""
+msgstr "Las solicitudes de liga recibidas aparecerán aquí"
 
 #: src/screens/club/club.tsx:140
 #: src/screens/club/clubSettings.tsx:46
@@ -966,194 +662,140 @@ msgstr ""
 #: src/screens/match/finishedMatch.tsx:267
 #: src/screens/user/requests.tsx:226
 msgid "Remove"
-msgstr ""
+msgstr "Eliminar"
 
 #: src/screens/club/clubSettings.tsx:36
 #: src/screens/club/clubSettings.tsx:44
 #: src/screens/club/clubSettings.tsx:93
 #: src/screens/league/clubs.tsx:207
 msgid "Remove Club"
-msgstr ""
+msgstr "Eliminar el club"
 
 #: src/screens/club/club.tsx:138
 msgid "Remove Player"
-msgstr ""
+msgstr "Retirar al jugador"
 
 #: src/screens/match/finishedMatch.tsx:313
 msgid "Remove Player Stat"
-msgstr ""
+msgstr "Eliminar la estadística del jugador"
 
 #: src/screens/user/requests.tsx:224
 msgid "Remove Request"
-msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:119
-msgid "Remove admin"
-msgstr ""
+msgstr "Retirar la solicitud"
 
 #: src/screens/league/leaguePreview.tsx:154
 msgid "Removing League..."
-msgstr ""
+msgstr "Eliminación de la Liga..."
 
 #: src/screens/match/finishedMatch.tsx:265
 msgid "Removing player stats"
-msgstr ""
+msgstr "Eliminación de las estadísticas de los jugadores"
 
 #: src/screens/league/leagueScheduled.tsx:41
-#~ msgid "Report Center"
-#~ msgstr ""
-
 #: src/screens/match/actions/shareMatchDetails.tsx:19
 #: src/screens/match/actions/shareMatchDetails.tsx:19
 msgid "Report Match"
-msgstr ""
-
-#: src/screens/world/world.tsx:9
-msgid "Report bugs, request features or just come to say hi!"
-msgstr ""
+msgstr "Informe del partido"
 
 #: src/screens/league/leaguePreview.tsx:198
 msgid "Request Sent"
-msgstr ""
+msgstr "Solicitud enviada"
 
 #: src/components/screenshots.tsx:81
 msgid "Required Screenshots"
-msgstr ""
-
-#: src/screens/user/home.tsx:256
-msgid "Resend"
-msgstr ""
+msgstr "Capturas de pantalla necesarias"
 
 #: src/screens/league/createLeague.tsx:140
 #: src/screens/league/createLeague.tsx:140
 #: src/screens/league/leaguePreview.tsx:115
 #: src/screens/league/leaguePreview.tsx:115
-#~ msgid "Resend verification"
-#~ msgstr ""
-
 #: src/screens/auth/resetPassword.tsx:94
 msgid "Reset Password"
-msgstr ""
+msgstr "Restablecer contraseña"
 
 #: src/screens/match/upcomingMatch.tsx:85
-#~ msgid "Resolve Match"
-#~ msgstr ""
-
 #: src/screens/match/submitMatch.tsx:101
 #: src/screens/match/submitMatch.tsx:110
 msgid "Result Submitted"
-msgstr ""
+msgstr "Resultado presentado"
 
 #: src/screens/league/leagueScheduled.tsx:32
 msgid "Review and resolve all conflicted matches"
-msgstr ""
+msgstr "Revisar y resolver todos los partidos conflictivos"
 
 #: src/screens/club/club.tsx:46
 #: src/screens/match/submitMatch.tsx:285
 msgid "Roster"
-msgstr ""
-
-#: src/screens/league/createLeague.tsx:321
-#: src/screens/league/createLeague.tsx:321
-msgid "Rounds"
-msgstr ""
+msgstr "Plantilla "
 
 #: src/screens/league/leaguePreSeason.tsx:82
 msgid "Schedule"
-msgstr ""
+msgstr "Programar"
 
 #: src/screens/league/leaguePreSeason.tsx:80
 #: src/screens/league/leaguePreSeason.tsx:95
 #: src/screens/league/leaguePreSeason.tsx:163
 msgid "Schedule Matches"
-msgstr ""
+msgstr "Programar los partidos"
 
 #: src/screens/league/leaguePreSeason.tsx:134
 msgid "Scheduling Matches..."
-msgstr ""
+msgstr "Programación de partidos..."
 
 #: src/components/picker.tsx:19
 msgid "Select"
-msgstr ""
+msgstr "Seleccione"
 
 #: src/screens/league/createLeague.tsx:204
 msgid "Select Platform"
-msgstr ""
+msgstr "Seleccione la plataforma"
 
 #: src/screens/club/joinClub.tsx:94
 msgid "Send Request"
-msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:186
-msgid "Send invite"
-msgstr ""
+msgstr "Enviar solicitud"
 
 #: src/screens/club/joinClub.tsx:92
 msgid "Send request to {0} to join?"
-msgstr ""
+msgstr "Enviar solicitud a {0} para unirse?"
 
 #: src/screens/user/requests.tsx:40
 msgid "Sent - {mySentRequests}"
-msgstr ""
+msgstr "Enviado - {mySentRequests}"
 
 #: src/screens/user/requests.tsx:238
 msgid "Sent Requests"
-msgstr ""
+msgstr "Solicitudes enviadas"
 
 #: src/screens/user/leagues.tsx:54
 msgid "Set up the league and invite players"
-msgstr ""
+msgstr "Crear la liga e invitar a los jugadores"
 
 #: src/screens/league/leagueScheduled.tsx:48
-#~ msgid "Share league link with other players to invite them to your club"
-#~ msgstr ""
-
 #: src/screens/match/actions/shareMatchDetails.tsx:17
 #: src/screens/match/actions/shareMatchDetails.tsx:17
 msgid "Share report with admin"
-msgstr ""
+msgstr "Compartir el informe con el administrador"
 
 #: src/screens/auth/signIn.tsx:124
 #: src/screens/league/createLeague.tsx:57
 msgid "Sign In"
-msgstr ""
+msgstr "Registrarse"
 
 #: src/screens/auth/signUp.tsx:213
 msgid "Sign Up"
-msgstr ""
+msgstr "Inscríbete"
 
 #: src/screens/auth/signUp.tsx:223
 msgid "Sign in now"
-msgstr ""
+msgstr "Acceder ahora"
 
 #: src/screens/league/createLeague.tsx:55
 msgid "Sign in to continue"
-msgstr ""
-
-#: src/screens/auth/signIn.tsx:145
-msgid "Sign up now."
-msgstr ""
-
-#: src/screens/auth/completeSignIn.tsx:72
-#~ msgid "Signing you in"
-#~ msgstr ""
-
-#: src/screens/league/createLeague.tsx:309
-#: src/screens/league/createLeague.tsx:320
-msgid "Single"
-msgstr ""
-
-#: src/screens/match/finishedMatch.tsx:53
-msgid "Skip Stats Submission"
-msgstr ""
-
-#: src/screens/match/finishedMatch.tsx:55
-msgid "Skip Submission"
-msgstr ""
+msgstr "Iniciar sesión para continuar"
 
 #: src/screens/league/leaguePreview.tsx:181
 msgid "Social"
-msgstr ""
+msgstr "Social"
 
 #: src/screens/match/finishedMatch.tsx:296
 #: src/screens/match/submitMatch.tsx:199
@@ -1164,245 +806,139 @@ msgstr ""
 #: src/screens/match/submitStats.tsx:179
 #: src/screens/match/submitStats.tsx:179
 msgid "Something went wrong"
-msgstr ""
+msgstr "Algo salió mal"
 
 #: src/screens/match/submitStats.tsx:212
 msgid "Stats submitted"
-msgstr ""
+msgstr "Estadísticas presentadas"
 
 #: src/screens/match/finishedMatch.tsx:290
 msgid "Submission Removed"
-msgstr ""
+msgstr "Presentación eliminada"
 
 #: src/components/scoreboard.tsx:87
 msgid "Submit"
-msgstr ""
+msgstr "Enviar"
 
 #: src/screens/match/submitMatch.tsx:329
 msgid "Submit Match"
-msgstr ""
+msgstr "Enviar partido"
 
 #: src/screens/match/finishedMatch.tsx:116
 #: src/screens/match/submitStats.tsx:257
 msgid "Submit Stats"
-msgstr ""
-
-#: src/screens/user/home.tsx:223
-msgid "Submit matches even when you lost."
-msgstr ""
+msgstr "Enviar estadísticas"
 
 #: src/screens/match/submitMatch.tsx:283
 #: src/screens/match/upcomingMatch.tsx:75
 #: src/screens/match/upcomingMatch.tsx:174
 msgid "Submitting Match..."
-msgstr ""
+msgstr "Presentando el partido..."
 
 #: src/screens/match/submitStats.tsx:224
 msgid "Submitting Performance Stats..."
-msgstr ""
-
-#: src/screens/league/clubs.tsx:235
-msgid "Swap"
-msgstr ""
-
-#: src/screens/league/clubs.tsx:110
-msgid "Swap Clubs"
-msgstr ""
+msgstr "Envío de estadísticas de rendimiento..."
 
 #: src/components/standingItems.tsx:64
 msgid "Team"
-msgstr ""
+msgstr "Equipo"
 
 #: src/screens/league/clubs.tsx:144
 #: src/screens/league/clubs.tsx:144
 #: src/screens/user/requests.tsx:112
 #: src/screens/user/requests.tsx:112
 msgid "Team Limit Reached"
-msgstr ""
+msgstr "Límite del equipo alcanzado"
 
 #: src/screens/league/createLeague.tsx:274
 #: src/screens/league/createLeague.tsx:274
 #: src/screens/user/leagueExplorer.tsx:36
 msgid "Teams"
-msgstr ""
+msgstr "Equipos"
 
 #: src/screens/auth/passwordRecovery.tsx:78
 #: src/screens/auth/signIn.tsx:103
 msgid "That email address is invalid"
-msgstr ""
+msgstr "Esa dirección de correo electrónico no es válida"
 
 #: src/screens/auth/signIn.tsx:109
 msgid "The password is invalid or the user does not have a password."
-msgstr ""
+msgstr "La contraseña no es válida o el usuario no tiene contraseña."
 
 #: src/screens/auth/passwordRecovery.tsx:81
 #: src/screens/auth/signIn.tsx:106
 msgid "There is no user with this email"
-msgstr ""
+msgstr "No hay ningún usuario con este correo electrónico"
 
 #: src/screens/match/submitStats.tsx:220
 msgid "There is something wrong with your image. Please send this image to your league admin or PRZ team"
-msgstr ""
+msgstr "Hay un problema con su imagen. Por favor, envíe esta imagen al administrador de su liga o al equipo de PRZ"
 
 #: src/screens/league/stats.tsx:103
-#~ msgid "This league currentl has no submitted matches"
-#~ msgstr ""
-
 #: src/screens/league/stats.tsx:136
 msgid "This league currently has no submitted matches"
-msgstr ""
-
-#: src/screens/league/transferHistory.tsx:63
-msgid "Transfer"
-msgstr ""
-
-#: src/screens/league/leaguePreSeason.tsx:158
-#: src/screens/league/leagueScheduled.tsx:53
-msgid "Transfer History"
-msgstr ""
-
-#: src/screens/user/settings.tsx:66
-msgid "Update"
-msgstr ""
-
-#: src/screens/index.tsx:165
-msgid "Update now to continue"
-msgstr ""
+msgstr "Esta liga no tiene actualmente ningún partido presentado"
 
 #: src/components/screenshots.tsx:59
 msgid "Upload Screenshots"
-msgstr ""
-
-#: src/screens/auth/signIn.tsx:105
-#: src/screens/auth/signIn.tsx:105
-#: src/screens/auth/signIn.tsx:105
-#~ msgid "Use the link that you have received in your email to sign in"
-#~ msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:75
-msgid "User invited"
-msgstr ""
-
-#: src/screens/league/leagueTeam.tsx:84
-msgid "User is not registered or not verified his email yet"
-msgstr ""
+msgstr "Cargar capturas de pantalla"
 
 #: src/screens/auth/signUp.tsx:212
 msgid "Username"
-msgstr ""
-
-#: src/screens/user/home.tsx:39
-msgid "Verification link sent"
-msgstr ""
+msgstr "Nombre de usuario"
 
 #: src/screens/league/createLeague.tsx:301
-#~ msgid "Verify your email to enable this option"
-#~ msgstr ""
-
 #: src/components/matchConflictItem.tsx:20
 msgid "View Proof"
-msgstr ""
+msgstr "Ver prueba"
 
 #: src/components/standingItems.tsx:73
 msgid "W"
-msgstr ""
-
-#: src/screens/match/upcomingMatch.tsx:85
-msgid "WARNING: Resolve Match"
-msgstr ""
+msgstr "W"
 
 #: src/screens/match/submitStats.tsx:220
 msgid "Wrong image"
-msgstr ""
-
-#: src/screens/auth/completeSignIn.tsx:45
-#: src/screens/auth/completeSignIn.tsx:61
-#~ msgid "Wrong sign in link"
-#~ msgstr ""
-
-#: src/screens/league/clubs.tsx:207
-msgid "You are about to remove your club. This actions can't be undone."
-msgstr ""
-
-#: src/screens/match/finishedMatch.tsx:53
-msgid "You are about to skip stats submission for this match. This action can't be undone."
-msgstr ""
-
-#: src/screens/league/clubs.tsx:110
-msgid "You are about to swap old club {0} with new club {1}. This action can't be undone."
-msgstr ""
+msgstr "Imagen incorrecta"
 
 #: src/screens/league/clubs.tsx:235
 msgid "You can invite clubs from league page"
-msgstr ""
+msgstr "Puedes invitar a los clubes desde la página de la liga"
 
 #: src/screens/league/leaguePreview.tsx:120
-#~ msgid "You can join only as a player as this league is already full"
-#~ msgstr ""
-
 #: src/screens/league/leaguePreSeason.tsx:95
 msgid "You can schedule matches once the league has {teamNum} teams"
-msgstr ""
+msgstr "Puedes programar partidos una vez que la liga tenga {teamNum} equipos"
 
 #: src/screens/auth/resetPassword.tsx:66
 msgid "You can sign in with your new password"
-msgstr ""
+msgstr "Puedes iniciar sesión con tu nueva contraseña"
 
 #: src/screens/league/createLeague.tsx:125
-#~ msgid "You cannot create more than one league"
-#~ msgstr ""
-
 #: src/screens/club/clubSettings.tsx:36
 msgid "You cannot remove club when league is scheduled"
-msgstr ""
+msgstr "No se puede eliminar el club cuando la liga está programada"
 
 #: src/screens/match/submitStats.tsx:136
 msgid "You have denied the app access to storage. To change, give the permission from the Android app info menu."
-msgstr ""
+msgstr "Has denegado a la aplicación el acceso al almacenamiento. Para cambiar, da el permiso desde el menú de información de la aplicación de Android."
 
 #: src/screens/match/submitMatch.tsx:169
 msgid "You have selected more than 11 players for this match"
-msgstr ""
+msgstr "Has seleccionado más de 11 jugadores para este partido"
 
 #: src/screens/match/submitStats.tsx:212
 msgid "Your player performance stats are now published"
-msgstr ""
+msgstr "Las estadísticas de tu rendimiento han sido publicadas "
 
 #: src/screens/league/createLeague.tsx:288
-#~ msgid "discord.com/abcde123"
-#~ msgstr ""
-
 #: src/screens/league/createLeague.tsx:195
 msgid "i.e. La Liga"
-msgstr ""
-
-#: src/screens/league/createLeague.tsx:289
-#~ msgid "twitter.com/proclubszone"
-#~ msgstr ""
-
-#: src/screens/match/submitStats.tsx:191
-#~ msgid "{0}"
-#~ msgstr ""
-
-#: src/screens/league/createLeague.tsx:261
-#~ msgid "{0} Match"
-#~ msgstr ""
-
-#: src/screens/league/createLeague.tsx:266
-#: src/screens/league/createLeague.tsx:271
-#: src/screens/league/createLeague.tsx:276
-#: src/screens/league/createLeague.tsx:281
-#~ msgid "{0} Matches"
-#~ msgstr ""
-
-#: src/screens/club/clubProfile.tsx:71
-msgid "{0} Roster"
-msgstr ""
+msgstr "es decir, la Liga"
 
 #: src/screens/match/upcomingMatch.tsx:247
 #: src/screens/match/upcomingMatch.tsx:248
 msgid "{0} Submission"
-msgstr ""
+msgstr "{0} Presentación"
 
 #: src/screens/league/createLeague.tsx:219
 #: src/screens/league/createLeague.tsx:224
@@ -1417,36 +953,331 @@ msgstr ""
 #: src/screens/league/createLeague.tsx:269
 #: src/screens/league/createLeague.tsx:274
 msgid "{0} Teams"
-msgstr ""
+msgstr "{0} Equipos"
 
 #: src/screens/league/leaguePreview.tsx:178
 msgid "{0} clubs / {1} matches"
-msgstr ""
+msgstr "{0} clubes / {1} partidos"
 
 #: src/screens/match/finishedMatch.tsx:158
 #: src/screens/match/finishedMatch.tsx:162
 msgid "{0} goalscorers"
-msgstr ""
+msgstr "{0} goleadores"
 
 #: src/screens/match/upcomingMatch.tsx:102
 #: src/screens/match/upcomingMatch.tsx:103
 msgid "{0} is winner"
-msgstr ""
+msgstr "{0} es ganador"
+
+#: src/screens/auth/signIn.tsx:105
+#: src/screens/auth/signIn.tsx:105
+#: src/screens/auth/signIn.tsx:105
+#: src/screens/user/home.tsx:39
+msgid "Check your email for verification link. Also make sure to check Spam folder."
+msgstr "Compruebe su correo electrónico para ver el enlace de verificación. Asegúrese también de revisar la carpeta de Spam."
+
+#: src/screens/auth/signIn.tsx:143
+msgid "Don’t have an account?"
+msgstr "¿No tiene una cuenta?"
+
+#: src/screens/league/createLeague.tsx:314
+#: src/screens/league/createLeague.tsx:321
+msgid "Home/Away"
+msgstr "Local/Visitante "
+
+#: src/screens/user/home.tsx:260
+msgid "I've verified"
+msgstr "He verificado"
+
+#: src/screens/match/submitStats.tsx:215
+msgid "Make sure you are uploading screenshot made in-game from your console"
+msgstr "Asegúrate de que estás subiendo una captura de pantalla hecha en el juego desde tu consola"
+
+#: src/screens/league/leaguePreSeason.tsx:148
+msgid "Manage your current roster"
+msgstr "Gestione su lista actual"
+
+#: src/screens/match/submitStats.tsx:189
+#: src/screens/match/submitStats.tsx:189
+msgid "No screenshot uploaded"
+msgstr "No se ha subido ninguna captura de pantalla"
+
+#: src/screens/match/submitStats.tsx:189
+#: src/screens/match/submitStats.tsx:189
+msgid "Please upload in-game screenshot taken from the console"
+msgstr "Por favor, sube una captura de pantalla del juego tomada desde la consola"
+
+#: src/screens/user/home.tsx:256
+msgid "Resend"
+msgstr "Reenviar"
+
+#: src/screens/league/createLeague.tsx:321
+#: src/screens/league/createLeague.tsx:321
+msgid "Rounds"
+msgstr "Rondas"
+
+#: src/screens/auth/signIn.tsx:145
+msgid "Sign up now."
+msgstr "Inscríbase ahora."
+
+#: src/screens/auth/completeSignIn.tsx:72
+#: src/screens/league/createLeague.tsx:309
+#: src/screens/league/createLeague.tsx:320
+msgid "Single"
+msgstr "Solo"
+
+#: src/screens/match/finishedMatch.tsx:53
+msgid "Skip Stats Submission"
+msgstr "Omitir la presentación de estadísticas"
+
+#: src/screens/match/finishedMatch.tsx:55
+msgid "Skip Submission"
+msgstr "Omitir la presentación"
+
+#: src/screens/user/home.tsx:39
+msgid "Verification link sent"
+msgstr "Enlace de verificación enviado"
+
+#: src/screens/match/finishedMatch.tsx:53
+msgid "You are about to skip stats submission for this match. This action can't be undone."
+msgstr "Estás a punto de omitir el envío de estadísticas para este partido. Esta acción no se puede deshacer."
+
+#: src/screens/match/upcomingMatch.tsx:102
+#: src/screens/league/createLeague.tsx:130
+msgid "Contact PRZ to create more than one league."
+msgstr "Contacta con PRZ para crear más de una liga."
+
+#: src/screens/league/createLeague.tsx:331
+msgid "Contact PRZ to enable this option"
+msgstr "Póngase en contacto con PRZ para activar esta opción"
+
+#: src/screens/leagueAdmin/leaguePreSeason.tsx:157
+#: src/screens/match/submitMatch.tsx:217
+#: src/screens/match/submitMatch.tsx:217
+msgid "No players added"
+msgstr "No se han añadido jugadores"
+
+#: src/screens/match/submitMatch.tsx:217
+#: src/screens/match/submitMatch.tsx:217
+msgid "Please select all the participated players from your roster to submit the match."
+msgstr "Por favor, seleccione todos los jugadores participantes de su lista para presentar el partido."
+
+#: src/screens/league/leagueScheduled.tsx:32
+msgid "Admin Center"
+msgstr "Centro de administración"
+
+#: src/screens/leagueAdmin/clubs.tsx:157
+#: src/screens/league/adminCenter.tsx:43
+msgid "All conflicted and single-submission fixtures will appear here"
+msgstr "Todas las instalaciones conflictivas y de presentación única aparecerán aquí"
+
+#: src/screens/club/createClub.tsx:162
+msgid "As this league is already scheduled, you will be placed on the waiting list until league admin accepts your club."
+msgstr "Como esta liga ya está programada, se le incluirá en la lista de espera hasta que la administración de la liga acepte a su club."
+
+#: src/screens/league/clubs.tsx:144
+#: src/screens/league/clubs.tsx:144
+msgid "Can't accept club due to league team limit. Remove or swap accepted clubs, or decline this request."
+msgstr "No se puede aceptar el club debido al límite de equipos de la liga. Elimina o intercambia los clubes aceptados, o rechaza esta solicitud."
+
+#: src/screens/league/clubs.tsx:102
+msgid "Can't swap admin club"
+msgstr "No se puede intercambiar el club de administradores"
+
+#: src/screens/league/clubs.tsx:116
+msgid "Confirm Swap"
+msgstr "Confirmar intercambio"
+
+#: src/screens/league/clubs.tsx:102
+msgid "Currently admins can't swap their own club"
+msgstr "Actualmente los administradores no pueden intercambiar su propio club"
+
+#: src/screens/world/world.tsx:8
+msgid "Find answers to most frequently asked questions."
+msgstr "Encuentre respuestas a las preguntas más frecuentes."
+
+#: src/screens/world/world.tsx:9
+msgid "Get in touch"
+msgstr "Póngase en contacto con nosotros"
+
+#: src/screens/world/world.tsx:8
+msgid "Help"
+msgstr "Ayuda"
+
+#: src/screens/match/finishedMatch.tsx:36
+#: src/screens/match/upcomingMatch.tsx:243
+msgid "Match Submissions"
+msgstr "Presentación de partidos"
+
+#: src/screens/index.tsx:144
+msgid "New app version available."
+msgstr "Nueva versión de la aplicación disponible."
+
+#: src/screens/league/adminCenter.tsx:43
+msgid "No fixtures"
+msgstr "No hay accesorios"
+
+#: src/screens/league/clubs.tsx:110
+msgid "Swap Clubs"
+msgstr "Clubes de intercambio"
+
+#: src/screens/index.tsx:165
+msgid "Update now to continue"
+msgstr "Actualizar ahora para continuar"
+
+#: src/screens/auth/completeSignIn.tsx:45
+#: src/screens/auth/completeSignIn.tsx:61
+#: src/screens/league/clubs.tsx:207
+msgid "You are about to remove your club. This actions can't be undone."
+msgstr "Estás a punto de quitarte el club. Esta acción no se puede deshacer."
+
+#: src/screens/league/clubs.tsx:110
+msgid "You are about to swap old club {0} with new club {1}. This action can't be undone."
+msgstr "Estás a punto de cambiar el viejo club {0} por el nuevo club {1}. Esta acción no se puede deshacer."
+
+#: src/screens/match/upcomingMatch.tsx:85
+#: src/screens/match/upcomingMatch.tsx:85
+msgid "Are you sure you want to pick {0} as a winner? Take this action only when team(s) didn't show up"
+msgstr "¿Estás seguro de que quieres elegir a {0} como ganador? Realiza esta acción sólo cuando el equipo o equipos no se presenten"
+
+#: src/screens/league/leagueTeam.tsx:119
+msgid "Are you sure you want to remove selected admin?"
+msgstr "¿Está seguro de que quiere eliminar el administrador seleccionado?"
+
+#: src/screens/league/leagueTeam.tsx:84
+msgid "Can't invite the user"
+msgstr "No se puede invitar al usuario"
+
+#: src/screens/league/leagueTeam.tsx:75
+msgid "Confirmation is sent to user's email. Once confirmed, user will become an admin."
+msgstr "La confirmación se envía al correo electrónico del usuario. Una vez confirmada, el usuario se convertirá en administrador."
+
+#: src/screens/league/leagueTeam.tsx:182
+msgid "Email"
+msgstr "Correo electrónico "
+
+#: src/screens/match/submitMatch.tsx:199
+#: src/screens/match/submitMatch.tsx:199
+#: src/screens/match/submitMatch.tsx:236
+#: src/screens/match/submitStats.tsx:159
+#: src/screens/match/submitStats.tsx:159
+#: src/screens/match/submitStats.tsx:179
+#: src/screens/match/submitStats.tsx:179
+msgid "If this issue occurs often, please report to us."
+msgstr "Si este problema ocurre a menudo, por favor infórmenos."
+
+#: src/screens/league/actions/shareLink.tsx:45
+#: src/screens/league/actions/shareLink.tsx:45
+#: src/screens/league/leagueTeam.tsx:178
+msgid "Invite new admin"
+msgstr "Invitar a un nuevo administrador"
+
+#: src/screens/user/home.tsx:199
+msgid "My Matches"
+msgstr "Mis partidos"
+
+#: src/screens/league/leagueTeam.tsx:119
+msgid "Remove admin"
+msgstr "Eliminar a los administradores"
+
+#: src/screens/league/leagueTeam.tsx:186
+msgid "Send invite"
+msgstr "Enviar invitación"
+
+#: src/screens/user/home.tsx:223
+msgid "Submit matches even when you lost."
+msgstr "Presenta los partidos incluso cuando has perdido."
+
+#: src/screens/auth/signIn.tsx:105
+#: src/screens/auth/signIn.tsx:105
+#: src/screens/auth/signIn.tsx:105
+#: src/screens/league/leagueTeam.tsx:75
+msgid "User invited"
+msgstr "Usuario invitado"
+
+#: src/screens/league/leagueTeam.tsx:84
+msgid "User is not registered or not verified his email yet"
+msgstr "El usuario no está registrado o no ha verificado su correo electrónico todavía"
+
+#: src/screens/match/upcomingMatch.tsx:85
+msgid "WARNING: Resolve Match"
+msgstr "ADVERTENCIA: Resolver el partido"
+
+#: src/screens/match/submitMatch.tsx:301
+#: src/screens/match/submitMatch.tsx:301
+msgid "1. Facts - 2. Player Ratings - 3. Player ID List"
+msgstr "1. Marcador - 2. Clasificación de los jugadores - 3. Lista de id de los jugadores"
+
+#: src/screens/auth/signIn.tsx:128
+msgid "Forgot login details?"
+msgstr "¿Olvidaste los datos de acceso? "
+
+#: src/screens/auth/signIn.tsx:130
+msgid "Get help recovering it."
+msgstr "Obtén ayuda para recuperarlo "
+
+#: src/screens/match/submitMatch.tsx:176
+#: src/screens/user/leagues.tsx:42
+msgid "My Leagues & Clubs"
+msgstr "Mis ligas y equipos "
+
+#: src/screens/world/world.tsx:9
+msgid "Report bugs, request features or just come to say hi!"
+msgstr "¡Informar error, solicite características o simplemente ven a saludar!\n"
+""
+
+#: src/screens/user/settings.tsx:63
+#: src/screens/user/settings.tsx:63
+msgid "Language"
+msgstr "Idioma"
+
+#: src/screens/user/settings.tsx:66
+msgid "Update"
+msgstr "Actualizar"
+
+#: src/screens/league/transferHistory.tsx:63
+msgid "All transfer history will appear here"
+msgstr "Todo el historial de transferencias aparecerá aquí"
+
+#: src/screens/league/transferHistory.tsx:63
+msgid "Day/Month"
+msgstr "Día/Mes"
+
+#: src/screens/league/clubs.tsx:235
+msgid "Manage"
+msgstr "Gestionar"
+
+#: src/screens/league/clubs.tsx:235
+msgid "Swap"
+msgstr "Intercambiar"
+
+#: src/screens/league/transferHistory.tsx:63
+msgid "Transfer"
+msgstr "Transferencia"
+
+#: src/screens/league/leaguePreSeason.tsx:158
+#: src/screens/league/leagueScheduled.tsx:53
+msgid "Transfer History"
+msgstr "Historia de la transferencia"
+
+#: src/screens/league/createLeague.tsx:289
+#: src/screens/match/submitStats.tsx:191
+#: src/screens/league/createLeague.tsx:261
+#: src/screens/league/createLeague.tsx:266
+#: src/screens/league/createLeague.tsx:271
+#: src/screens/league/createLeague.tsx:276
+#: src/screens/league/createLeague.tsx:281
+#: src/screens/club/clubProfile.tsx:71
+msgid "{0} Roster"
+msgstr "{0} Lista"
 
 #: src/screens/league/leaguePreSeason.tsx:163
-#~ msgid ""
-#~ "{acceptedClubs}/{teamNum} Teams. \n"
-#~ "Not enough teams to schedule matches"
-#~ msgstr ""
-
 #: src/screens/league/leaguePreSeason.tsx:165
-#~ msgid "{acceptedClubs}/{teamNum} Teams.\\nNot enough teams to schedule matches"
-#~ msgstr ""
-
 #: src/screens/league/leaguePreSeason.tsx:165
 msgid "{acceptedClubs}/{teamNum} Teams.{0}Not enough teams to schedule matches"
-msgstr ""
+msgstr "{acceptedClubs}/{teamNum} Teams.{0}Not enough teams to schedule matches"
 
-#: src/screens/leagueAdmin/leaguePreSeason.tsx:156
-#~ msgid "{clubRosterLength} Players"
-#~ msgstr ""
+#: src/screens/league/transferHistory.tsx:63
+msgid "No Transfers"
+msgstr "Sin transferencias"
+

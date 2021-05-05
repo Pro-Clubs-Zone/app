@@ -36,6 +36,8 @@ export default function ClubSettings({route, navigation}: Props) {
   const isManager = context.userData!.leagues![leagueId].manager;
   const admins = leagueContext.league.admins;
   const leagueScheduled = leagueContext.league.scheduled;
+  const clubName = context.userData.leagues[leagueId].clubName;
+  const username = user.displayName;
 
   const onRemoveClub = async () => {
     if (leagueScheduled) {
@@ -59,15 +61,15 @@ export default function ClubSettings({route, navigation}: Props) {
         [
           {
             text: i18n._(t`Remove`),
-            onPress: () => {
-              removeClub(leagueId, clubId, admins, clubRoster).then(() => {
-                navigation.dispatch(
-                  CommonActions.reset({
-                    index: 1,
-                    routes: [{name: 'Home'}],
-                  }),
-                );
-              });
+            onPress: async () => {
+              await removeClub(leagueId, clubId, admins, clubRoster);
+              await user.currentUser.reload();
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 1,
+                  routes: [{name: 'Home'}],
+                }),
+              );
             },
             style: 'destructive',
           },
@@ -90,15 +92,21 @@ export default function ClubSettings({route, navigation}: Props) {
       [
         {
           text: i18n._(t`Leave`),
-          onPress: () => {
-            removePlayer({leagueId, playerId, clubId}).then(() => {
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [{name: 'Home'}],
-                }),
-              );
+          onPress: async () => {
+            await removePlayer({
+              leagueId,
+              playerId,
+              clubId,
+              clubName,
+              username,
             });
+            await user.currentUser.reload();
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 1,
+                routes: [{name: 'Home'}],
+              }),
+            );
           },
           style: 'destructive',
         },

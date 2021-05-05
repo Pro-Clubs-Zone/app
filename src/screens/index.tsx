@@ -43,6 +43,7 @@ import World from './world/world';
 import Help from './world/help';
 import HelpArticle from './world/helpArticle';
 import AppInfo from './world/appInfo';
+import Settings from './user/settings';
 
 type SignIn = {data?: {}; redirectedFrom?: string | null};
 
@@ -80,6 +81,7 @@ export type AppNavStack = {
     id: string;
   };
   'App Info': undefined;
+  Settings: undefined;
 };
 
 const db = firestore();
@@ -135,12 +137,13 @@ export default function AppIndex() {
     checkAppUpdate();
   }, []);
 
-  const onSignOut = () => {
+  const onSignOut = (goBack: () => void) => {
     firAuth.signOut().then(() => {
       context.setUserData(undefined);
       context.setUserLeagues(undefined);
       context.setUserMatches([]);
       requests.resetRequests();
+      goBack();
     });
   };
 
@@ -171,6 +174,19 @@ export default function AppIndex() {
         options={{
           title: 'Get in touch',
         }}
+      />
+      <Stack.Screen
+        name="Settings"
+        component={Settings}
+        options={({navigation}) => ({
+          headerRight: () =>
+            uid && (
+              <IconButton
+                name="logout-variant"
+                onPress={() => onSignOut(navigation.goBack())}
+              />
+            ),
+        })}
       />
     </>
   );
@@ -267,12 +283,14 @@ export default function AppIndex() {
         <Stack.Screen
           name="Home"
           component={UserTabs}
-          options={{
-            animationTypeForReplace: 'pop',
+          options={({navigation}) => ({
             headerRight: () => (
-              <IconButton name="logout-variant" onPress={onSignOut} />
+              <IconButton
+                name="cog"
+                onPress={() => navigation.navigate('Settings')}
+              />
             ),
-          }}
+          })}
         />
 
         <Stack.Screen
@@ -298,10 +316,19 @@ export default function AppIndex() {
         options={({navigation}) => ({
           title: 'Home',
           headerRight: () => (
-            <IconButton
-              name="account"
-              onPress={() => navigation.navigate('Sign Up')}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+              }}>
+              <IconButton
+                name="cog"
+                onPress={() => navigation.navigate('Settings')}
+              />
+              <IconButton
+                name="account"
+                onPress={() => navigation.navigate('Sign Up')}
+              />
+            </View>
           ),
           animationTypeForReplace: 'pop',
         })}
@@ -416,7 +443,7 @@ const GuestTabs = () => {
         labelPosition: 'beside-icon',
       }}>
       <Tab.Screen
-        name="League "
+        name="Leagues "
         component={Leagues}
         options={{
           tabBarIcon: ({color, size}) => (
@@ -425,7 +452,7 @@ const GuestTabs = () => {
         }}
       />
       <Tab.Screen
-        name="World"
+        name="World "
         component={World}
         options={{
           tabBarIcon: ({color, size}) => (

@@ -1,49 +1,56 @@
 import {setupI18n} from '@lingui/core';
-import ruTranslation from '../locales/ru/messages.js';
 import enTranslation from '../locales/en/messages.js';
-import {en, ru} from 'make-plural';
+import esTranslations from '../locales/es/messages.js';
+import {en, es} from 'make-plural';
 
 const i18n = setupI18n({
-  locale: 'en',
   localeData: {
-    ru: {
-      plurals: ru,
-    },
     en: {
       plurals: en,
     },
+    es: {
+      plurals: es,
+    },
   },
   messages: {
-    en: ruTranslation.messages,
-    ru: enTranslation.messages,
+    en: enTranslation.messages,
+    es: esTranslations.messages,
   },
 });
 
-i18n.load('en', enTranslation.messages);
 // i18n.loadLocaleData('ru', {
 //   plurals: ru,
 // });
-i18n.activate('en');
 
 export default i18n;
 
-// export const changeActiveLanguage = (newActiveLanguage) => {
-//   var catalog = 'www';
+// i18n.load('es', esTranslations.messages);
+// i18n.activate('es');
+
+// i18n.loadLocaleData({
+//   en: {plurals: en},
+//   cs: {plurals: es},
+// });
+
+// export const changeActiveLanguage = (newActiveLanguage: string) => {
+//   console.log(newActiveLanguage);
+
 //   switch (newActiveLanguage) {
-//     case 'English':
-//       catalog = {en: enMessages};
+//     case 'es':
+//       i18n.load('es', esTranslations.messages);
+//       i18n.activate('es');
 //       break;
-//     case 'Russian':
-//       catalog = {ru: ruMessages};
+//     case 'en':
+//       i18n.activate('en');
 //       break;
 //     default:
-//       catalog = {en: enMessages};
+//       i18n.activate('en');
 //       break;
 //   }
 //   // const catalog =
 //   //   newActiveLanguage === 'en' ? { en: enMessages } : { cs: require('./locale/cs/messages.js') };
-//   console.log('catalog: ' + catalog);
-//   i18n.load(catalog);
+//   // console.log('catalog: ' + catalog);
+//   // i18n.load(catalog);
 //   i18n.activate('en');
 //   return i18n;
 // };

@@ -217,11 +217,18 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           badgeNumber={currentLeagueRequestCount}
         />
         <CardSmall
-          title={i18n._(t`Invite Clubs`)}
-          onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+          title={i18n._(t`Transfer History`)}
+          onPress={() =>
+            navigation.navigate('Transfer History', {
+              leagueId: leagueId,
+            })
+          }
         />
       </CardSmallContainer>
-
+      <CardMedium
+        title={i18n._(t`Invite Clubs`)}
+        onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
+      />
       <CardMedium
         onPress={onScheduleMatches}
         title={i18n._(t`Schedule Matches`)}
@@ -229,8 +236,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           leagueComplete
             ? i18n._(t`League is full and matches can be scheduled`)
             : i18n._(
-                t`${acceptedClubs}/${teamNum} Teams. 
-                Not enough teams to schedule matches`,
+                t`${acceptedClubs}/${teamNum} Teams.${`\n`}Not enough teams to schedule matches`,
               )
         }
       />

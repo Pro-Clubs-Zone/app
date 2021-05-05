@@ -7,6 +7,8 @@ import {TableHeader, TableRow} from '../../components/standingItems';
 import {ListSeparator} from '../../components/listItems';
 import {verticalScale} from 'react-native-size-matters';
 import FullScreenLoading from '../../components/loading';
+import {StackNavigationProp} from '@react-navigation/stack';
+import {LeagueStackType} from '../league/league';
 
 const db = firestore();
 
@@ -15,8 +17,13 @@ type StandingsList = {
   data: IClubStanding;
 };
 
-export default function LeagueStandings() {
-  //  const [data, setData] = useState<{[id: string]: IClubStanding}>({});
+type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Standings'>;
+
+type Props = {
+  navigation: ScreenNavigationProp;
+};
+
+export default function LeagueStandings({navigation}: Props) {
   const [standings, setStandings] = useState<StandingsList[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -93,6 +100,11 @@ export default function LeagueStandings() {
             dif={item.data.scored - item.data.conceded}
             pts={item.data.points}
             position={index + 1}
+            profile={() =>
+              navigation.navigate('Club Profile', {
+                clubId: item.key,
+              })
+            }
           />
         )}
         keyExtractor={(item) => item.key}

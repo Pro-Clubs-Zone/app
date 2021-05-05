@@ -8,7 +8,7 @@
  * @format
  */
 
-import React, {useEffect, useRef} from 'react';
+import React, {useLayoutEffect, useRef} from 'react';
 import {StatusBar, Linking} from 'react-native';
 import analytics from '@react-native-firebase/analytics';
 import {NavigationContainer} from '@react-navigation/native';
@@ -25,6 +25,7 @@ import RNBootSplash from 'react-native-bootsplash';
 import dynamicLinks from '@react-native-firebase/dynamic-links';
 import {MatchProvider} from './src/context/matchContext';
 import {ArticlesProvider} from './src/context/articlesContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const App = () => {
   const routeNameRef = useRef();
@@ -90,8 +91,24 @@ const App = () => {
     },
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     RNBootSplash.hide({fade: true});
+
+    const getLanguage = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@language');
+        console.log('langvalue', value);
+
+        if (value !== null && value !== i18n.locale) {
+          console.log('langvalupdate,', value);
+          return i18n.activate(value);
+        }
+        i18n.activate('en');
+      } catch (e) {
+        throw new Error(e);
+      }
+    };
+    getLanguage();
   }, []);
 
   return (
