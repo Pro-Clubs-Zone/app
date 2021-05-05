@@ -254,7 +254,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           leagueComplete
             ? i18n._(t`League is full and matches can be scheduled`)
             : i18n._(
-                t`${acceptedClubs}/${teamNum} Teams.\nNot enough teams to schedule matches`,
+                t`${acceptedClubs}/${teamNum} Teams.${`\n`}Not enough teams to schedule matches`,
               )
         }
       />

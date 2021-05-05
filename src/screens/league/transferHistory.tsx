@@ -85,7 +85,7 @@ export default function TransferHistory({navigation, route}: Props) {
       )}
       ListEmptyComponent={() => (
         <EmptyState
-          title={i18n._(t`No Trasfers`)}
+          title={i18n._(t`No Transfers`)}
           body={i18n._(t`All transfer history will appear here`)}
         />
       )}
