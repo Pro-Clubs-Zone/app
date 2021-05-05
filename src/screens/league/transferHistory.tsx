@@ -57,6 +57,7 @@ export default function TransferHistory({navigation, route}: Props) {
           setLoading(false);
         })
         .catch((err) => {
+          setLoading(false);
           console.log(err);
           throw new Error(err);
         });

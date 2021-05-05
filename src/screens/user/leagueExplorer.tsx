@@ -27,7 +27,7 @@ export default function LeagueExplorer({navigation}: Props) {
     const leagueCollection = db.collection('leagues');
     const subscriber = leagueCollection
       .where('private', '==', false)
-      .where('scheduled', '==', false)
+      //   .where('scheduled', '==', false)
       .onSnapshot((querySnapshot) => {
         let retrievedLeagues: LeagueListItem[] = [];
         querySnapshot.forEach((doc) => {

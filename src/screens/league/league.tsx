@@ -35,6 +35,7 @@ import SignUp from '../auth/signUp';
 import analytics from '@react-native-firebase/analytics';
 import LeagueTeam from './leagueTeam';
 import TransferHistory from './transferHistory';
+import ClubProfile from '../club/clubProfile';
 
 interface ClubProps {
   clubId: string;
@@ -57,6 +58,7 @@ export type LeagueStackType = {
   Match: {matchData: IMatchNavData; upcoming: boolean};
   'My Club': ClubProps;
   'Club Settings': ClubProps;
+  'Club Profile': ClubProps;
   'Admin Center': ILeagueProps;
   'Sign In': undefined;
   'Sign Up': undefined;
@@ -187,6 +189,7 @@ export default function LeagueStack({navigation, route}: Props) {
       <Stack.Screen name="Clubs" component={Clubs} />
       <Stack.Screen name="My Club" component={Club} />
       <Stack.Screen name="Club Settings" component={ClubSettings} />
+      <Stack.Screen name="Club Profile" component={ClubProfile} />
     </>
   );
 

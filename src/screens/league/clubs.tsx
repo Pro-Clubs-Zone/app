@@ -338,15 +338,22 @@ export default function Clubs({navigation, route}: Props) {
                 ? scheduled
                   ? 'swap-horizontal-circle'
                   : 'minus-circle'
-                : undefined
+                : 'arrow-right-circle'
             }
-            onIconPress={() => onAcceptedClub(item)}
-            onPress={() => !item.accepted && onUnacceptedClub(item)}
+            onIconPress={() =>
+              !item.accepted ? onUnacceptedClub(item) : onAcceptedClub(item)
+            }
+            onPress={() =>
+              navigation.navigate('Club Profile', {clubId: item.clubId})
+            }
           />
         )}
         ItemSeparatorComponent={() => <ListSeparator />}
         renderSectionHeader={({section: {title}}) => (
-          <ListHeading col1={title} />
+          <ListHeading
+            col1={title}
+            col4={scheduled ? i18n._(t`Swap`) : i18n._(t`Manage`)}
+          />
         )}
         ListEmptyComponent={() => (
           <EmptyState
