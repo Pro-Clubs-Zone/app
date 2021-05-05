@@ -30,16 +30,16 @@ export default function Club({navigation, route}: Props) {
   const [sectionedData, setSectionedData] = useState<IClubRequest[]>([]);
 
   const context = useContext(AppContext);
-  const requestContext = useContext(RequestContext);
+  // const requestContext = useContext(RequestContext);
   const leagueContext = useContext(LeagueContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
   const clubId = route.params.clubId;
   const leagueId = leagueContext.leagueId;
   const club = context.userData.leagues[leagueId];
-  const requests = requestContext.clubs;
-  const requestSectionTitle =
-    club.clubName + ' / ' + context.userLeagues[leagueId].name;
+  // const requests = requestContext.clubs;
+  // const requestSectionTitle =
+  //   club.clubName + ' / ' + context.userLeagues[leagueId].name;
 
   const isManager = context.userData.leagues[leagueId].manager;
   const managerId = context.userLeagues[leagueId].clubs[clubId].managerId;
@@ -90,18 +90,20 @@ export default function Club({navigation, route}: Props) {
   };
 
   useEffect(() => {
-    const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    let playerList: IPlayerRequestData[] = [];
-    let playerInfo: IPlayerRequestData;
-    for (const [playerId, player] of Object.entries(clubRoster)) {
-      playerInfo = {
-        ...player,
-        playerId: playerId,
-        clubId: clubId,
-        leagueId: leagueId,
-      };
-      playerList.push(playerInfo);
-    }
+    // const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
+    // let playerList: IPlayerRequestData[] = [];
+    // let playerInfo: IPlayerRequestData;
+    // for (const [playerId, player] of Object.entries(clubRoster)) {
+    //   playerInfo = {
+    //     ...player,
+    //     playerId: playerId,
+    //     clubId: clubId,
+    //     leagueId: leagueId,
+    //   };
+    //   playerList.push(playerInfo);
+    // }
+
+    con;
 
     setData(playerList);
     sortPlayers(playerList);
@@ -113,30 +115,24 @@ export default function Club({navigation, route}: Props) {
     acceptRequest: boolean,
   ) => {
     try {
-      const newData = await handleClubRequest(
-        requests,
-        selectedPlayer,
-        requestSectionTitle,
-        acceptRequest,
-        club.clubName,
-      );
+      await handleClubRequest(selectedPlayer, acceptRequest, club.clubName);
 
-      requestContext.setClubs(newData);
-      const currentCount = requestContext.requestCount;
-      requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
+      //  requestContext.setClubs(newData);
+      //  const currentCount = requestContext.requestCount;
+      //  requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
 
-      const currentLeagueData = {...context.userLeagues};
-      if (acceptRequest) {
-        currentLeagueData[selectedPlayer.leagueId].clubs[
-          selectedPlayer.clubId
-        ].roster[selectedPlayer.playerId].accepted = true;
-      } else {
-        delete currentLeagueData[selectedPlayer.leagueId].clubs[
-          selectedPlayer.clubId
-        ].roster[selectedPlayer.playerId];
-      }
+      // const currentLeagueData = {...context.userLeagues};
+      // if (acceptRequest) {
+      //   currentLeagueData[selectedPlayer.leagueId].clubs[
+      //     selectedPlayer.clubId
+      //   ].roster[selectedPlayer.playerId].accepted = true;
+      // } else {
+      //   delete currentLeagueData[selectedPlayer.leagueId].clubs[
+      //     selectedPlayer.clubId
+      //   ].roster[selectedPlayer.playerId];
+      // }
 
-      context.setUserLeagues(currentLeagueData);
+      // context.setUserLeagues(currentLeagueData);
     } catch (error) {
       console.log(error);
 
