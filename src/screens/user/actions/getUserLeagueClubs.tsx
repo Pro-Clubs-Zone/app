@@ -16,7 +16,7 @@ const getLeaguesClubs = async (
   let adminConflictCounts: number = 0;
 
   for (const leagueId of leagues) {
-    // const clubRef = leaguesRef.doc(leagueId).collection('clubs');
+    const clubRef = leaguesRef.doc(leagueId).collection('clubs');
 
     await leaguesRef
       .doc(leagueId)
@@ -29,19 +29,18 @@ const getLeaguesClubs = async (
             adminConflictCounts += league.conflictMatchesCount;
           }
         }
+      })
+      .then(async () => {
+        await clubRef.get().then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            userLeagues[leagueId].clubs = {
+              ...userLeagues[leagueId].clubs,
+              [doc.id]: doc.data() as IClub,
+            };
+          });
+        });
       });
-    // .then(async () => {
-    //   await clubRef.get().then((querySnapshot) => {
-    //     querySnapshot.forEach((doc) => {
-    //       userLeagues[leagueId].clubs = {
-    //         ...userLeagues[leagueId].clubs,
-    //         [doc.id]: doc.data() as IClub,
-    //       };
-    //     });
-    //   });
-    // });
   }
-
   const updatedUserData: IUser = {
     ...userData,
     adminConflictCounts: adminConflictCounts,

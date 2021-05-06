@@ -44,6 +44,8 @@ const useGetLeagueRequests = (uid: string) => {
             setLoading(false);
             setData([]);
             setCount(0);
+            requestContext.setTotalLeagueCount(0);
+            requestContext.setLeagueCount({});
             return {data, count, loading};
           }
 

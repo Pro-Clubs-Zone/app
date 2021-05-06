@@ -2,15 +2,11 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Alert, SectionList} from 'react-native';
 import {IClub, IClubRequestData, ILeagueRequest} from '../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
-// import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
-// import {LeagueStackType} from '../league/league';
-import {AppContext} from '../../context/appContext';
 import {ListHeading, ListSeparator, TwoLine} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import handleLeagueRequest from '../club/actions/handleLeagueRequest';
-import {RequestContext} from '../../context/requestContext';
 import {LeagueContext} from '../../context/leagueContext';
 import removeClub from '../club/actions/removeClub';
 import EmptyState from '../../components/emptyState';
@@ -33,13 +29,10 @@ type Props = {
 const db = firestore();
 
 export default function Clubs({navigation, route}: Props) {
-  const [data, setData] = useState<IClubRequestData[]>([]);
   const [loading, setLoading] = useState(true);
   const [sectionedData, setSectionedData] = useState<ILeagueRequest[]>([]);
   const [swapClub, setSwapClub] = useState<IClubRequestData>();
 
-  const context = useContext(AppContext);
-  const requestContext = useContext(RequestContext);
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
 
@@ -101,7 +94,6 @@ export default function Clubs({navigation, route}: Props) {
         clubList.push(clubInfo);
       });
 
-      setData(clubList);
       sortClubs(clubList);
       setLoading(false);
     });
@@ -116,10 +108,8 @@ export default function Clubs({navigation, route}: Props) {
     setLoading(true);
     try {
       await swapClubs({oldClub, newClub});
-      requestContext.setLeagueCount(requestContext.requestCount - 1);
       await user.currentUser.reload();
       setLoading(false);
-      navigation.goBack();
     } catch (error) {
       setLoading(false);
       throw new Error(error);
@@ -167,44 +157,6 @@ export default function Clubs({navigation, route}: Props) {
     );
   };
 
-  const onHandleLeagueRequest = async (
-    selectedClub: IClubRequestData,
-    acceptRequest: boolean,
-  ) => {
-    try {
-      await handleLeagueRequest(selectedClub, acceptRequest);
-
-      //   requestContext.setLeagues(newRequestData);
-      //  const currentCount = requestContext.requestCount;
-      //    /  requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
-
-      // const currentLeagueData = {...userLeagues};
-      // const currentClub = currentLeagueData[selectedClub.leagueId].clubs![
-      //   selectedClub.clubId
-      // ];
-      // if (acceptRequest) {
-      //   if (currentClub !== undefined) {
-      //     currentClub.accepted = true;
-      //   } else {
-      //     currentLeagueData[selectedClub.leagueId].clubs[
-      //       selectedClub.clubId
-      //     ] = selectedClub;
-      //   }
-      // } else {
-      //   if (currentClub !== undefined) {
-      //     delete currentLeagueData[selectedClub.leagueId].clubs![
-      //       selectedClub.clubId
-      //     ];
-      //   }
-      // }
-      // context.setUserLeagues(currentLeagueData);
-    } catch (error) {
-      console.log(error);
-
-      throw new Error(error);
-    }
-  };
-
   const onAcceptClub = async (selectedClub: IClubRequestData) => {
     if (leagueContext.league.acceptedClubs === leagueContext.league.teamNum) {
       return Alert.alert(
@@ -222,39 +174,27 @@ export default function Clubs({navigation, route}: Props) {
       );
     }
     setLoading(true);
-    // const updatedList: IClubRequestData[] = data.map((club) => {
-    //   if (club.clubId === selectedClub.clubId) {
-    //     club.accepted = true;
-    //   }
-    //   return club;
-    // });
-    await onHandleLeagueRequest(selectedClub, true)
-      .then(() => {
-        //    const leagueData = {...leagueContext.league};
-        //    leagueData.acceptedClubs += 1;
-        //    leagueContext.setLeague(leagueData);
-        // setData(updatedList);
-        // sortClubs(updatedList);
-        setLoading(false);
-      })
-      .catch((requestError) => {
-        throw new Error(requestError);
-      });
+
+    try {
+      await handleLeagueRequest(selectedClub, true);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+      throw new Error(err);
+    }
   };
 
   const onDeclineClub = async (selectedClub: IClubRequestData) => {
     setLoading(true);
-
-    // const updatedList: IClubRequestData[] = data.filter(
-    //   (club) => club.clubId !== selectedClub.clubId,
-    // );
-    await onHandleLeagueRequest(selectedClub, false);
-    setLoading(false);
-    // .then(() => {
-    //   setData(updatedList);
-    //   sortClubs(updatedList);
-    //   setLoading(false);
-    // });
+    try {
+      await handleLeagueRequest(selectedClub, false);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      console.log(err);
+      throw new Error(err);
+    }
   };
 
   const onUnacceptedClub = (club: IClubRequestData) => {
@@ -303,12 +243,6 @@ export default function Clubs({navigation, route}: Props) {
           onPress: async () => {
             setLoading(true);
             await removeClub(leagueId, club.clubId, admins, clubRoster);
-            // navigation.dispatch(
-            //   CommonActions.reset({
-            //     index: 1,
-            //     routes: [{name: 'Home'}],
-            //   }),
-            // );
           },
           style: 'destructive',
         },
@@ -325,7 +259,7 @@ export default function Clubs({navigation, route}: Props) {
     <>
       <FullScreenLoading visible={loading} />
       <Select
-        items={sectionedData[0]?.data}
+        items={sectionedData[1]?.data}
         uniqueKey="clubId"
         displayKey="name"
         onSelectedItemsChange={(item) =>
