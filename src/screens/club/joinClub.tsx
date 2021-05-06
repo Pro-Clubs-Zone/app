@@ -49,7 +49,7 @@ export default function JoinClub({navigation}: Props) {
       .then(() => {
         setLoading(false);
       });
-  }, []);
+  }, [leagueContext]);
 
   const onSendRequestConfirm = async (club: ClubListItem) => {
     setLoading(true);
@@ -86,7 +86,8 @@ export default function JoinClub({navigation}: Props) {
       },
       {merge: true},
     );
-    await batch.commit().then(async () => {
+    try {
+      await batch.commit();
       await analytics().logJoinGroup({
         group_id: leagueContext.leagueId,
       });
@@ -96,17 +97,23 @@ export default function JoinClub({navigation}: Props) {
         [leagueId]: userInfo,
       };
 
-      // const userLeagues = {...context.userLeagues};
+      let userLeagues = {...context.userLeagues};
+      userLeagues = {
+        [leagueId]: leagueContext.league,
+      };
       // userLeagues[leagueId].clubs[club.clubId] = {
       //   ...userLeagues[leagueId].clubs[club.clubId],
       //   roster: rosterMember,
       // };
 
       context.setUserData(userData);
-      //  context.setUserLeagues(userLeagues);
+      context.setUserLeagues(userLeagues);
       setLoading(false);
       navigation.goBack();
-    });
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+    }
   };
 
   const onSendRequest = (club: ClubListItem) => {

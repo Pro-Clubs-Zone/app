@@ -35,29 +35,29 @@ export default function Leagues({navigation}: Props) {
 
       for (const [leagueId, league] of Object.entries(userLeagues)) {
         const userLeague = userData.leagues![leagueId];
-        const accepted = userLeague.accepted;
+        //    const accepted = userLeague.accepted;
         const isAdmin = userLeague.admin;
-        if (accepted || isAdmin) {
-          const userClubName = userLeague.clubName;
-          const updatedData = {
-            ...league,
-            clubName: userClubName!,
-            isAdmin: !!isAdmin,
-          };
+        //  if (accepted || isAdmin) {
+        const userClubName = userLeague.clubName;
+        const updatedData = {
+          ...league,
+          clubName: userClubName!,
+          isAdmin: !!isAdmin,
+        };
 
-          const leagueData: IleagueData = {
-            id: leagueId,
-            data: updatedData,
-          };
-          leagueList.push(leagueData);
-        }
+        const leagueData: IleagueData = {
+          id: leagueId,
+          data: updatedData,
+        };
+        leagueList.push(leagueData);
+        //     }
       }
 
       setData(leagueList);
     } else {
       setData([]);
     }
-  }, [context]);
+  }, [context.userLeagues]);
 
   return (
     <View style={{flex: 1}}>

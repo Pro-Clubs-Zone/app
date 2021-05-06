@@ -43,6 +43,15 @@ type Props = {
 export default function Requests({navigation, route}: Props) {
   const uid = route.params.uid;
   const requestContext = useContext(RequestContext);
+  const context = useContext(AppContext);
+  let sentRequests = 0;
+
+  for (const league of Object.values(context.userData.leagues)) {
+    if (!league.accepted && league.clubId) {
+      sentRequests++;
+    }
+  }
+
   return (
     <Tab.Navigator lazy={true}>
       <Tab.Screen
@@ -65,7 +74,7 @@ export default function Requests({navigation, route}: Props) {
         name="Sent"
         component={MySentRequests}
         options={{
-          title: i18n._(t`Sent`),
+          title: i18n._(t`Sent - ${sentRequests}`),
         }}
         initialParams={{uid}}
       />
@@ -285,84 +294,77 @@ function MySentRequests({navigation, route}) {
 
   const context = useContext(AppContext);
   const uid = route.params.uid;
-
+  const userData = context.userData;
   const userRef = db.collection('users').doc(uid);
 
   useEffect(() => {
-    const getSentRequests = userRef.onSnapshot((snapshot) => {
-      if (!snapshot.exists) {
-        return setLoading(false);
-      }
-      const player = snapshot.data() as IUser;
-      const requests: IMyRequests[] = [];
+    const requests: IMyRequests[] = [];
+    for (const [leagueId, league] of Object.entries(userData.leagues)) {
+      const leagueName = context.userLeagues[leagueId].name;
+      let requestData: IMyRequests = {
+        title: '',
+        data: [],
+      };
 
-      for (const [leagueId, league] of Object.entries(player.leagues)) {
-        const leagueName = context.userLeagues[leagueId].name;
-        let requestData: IMyRequests = {
-          title: '',
-          data: [],
+      if (!league.accepted && league.clubId) {
+        const myRequestData: ISentRequest = {
+          accepted: league.accepted,
+          clubId: league.clubId,
+          leagueId: leagueId,
+          leagueName: leagueName,
+          clubName: league.clubName,
+          manager: league.manager,
         };
-
-        if (!league.accepted) {
-          const myRequestData: ISentRequest = {
-            accepted: league.accepted,
-            clubId: league.clubId,
-            leagueId: leagueId,
-            leagueName: leagueName,
-            clubName: league.clubName,
-            manager: league.manager,
-          };
-          if (league.manager) {
-            if (requests.length === 0) {
-              requestData = {
-                title: i18n._(t`League Requests`),
-                data: [myRequestData],
-              };
-              requests.push(requestData);
-            } else {
-              requests.map((section, index) => {
-                if (section.title === 'League Requests') {
-                  requests[index].data.push(myRequestData);
-                } else {
-                  requestData = {
-                    title: i18n._(t`League Requests`),
-                    data: [myRequestData],
-                  };
-                  requests.push(requestData);
-                }
-              });
-            }
+        if (league.manager) {
+          if (requests.length === 0) {
+            requestData = {
+              title: i18n._(t`League Requests`),
+              data: [myRequestData],
+            };
+            requests.push(requestData);
           } else {
-            if (requests.length === 0) {
-              requestData = {
-                title: i18n._(t`Club Requests`),
-                data: [myRequestData],
-              };
-              requests.push(requestData);
-            } else {
-              requests.map((section, index) => {
-                if (section.title === 'Club Requests') {
-                  requests[index].data.push(myRequestData);
-                } else {
-                  requestData = {
-                    title: i18n._(t`Club Requests`),
-                    data: [myRequestData],
-                  };
-                  requests.push(requestData);
-                }
-              });
-            }
+            requests.map((section, index) => {
+              if (section.title === 'League Requests') {
+                requests[index].data.push(myRequestData);
+              } else {
+                requestData = {
+                  title: i18n._(t`League Requests`),
+                  data: [myRequestData],
+                };
+                requests.push(requestData);
+              }
+            });
+          }
+        } else {
+          if (requests.length === 0) {
+            requestData = {
+              title: i18n._(t`Club Requests`),
+              data: [myRequestData],
+            };
+            requests.push(requestData);
+          } else {
+            requests.map((section, index) => {
+              if (section.title === 'Club Requests') {
+                requests[index].data.push(myRequestData);
+              } else {
+                requestData = {
+                  title: i18n._(t`Club Requests`),
+                  data: [myRequestData],
+                };
+                requests.push(requestData);
+              }
+            });
           }
         }
       }
-      setData(requests);
-      setLoading(false);
-    });
-    return getSentRequests;
-  }, [context.userLeagues]);
+    }
+    setData(requests);
+    setLoading(false);
+  }, [context.userData]);
 
   const onCancelRequestConfirm = async (myRequest: ISentRequest) => {
     setLoading(true);
+
     const clubRef = db
       .collection('leagues')
       .doc(myRequest.leagueId)
@@ -381,7 +383,14 @@ function MySentRequests({navigation, route}) {
       ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
     });
 
+    let updatedUserData = {...userData};
+    delete updatedUserData.leagues[myRequest.leagueId];
+    let updatedUserLeagues = {...context.userLeagues};
+    delete updatedUserLeagues[myRequest.leagueId];
+
     await batch.commit();
+    context.setUserData(updatedUserData);
+    context.setUserLeagues(updatedUserLeagues);
     setLoading(false);
   };
 
