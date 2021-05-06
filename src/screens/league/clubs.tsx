@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Alert, SectionList} from 'react-native';
-import {IClubRequestData, ILeagueRequest} from '../../utils/interface';
+import {IClub, IClubRequestData, ILeagueRequest} from '../../utils/interface';
+import firestore from '@react-native-firebase/firestore';
 // import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 // import {LeagueStackType} from '../league/league';
@@ -15,13 +16,11 @@ import removeClub from '../club/actions/removeClub';
 import EmptyState from '../../components/emptyState';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
-import {CommonActions} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueStackType} from './league';
 import Select from '../../components/select';
 import swapClubs from '../club/actions/swapClubs';
 import {AuthContext} from '../../context/authContext';
-import useGetLeagueRequests from '../user/actions/useGetLeagueRequests';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -30,6 +29,8 @@ type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
+
+const db = firestore();
 
 export default function Clubs({navigation, route}: Props) {
   const [data, setData] = useState<IClubRequestData[]>([]);
@@ -48,15 +49,8 @@ export default function Clubs({navigation, route}: Props) {
 
   const leagueId = leagueContext.leagueId;
   const admins = leagueContext.league.admins;
-  const userLeagues = context.userLeagues!;
-  const uid = user.uid;
 
   const scheduled = route?.params?.scheduled;
-
-  const leagueRequests = useGetLeagueRequests(uid);
-  const currentLeagueRequests = leagueRequests.data.filter((league) => {
-    return league.title === leagueContext.league.name + ' - ' + 'New Requests';
-  });
 
   const sortClubs = (clubs: IClubRequestData[]) => {
     console.log('run sort');
@@ -74,12 +68,10 @@ export default function Clubs({navigation, route}: Props) {
     clubs.forEach((club) => {
       if (club.accepted) {
         acceptedClubList.data.push(club);
+      } else {
+        clubRequestList.data.push(club);
       }
     });
-
-    // if (currentLeagueRequests[0].data.length !== 0) {
-    //   clubRequestList.data = currentLeagueRequests[0].data;
-    // }
 
     let sortedClubs: ILeagueRequest[] = [];
 
@@ -93,28 +85,28 @@ export default function Clubs({navigation, route}: Props) {
   };
 
   useEffect(() => {
-    const clubs = userLeagues[leagueId].clubs;
+    const clubsRef = db.collection('leagues').doc(leagueId).collection('clubs');
 
-    console.log('leagueReg', leagueRequests);
-
-    let clubList: IClubRequestData[] = [];
-    let clubInfo: IClubRequestData;
-    if (clubs) {
-      for (const [clubId, club] of Object.entries(clubs)) {
+    const getData = clubsRef.onSnapshot((snapshot) => {
+      let clubList: IClubRequestData[] = [];
+      let clubInfo: IClubRequestData;
+      snapshot.forEach((club) => {
+        const clubData = club.data() as IClub;
+        const clubId = club.id;
         clubInfo = {
-          ...club,
+          ...clubData,
           clubId: clubId,
           leagueId: leagueId,
-          managerId: club.managerId,
         };
         clubList.push(clubInfo);
-      }
+      });
 
       setData(clubList);
       sortClubs(clubList);
-    }
+      setLoading(false);
+    });
 
-    setLoading(false);
+    return getData;
   }, [leagueId]);
 
   const onClubSwap = async (
@@ -186,26 +178,26 @@ export default function Clubs({navigation, route}: Props) {
       //  const currentCount = requestContext.requestCount;
       //    /  requestContext.setLeagueCount(currentCount === 1 ? 0 : currentCount - 1);
 
-      const currentLeagueData = {...userLeagues};
-      const currentClub = currentLeagueData[selectedClub.leagueId].clubs![
-        selectedClub.clubId
-      ];
-      if (acceptRequest) {
-        if (currentClub !== undefined) {
-          currentClub.accepted = true;
-        } else {
-          currentLeagueData[selectedClub.leagueId].clubs[
-            selectedClub.clubId
-          ] = selectedClub;
-        }
-      } else {
-        if (currentClub !== undefined) {
-          delete currentLeagueData[selectedClub.leagueId].clubs![
-            selectedClub.clubId
-          ];
-        }
-      }
-      context.setUserLeagues(currentLeagueData);
+      // const currentLeagueData = {...userLeagues};
+      // const currentClub = currentLeagueData[selectedClub.leagueId].clubs![
+      //   selectedClub.clubId
+      // ];
+      // if (acceptRequest) {
+      //   if (currentClub !== undefined) {
+      //     currentClub.accepted = true;
+      //   } else {
+      //     currentLeagueData[selectedClub.leagueId].clubs[
+      //       selectedClub.clubId
+      //     ] = selectedClub;
+      //   }
+      // } else {
+      //   if (currentClub !== undefined) {
+      //     delete currentLeagueData[selectedClub.leagueId].clubs![
+      //       selectedClub.clubId
+      //     ];
+      //   }
+      // }
+      // context.setUserLeagues(currentLeagueData);
     } catch (error) {
       console.log(error);
 
@@ -230,12 +222,12 @@ export default function Clubs({navigation, route}: Props) {
       );
     }
     setLoading(true);
-    const updatedList: IClubRequestData[] = data.map((club) => {
-      if (club.clubId === selectedClub.clubId) {
-        club.accepted = true;
-      }
-      return club;
-    });
+    // const updatedList: IClubRequestData[] = data.map((club) => {
+    //   if (club.clubId === selectedClub.clubId) {
+    //     club.accepted = true;
+    //   }
+    //   return club;
+    // });
     await onHandleLeagueRequest(selectedClub, true)
       .then(() => {
         //    const leagueData = {...leagueContext.league};
@@ -253,14 +245,16 @@ export default function Clubs({navigation, route}: Props) {
   const onDeclineClub = async (selectedClub: IClubRequestData) => {
     setLoading(true);
 
-    const updatedList: IClubRequestData[] = data.filter(
-      (club) => club.clubId !== selectedClub.clubId,
-    );
-    await onHandleLeagueRequest(selectedClub, false).then(() => {
-      setData(updatedList);
-      sortClubs(updatedList);
-      setLoading(false);
-    });
+    // const updatedList: IClubRequestData[] = data.filter(
+    //   (club) => club.clubId !== selectedClub.clubId,
+    // );
+    await onHandleLeagueRequest(selectedClub, false);
+    setLoading(false);
+    // .then(() => {
+    //   setData(updatedList);
+    //   sortClubs(updatedList);
+    //   setLoading(false);
+    // });
   };
 
   const onUnacceptedClub = (club: IClubRequestData) => {
@@ -290,7 +284,7 @@ export default function Clubs({navigation, route}: Props) {
   };
 
   const onAcceptedClub = async (club: IClubRequestData) => {
-    const clubRoster = userLeagues[leagueId].clubs![club.clubId].roster;
+    const clubRoster = club.roster;
 
     if (scheduled) {
       setSwapClub(club);
@@ -301,7 +295,7 @@ export default function Clubs({navigation, route}: Props) {
     Alert.alert(
       i18n._(t`Remove Club`),
       i18n._(
-        t`You are about to remove your club. This actions can't be undone.`,
+        t`You are about to remove ${club.name} from the league. This actions can't be undone.`,
       ),
       [
         {
@@ -309,12 +303,12 @@ export default function Clubs({navigation, route}: Props) {
           onPress: async () => {
             setLoading(true);
             await removeClub(leagueId, club.clubId, admins, clubRoster);
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Home'}],
-              }),
-            );
+            // navigation.dispatch(
+            //   CommonActions.reset({
+            //     index: 1,
+            //     routes: [{name: 'Home'}],
+            //   }),
+            // );
           },
           style: 'destructive',
         },
@@ -329,9 +323,9 @@ export default function Clubs({navigation, route}: Props) {
 
   return (
     <>
-      <FullScreenLoading visible={loading || leagueRequests.loading} />
+      <FullScreenLoading visible={loading} />
       <Select
-        items={currentLeagueRequests[0]?.data}
+        items={sectionedData[0]?.data}
         uniqueKey="clubId"
         displayKey="name"
         onSelectedItemsChange={(item) =>
@@ -345,7 +339,7 @@ export default function Clubs({navigation, route}: Props) {
         title={i18n._(t`New Requests`)}
       />
       <SectionList
-        sections={[...sectionedData, ...currentLeagueRequests]}
+        sections={sectionedData}
         keyExtractor={(item) => item.clubId}
         renderItem={({item}) => (
           <TwoLine

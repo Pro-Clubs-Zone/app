@@ -59,7 +59,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   const clubRequests = useGetClubRequests(uid);
 
   const currentLeagueRequestCount = leagueRequests.data.filter((league) => {
-    return league.title === leagueContext.league.name + ' - ' + 'New Requests';
+    return league.title === leagueContext.league.name;
   })[0]?.data.length;
 
   // const currentClubRequestCount = clubRequests.data.filter((leagueClub) => {

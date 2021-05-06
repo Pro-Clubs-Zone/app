@@ -24,13 +24,19 @@ const useGetClubRequests = (uid: string) => {
         ownerIds.push(league.ownerId);
       }
 
-      const query = db.collectionGroup('clubs').where('managerId', '==', uid);
+      const query = db
+        .collectionGroup('clubs')
+        .where('managerId', '==', uid)
+        .where('accepted', '==', true);
 
       const getRequests = query.onSnapshot((snapshot) => {
         let requests: IClubRequest[] = [];
         let requestCount = 0;
         if (snapshot.empty) {
-          return setLoading(false);
+          setLoading(false);
+          setData([]);
+          setCount(0);
+          return {data, count, loading};
         }
         snapshot.forEach((doc) => {
           const leagueId: string = doc.ref.parent.parent.id;

@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState, useLayoutEffect} from 'react';
+import firestore from '@react-native-firebase/firestore';
 import {Alert, SectionList} from 'react-native';
-import {IClubRequest, IPlayerRequestData} from '../../utils/interface';
+import {IClub, IClubRequest, IPlayerRequestData} from '../../utils/interface';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
@@ -23,6 +24,8 @@ type Props = {
   navigation: ScreenNavigationProp;
   route: ScreenRouteProp;
 };
+
+const db = firestore();
 
 export default function Club({navigation, route}: Props) {
   const [data, setData] = useState<IPlayerRequestData[]>([]);
@@ -90,24 +93,35 @@ export default function Club({navigation, route}: Props) {
   };
 
   useEffect(() => {
-    // const clubRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    // let playerList: IPlayerRequestData[] = [];
-    // let playerInfo: IPlayerRequestData;
-    // for (const [playerId, player] of Object.entries(clubRoster)) {
-    //   playerInfo = {
-    //     ...player,
-    //     playerId: playerId,
-    //     clubId: clubId,
-    //     leagueId: leagueId,
-    //   };
-    //   playerList.push(playerInfo);
-    // }
+    const clubRef = db
+      .collection('leagues')
+      .doc(leagueId)
+      .collection('clubs')
+      .doc(clubId);
 
-    con;
+    const getData = async () => {
+      clubRef.get().then((doc) => {
+        const clubData = doc.data() as IClub;
+        console.log(clubData);
 
-    setData(playerList);
-    sortPlayers(playerList);
-    setLoading(false);
+        let playerList: IPlayerRequestData[] = [];
+        let playerInfo: IPlayerRequestData;
+        for (const [playerId, player] of Object.entries(clubData.roster)) {
+          playerInfo = {
+            ...player,
+            playerId: playerId,
+            clubId: clubId,
+            leagueId: leagueId,
+          };
+          playerList.push(playerInfo);
+        }
+
+        setData(playerList);
+        sortPlayers(playerList);
+        setLoading(false);
+      });
+    };
+    getData();
   }, [leagueId, clubId]);
 
   const onHandlePlayerRequest = async (

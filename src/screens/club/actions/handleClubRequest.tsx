@@ -6,9 +6,7 @@ import {
 } from '../../../utils/interface';
 
 const handleClubRequest = async (
-  data: IClubRequest[],
   {playerId, clubId, leagueId, username}: IPlayerRequestData,
-  sectionTitle: string,
   acceptRequest: boolean,
   clubName: string,
 ) => {
@@ -37,21 +35,6 @@ const handleClubRequest = async (
     },
   };
 
-  const sectionIndex = data.findIndex(
-    (section) => section.title === sectionTitle,
-  );
-
-  const unacceptedPlayers = data[sectionIndex].data.filter((player) => {
-    return player.playerId !== playerId;
-  });
-
-  const newData = [...data];
-  newData[sectionIndex].data = unacceptedPlayers;
-
-  if (unacceptedPlayers.length === 0) {
-    newData.splice(sectionIndex, 1);
-  }
-
   if (acceptRequest) {
     batch.update(clubRef, {
       ['roster.' + playerId + '.accepted']: true,
@@ -70,8 +53,6 @@ const handleClubRequest = async (
   }
 
   await batch.commit();
-
-  return newData;
 };
 
 export default handleClubRequest;

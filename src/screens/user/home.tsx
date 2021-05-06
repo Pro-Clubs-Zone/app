@@ -41,8 +41,6 @@ export default function Home({navigation}: Props) {
   const leagueRequests = useGetLeagueRequests(uid);
   const clubRequests = useGetClubRequests(uid);
 
-  console.log(clubRequests);
-
   const showResendAlert = () => {
     Alert.alert(
       i18n._(t`Verification link sent`),

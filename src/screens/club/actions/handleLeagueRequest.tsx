@@ -1,5 +1,5 @@
 import firestore from '@react-native-firebase/firestore';
-import {IClubRequestData, ILeagueRequest} from '../../../utils/interface';
+import {IClubRequestData} from '../../../utils/interface';
 
 const handleLeagueRequest = async (
   {clubId, leagueId, managerId}: IClubRequestData,
