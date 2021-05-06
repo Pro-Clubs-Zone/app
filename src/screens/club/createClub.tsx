@@ -95,10 +95,23 @@ export default function CreateClub({route, navigation}: Props) {
           accepted: isAdmin ? true : false,
         };
 
+        let updateLeagueInfo = {...leagueContext.league};
+
         if (isAdmin) {
           batch.update(leagueRef, {
             acceptedClubs: firestore.FieldValue.increment(1),
           });
+          batch.set(
+            leagueRef,
+            {
+              clubIndex: {
+                [clubRef.id]: clubName.trim(),
+              },
+            },
+            {merge: true},
+          );
+          updateLeagueInfo.acceptedClubs += 1;
+          updateLeagueInfo.clubIndex[clubRef.id] = clubName.trim();
         }
         batch.set(clubRef, clubInfo);
         batch.set(
@@ -117,9 +130,6 @@ export default function CreateClub({route, navigation}: Props) {
               group_id: leagueContext.leagueId,
             }),
           ]);
-          let updateLeagueInfo = {...leagueContext.league};
-          updateLeagueInfo.acceptedClubs += 1;
-          leagueContext.setLeague(updateLeagueInfo);
 
           let userData = {...context.userData!};
           userData.leagues = {
@@ -131,9 +141,9 @@ export default function CreateClub({route, navigation}: Props) {
 
           userLeagues = {
             ...userLeagues,
-            [leagueId]: leagueContext.league,
+            [leagueId]: updateLeagueInfo,
           };
-
+          leagueContext.setLeague(updateLeagueInfo);
           context.setUserData(userData);
           context.setUserLeagues(userLeagues);
           setLoading(false);

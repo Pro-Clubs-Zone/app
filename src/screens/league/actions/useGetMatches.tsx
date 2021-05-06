@@ -38,8 +38,8 @@ const useGetMatches = (
         snapshot.forEach((doc) => {
           const matchData = doc.data() as IMatch;
           const matchId = doc.id;
-          const awayTeamName = league.clubs[matchData.awayTeamId].name;
-          const homeTeamName = league.clubs[matchData.homeTeamId].name;
+          const awayTeamName = league.clubIndex[matchData.awayTeamId];
+          const homeTeamName = league.clubIndex[matchData.homeTeamId];
 
           const match: IMatchNavData = {
             ...matchData,

@@ -37,6 +37,16 @@ const removeClub = async (
   });
   batch.delete(clubRef);
 
+  batch.set(
+    leagueRef,
+    {
+      clubIndex: {
+        [clubId]: firestore.FieldValue.delete(),
+      },
+    },
+    {merge: true},
+  );
+
   await batch.commit();
 };
 

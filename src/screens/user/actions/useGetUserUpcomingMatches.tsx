@@ -38,8 +38,8 @@ const getUserUpcomingMatches = async (
           const matchData = doc.data() as IMatch;
           const matchId = doc.id;
           const leagueData = userLeagues[leagueId];
-          const homeTeamName = leagueData.clubs[matchData.homeTeamId].name;
-          const awayTeamName = leagueData.clubs[matchData.awayTeamId].name;
+          const awayTeamName = leagueData.clubIndex[matchData.awayTeamId];
+          const homeTeamName = leagueData.clubIndex[matchData.homeTeamId];
 
           let match: IMatchNavData = {
             ...matchData,

@@ -210,6 +210,7 @@ export interface ILeague {
   };
   conflictMatchesCount: 0;
   ownerId: string;
+  clubIndex: {[clubId: string]: string};
 }
 
 export interface ILeagueAdmin {

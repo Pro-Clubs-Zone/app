@@ -37,8 +37,8 @@ const useGetUserPublishedMatches = (uid: string) => {
           const manager = userLeague.manager;
           const leagueName = context.userLeagues[leagueId].name;
           const admin = userLeague.admin;
-          const awayTeamName = league.clubs[matchData.awayTeamId].name;
-          const homeTeamName = league.clubs[matchData.homeTeamId].name;
+          const awayTeamName = league.clubIndex[matchData.awayTeamId];
+          const homeTeamName = league.clubIndex[matchData.homeTeamId];
 
           const match: IMatchNavData = {
             ...matchData,
