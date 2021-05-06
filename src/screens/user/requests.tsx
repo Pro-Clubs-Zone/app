@@ -208,17 +208,17 @@ function LeagueRequests({navigation, route}) {
       setLoading(true);
       await handleLeagueRequest(selectedClub, acceptRequest);
 
-      const currentLeagueData = {...context.userLeagues};
-      if (acceptRequest) {
-        currentLeagueData[selectedClub.leagueId].clubs[
-          selectedClub.clubId
-        ].accepted = true;
-      } else {
-        delete currentLeagueData[selectedClub.leagueId].clubs[
-          selectedClub.clubId
-        ];
-      }
-      context.setUserLeagues(currentLeagueData);
+      // const currentLeagueData = {...context.userLeagues};
+      // if (acceptRequest) {
+      //   currentLeagueData[selectedClub.leagueId].clubs[
+      //     selectedClub.clubId
+      //   ].accepted = true;
+      // } else {
+      //   delete currentLeagueData[selectedClub.leagueId].clubs[
+      //     selectedClub.clubId
+      //   ];
+      // }
+      // context.setUserLeagues(currentLeagueData);
       setLoading(false);
     } catch (error) {
       console.log(error);

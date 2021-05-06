@@ -52,11 +52,13 @@ export default function ClubProfile({navigation, route}: Props) {
           const clubData = doc.data() as IClub;
           const {roster, ...rest} = clubData;
           for (const [memberId, member] of Object.entries(roster)) {
-            const rosterData: Roster = {
-              id: memberId,
-              data: member,
-            };
-            fullRoster.push(rosterData);
+            if (member.accepted) {
+              const rosterData: Roster = {
+                id: memberId,
+                data: member,
+              };
+              fullRoster.push(rosterData);
+            }
           }
           setClubInfo({...rest});
           setClubRoster(fullRoster);

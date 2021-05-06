@@ -6,6 +6,7 @@ import {
 } from '../../../utils/interface';
 import {AppContext} from '../../../context/appContext';
 import firestore from '@react-native-firebase/firestore';
+import {RequestContext} from '../../../context/requestContext';
 
 const useGetClubRequests = (uid: string) => {
   const [data, setData] = useState<IClubRequest[]>([]);
@@ -13,6 +14,7 @@ const useGetClubRequests = (uid: string) => {
   const [count, setCount] = useState(0);
 
   const context = useContext(AppContext);
+  const requestContext = useContext(RequestContext);
 
   const db = firestore();
 
@@ -31,11 +33,16 @@ const useGetClubRequests = (uid: string) => {
 
       const getRequests = query.onSnapshot((snapshot) => {
         let requests: IClubRequest[] = [];
-        let requestCount = 0;
+        let totalRequestCount = 0;
+        let clubRequestCount: {
+          [name: string]: number;
+        } = {};
         if (snapshot.empty) {
           setLoading(false);
           setData([]);
           setCount(0);
+          requestContext.setTotalClubCount(0);
+          requestContext.setClubCount({});
           return {data, count, loading};
         }
         snapshot.forEach((doc) => {
@@ -77,14 +84,19 @@ const useGetClubRequests = (uid: string) => {
                   }
                 });
               }
-
-              requestCount++;
+              if (clubRequestCount[clubId] === undefined) {
+                clubRequestCount[clubId] = 1;
+              } else {
+                clubRequestCount[clubId] += 1;
+              }
+              totalRequestCount++;
             }
           }
         });
-
+        requestContext.setTotalClubCount(totalRequestCount);
+        requestContext.setClubCount(clubRequestCount);
         setData(requests);
-        setCount(requestCount);
+        setCount(totalRequestCount);
         setLoading(false);
       });
 
