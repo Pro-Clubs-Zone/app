@@ -1,18 +1,15 @@
 import React, {useState, createContext, Dispatch, SetStateAction} from 'react';
-import {IClubRequest, ILeagueRequest, IMyRequests} from '../utils/interface';
 
 type RequestContextType = {
-  clubs: IClubRequest[];
-  leagues: ILeagueRequest[];
-  myClubRequests: IMyRequests | null;
-  myLeagueRequests: IMyRequests | null;
-  setClubs: Dispatch<SetStateAction<IClubRequest[]>>;
-  setLeagues: Dispatch<SetStateAction<ILeagueRequest[]>>;
-  setMyLeagueRequests: Dispatch<SetStateAction<IMyRequests | null>>;
-  setMyClubRequests: Dispatch<SetStateAction<IMyRequests | null>>;
-  setLeagueCount: Dispatch<SetStateAction<number>>;
-  setClubCount: Dispatch<SetStateAction<number>>;
-  requestCount: number;
+  setLeagueCount: Dispatch<SetStateAction<{[leagueId: string]: number}>>;
+  setClubCount: Dispatch<SetStateAction<{[club: string]: number}>>;
+  setTotalLeagueCount: Dispatch<SetStateAction<number>>;
+  setTotalClubCount: Dispatch<SetStateAction<number>>;
+  totalClubCount: number;
+  totalLeagueCount: number;
+  leagueCount: {[league: string]: number};
+  clubCount: {[club: string]: number};
+  totalCount: number;
   resetRequests: () => void;
 };
 
@@ -21,42 +18,34 @@ const RequestContext = createContext<RequestContextType>(
 );
 
 const RequestProvider = (props: any) => {
-  const [myClubRequests, setMyClubRequests] = useState<IMyRequests | null>(
-    null,
+  const [leagueCount, setLeagueCount] = useState<{[leagueId: string]: number}>(
+    {},
   );
-  const [myLeagueRequests, setMyLeagueRequests] = useState<IMyRequests | null>(
-    null,
-  );
-  const [clubs, setClubs] = useState<IClubRequest[]>([]);
-  const [leagues, setLeagues] = useState<ILeagueRequest[]>([]);
-  const [leagueCount, setLeagueCount] = useState<number>(0);
-  const [clubCount, setClubCount] = useState<number>(0);
-
-  const requestCount: number = leagueCount + clubCount;
+  const [clubCount, setClubCount] = useState<{[club: string]: number}>({});
+  const [totalLeagueCount, setTotalLeagueCount] = useState<number>(0);
+  const [totalClubCount, setTotalClubCount] = useState<number>(0);
 
   const resetRequests = () => {
-    setClubs([]);
-    setLeagues([]);
-    setLeagueCount(0);
-    setClubCount(0);
-    setMyLeagueRequests(null);
-    setMyClubRequests(null);
+    setLeagueCount({});
+    setClubCount({});
+    setTotalLeagueCount(0);
+    setTotalClubCount(0);
   };
+
+  const totalCount: number = totalLeagueCount + totalClubCount;
 
   return (
     <RequestContext.Provider
       value={{
-        myClubRequests,
-        myLeagueRequests,
-        clubs,
-        leagues,
-        setClubs,
-        setLeagues,
-        setMyLeagueRequests,
-        setMyClubRequests,
         setLeagueCount,
         setClubCount,
-        requestCount,
+        setTotalLeagueCount,
+        setTotalClubCount,
+        clubCount,
+        leagueCount,
+        totalLeagueCount,
+        totalClubCount,
+        totalCount,
         resetRequests,
       }}>
       {props.children}

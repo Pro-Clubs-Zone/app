@@ -355,7 +355,7 @@ const UserTabs = () => {
   const context = useContext(AppContext);
 
   const conflictsCount = context.userData?.adminConflictCounts;
-  const requestCount = requestContext.requestCount;
+  const requestCount = requestContext.totalCount;
 
   return (
     <Tab.Navigator

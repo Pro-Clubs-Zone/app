@@ -19,7 +19,6 @@ import i18n from '../../utils/i18n';
 import {RequestContext} from '../../context/requestContext';
 import shareLeagueLink from './actions/shareLink';
 import analytics from '@react-native-firebase/analytics';
-import countLeagueRequests from './actions/countLeagueRequests';
 import useGetLeagueRequests from '../user/actions/useGetLeagueRequests';
 import {AuthContext} from '../../context/authContext';
 import useGetClubRequests from '../user/actions/useGetClubRequests';
@@ -38,15 +37,12 @@ const firFunc = functions();
 
 export default function LeaguePreSeason({navigation, route}: Props) {
   const [loading, setLoading] = useState<boolean>(false);
-  //  const [leagueReqCount, setLeagueReqCount] = useState(0);
-  //  const [clubReqCount, setClubReqCount] = useState(0);
-  // const [clubRosterLength, setClubRosterLength] = useState(1);
 
   const context = useContext(AppContext);
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
   const uid = user.uid;
-  // const requestContext = useContext(RequestContext);
+  const requestContext = useContext(RequestContext);
 
   const leagueId = leagueContext.leagueId;
   const teamNum = leagueContext.league.teamNum;
@@ -57,17 +53,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
 
   const leagueRequests = useGetLeagueRequests(uid);
   const clubRequests = useGetClubRequests(uid);
-
-  const currentLeagueRequestCount = leagueRequests.data.filter((league) => {
-    return league.title === leagueContext.league.name;
-  })[0]?.data.length;
-
-  // const currentClubRequestCount = clubRequests.data.filter((leagueClub) => {
-  //   if (userLeague.manager) {
-  //     leagueClub.title ===
-  //       userLeague.clubName + ' / ' + leagueContext.league.name;
-  //   }
-  // })[0].data.length;
 
   useLayoutEffect(() => {
     if (newLeague) {
@@ -83,15 +68,6 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       });
     }
   }, [navigation, newLeague]);
-
-  //FIXME:
-  // useEffect(() => {
-  //   if (userClub.clubId && context.userLeagues[leagueId].clubs) {
-  //     const clubRoster =
-  //       context.userLeagues[leagueId].clubs[userClub.clubId].roster;
-  //     setClubRosterLength(Object.values(clubRoster).length);
-  //   }
-  // }, [context]);
 
   const onScheduleMatches = () => {
     if (leagueComplete) {
@@ -214,7 +190,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
               newLeague: false,
             })
           }
-          badgeNumber={currentLeagueRequestCount}
+          badgeNumber={requestContext.leagueCount[leagueId]}
         />
         <CardSmall
           title={i18n._(t`Transfer History`)}

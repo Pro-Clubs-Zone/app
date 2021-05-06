@@ -28,6 +28,7 @@ import useGetClubRequests from './actions/useGetClubRequests';
 import {RouteProp} from '@react-navigation/native';
 import {AppNavStack} from '../index';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {RequestContext} from '../../context/requestContext';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -41,14 +42,14 @@ type Props = {
 
 export default function Requests({navigation, route}: Props) {
   const uid = route.params.uid;
-
+  const requestContext = useContext(RequestContext);
   return (
     <Tab.Navigator lazy={true}>
       <Tab.Screen
         name="Club"
         component={ClubRequests}
         options={{
-          title: i18n._(t`Club`),
+          title: i18n._(t`Club - ${requestContext.totalClubCount}`),
         }}
         initialParams={{uid}}
       />
@@ -56,7 +57,7 @@ export default function Requests({navigation, route}: Props) {
         name="League"
         component={LeagueRequests}
         options={{
-          title: i18n._(t`League`),
+          title: i18n._(t`League - ${requestContext.totalLeagueCount}`),
         }}
         initialParams={{uid}}
       />

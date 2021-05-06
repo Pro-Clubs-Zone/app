@@ -14,7 +14,6 @@ import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import shareLeagueLink from './actions/shareLink';
 import {RequestContext} from '../../context/requestContext';
-import countLeagueRequests from './actions/countLeagueRequests';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -45,13 +44,6 @@ export default function LeagueScheduled({navigation}: Props) {
   const conflictMatchesCount =
     context.userLeagues?.[leagueId].conflictMatchesCount;
 
-  const [clubRequests, leagueRequests] = countLeagueRequests(
-    requestContext.leagues,
-    requestContext.clubs,
-    userLeague,
-    leagueContext.league.name,
-  );
-
   return (
     <ScrollView
       contentContainerStyle={{
@@ -75,7 +67,7 @@ export default function LeagueScheduled({navigation}: Props) {
                 scheduled: true,
               })
             }
-            badgeNumber={leagueRequests}
+            badgeNumber={requestContext.leagueCount[leagueId]}
           />
         </CardSmallContainer>
       )}
@@ -99,7 +91,7 @@ export default function LeagueScheduled({navigation}: Props) {
         <CardMedium
           title={userLeague.clubName}
           // subTitle={`${clubRosterLength} club members`}
-          badgeNumber={clubRequests}
+          badgeNumber={requestContext.clubCount[userLeague.clubId]}
           onPress={() =>
             navigation.navigate('My Club', {
               clubId: userLeague.clubId,

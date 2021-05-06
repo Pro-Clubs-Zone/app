@@ -6,15 +6,15 @@ import {
 } from '../../../utils/interface';
 import {AppContext} from '../../../context/appContext';
 import firestore from '@react-native-firebase/firestore';
-import {t} from '@lingui/macro';
-import i18n from '../../../utils/i18n';
+import {RequestContext} from '../../../context/requestContext';
+
 const useGetLeagueRequests = (uid: string) => {
   const [data, setData] = useState<ILeagueRequest[]>([]);
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(0);
 
   const context = useContext(AppContext);
-  // const requestContext = useContext(RequestContext);
+  const requestContext = useContext(RequestContext);
 
   const db = firestore();
 
@@ -35,7 +35,11 @@ const useGetLeagueRequests = (uid: string) => {
 
         const getRequests = query.onSnapshot((snapshot) => {
           let requests: ILeagueRequest[] = [];
-          let requestCount = 0;
+          let totalRequestCount = 0;
+          let leagueRequestCount: {
+            [name: string]: number;
+          } = {};
+
           if (snapshot.empty) {
             setLoading(false);
             setData([]);
@@ -78,11 +82,17 @@ const useGetLeagueRequests = (uid: string) => {
                 }
               });
             }
-            requestCount++;
+            if (leagueRequestCount[leagueId] === undefined) {
+              leagueRequestCount[leagueId] = 1;
+            } else {
+              leagueRequestCount[leagueId] += 1;
+            }
+            totalRequestCount++;
           });
-
+          requestContext.setTotalLeagueCount(totalRequestCount);
+          requestContext.setLeagueCount(leagueRequestCount);
           setData(requests);
-          setCount(requestCount);
+          setCount(totalRequestCount);
           setLoading(false);
         });
 
