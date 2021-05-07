@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
@@ -47,11 +47,13 @@ export default function CreateClub({route, navigation}: Props) {
   const username = context.userData!.username;
   const scheduled = route?.params?.scheduled;
 
-  useEffect(() => {
+  const onChangeText = (text: string) => {
+    setClubName(text);
+
     if (error.clubName && clubName !== '') {
       setError({...error, clubName: ''});
     }
-  }, [clubName]);
+  };
 
   const fieldValidation = async () => {
     if (clubName === '') {
@@ -105,13 +107,16 @@ export default function CreateClub({route, navigation}: Props) {
             leagueRef,
             {
               clubIndex: {
-                [clubRef.id]: clubName.trim(),
+                [clubRef.id]: clubName,
               },
             },
             {merge: true},
           );
           updateLeagueInfo.acceptedClubs += 1;
-          updateLeagueInfo.clubIndex[clubRef.id] = clubName.trim();
+          updateLeagueInfo.clubIndex = {
+            ...updateLeagueInfo.clubIndex,
+            [clubRef.id]: clubName.trim(),
+          };
         }
         batch.set(clubRef, clubInfo);
         batch.set(
@@ -166,7 +171,7 @@ export default function CreateClub({route, navigation}: Props) {
     <FormView>
       <FormContent>
         <TextField
-          onChangeText={(text) => setClubName(text.trimStart())}
+          onChangeText={(text) => onChangeText(text.trimStart())}
           value={clubName}
           placeholder={i18n._(t`Club Name`)}
           autoCorrect={false}

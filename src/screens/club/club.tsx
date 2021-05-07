@@ -10,7 +10,6 @@ import {ListHeading, OneLine, ListSeparator} from '../../components/listItems';
 import FullScreenLoading from '../../components/loading';
 import {useActionSheet} from '@expo/react-native-action-sheet';
 import handleClubRequest from './actions/handleClubRequest';
-import {RequestContext} from '../../context/requestContext';
 import {IconButton} from '../../components/buttons';
 import {LeagueContext} from '../../context/leagueContext';
 import removePlayer from './actions/removePlayer';
@@ -31,21 +30,17 @@ export default function Club({navigation, route}: Props) {
   const [data, setData] = useState<IPlayerRequestData[]>([]);
   const [loading, setLoading] = useState(true);
   const [sectionedData, setSectionedData] = useState<IClubRequest[]>([]);
+  const [managerId, setManagerId] = useState<string>();
 
   const context = useContext(AppContext);
-  // const requestContext = useContext(RequestContext);
   const leagueContext = useContext(LeagueContext);
   const {showActionSheetWithOptions} = useActionSheet();
 
   const clubId = route.params.clubId;
   const leagueId = leagueContext.leagueId;
   const club = context.userData.leagues[leagueId];
-  // const requests = requestContext.clubs;
-  // const requestSectionTitle =
-  //   club.clubName + ' / ' + context.userLeagues[leagueId].name;
 
   const isManager = context.userData.leagues[leagueId].manager;
-  const managerId = context.userLeagues[leagueId].clubs[clubId].managerId;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -115,7 +110,7 @@ export default function Club({navigation, route}: Props) {
           };
           playerList.push(playerInfo);
         }
-
+        setManagerId(clubData.managerId);
         setData(playerList);
         sortPlayers(playerList);
         setLoading(false);

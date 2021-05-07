@@ -15,7 +15,7 @@ import ScoreBoard from '../../components/scoreboard';
 import {MatchTextField} from '../../components/textField';
 import {ScaledSheet, verticalScale} from 'react-native-size-matters';
 import {APP_COLORS} from '../../utils/designSystem';
-//import firestore from '@react-native-firebase/firestore';
+import firestore from '@react-native-firebase/firestore';
 import i18n from '../../utils/i18n';
 import {ListHeading} from '../../components/listItems';
 import {t} from '@lingui/macro';
@@ -33,7 +33,7 @@ import MatchPlayer from '../../components/matchPlayer';
 import Select from '../../components/select';
 import addMatchStats from './actions/onAddMatchStats';
 import Toast from '../../components/toast';
-import {PlayerStatsInfo} from '../../utils/interface';
+import {IClub, PlayerStatsInfo} from '../../utils/interface';
 import {AuthContext} from '../../context/authContext';
 
 type ScreenNavigationProp = StackNavigationProp<MatchStackType, 'Submit Match'>;
@@ -42,7 +42,7 @@ type Props = {
   navigation: ScreenNavigationProp;
 };
 
-//const db = firestore();
+const db = firestore();
 
 export default function SubmitMatch({navigation}: Props) {
   const [homeScore, setHomeScore] = useState<string>('');
@@ -91,22 +91,34 @@ export default function SubmitMatch({navigation}: Props) {
   // const getMatches = useGetMatches(leagueId, query);
 
   useEffect(() => {
-    const currentRoster = context.userLeagues[leagueId].clubs[clubId].roster;
-    let rosterItems: PlayerStatsInfo[] = [];
+    const getClub = async () => {
+      const clubRef = db
+        .collection('leagues')
+        .doc(leagueId)
+        .collection('clubs')
+        .doc(clubId);
 
-    for (const [id, playerData] of Object.entries(currentRoster)) {
-      const player: PlayerStatsInfo = {
-        id: id,
-        username: playerData.username,
-        motm: undefined,
-        club: context.userData.leagues[leagueId].clubName,
-        clubId: clubId,
-      };
-      rosterItems.push(player);
-    }
+      const getData = await clubRef.get();
+      const club = getData.data() as IClub;
 
-    setRoster(rosterItems);
-  }, [leagueId, context.userData, context.userLeagues]);
+      const currentRoster = club.roster;
+      let rosterItems: PlayerStatsInfo[] = [];
+
+      for (const [id, playerData] of Object.entries(currentRoster)) {
+        const player: PlayerStatsInfo = {
+          id: id,
+          username: playerData.username,
+          motm: undefined,
+          club: context.userData.leagues[leagueId].clubName,
+          clubId: clubId,
+        };
+        rosterItems.push(player);
+      }
+
+      setRoster(rosterItems);
+    };
+    getClub();
+  }, [matchData, context.userData]);
 
   const onShowToast = (message: string) => {
     setShowToast(true);

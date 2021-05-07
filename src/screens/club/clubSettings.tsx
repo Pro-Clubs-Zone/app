@@ -32,7 +32,6 @@ export default function ClubSettings({route, navigation}: Props) {
   const playerId = user.uid!;
   const leagueId = leagueContext.leagueId;
   const clubId = route.params.clubId;
-  const clubRoster = context.userLeagues![leagueId].clubs![clubId].roster;
   const isManager = context.userData!.leagues![leagueId].manager;
   const admins = leagueContext.league.admins;
   const leagueScheduled = leagueContext.league.scheduled;
@@ -62,7 +61,7 @@ export default function ClubSettings({route, navigation}: Props) {
           {
             text: i18n._(t`Remove`),
             onPress: async () => {
-              await removeClub(leagueId, clubId, admins, clubRoster);
+              await removeClub(leagueId, clubId, admins);
               await user.currentUser.reload();
               navigation.dispatch(
                 CommonActions.reset({
