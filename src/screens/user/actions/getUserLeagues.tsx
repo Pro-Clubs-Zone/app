@@ -1,9 +1,9 @@
 import firestore from '@react-native-firebase/firestore';
-import {IClub, ILeague, IUser} from '../../../utils/interface';
+import {ILeague, IUser} from '../../../utils/interface';
 
 const db = firestore();
 
-const getLeaguesClubs = async (
+const getUserLeagues = async (
   userData: IUser,
 ): Promise<{
   updatedUserData: IUser;
@@ -52,4 +52,4 @@ const getLeaguesClubs = async (
   };
 };
 
-export default getLeaguesClubs;
+export default getUserLeagues;

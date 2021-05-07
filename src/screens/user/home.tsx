@@ -5,8 +5,8 @@ import {AuthContext} from '../../context/authContext';
 import {StackNavigationProp} from '@react-navigation/stack';
 import firestore from '@react-native-firebase/firestore';
 import {IUser, IMatchNavData} from '../../utils/interface';
-import getUserUpcomingMatches from './actions/useGetUserUpcomingMatches';
-import getLeaguesClubs from './actions/getUserLeagueClubs';
+import getUserUpcomingMatches from './actions/getUserUpcomingMatches';
+import getUserLeagues from './actions/getUserLeagues';
 import {AppNavStack} from '../index';
 import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {t, Trans} from '@lingui/macro';
@@ -65,7 +65,7 @@ export default function Home({navigation}: Props) {
       const doc = await userRef.get();
       userInfo = doc.data() as IUser;
       if (doc.exists && userInfo.leagues) {
-        const leagueAndClubsData = await getLeaguesClubs(userInfo);
+        const leagueAndClubsData = await getUserLeagues(userInfo);
         const {updatedUserData, userLeagues} = leagueAndClubsData;
         context.setUserData(updatedUserData);
         context.setUserLeagues(userLeagues);
