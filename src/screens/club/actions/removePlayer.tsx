@@ -5,8 +5,8 @@ const removePlayer = async ({
   leagueId,
   playerId,
   clubId,
-  clubName,
   username,
+  clubName,
 }: Partial<IPlayerRequestData> & {clubName: string}) => {
   const db = firestore();
   const batch = db.batch();

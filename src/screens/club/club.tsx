@@ -119,36 +119,6 @@ export default function Club({navigation, route}: Props) {
     getData();
   }, [leagueId, clubId]);
 
-  const onHandlePlayerRequest = async (
-    selectedPlayer: IPlayerRequestData,
-    acceptRequest: boolean,
-  ) => {
-    try {
-      await handleClubRequest(selectedPlayer, acceptRequest, club.clubName);
-
-      //  requestContext.setClubs(newData);
-      //  const currentCount = requestContext.requestCount;
-      //  requestContext.setClubCount(currentCount === 1 ? 0 : currentCount - 1);
-
-      // const currentLeagueData = {...context.userLeagues};
-      // if (acceptRequest) {
-      //   currentLeagueData[selectedPlayer.leagueId].clubs[
-      //     selectedPlayer.clubId
-      //   ].roster[selectedPlayer.playerId].accepted = true;
-      // } else {
-      //   delete currentLeagueData[selectedPlayer.leagueId].clubs[
-      //     selectedPlayer.clubId
-      //   ].roster[selectedPlayer.playerId];
-      // }
-
-      // context.setUserLeagues(currentLeagueData);
-    } catch (error) {
-      console.log(error);
-
-      throw new Error(error);
-    }
-  };
-
   const onAcceptPlayer = async (selectedPlayer: IPlayerRequestData) => {
     setLoading(true);
 
@@ -159,11 +129,10 @@ export default function Club({navigation, route}: Props) {
       return player;
     });
 
-    onHandlePlayerRequest(selectedPlayer, true).then(() => {
-      setData(updatedList);
-      sortPlayers(updatedList);
-      setLoading(false);
-    });
+    await handleClubRequest(selectedPlayer, true, club.clubName);
+    setData(updatedList);
+    sortPlayers(updatedList);
+    setLoading(false);
   };
 
   const onDeclinePlayer = async (selectedPlayer: IPlayerRequestData) => {
@@ -173,11 +142,10 @@ export default function Club({navigation, route}: Props) {
       (player) => player.playerId !== selectedPlayer.playerId,
     );
 
-    onHandlePlayerRequest(selectedPlayer, false).then(() => {
-      setData(updatedList);
-      sortPlayers(updatedList);
-      setLoading(false);
-    });
+    await handleClubRequest(selectedPlayer, false, club.clubName);
+    setData(updatedList);
+    sortPlayers(updatedList);
+    setLoading(false);
   };
 
   const onRemovePlayer = async (selectedPlayer: IPlayerRequestData) => {
@@ -188,12 +156,6 @@ export default function Club({navigation, route}: Props) {
     );
 
     await removePlayer({...selectedPlayer, clubName: club.clubName});
-    const currentLeagueData = {...context.userLeagues};
-    delete currentLeagueData[selectedPlayer.leagueId].clubs[
-      selectedPlayer.clubId
-    ].roster[selectedPlayer.playerId];
-
-    context.setUserLeagues(currentLeagueData);
 
     setData(updatedList);
     sortPlayers(updatedList);

@@ -24,7 +24,9 @@ const useGetUserPublishedMatches = (uid: string) => {
       const subscriber = publishedMatchesForPlayer.onSnapshot((snapshot) => {
         let matches: FixtureList[] = [];
         if (snapshot.empty) {
-          return setLoading(false);
+          setLoading(false);
+          setData([]);
+          return {data, loading};
         }
         snapshot.forEach((doc) => {
           const matchData = doc.data() as IMatch;

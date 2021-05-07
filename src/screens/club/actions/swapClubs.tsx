@@ -58,6 +58,16 @@ const swapClubs = async ({oldClub, newClub}: Props) => {
       },
       {merge: true},
     );
+
+    batch.set(
+      leagueRef,
+      {
+        clubIndex: {
+          [oldClub.clubId]: newClub.name,
+        },
+      },
+      {merge: true},
+    );
   }
 
   await Promise.all([
