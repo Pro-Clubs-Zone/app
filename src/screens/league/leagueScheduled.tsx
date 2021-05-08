@@ -90,7 +90,7 @@ export default function LeagueScheduled({navigation}: Props) {
       {isPlayer && (
         <CardMedium
           title={userLeague.clubName}
-          // subTitle={`${clubRosterLength} club members`}
+          subTitle={i18n._(t`Manager your club and roster`)}
           badgeNumber={requestContext.clubCount[userLeague.clubId]}
           onPress={() =>
             navigation.navigate('My Club', {

@@ -1,13 +1,19 @@
 import firestore from '@react-native-firebase/firestore';
-import {IClub, IClubRequestData} from '../../../utils/interface';
+import {
+  IClub,
+  IClubRequestData,
+  ILeagueAdmin,
+  IUserLeague,
+} from '../../../utils/interface';
 import analytics from '@react-native-firebase/analytics';
 
 type Props = {
   oldClub: IClubRequestData;
   newClub: IClubRequestData;
+  leagueAdmins: ILeagueAdmin;
 };
 
-const swapClubs = async ({oldClub, newClub}: Props) => {
+const swapClubs = async ({oldClub, newClub, leagueAdmins}: Props) => {
   const db = firestore();
   const batch = db.batch();
   const leagueId = oldClub.leagueId;
@@ -36,10 +42,25 @@ const swapClubs = async ({oldClub, newClub}: Props) => {
   batch.delete(clubRef.doc(newClub.clubId));
 
   for (const playerId of Object.keys(oldClub.roster)) {
+    const isAdmin = Object.keys(leagueAdmins).some(
+      (adminUid) => adminUid === playerId,
+    );
+
+    const removeClubFromAdmin: Partial<IUserLeague> = {
+      accepted: firestore.FieldValue.delete(),
+      clubId: firestore.FieldValue.delete(),
+      clubName: firestore.FieldValue.delete(),
+      manager: firestore.FieldValue.delete(),
+    };
+
     batch.set(
       usersRef.doc(playerId),
       {
-        leagues: {[leagueId]: firestore.FieldValue.delete()},
+        leagues: {
+          [leagueId]: isAdmin
+            ? removeClubFromAdmin
+            : firestore.FieldValue.delete(),
+        },
       },
       {merge: true},
     );

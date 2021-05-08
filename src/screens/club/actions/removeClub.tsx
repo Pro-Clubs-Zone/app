@@ -4,7 +4,7 @@ import {IClub, ILeagueAdmin} from '../../../utils/interface';
 const removeClub = async (
   leagueId: string,
   clubId: string,
-  admins: ILeagueAdmin,
+  leagueAdmins: ILeagueAdmin,
 ) => {
   const db = firestore();
   const batch = db.batch();
@@ -18,7 +18,7 @@ const removeClub = async (
 
   for (const playerId of Object.keys(club.roster)) {
     const playerRef = db.collection('users').doc(playerId);
-    const isAdmin = Object.keys(admins).some(
+    const isAdmin = Object.keys(leagueAdmins).some(
       (adminUid) => adminUid === playerId,
     );
     if (isAdmin) {

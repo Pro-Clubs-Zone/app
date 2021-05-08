@@ -41,7 +41,7 @@ export default function Clubs({navigation, route}: Props) {
   const ref = useRef(null);
 
   const leagueId = leagueContext.leagueId;
-  const admins = leagueContext.league.admins;
+  const leagueAdmins = leagueContext.league.admins;
 
   const scheduled = route?.params?.scheduled;
 
@@ -107,7 +107,7 @@ export default function Clubs({navigation, route}: Props) {
   ) => {
     setLoading(true);
     try {
-      await swapClubs({oldClub, newClub});
+      await swapClubs({oldClub, newClub, leagueAdmins});
       await user.currentUser.reload();
       setLoading(false);
     } catch (error) {
@@ -117,23 +117,23 @@ export default function Clubs({navigation, route}: Props) {
   };
 
   const onConfirmClubSwap = (oldClub: IClubRequestData, swapClubId: string) => {
-    const isAdmin = Object.keys(admins).some(
-      (adminUid) => adminUid === oldClub.managerId,
-    );
+    // const isAdmin = Object.keys(leagueAdmins).some(
+    //   (adminUid) => adminUid === oldClub.managerId,
+    // );
 
-    if (isAdmin) {
-      return Alert.alert(
-        i18n._(t`Can't swap admin club`),
-        i18n._(t`Currently admins can't swap their own club`),
-        [
-          {
-            text: i18n._(t`Close`),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: false},
-      );
-    }
+    // if (isAdmin) {
+    //   return Alert.alert(
+    //     i18n._(t`Can't swap admin club`),
+    //     i18n._(t`Currently admins can't swap their own club`),
+    //     [
+    //       {
+    //         text: i18n._(t`Close`),
+    //         style: 'cancel',
+    //       },
+    //     ],
+    //     {cancelable: false},
+    //   );
+    // }
     const newClub = sectionedData[1].data.filter(
       (club) => club.clubId === swapClubId,
     );
@@ -224,8 +224,6 @@ export default function Clubs({navigation, route}: Props) {
   };
 
   const onAcceptedClub = async (club: IClubRequestData) => {
-    const clubRoster = club.roster;
-
     if (scheduled) {
       setSwapClub(club);
       return ref?.current?._toggleSelector();
@@ -242,7 +240,7 @@ export default function Clubs({navigation, route}: Props) {
           text: i18n._(t`Remove`),
           onPress: async () => {
             setLoading(true);
-            await removeClub(leagueId, club.clubId, admins, clubRoster);
+            await removeClub(leagueId, club.clubId, leagueAdmins);
           },
           style: 'destructive',
         },
