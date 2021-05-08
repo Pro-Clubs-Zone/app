@@ -20,7 +20,10 @@ export default function SwitchLabel({
         alignItems: 'center',
         paddingBottom: verticalScale(16),
       }}>
-      <View>
+      <View
+        style={{
+          flex: 1,
+        }}>
         <Text style={TEXT_STYLES.body}>{title}</Text>
         {subtitle && (
           <Text

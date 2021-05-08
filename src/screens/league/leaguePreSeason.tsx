@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useContext, useLayoutEffect, useState} from 'react';
 import {Alert, ScrollView} from 'react-native';
 import {HeaderBackButton, StackNavigationProp} from '@react-navigation/stack';
 import functions from '@react-native-firebase/functions';

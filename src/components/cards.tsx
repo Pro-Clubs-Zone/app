@@ -7,8 +7,12 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import {verticalScale, ScaledSheet} from 'react-native-size-matters';
-import {TEXT_STYLES, APP_COLORS} from '../utils/designSystem';
+import {
+  verticalScale,
+  ScaledSheet,
+  moderateVerticalScale,
+} from 'react-native-size-matters';
+import {TEXT_STYLES, APP_COLORS, FONT_SIZES} from '../utils/designSystem';
 import {Badge} from './elements';
 
 const deviceWidth = Dimensions.get('window').width;
@@ -38,9 +42,23 @@ export const CardSmall = ({onPress, title, badgeNumber}: CardProps) => {
         source={{uri: 'card_overlay'}}
         resizeMode="cover">
         {badgeNumber > 0 && <Badge number={badgeNumber} />}
-        <View>
-          <Text style={TEXT_STYLES.display5}>
-            {title.replace(' ', '\n').toUpperCase()}
+        <View
+          style={{
+            justifyContent: 'center',
+          }}>
+          <Text
+            style={[
+              TEXT_STYLES.display5,
+              {
+                fontSize:
+                  title.length > 20
+                    ? moderateVerticalScale(FONT_SIZES.XXS, 0)
+                    : moderateVerticalScale(FONT_SIZES.XS, 0.6),
+                lineHeight:
+                  title.length > 20 ? verticalScale(16) : verticalScale(20),
+              },
+            ]}>
+            {title.toUpperCase()}
           </Text>
         </View>
       </ImageBackground>

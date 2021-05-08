@@ -196,7 +196,8 @@ export default function SignIn({navigation}: Props) {
                 onPress={() => navigation.navigate('Password Recovery')}>
                 <View style={styles.resetPass}>
                   <Text style={TEXT_STYLES.small}>
-                    <Trans>Forgot login details?</Trans>{' '}
+                    <Trans>Forgot login details?</Trans>
+                    {'\n'}
                     <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
                       <Trans>Get help recovering it.</Trans>
                     </Text>
