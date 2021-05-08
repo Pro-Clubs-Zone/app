@@ -121,6 +121,9 @@ export default function Club({navigation, route}: Props) {
 
   const onAcceptPlayer = async (selectedPlayer: IPlayerRequestData) => {
     setLoading(true);
+    const isPlayerAdmin = Object.keys(leagueContext.league.admins).some(
+      (adminUid) => adminUid === selectedPlayer.playerId,
+    );
 
     const updatedList: IPlayerRequestData[] = data.map((player) => {
       if (player.playerId === selectedPlayer.playerId) {
@@ -129,7 +132,7 @@ export default function Club({navigation, route}: Props) {
       return player;
     });
 
-    await handleClubRequest(selectedPlayer, true, club.clubName);
+    await handleClubRequest(selectedPlayer, true, club.clubName, isPlayerAdmin);
     setData(updatedList);
     sortPlayers(updatedList);
     setLoading(false);
@@ -137,12 +140,19 @@ export default function Club({navigation, route}: Props) {
 
   const onDeclinePlayer = async (selectedPlayer: IPlayerRequestData) => {
     setLoading(true);
-
+    const isPlayerAdmin = Object.keys(leagueContext.league.admins).some(
+      (adminUid) => adminUid === selectedPlayer.playerId,
+    );
     const updatedList: IPlayerRequestData[] = data.filter(
       (player) => player.playerId !== selectedPlayer.playerId,
     );
 
-    await handleClubRequest(selectedPlayer, false, club.clubName);
+    await handleClubRequest(
+      selectedPlayer,
+      false,
+      club.clubName,
+      isPlayerAdmin,
+    );
     setData(updatedList);
     sortPlayers(updatedList);
     setLoading(false);
@@ -150,12 +160,19 @@ export default function Club({navigation, route}: Props) {
 
   const onRemovePlayer = async (selectedPlayer: IPlayerRequestData) => {
     setLoading(true);
-
+    const leagueAdmins = leagueContext.league.admins;
+    const isAdmin = Object.keys(leagueAdmins).some(
+      (adminUid) => adminUid === selectedPlayer.playerId,
+    );
     const updatedList: IPlayerRequestData[] = data.filter(
       (player) => player.playerId !== selectedPlayer.playerId,
     );
 
-    await removePlayer({...selectedPlayer, clubName: club.clubName});
+    await removePlayer({
+      ...selectedPlayer,
+      clubName: club.clubName,
+      isAdmin,
+    });
 
     setData(updatedList);
     sortPlayers(updatedList);

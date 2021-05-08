@@ -3,7 +3,7 @@ import {Alert, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {AppContext} from '../../context/appContext';
 import {AuthContext} from '../../context/authContext';
-import {IClub, IClubRosterMember, IUserLeague} from '../../utils/interface';
+import {IClub, IUserLeague} from '../../utils/interface';
 import {LeagueStackType} from '../league/league';
 import FullScreenLoading from '../../components/loading';
 import {ListHeading, TwoLine, ListSeparator} from '../../components/listItems';
@@ -11,9 +11,9 @@ import {verticalScale} from 'react-native-size-matters';
 import EmptyState from '../../components/emptyState';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {LeagueContext} from '../../context/leagueContext';
-import analytics from '@react-native-firebase/analytics';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
+import sendPlayerRequest from './actions/sendPlayerRequest';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Join Club'>;
 
@@ -54,43 +54,14 @@ export default function JoinClub({navigation}: Props) {
   const onSendRequestConfirm = async (club: ClubListItem) => {
     setLoading(true);
     const uid = user.uid!;
-    const userRef = db.collection('users').doc(uid);
-    const batch = db.batch();
-    const clubRef = leagueClubs.doc(club.clubId);
     const userInfo: IUserLeague = {
       clubId: club.clubId,
       accepted: false,
       manager: false,
       clubName: club.name,
     };
-    const rosterMember: {[uid: string]: IClubRosterMember} = {
-      [uid as string]: {
-        accepted: false,
-        username: context.userData!.username,
-      },
-    };
-
-    batch.set(
-      clubRef,
-      {
-        roster: rosterMember,
-      },
-      {merge: true},
-    );
-    batch.set(
-      userRef,
-      {
-        leagues: {
-          [leagueId]: userInfo,
-        },
-      },
-      {merge: true},
-    );
     try {
-      await batch.commit();
-      await analytics().logJoinGroup({
-        group_id: leagueContext.leagueId,
-      });
+      await sendPlayerRequest(uid, user.displayName, leagueId, userInfo);
       let userData = {...context.userData!};
       userData.leagues = {
         ...userData.leagues,
@@ -101,10 +72,6 @@ export default function JoinClub({navigation}: Props) {
       userLeagues = {
         [leagueId]: leagueContext.league,
       };
-      // userLeagues[leagueId].clubs[club.clubId] = {
-      //   ...userLeagues[leagueId].clubs[club.clubId],
-      //   roster: rosterMember,
-      // };
 
       context.setUserData(userData);
       context.setUserLeagues(userLeagues);

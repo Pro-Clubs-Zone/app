@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import {
-  IClubRequest,
   IPlayerRequestData,
+  IUserLeague,
   Transfer,
 } from '../../../utils/interface';
 
@@ -9,6 +9,7 @@ const handleClubRequest = async (
   {playerId, clubId, leagueId, username}: IPlayerRequestData,
   acceptRequest: boolean,
   clubName: string,
+  isAdmin: boolean,
 ) => {
   const db = firestore();
   const batch = db.batch();
@@ -35,6 +36,13 @@ const handleClubRequest = async (
     },
   };
 
+  const removeClubFromAdmin: Partial<IUserLeague> = {
+    accepted: firestore.FieldValue.delete(),
+    clubId: firestore.FieldValue.delete(),
+    clubName: firestore.FieldValue.delete(),
+    manager: firestore.FieldValue.delete(),
+  };
+
   if (acceptRequest) {
     batch.update(clubRef, {
       ['roster.' + playerId + '.accepted']: true,
@@ -44,9 +52,15 @@ const handleClubRequest = async (
     });
     batch.set(transfersRef, transferItem, {merge: true});
   } else {
-    batch.update(playerRef, {
-      [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
-    });
+    batch.set(
+      playerRef,
+      {
+        [`leagues.${leagueId}`]: isAdmin
+          ? removeClubFromAdmin
+          : firestore.FieldValue.delete(),
+      },
+      {merge: true},
+    );
     batch.update(clubRef, {
       ['roster.' + playerId]: firestore.FieldValue.delete(),
     });

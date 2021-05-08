@@ -92,12 +92,14 @@ export default function ClubSettings({route, navigation}: Props) {
         {
           text: i18n._(t`Leave`),
           onPress: async () => {
+            const isAdmin = context.userData.leagues[leagueId].admin;
             await removePlayer({
               leagueId,
               playerId,
               clubId,
               clubName,
               username,
+              isAdmin,
             });
             await user.currentUser.reload();
             navigation.dispatch(

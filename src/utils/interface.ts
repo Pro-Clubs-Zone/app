@@ -238,7 +238,7 @@ export interface IClub {
 
 export interface IUserLeague {
   clubId?: string;
-  manager: boolean;
+  manager?: boolean;
   admin?: boolean;
   accepted?: boolean;
   clubName?: string;

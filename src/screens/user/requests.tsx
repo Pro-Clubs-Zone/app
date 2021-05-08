@@ -7,7 +7,7 @@ import {
   IMyRequests,
   IPlayerRequestData,
   ISentRequest,
-  IUser,
+  IUserLeague,
 } from '../../utils/interface';
 import {
   ListHeading,
@@ -99,21 +99,19 @@ function ClubRequests({navigation, route}) {
   ) => {
     try {
       setLoading(true);
+      const leagueAdmins = context.userLeagues[selectedPlayer.leagueId].admins;
+      const isPlayerAdmin = Object.keys(leagueAdmins).some(
+        (adminUid) => adminUid === selectedPlayer.playerId,
+      );
       const clubName =
         context.userData.leagues[selectedPlayer.leagueId].clubName;
-      await handleClubRequest(selectedPlayer, acceptRequest, clubName);
+      await handleClubRequest(
+        selectedPlayer,
+        acceptRequest,
+        clubName,
+        isPlayerAdmin,
+      );
 
-      // const currentLeagueData = {...context.userLeagues};
-      // if (acceptRequest) {
-      //   currentLeagueData[selectedPlayer.leagueId].clubs[
-      //     selectedPlayer.clubId
-      //   ].roster[selectedPlayer.playerId].accepted = true;
-      // } else {
-      //   delete currentLeagueData[selectedPlayer.leagueId].clubs[
-      //     selectedPlayer.clubId
-      //   ].roster[selectedPlayer.playerId];
-      // }
-      // context.setUserLeagues(currentLeagueData);
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -365,6 +363,13 @@ function MySentRequests({navigation, route}) {
   const onCancelRequestConfirm = async (myRequest: ISentRequest) => {
     setLoading(true);
 
+    const isAdmin = userData.leagues[myRequest.leagueId].admin;
+    const removeClubFromAdmin: Partial<IUserLeague> = {
+      accepted: firestore.FieldValue.delete(),
+      clubId: firestore.FieldValue.delete(),
+      clubName: firestore.FieldValue.delete(),
+      manager: firestore.FieldValue.delete(),
+    };
     const clubRef = db
       .collection('leagues')
       .doc(myRequest.leagueId)
@@ -379,14 +384,34 @@ function MySentRequests({navigation, route}) {
       batch.delete(clubRef);
     }
 
-    batch.update(userRef, {
-      ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
-    });
+    console.log('isadmin', isAdmin);
+
+    batch.set(
+      userRef,
+      {
+        leagues: {
+          [myRequest.leagueId]: isAdmin
+            ? removeClubFromAdmin
+            : firestore.FieldValue.delete(),
+        },
+      },
+      {merge: true},
+    );
 
     let updatedUserData = {...userData};
-    delete updatedUserData.leagues[myRequest.leagueId];
     let updatedUserLeagues = {...context.userLeagues};
-    delete updatedUserLeagues[myRequest.leagueId];
+
+    if (isAdmin) {
+      const {admin, owner} = updatedUserData.leagues[myRequest.leagueId];
+      updatedUserData.leagues[myRequest.leagueId] = {
+        admin,
+        owner,
+      };
+      console.log(updatedUserData.leagues[myRequest.leagueId]);
+    } else {
+      delete updatedUserData.leagues[myRequest.leagueId];
+      delete updatedUserLeagues[myRequest.leagueId];
+    }
 
     await batch.commit();
     context.setUserData(updatedUserData);
