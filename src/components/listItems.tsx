@@ -206,14 +206,15 @@ export const OneLine = ({
 //---------- Two Line List Item ----------//
 
 export const TwoLine = (props: TwoLineProps) => (
-  <Pressable onPress={props.onPress} disabled={props.disabled}>
-    <View
-      style={[
-        styles.listBg,
-        {
-          minHeight: verticalScale(72),
-        },
-      ]}>
+  <View
+    style={{
+      flexDirection: 'row',
+      minHeight: verticalScale(72),
+    }}>
+    <Pressable
+      onPress={props.onPress}
+      disabled={props.disabled}
+      style={[styles.listBg]}>
       <View
         style={{
           flexDirection: 'row',
@@ -331,25 +332,24 @@ export const TwoLine = (props: TwoLineProps) => (
           {props.value}
         </Text>
       </View>
-      {props.rightDefaultIcon || props.rightIcon ? (
-        <View style={styles.twoLineIcon}>
-          <Icon
-            name={props.rightIcon ? props.rightIcon : 'chevron-right'}
-            size={verticalScale(24)}
-            color={props.iconColor ? props.iconColor : APP_COLORS.Gray}
-            onPress={props.onIconPress}
-          />
-        </View>
-      ) : null}
-    </View>
-  </Pressable>
+    </Pressable>
+    {props.rightDefaultIcon || props.rightIcon ? (
+      <Pressable style={styles.twoLineIcon} onPress={props.onIconPress}>
+        <Icon
+          name={props.rightIcon ? props.rightIcon : 'chevron-right'}
+          size={verticalScale(24)}
+          color={props.iconColor ? props.iconColor : APP_COLORS.Gray}
+        />
+      </Pressable>
+    ) : null}
+  </View>
 );
 
 //---------- Stylesheet ----------//
 
 const styles = ScaledSheet.create({
   listBg: {
-    //    flex: 1,
+    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: '16@vs',
@@ -377,9 +377,7 @@ const styles = ScaledSheet.create({
     borderBottomColor: APP_COLORS.Primary,
   },
   twoLineIcon: {
-    width: '24@vs',
-    height: '48@vs',
-    marginLeft: '16@vs',
+    paddingHorizontal: '16@vs',
     justifyContent: 'center',
     alignItems: 'center',
   },

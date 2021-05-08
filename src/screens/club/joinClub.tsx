@@ -148,6 +148,7 @@ export default function JoinClub({navigation}: Props) {
             sub={item.managerUsername}
             onPress={() => onSendRequest(item)}
             rightDefaultIcon
+            onIconPress={() => onSendRequest(item)}
           />
         )}
         ListHeaderComponent={() =>
