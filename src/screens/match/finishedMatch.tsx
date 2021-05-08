@@ -192,6 +192,16 @@ function MatchResult({navigation, route}) {
         showSubmit={isPlayer}
         onSubmit={() => navigation.navigate('Submit Stats')}
         submitTitle={i18n._(t`Submit Stats`)}
+        onPressHome={() => {
+          navigation.navigate('Club Profile', {
+            clubId: matchData.homeTeamId,
+          });
+        }}
+        onPressAway={() => {
+          navigation.navigate('Club Profile', {
+            clubId: matchData.awayTeamId,
+          });
+        }}
       />
       {
         // MOTM - Name, Club, Rating, Card

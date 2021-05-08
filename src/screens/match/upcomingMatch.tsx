@@ -266,6 +266,19 @@ export default function UpcomingMatch({navigation}: Props) {
         onSubmit={() => {
           navigation.navigate('Submit Match');
         }}
+        onPressHome={() => {
+          // @ts-ignore
+          navigation.navigate('Club Profile', {
+            clubId: matchData.homeTeamId,
+          });
+        }}
+        // @ts-ignore
+        onPressAway={() => {
+          // @ts-ignore
+          navigation.navigate('Club Profile', {
+            clubId: matchData.awayTeamId,
+          });
+        }}
       />
       {matchData.submissions && matchData.admin ? (
         <MatchConflict

@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, ImageBackground} from 'react-native';
+import {View, Text, Image, ImageBackground, Pressable} from 'react-native';
 import {APP_COLORS, TEXT_STYLES} from '../utils/designSystem';
 import {PrimaryButton} from './buttons';
 import {verticalScale, ScaledSheet} from 'react-native-size-matters';
@@ -15,6 +15,8 @@ type Props = {
   data: IMatchNavData;
   children?: any;
   submitTitle?: any;
+  onPressHome: () => void;
+  onPressAway: () => void;
 };
 
 const ScoreBoard = ({
@@ -24,12 +26,20 @@ const ScoreBoard = ({
   onSubmit,
   children,
   submitTitle,
+  onPressHome,
+  onPressAway,
 }: Props) => {
   const homeTeamScore = data.result?.[data.homeTeamId];
   const awayTeamScore = data.result?.[data.awayTeamId];
 
-  const Team = ({teamName}: {teamName: string}) => (
-    <View style={styles.team}>
+  const Team = ({
+    teamName,
+    onPress,
+  }: {
+    teamName: string;
+    onPress: () => void;
+  }) => (
+    <Pressable style={styles.team} onPress={onPress}>
       <Image source={defaultLogo} style={styles.teamLogo} />
       <Text
         style={[
@@ -41,14 +51,14 @@ const ScoreBoard = ({
         ]}>
         {teamName}
       </Text>
-    </View>
+    </Pressable>
   );
 
   return (
     <ImageBackground source={{uri: 'scoreboard_bg'}} style={styles.bg}>
       <View style={styles.container}>
         <View style={styles.firstRow}>
-          <Team teamName={data.homeTeamName} />
+          <Team teamName={data.homeTeamName} onPress={onPressHome} />
 
           <View
             style={{
@@ -116,7 +126,7 @@ const ScoreBoard = ({
               </View>
             )}
           </View>
-          <Team teamName={data.awayTeamName} />
+          <Team teamName={data.awayTeamName} onPress={onPressAway} />
         </View>
       </View>
       {
