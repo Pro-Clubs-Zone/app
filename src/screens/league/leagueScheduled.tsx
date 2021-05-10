@@ -40,6 +40,7 @@ export default function LeagueScheduled({navigation}: Props) {
   const isAdmin = userLeague.admin;
   // const isManager = context.userData.leagues[leagueId].manager;
   const isPlayer = userLeague.clubId !== undefined;
+  const isAccepted = userLeague.accepted;
 
   const conflictMatchesCount =
     context.userLeagues?.[leagueId].conflictMatchesCount;
@@ -87,7 +88,7 @@ export default function LeagueScheduled({navigation}: Props) {
         />
       </CardSmallContainer>
 
-      {isPlayer && (
+      {isPlayer && isAccepted && (
         <CardMedium
           title={userLeague.clubName}
           subTitle={i18n._(t`Manager your club and roster`)}

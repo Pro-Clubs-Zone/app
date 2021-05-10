@@ -116,6 +116,8 @@ export default function LeagueStack({navigation, route}: Props) {
   };
 
   useEffect(() => {
+    console.log('league');
+
     const getLeagueData = async () => {
       try {
         const leagueRef = db.collection('leagues').doc(leagueId);
@@ -130,10 +132,52 @@ export default function LeagueStack({navigation, route}: Props) {
           leagueContext.setLeagueId(leagueId);
           leagueContext.setLeague(leagueInfo);
           setLeague(leagueInfo);
-          // const userLeagues = {...context.userLeagues};
-          // userLeagues[leagueId] = leagueInfo;
-          // context.setUserLeagues(userLeagues);
         }
+        // first part end
+        const userData = context.userData;
+        const uid = user.uid;
+
+        let role: string = 'guest';
+
+        if (user && userData) {
+          const userDataLeague = userData.leagues?.[leagueId];
+          role = userDataLeague?.admin
+            ? 'admin'
+            : userDataLeague?.manager
+            ? 'manager'
+            : 'player';
+        }
+
+        const log = async () => {
+          await Promise.all([
+            crashlytics().setAttributes({
+              leagueId: leagueId,
+              role: role,
+              leagueName: leagueInfo.name,
+              clubName: userData?.leagues?.[leagueId]?.clubName,
+            }),
+            analytics().logEvent('league_view', {
+              leagueId: leagueId,
+              role: role,
+              leagueName: leagueInfo?.name,
+              clubName: userData?.leagues?.[leagueId]?.clubName,
+            }),
+          ]).catch((logErr) => {
+            throw new Error(logErr);
+          });
+        };
+
+        const userInLeague =
+          (userData?.leagues && userData.leagues[leagueId]?.accepted) ?? false;
+        const scheduled = leagueInfo?.scheduled ?? false;
+        const userAdmin =
+          userData &&
+          leagueInfo &&
+          Object.keys(leagueInfo.admins).some((adminUid) => adminUid === uid);
+        await log();
+        setLeagueScheduled(scheduled);
+        setIsAdmin(userAdmin);
+        setInLeague(userInLeague);
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -141,54 +185,7 @@ export default function LeagueStack({navigation, route}: Props) {
       }
     };
     getLeagueData();
-  }, [leagueId]);
-
-  useEffect(() => {
-    const userData = context.userData;
-    const uid = user.uid;
-
-    let role: string = 'guest';
-
-    if (user && userData) {
-      const userDataLeague = userData.leagues?.[leagueId];
-      role = userDataLeague?.admin
-        ? 'admin'
-        : userDataLeague?.manager
-        ? 'manager'
-        : 'player';
-    }
-
-    const log = async () => {
-      await Promise.all([
-        crashlytics().setAttributes({
-          leagueId: leagueId,
-          role: role,
-          leagueName: league.name,
-          clubName: userData?.leagues?.[leagueId]?.clubName,
-        }),
-        analytics().logEvent('league_view', {
-          leagueId: leagueId,
-          role: role,
-          leagueName: league?.name,
-          clubName: userData?.leagues?.[leagueId]?.clubName,
-        }),
-      ]).catch((logErr) => {
-        throw new Error(logErr);
-      });
-    };
-
-    const userInLeague =
-      (userData?.leagues && userData.leagues[leagueId]?.accepted) ?? false;
-    const scheduled = league?.scheduled ?? false;
-    const userAdmin =
-      userData &&
-      league &&
-      Object.keys(league.admins).some((adminUid) => adminUid === uid);
-    log();
-    setLeagueScheduled(scheduled);
-    setIsAdmin(userAdmin);
-    setInLeague(userInLeague);
-  }, [league]);
+  }, [leagueId, context.userData]);
 
   const commonStack = (
     <>

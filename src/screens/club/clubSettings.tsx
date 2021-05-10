@@ -33,13 +33,14 @@ export default function ClubSettings({route, navigation}: Props) {
   const leagueId = leagueContext.leagueId;
   const clubId = route.params.clubId;
   const isManager = context.userData!.leagues![leagueId].manager;
+  const isAccepted = context.userData.leagues[leagueId].accepted;
   const admins = leagueContext.league.admins;
   const leagueScheduled = leagueContext.league.scheduled;
   const clubName = context.userData.leagues[leagueId].clubName;
   const username = user.displayName;
 
   const onRemoveClub = async () => {
-    if (leagueScheduled) {
+    if (leagueScheduled && isAccepted) {
       Alert.alert(
         i18n._(t`Remove Club`),
         i18n._(t`You cannot remove club when league is scheduled`),
@@ -64,7 +65,15 @@ export default function ClubSettings({route, navigation}: Props) {
             onPress: async () => {
               try {
                 await removeClub(leagueId, clubId, admins);
-                await user.currentUser.reload();
+                // await user.currentUser.reload();
+                let userDataCopy = {...context.userData};
+                let userDataLeaguesCopy = {...userDataCopy.leagues};
+                delete userDataLeaguesCopy[leagueId].clubId;
+                delete userDataLeaguesCopy[leagueId].accepted;
+                delete userDataLeaguesCopy[leagueId].clubName;
+                delete userDataLeaguesCopy[leagueId].manager;
+                context.setUserData(userDataCopy);
+
                 // navigation.dispatch(
                 //   CommonActions.reset({
                 //     index: 1,

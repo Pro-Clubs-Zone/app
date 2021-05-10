@@ -59,19 +59,19 @@ export default function ClubProfile({navigation, route}: Props) {
         clubName,
       };
       await sendPlayerRequest(uid, user.displayName, leagueId, userInfo);
-      let userDataCopy = {...context.userData};
-      let userLeagueData = {...userDataCopy.leagues[leagueId], ...userInfo};
-      userDataCopy.leagues[leagueId] = userLeagueData;
-
-      // let userLeagues = {...context.userLeagues};
-      // userLeagues = {
-      //   [leagueId]: leagueContext.league,
-      // };
-      console.log(userDataCopy);
-
-      //    context.setUserData(userData);
-
-      //    context.setUserLeagues(userLeagues);
+      let userData = {...context.userData!};
+      if (context.userData.leagues[leagueId]) {
+        userData.leagues = {
+          ...userData.leagues,
+          [leagueId]: {...context.userData.leagues[leagueId], ...userInfo},
+        };
+      } else {
+        userData.leagues = {
+          ...userData.leagues,
+          [leagueId]: userInfo,
+        };
+      }
+      context.setUserData(userData);
       setLoading(false);
       navigation.goBack();
     } catch (err) {
@@ -131,16 +131,16 @@ export default function ClubProfile({navigation, route}: Props) {
           );
           const userClub = context.userData.leagues[leagueId].clubId;
 
-          if (isAdmin && !userClub) {
-            navigation.setOptions({
-              headerRight: () => (
+          navigation.setOptions({
+            headerRight: () =>
+              isAdmin &&
+              !userClub && (
                 <IconButton
                   name="send"
                   onPress={() => onSendRequest(rest.name)}
                 />
               ),
-            });
-          }
+          });
 
           setLoading(false);
         })

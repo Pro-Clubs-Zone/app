@@ -25,11 +25,10 @@ export default function Leagues({navigation}: Props) {
   const [data, setData] = useState<IleagueData[]>([]);
 
   const context = useContext(AppContext);
+  const userLeagues = context.userLeagues;
+  const userData = context.userData;
 
   useEffect(() => {
-    const userLeagues = context.userLeagues;
-    const userData = context.userData;
-
     if (userLeagues && userData) {
       const leagueList: IleagueData[] = [];
 
@@ -57,7 +56,7 @@ export default function Leagues({navigation}: Props) {
     } else {
       setData([]);
     }
-  }, [context.userLeagues]);
+  }, [context.userLeagues, context.userData]);
 
   return (
     <View style={{flex: 1}}>
@@ -75,7 +74,9 @@ export default function Leagues({navigation}: Props) {
             showsHorizontalScrollIndicator={false}
             renderItem={({item}) => (
               <UserLeagueCard
-                teamName={item.data.clubName}
+                teamName={
+                  userData.leagues[item.id].accepted && item.data.clubName
+                }
                 leagueName={item.data.name}
                 conflictsCount={
                   item.data.isAdmin ? item.data.conflictMatchesCount : 0

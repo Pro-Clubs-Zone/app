@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useLayoutEffect, useRef, useState} from 'react';
 import {Alert, SectionList} from 'react-native';
 import {IClub, IClubRequestData, ILeagueRequest} from '../../utils/interface';
 import firestore from '@react-native-firebase/firestore';
@@ -80,7 +80,7 @@ export default function Clubs({navigation, route}: Props) {
     setSectionedData(sortedClubs);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const clubsRef = db.collection('leagues').doc(leagueId).collection('clubs');
 
     const getData = clubsRef.onSnapshot((snapshot) => {
@@ -103,11 +103,13 @@ export default function Clubs({navigation, route}: Props) {
       const isAdmin = Object.keys(admins).some((adminUid) => adminUid === uid);
       const userClub = context.userData.leagues[leagueId].clubId;
 
-      if (isAdmin && !userClub && scheduled) {
-        navigation.setOptions({
-          headerRight: () => (
+      navigation.setOptions({
+        headerRight: () =>
+          isAdmin &&
+          !userClub &&
+          scheduled && (
             <IconButton
-              name="send"
+              name="shield-plus"
               onPress={() =>
                 navigation.navigate('Create Club', {
                   isAdmin: true,
@@ -118,14 +120,13 @@ export default function Clubs({navigation, route}: Props) {
               }
             />
           ),
-        });
-      }
+      });
 
       setLoading(false);
     });
 
     return getData;
-  }, [leagueId]);
+  }, [leagueId, context.userData]);
 
   const onRemoveClub = async (clubId: string) => {
     setLoading(true);
