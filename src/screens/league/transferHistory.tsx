@@ -44,16 +44,20 @@ export default function TransferHistory({navigation, route}: Props) {
       await transfersRef
         .get()
         .then((doc) => {
-          const transfers = doc.data() as Transfer;
-          for (const [transferId, transferData] of Object.entries(transfers)) {
-            const transfer = {
-              id: transferId,
-              data: transferData,
-            };
-            transferHistory.push(transfer);
+          if (doc.exists) {
+            const transfers = doc.data() as Transfer;
+            for (const [transferId, transferData] of Object.entries(
+              transfers,
+            )) {
+              const transfer = {
+                id: transferId,
+                data: transferData,
+              };
+              transferHistory.push(transfer);
+            }
+            transferHistory.sort((a, b) => Number(b.id) - Number(a.id));
+            setData(transferHistory);
           }
-          transferHistory.sort((a, b) => Number(b.id) - Number(a.id));
-          setData(transferHistory);
           setLoading(false);
         })
         .catch((err) => {

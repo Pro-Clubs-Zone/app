@@ -19,21 +19,21 @@ import {AppNavStack} from '../index';
 import {BigButtonOutlined} from '../../components/buttons';
 import FullScreenLoading from '../../components/loading';
 import Toast from '../../components/toast';
-import {StackActions} from '@react-navigation/native';
+import {RouteProp, StackActions} from '@react-navigation/native';
 //import {ILeague} from '../../utils/interface';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign In'>;
-//type ScreenRouteProp = RouteProp<AppNavStack, 'Sign In'>;
+type ScreenRouteProp = RouteProp<AppNavStack, 'Sign In'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  //  route: ScreenRouteProp;
+  route: ScreenRouteProp;
 };
 
 const firAuth = auth();
 
-export default function SignIn({navigation}: Props) {
-  // const redirectedFrom = route.params?.redirectedFrom ?? 'home';
+export default function SignIn({navigation, route}: Props) {
+  const redirectFrom = route?.params?.redirectFrom;
   // const redirectedData = route.params?.data as ILeague;
 
   const [email, setEmail] = useState<string>('');
@@ -126,6 +126,10 @@ export default function SignIn({navigation}: Props) {
       setLoading(true);
       try {
         await firAuth.signInWithEmailAndPassword(email, password);
+        if (redirectFrom === 'leaguePreview') {
+          setLoading(false);
+          navigation.dispatch(popAction);
+        }
       } catch (prcErr) {
         setLoading(false);
 
@@ -195,10 +199,14 @@ export default function SignIn({navigation}: Props) {
               <Pressable
                 onPress={() => navigation.navigate('Password Recovery')}>
                 <View style={styles.resetPass}>
-                  <Text style={TEXT_STYLES.small}>
+                  <Text style={[TEXT_STYLES.small, {textAlign: 'center'}]}>
                     <Trans>Forgot login details?</Trans>
                     {'\n'}
-                    <Text style={[TEXT_STYLES.small, {fontWeight: 'bold'}]}>
+                    <Text
+                      style={[
+                        TEXT_STYLES.small,
+                        {fontWeight: 'bold', textAlign: 'center'},
+                      ]}>
                       <Trans>Get help recovering it.</Trans>
                     </Text>
                   </Text>
@@ -296,5 +304,6 @@ const styles = ScaledSheet.create({
   resetPass: {
     alignItems: 'center',
     marginTop: '16@vs',
+    justifyContent: 'center',
   },
 });

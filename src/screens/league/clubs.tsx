@@ -17,6 +17,8 @@ import {LeagueStackType} from './league';
 import Select from '../../components/select';
 import swapClubs from '../club/actions/swapClubs';
 import {AuthContext} from '../../context/authContext';
+import {IconButton} from '../../components/buttons';
+import {AppContext} from '../../context/appContext';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Clubs'>;
 type ScreenRouteProp = RouteProp<LeagueStackType, 'Clubs'>;
@@ -35,7 +37,8 @@ export default function Clubs({navigation, route}: Props) {
 
   const leagueContext = useContext(LeagueContext);
   const user = useContext(AuthContext);
-
+  const context = useContext(AppContext);
+  const uid = user.uid;
   const {showActionSheetWithOptions} = useActionSheet();
 
   const ref = useRef(null);
@@ -95,11 +98,56 @@ export default function Clubs({navigation, route}: Props) {
       });
 
       sortClubs(clubList);
+
+      const admins = leagueContext.league.admins;
+      const isAdmin = Object.keys(admins).some((adminUid) => adminUid === uid);
+      const userClub = context.userData.leagues[leagueId].clubId;
+
+      if (isAdmin && !userClub && scheduled) {
+        navigation.setOptions({
+          headerRight: () => (
+            <IconButton
+              name="send"
+              onPress={() =>
+                navigation.navigate('Create Club', {
+                  isAdmin: true,
+                  newLeague: false,
+                  scheduled: scheduled,
+                  acceptClub: false,
+                })
+              }
+            />
+          ),
+        });
+      }
+
       setLoading(false);
     });
 
     return getData;
   }, [leagueId]);
+
+  const onRemoveClub = async (clubId: string) => {
+    setLoading(true);
+    await removeClub(leagueId, clubId, leagueAdmins);
+    const userData = context.userData;
+    let userDataCopy = {...userData};
+    let userDataLeaguesCopy = {...userDataCopy.leagues};
+
+    if (userData.leagues[leagueId].clubId === clubId) {
+      delete userDataLeaguesCopy[leagueId].clubId;
+      delete userDataLeaguesCopy[leagueId].accepted;
+      delete userDataLeaguesCopy[leagueId].clubName;
+      delete userDataLeaguesCopy[leagueId].manager;
+      context.setUserData(userDataCopy);
+    }
+
+    let leagueDataCopy = {...leagueContext.league};
+
+    delete leagueDataCopy.clubs[clubId];
+    leagueDataCopy.acceptedClubs -= 1;
+    leagueContext.setLeague(leagueDataCopy);
+  };
 
   const onClubSwap = async (
     oldClub: IClubRequestData,
@@ -177,6 +225,9 @@ export default function Clubs({navigation, route}: Props) {
 
     try {
       await handleLeagueRequest(selectedClub, true);
+      let leagueDataCopy = {...leagueContext.league};
+      leagueDataCopy.acceptedClubs += 1;
+      leagueContext.setLeague(leagueDataCopy);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -238,10 +289,7 @@ export default function Clubs({navigation, route}: Props) {
       [
         {
           text: i18n._(t`Remove`),
-          onPress: async () => {
-            setLoading(true);
-            await removeClub(leagueId, club.clubId, leagueAdmins);
-          },
+          onPress: () => onRemoveClub(club.clubId),
           style: 'destructive',
         },
         {

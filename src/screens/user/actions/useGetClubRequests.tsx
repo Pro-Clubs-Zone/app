@@ -19,88 +19,95 @@ const useGetClubRequests = (uid: string) => {
   const db = firestore();
 
   useEffect(() => {
-    if (context.userLeagues) {
-      setLoading(true);
-      const ownerIds: string[] = [];
-      for (const league of Object.values(context.userLeagues)) {
-        ownerIds.push(league.ownerId);
-      }
-
-      const query = db
-        .collectionGroup('clubs')
-        .where('managerId', '==', uid)
-        .where('accepted', '==', true);
-
-      const getRequests = query.onSnapshot((snapshot) => {
-        let requests: IClubRequest[] = [];
-        let totalRequestCount = 0;
-        let clubRequestCount: {
-          [name: string]: number;
-        } = {};
-        if (snapshot.empty) {
-          setLoading(false);
-          setData([]);
-          setCount(0);
-          requestContext.setTotalClubCount(0);
-          requestContext.setClubCount({});
-          return {data, count, loading};
+    try {
+      if (context.userLeagues !== undefined) {
+        console.log(context.userLeagues);
+        setLoading(true);
+        const ownerIds: string[] = [];
+        for (const league of Object.values(context.userLeagues)) {
+          ownerIds.push(league.ownerId);
         }
-        snapshot.forEach((doc) => {
-          const leagueId: string = doc.ref.parent.parent.id;
-          const leagueName = context.userLeagues[leagueId].name;
-          const club = doc.data() as IClub;
-          const clubId = doc.id;
 
-          for (const [playerId, player] of Object.entries(club.roster)) {
-            if (player.accepted === false) {
-              let playerData: IPlayerRequestData = {
-                ...player,
-                clubId: clubId,
-                leagueId: leagueId,
-                playerId: playerId,
-              };
+        const query = db
+          .collectionGroup('clubs')
+          .where('managerId', '==', uid)
+          .where('accepted', '==', true);
 
-              let clubData: IClubRequest = {
-                title: '',
-                data: [],
-              };
-
-              if (requests.length === 0) {
-                clubData = {
-                  title: club.name + ' / ' + leagueName,
-                  data: [playerData],
-                };
-                requests.push(clubData);
-              } else {
-                requests.map((request, index) => {
-                  if (request.title === club.name + ' / ' + leagueName) {
-                    requests[index].data.push(playerData);
-                  } else {
-                    clubData = {
-                      title: club.name + ' / ' + leagueName,
-                      data: [playerData],
-                    };
-                    requests.push(clubData);
-                  }
-                });
-              }
-              if (clubRequestCount[clubId] === undefined) {
-                clubRequestCount[clubId] = 1;
-              } else {
-                clubRequestCount[clubId] += 1;
-              }
-              totalRequestCount++;
-            }
+        const getRequests = query.onSnapshot((snapshot) => {
+          let requests: IClubRequest[] = [];
+          let totalRequestCount = 0;
+          let clubRequestCount: {
+            [name: string]: number;
+          } = {};
+          if (snapshot.empty) {
+            setLoading(false);
+            setData([]);
+            setCount(0);
+            requestContext.setTotalClubCount(0);
+            requestContext.setClubCount({});
+            return {data, count, loading};
           }
-        });
-        requestContext.setTotalClubCount(totalRequestCount);
-        requestContext.setClubCount(clubRequestCount);
-        setData(requests);
-        setCount(totalRequestCount);
-        setLoading(false);
-      });
+          snapshot.forEach((doc) => {
+            const leagueId: string = doc.ref.parent.parent.id;
+            const leagueName = context.userLeagues[leagueId].name;
+            const club = doc.data() as IClub;
+            const clubId = doc.id;
 
-      return getRequests;
+            for (const [playerId, player] of Object.entries(club.roster)) {
+              if (player.accepted === false) {
+                let playerData: IPlayerRequestData = {
+                  ...player,
+                  clubId: clubId,
+                  leagueId: leagueId,
+                  playerId: playerId,
+                };
+
+                let clubData: IClubRequest = {
+                  title: '',
+                  data: [],
+                };
+
+                if (requests.length === 0) {
+                  clubData = {
+                    title: club.name + ' / ' + leagueName,
+                    data: [playerData],
+                  };
+                  requests.push(clubData);
+                } else {
+                  requests.map((request, index) => {
+                    if (request.title === club.name + ' / ' + leagueName) {
+                      requests[index].data.push(playerData);
+                    } else {
+                      clubData = {
+                        title: club.name + ' / ' + leagueName,
+                        data: [playerData],
+                      };
+                      requests.push(clubData);
+                    }
+                  });
+                }
+                if (clubRequestCount[clubId] === undefined) {
+                  clubRequestCount[clubId] = 1;
+                } else {
+                  clubRequestCount[clubId] += 1;
+                }
+                totalRequestCount++;
+              }
+            }
+          });
+          requestContext.setTotalClubCount(totalRequestCount);
+          requestContext.setClubCount(clubRequestCount);
+          setData(requests);
+          setCount(totalRequestCount);
+          setLoading(false);
+        });
+
+        return getRequests;
+      }
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      throw new Error(err);
     }
   }, [context.userLeagues]);
 

@@ -48,39 +48,35 @@ export default function Settings() {
     Platform.OS === 'ios' ? APP_COLORS.Light : APP_COLORS.Dark;
 
   return (
-    <>
-      <FormView>
-        <FormContent>
-          <Picker
-            onValueChange={(itemValue) =>
-              Platform.OS === 'ios'
-                ? setTempData(itemValue)
-                : setData(itemValue)
-            }
-            onDonePress={() => {
-              setData(tempData);
-            }}
-            items={[
-              {label: 'English', value: 'en', color: pickerItemColor},
-              {label: 'Español', value: 'es', color: pickerItemColor},
-            ]}
-            value={Platform.OS === 'ios' ? tempData : data}>
-            <TextField
-              value={data === 'en' ? 'English' : 'Español'}
-              label={i18n._(t`Language`)}
-              placeholder={i18n._(t`Language`)}
-              editable={false}
-              fieldIco="chevron-down"
-            />
-          </Picker>
-        </FormContent>
-        <BigButton
-          title={i18n._(t`Update`)}
-          onPress={() => {
-            setLanguage();
+    <FormView>
+      <FormContent>
+        <Picker
+          onValueChange={(itemValue) =>
+            Platform.OS === 'ios' ? setTempData(itemValue) : setData(itemValue)
+          }
+          onDonePress={() => {
+            setData(tempData);
           }}
-        />
-      </FormView>
-    </>
+          items={[
+            {label: 'English', value: 'en', color: pickerItemColor},
+            {label: 'Español', value: 'es', color: pickerItemColor},
+          ]}
+          value={Platform.OS === 'ios' ? tempData : data}>
+          <TextField
+            value={data === 'en' ? 'English' : 'Español'}
+            label={i18n._(t`Language`)}
+            placeholder={i18n._(t`Language`)}
+            editable={false}
+            fieldIco="chevron-down"
+          />
+        </Picker>
+      </FormContent>
+      <BigButton
+        title={i18n._(t`Update`)}
+        onPress={() => {
+          setLanguage();
+        }}
+      />
+    </FormView>
   );
 }

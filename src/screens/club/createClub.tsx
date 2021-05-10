@@ -43,7 +43,8 @@ export default function CreateClub({route, navigation}: Props) {
 
   const leagueId = leagueContext.leagueId;
   const uid = user.uid!;
-  const isAdmin = route?.params?.isAdmin;
+  //const isAdmin = route?.params?.isAdmin;
+  const acceptClub = route.params.acceptClub;
   const username = context.userData!.username;
   const scheduled = route?.params?.scheduled;
 
@@ -80,7 +81,7 @@ export default function CreateClub({route, navigation}: Props) {
           name: clubName.trim(),
           managerId: uid,
           managerUsername: username,
-          accepted: isAdmin ? true : false,
+          accepted: acceptClub,
           roster: {
             [uid]: {
               accepted: true,
@@ -94,12 +95,12 @@ export default function CreateClub({route, navigation}: Props) {
           clubId: clubRef.id,
           manager: true,
           clubName: clubName.trim(),
-          accepted: isAdmin ? true : false,
+          accepted: acceptClub,
         };
 
         let updateLeagueInfo = {...leagueContext.league};
 
-        if (isAdmin) {
+        if (acceptClub) {
           batch.update(leagueRef, {
             acceptedClubs: firestore.FieldValue.increment(1),
           });

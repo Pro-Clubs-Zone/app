@@ -22,19 +22,20 @@ import {IUser} from '../../utils/interface';
 import {AppContext} from '../../context/appContext';
 import Toast from '../../components/toast';
 import analytics from '@react-native-firebase/analytics';
+import {RouteProp} from '@react-navigation/core';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Sign Up'>;
-// type ScreenRouteProp = RouteProp<AppNavStack, 'Sign Up'>;
+type ScreenRouteProp = RouteProp<AppNavStack, 'Sign Up'>;
 
 type Props = {
   navigation: ScreenNavigationProp;
-  //route: ScreenRouteProp;
+  route: ScreenRouteProp;
 };
 
 const firAuth = auth();
 const db = firestore();
 
-function SignUp({navigation}: Props) {
+function SignUp({navigation, route}: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [username, setUsername] = useState<string>('');
@@ -47,7 +48,7 @@ function SignUp({navigation}: Props) {
     username: null,
   });
 
-  // const redirectedFrom: string = route.params?.redirectedFrom ?? 'home';
+  const redirectFrom: string = route?.params?.redirectFrom;
   // const redirectedData = route.params?.data as ILeague;
 
   const context = useContext(AppContext);
@@ -164,7 +165,7 @@ function SignUp({navigation}: Props) {
           displayName: username,
         };
         setLoading(true);
-        return await Promise.all([
+        await Promise.all([
           firAuth.currentUser.updateProfile(userProfile),
           createDbEntry(userData),
           userData.user.sendEmailVerification(),
@@ -172,6 +173,8 @@ function SignUp({navigation}: Props) {
             method: 'email',
           }),
         ]);
+        // setLoading(false);
+        //  navigation.goBack();
         //   setLoading(false);
         // const onCreateLeague = async () => {
         //   const {user} = userData;
@@ -207,18 +210,21 @@ function SignUp({navigation}: Props) {
         //   );
         // };
 
-        // switch (redirectedFrom) {
-        //   case 'createLeague':
-        //     onCreateLeague();
-        //     break;
-        //   case 'createClub':
+        if (redirectFrom === 'leaguePreview') {
+          setLoading(false);
+          navigation.goBack();
+        }
+
+        // switch (redirectFrom) {
+        //   // case 'createLeague':
+        //   //   onCreateLeague();
+        //   //   break;
+        //   case 'leaguePreview':
         //     setLoading(false);
         //     navigation.goBack();
         //     break;
-        //   case 'joinClub':
+        //   default:
         //     setLoading(false);
-        //     navigation.goBack();
-        //     break;
         // }
       } catch (error) {
         setLoading(false);
@@ -298,7 +304,11 @@ function SignUp({navigation}: Props) {
       </TouchableWithoutFeedback>
       <Pressable
         style={{width: '100%'}}
-        onPress={() => navigation.navigate('Sign In')}>
+        onPress={() =>
+          navigation.navigate('Sign In', {
+            redirectFrom,
+          })
+        }>
         <View style={styles.footer}>
           <Text style={TEXT_STYLES.small}>
             {i18n._(t`Already have an account?`)}{' '}

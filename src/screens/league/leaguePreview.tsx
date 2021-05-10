@@ -16,6 +16,7 @@ import FullScreenLoading from '../../components/loading';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import shareLeagueLink from './actions/shareLink';
+import crashlytics from '@react-native-firebase/crashlytics';
 
 type ScreenNavigationProp = StackNavigationProp<
   LeagueStackType,
@@ -167,17 +168,24 @@ export default function LeaguePreview({navigation, route}: Props) {
                 isAdmin: false,
                 newLeague: false,
                 scheduled: scheduled,
+                acceptClub: false,
               });
+              crashlytics().log('Create Club');
             } else {
-              navigation.navigate('Sign Up');
+              navigation.navigate('Sign Up', {
+                redirectFrom: 'leaguePreview',
+              });
             }
 
             break;
           case 1:
             if (user.uid) {
               navigation.navigate('Join Club');
+              crashlytics().log('Join Club');
             } else {
-              navigation.navigate('Sign Up');
+              navigation.navigate('Sign Up', {
+                redirectFrom: 'leaguePreview',
+              });
             }
             break;
         }

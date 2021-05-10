@@ -60,8 +60,12 @@ export type LeagueStackType = {
   'Club Settings': ClubProps;
   'Club Profile': ClubProps;
   'Admin Center': ILeagueProps;
-  'Sign In': undefined;
-  'Sign Up': undefined;
+  'Sign In': {
+    redirectFrom: string;
+  };
+  'Sign Up': {
+    redirectFrom: string;
+  };
   Stats: undefined;
   'League Team': undefined;
   'Transfer History': {
@@ -137,7 +141,7 @@ export default function LeagueStack({navigation, route}: Props) {
       }
     };
     getLeagueData();
-  }, [leagueContext, leagueId]);
+  }, [leagueId]);
 
   useEffect(() => {
     const userData = context.userData;

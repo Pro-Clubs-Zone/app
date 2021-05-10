@@ -56,8 +56,12 @@ type AppInfo = {
 
 export type AppNavStack = {
   Home: undefined;
-  'Sign Up': undefined;
-  'Sign In': undefined;
+  'Sign Up': {
+    redirectFrom?: string;
+  };
+  'Sign In': {
+    redirectFrom?: string;
+  };
   'Password Recovery': undefined;
   'Reset Password': {
     oobCode: string;

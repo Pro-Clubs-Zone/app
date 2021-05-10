@@ -114,6 +114,7 @@ export interface ILeagueProps {
   isAdmin: boolean;
   newLeague: boolean;
   scheduled?: boolean;
+  acceptClub?: boolean;
 }
 
 export interface IMatchNavData extends IMatch {

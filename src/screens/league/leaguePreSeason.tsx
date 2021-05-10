@@ -169,6 +169,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
             navigation.navigate('Create Club', {
               isAdmin: true,
               newLeague: false,
+              acceptClub: !(acceptedClubs === teamNum),
             })
           }
           title={i18n._(t`Create Your Club`)}

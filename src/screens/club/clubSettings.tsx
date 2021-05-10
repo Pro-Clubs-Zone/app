@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {View, Alert} from 'react-native';
-import {RouteProp} from '@react-navigation/native';
+import {RouteProp, StackActions} from '@react-navigation/native';
 import {AppContext} from '../../context/appContext';
 import {LeagueStackType} from '../league/league';
 import {LeagueContext} from '../../context/leagueContext';
@@ -52,6 +52,7 @@ export default function ClubSettings({route, navigation}: Props) {
         {cancelable: false},
       );
     } else {
+      const popAction = StackActions.pop(2);
       Alert.alert(
         i18n._(t`Remove Club`),
         i18n._(
@@ -61,14 +62,19 @@ export default function ClubSettings({route, navigation}: Props) {
           {
             text: i18n._(t`Remove`),
             onPress: async () => {
-              await removeClub(leagueId, clubId, admins);
-              await user.currentUser.reload();
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 1,
-                  routes: [{name: 'Home'}],
-                }),
-              );
+              try {
+                await removeClub(leagueId, clubId, admins);
+                await user.currentUser.reload();
+                // navigation.dispatch(
+                //   CommonActions.reset({
+                //     index: 1,
+                //     routes: [{name: 'Home'}],
+                //   }),
+                // );
+                navigation.dispatch(popAction);
+              } catch (err) {
+                console.log(err);
+              }
             },
             style: 'destructive',
           },

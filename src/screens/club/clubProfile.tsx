@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React, {useContext, useLayoutEffect, useState} from 'react';
 import {Alert, FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import {RouteProp} from '@react-navigation/native';
@@ -99,25 +99,6 @@ export default function ClubProfile({navigation, route}: Props) {
   };
 
   useLayoutEffect(() => {
-    const admins = leagueContext.league.admins;
-    const isAdmin = Object.keys(admins).some((adminUid) => adminUid === uid);
-    const userClub = context.userData.leagues[leagueId].clubId;
-
-    if (isAdmin && !userClub && clubInfo) {
-      navigation.setOptions({
-        headerRight: () => (
-          <IconButton
-            name="send"
-            onPress={() => onSendRequest(clubInfo.name)}
-          />
-        ),
-      });
-    }
-  }, [navigation, clubInfo]);
-
-  useEffect(() => {
-    console.log('use');
-
     const clubRef = db
       .collection('leagues')
       .doc(leagueId)
@@ -140,10 +121,27 @@ export default function ClubProfile({navigation, route}: Props) {
               fullRoster.push(rosterData);
             }
           }
-          console.log(rest);
 
           setClubInfo(rest);
           setClubRoster(fullRoster);
+
+          const admins = leagueContext.league.admins;
+          const isAdmin = Object.keys(admins).some(
+            (adminUid) => adminUid === uid,
+          );
+          const userClub = context.userData.leagues[leagueId].clubId;
+
+          if (isAdmin && !userClub) {
+            navigation.setOptions({
+              headerRight: () => (
+                <IconButton
+                  name="send"
+                  onPress={() => onSendRequest(rest.name)}
+                />
+              ),
+            });
+          }
+
           setLoading(false);
         })
         .catch((err) => {
