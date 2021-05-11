@@ -39,7 +39,38 @@ export default function ClubSettings({route, navigation}: Props) {
   const clubName = context.userData.leagues[leagueId].clubName;
   const username = user.displayName;
 
+  const popAction = StackActions.pop(2);
+  const isAdmin = Object.keys(admins).some((adminUid) => adminUid === playerId);
+
   const onRemoveClub = async () => {
+    try {
+      await removeClub(leagueId, clubId, admins);
+      //  await user.currentUser.reload();
+      let userDataCopy = {...context.userData};
+      let userDataLeaguesCopy = userDataCopy.leagues;
+      // if (isAdmin) {
+      //   delete userDataLeaguesCopy[leagueId].clubId;
+      //   delete userDataLeaguesCopy[leagueId].accepted;
+      //   delete userDataLeaguesCopy[leagueId].clubName;
+      //   delete userDataLeaguesCopy[leagueId].manager;
+      // } else {
+      //   delete userDataLeaguesCopy[leagueId];
+      // }
+      // context.setUserData(userDataCopy);
+      //  navigation.dispatch(popAction);
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [{name: 'Home'}],
+        }),
+      );
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
+  };
+
+  const onRemoveClubConfirm = () => {
     if (leagueScheduled && isAccepted) {
       Alert.alert(
         i18n._(t`Remove Club`),
@@ -53,7 +84,6 @@ export default function ClubSettings({route, navigation}: Props) {
         {cancelable: false},
       );
     } else {
-      const popAction = StackActions.pop(2);
       Alert.alert(
         i18n._(t`Remove Club`),
         i18n._(
@@ -62,29 +92,7 @@ export default function ClubSettings({route, navigation}: Props) {
         [
           {
             text: i18n._(t`Remove`),
-            onPress: async () => {
-              try {
-                await removeClub(leagueId, clubId, admins);
-                // await user.currentUser.reload();
-                let userDataCopy = {...context.userData};
-                let userDataLeaguesCopy = {...userDataCopy.leagues};
-                delete userDataLeaguesCopy[leagueId].clubId;
-                delete userDataLeaguesCopy[leagueId].accepted;
-                delete userDataLeaguesCopy[leagueId].clubName;
-                delete userDataLeaguesCopy[leagueId].manager;
-                context.setUserData(userDataCopy);
-
-                // navigation.dispatch(
-                //   CommonActions.reset({
-                //     index: 1,
-                //     routes: [{name: 'Home'}],
-                //   }),
-                // );
-                navigation.dispatch(popAction);
-              } catch (err) {
-                console.log(err);
-              }
-            },
+            onPress: () => onRemoveClub(),
             style: 'destructive',
           },
           {
@@ -141,7 +149,10 @@ export default function ClubSettings({route, navigation}: Props) {
         flex: 1,
       }}>
       {isManager ? (
-        <CardMedium title={i18n._(t`Remove Club`)} onPress={onRemoveClub} />
+        <CardMedium
+          title={i18n._(t`Remove Club`)}
+          onPress={onRemoveClubConfirm}
+        />
       ) : (
         <CardMedium title={i18n._(t`Leave Club`)} onPress={onRemovePlayer} />
       )}

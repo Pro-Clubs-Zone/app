@@ -42,6 +42,7 @@ export default function CreateClub({route, navigation}: Props) {
   const leagueContext = useContext(LeagueContext);
 
   const leagueId = leagueContext.leagueId;
+
   const uid = user.uid!;
   //const isAdmin = route?.params?.isAdmin;
   const acceptClub = route.params.acceptClub;
@@ -137,17 +138,15 @@ export default function CreateClub({route, navigation}: Props) {
             }),
           ]);
 
-          let userData = {...context.userData!};
-          if (context.userData.leagues[leagueId]) {
-            userData.leagues = {
-              ...userData.leagues,
-              [leagueId]: {...context.userData.leagues[leagueId], ...userInfo},
+          let userData = {...context.userData};
+
+          if (userData.leagues?.[leagueId]) {
+            userData.leagues[leagueId] = {
+              ...userData.leagues[leagueId],
+              ...userInfo,
             };
           } else {
-            userData.leagues = {
-              ...userData.leagues,
-              [leagueId]: userInfo,
-            };
+            userData.leagues = {[leagueId]: userInfo};
           }
 
           let userLeagues = {...context.userLeagues};

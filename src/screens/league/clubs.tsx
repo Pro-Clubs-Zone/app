@@ -166,23 +166,6 @@ export default function Clubs({navigation, route}: Props) {
   };
 
   const onConfirmClubSwap = (oldClub: IClubRequestData, swapClubId: string) => {
-    // const isAdmin = Object.keys(leagueAdmins).some(
-    //   (adminUid) => adminUid === oldClub.managerId,
-    // );
-
-    // if (isAdmin) {
-    //   return Alert.alert(
-    //     i18n._(t`Can't swap admin club`),
-    //     i18n._(t`Currently admins can't swap their own club`),
-    //     [
-    //       {
-    //         text: i18n._(t`Close`),
-    //         style: 'cancel',
-    //       },
-    //     ],
-    //     {cancelable: false},
-    //   );
-    // }
     const newClub = sectionedData[1].data.filter(
       (club) => club.clubId === swapClubId,
     );

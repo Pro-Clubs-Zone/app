@@ -10,6 +10,7 @@ import {APP_COLORS, TEXT_STYLES} from '../../utils/designSystem';
 import {AppContext} from '../../context/appContext';
 import {IFlatList, ILeague} from '../../utils/interface';
 import UserLeagueCard from '../../components/userLeagueCard';
+import {AuthContext} from '../../context/authContext';
 
 type ScreenNavigationProp = StackNavigationProp<AppNavStack, 'Leagues'>;
 
@@ -25,38 +26,42 @@ export default function Leagues({navigation}: Props) {
   const [data, setData] = useState<IleagueData[]>([]);
 
   const context = useContext(AppContext);
+  const user = useContext(AuthContext);
+  const uid = user.uid;
   const userLeagues = context.userLeagues;
   const userData = context.userData;
 
   useEffect(() => {
-    if (userLeagues && userData) {
+    if (userLeagues && userData && uid) {
       const leagueList: IleagueData[] = [];
 
       for (const [leagueId, league] of Object.entries(userLeagues)) {
-        const userLeague = userData.leagues![leagueId];
+        const userLeague = userData.leagues[leagueId];
         //    const accepted = userLeague.accepted;
-        const isAdmin = userLeague.admin;
-        //  if (accepted || isAdmin) {
-        const userClubName = userLeague.clubName;
-        const updatedData = {
-          ...league,
-          clubName: userClubName!,
-          isAdmin: !!isAdmin,
-        };
+        if (userLeague) {
+          const isAdmin = userLeague.admin;
+          //  if (accepted || isAdmin) {
+          const userClubName = userLeague.clubName;
+          const updatedData = {
+            ...league,
+            clubName: userClubName!,
+            isAdmin: !!isAdmin,
+          };
 
-        const leagueData: IleagueData = {
-          id: leagueId,
-          data: updatedData,
-        };
-        leagueList.push(leagueData);
-        //     }
+          const leagueData: IleagueData = {
+            id: leagueId,
+            data: updatedData,
+          };
+          leagueList.push(leagueData);
+          //     }
+        }
       }
 
       setData(leagueList);
     } else {
       setData([]);
     }
-  }, [context.userLeagues, context.userData]);
+  }, [context.userLeagues, context.userData, uid]);
 
   return (
     <View style={{flex: 1}}>
@@ -75,7 +80,7 @@ export default function Leagues({navigation}: Props) {
             renderItem={({item}) => (
               <UserLeagueCard
                 teamName={
-                  userData.leagues[item.id].accepted && item.data.clubName
+                  userData.leagues?.[item.id]?.accepted && item.data.clubName
                 }
                 leagueName={item.data.name}
                 conflictsCount={
