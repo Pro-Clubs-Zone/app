@@ -146,7 +146,7 @@ export default function CreateClub({route, navigation}: Props) {
               ...userInfo,
             };
           } else {
-            userData.leagues = {[leagueId]: userInfo};
+            userData.leagues = {...userData.leagues, [leagueId]: userInfo};
           }
 
           let userLeagues = {...context.userLeagues};

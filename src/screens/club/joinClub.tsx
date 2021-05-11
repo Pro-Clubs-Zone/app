@@ -70,6 +70,7 @@ export default function JoinClub({navigation}: Props) {
 
       let userLeagues = {...context.userLeagues};
       userLeagues = {
+        ...userLeagues,
         [leagueId]: leagueContext.league,
       };
 
