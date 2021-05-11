@@ -46,24 +46,18 @@ const swapClubs = async ({oldClub, newClub, leagueAdmins}: Props) => {
       (adminUid) => adminUid === playerId,
     );
 
-    const removeClubFromAdmin: Partial<IUserLeague> = {
-      accepted: firestore.FieldValue.delete(),
-      clubId: firestore.FieldValue.delete(),
-      clubName: firestore.FieldValue.delete(),
-      manager: firestore.FieldValue.delete(),
-    };
-
-    batch.set(
-      usersRef.doc(playerId),
-      {
-        leagues: {
-          [leagueId]: isAdmin
-            ? removeClubFromAdmin
-            : firestore.FieldValue.delete(),
-        },
-      },
-      {merge: true},
-    );
+    if (isAdmin) {
+      batch.update(usersRef.doc(playerId), {
+        ['leagues.' + leagueId + '.accepted']: firestore.FieldValue.delete(),
+        ['leagues.' + leagueId + '.clubId']: firestore.FieldValue.delete(),
+        ['leagues.' + leagueId + '.clubName']: firestore.FieldValue.delete(),
+        ['leagues.' + leagueId + '.manager']: firestore.FieldValue.delete(),
+      });
+    } else {
+      batch.update(usersRef.doc(playerId), {
+        ['leagues.' + leagueId]: firestore.FieldValue.delete(),
+      });
+    }
   }
 
   for (const playerId of Object.keys(newClub.roster)) {

@@ -39,25 +39,23 @@ export default function ClubSettings({route, navigation}: Props) {
   const clubName = context.userData.leagues[leagueId].clubName;
   const username = user.displayName;
 
-  const popAction = StackActions.pop(2);
-  const isAdmin = Object.keys(admins).some((adminUid) => adminUid === playerId);
+  const isAdmin = context.userData.leagues[leagueId].admin;
 
   const onRemoveClub = async () => {
+    const popAction = StackActions.pop(2);
     try {
       await removeClub(leagueId, clubId, admins);
       //  await user.currentUser.reload();
       let userDataCopy = {...context.userData};
       let userDataLeaguesCopy = userDataCopy.leagues;
-      // if (isAdmin) {
-      //   delete userDataLeaguesCopy[leagueId].clubId;
-      //   delete userDataLeaguesCopy[leagueId].accepted;
-      //   delete userDataLeaguesCopy[leagueId].clubName;
-      //   delete userDataLeaguesCopy[leagueId].manager;
-      // } else {
-      //   delete userDataLeaguesCopy[leagueId];
-      // }
-      // context.setUserData(userDataCopy);
-      //  navigation.dispatch(popAction);
+      if (isAdmin) {
+        delete userDataLeaguesCopy[leagueId].clubId;
+        delete userDataLeaguesCopy[leagueId].accepted;
+        delete userDataLeaguesCopy[leagueId].clubName;
+        delete userDataLeaguesCopy[leagueId].manager;
+        context.setUserData(userDataCopy);
+        return navigation.dispatch(popAction);
+      }
       navigation.dispatch(
         CommonActions.reset({
           index: 1,
@@ -68,6 +66,24 @@ export default function ClubSettings({route, navigation}: Props) {
       console.log(err);
       throw new Error(err);
     }
+  };
+
+  const onLeaveClub = async () => {
+    await removePlayer({
+      leagueId,
+      playerId,
+      clubId,
+      clubName,
+      username,
+      isAdmin,
+    });
+    await user.currentUser.reload();
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [{name: 'Home'}],
+      }),
+    );
   };
 
   const onRemoveClubConfirm = () => {
@@ -105,7 +121,7 @@ export default function ClubSettings({route, navigation}: Props) {
     }
   };
 
-  const onRemovePlayer = async () => {
+  const onLeaveClubConfirm = () => {
     Alert.alert(
       'Leave Club',
       i18n._(
@@ -114,24 +130,7 @@ export default function ClubSettings({route, navigation}: Props) {
       [
         {
           text: i18n._(t`Leave`),
-          onPress: async () => {
-            const isAdmin = context.userData.leagues[leagueId].admin;
-            await removePlayer({
-              leagueId,
-              playerId,
-              clubId,
-              clubName,
-              username,
-              isAdmin,
-            });
-            await user.currentUser.reload();
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 1,
-                routes: [{name: 'Home'}],
-              }),
-            );
-          },
+          onPress: () => onLeaveClub(),
           style: 'destructive',
         },
         {
@@ -154,7 +153,10 @@ export default function ClubSettings({route, navigation}: Props) {
           onPress={onRemoveClubConfirm}
         />
       ) : (
-        <CardMedium title={i18n._(t`Leave Club`)} onPress={onRemovePlayer} />
+        <CardMedium
+          title={i18n._(t`Leave Club`)}
+          onPress={onLeaveClubConfirm}
+        />
       )}
     </View>
   );

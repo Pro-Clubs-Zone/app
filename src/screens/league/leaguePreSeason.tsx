@@ -160,7 +160,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
             })
           }
           title={userLeague.clubName!}
-          subTitle={i18n._(t`Manage your current roster`)}
+          subTitle={i18n._(t`Manager your club and roster`)}
           badgeNumber={requestContext.clubCount[userLeague.clubId]}
         />
       ) : (

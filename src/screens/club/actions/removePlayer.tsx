@@ -38,22 +38,18 @@ const removePlayer = async ({
     },
   };
 
-  const removeClubFromAdmin: Partial<IUserLeague> = {
-    accepted: firestore.FieldValue.delete(),
-    clubId: firestore.FieldValue.delete(),
-    clubName: firestore.FieldValue.delete(),
-    manager: firestore.FieldValue.delete(),
-  };
-
-  batch.set(
-    playerRef,
-    {
-      ['leagues.' + leagueId]: isAdmin
-        ? removeClubFromAdmin
-        : firestore.FieldValue.delete(),
-    },
-    {merge: true},
-  );
+  if (isAdmin) {
+    batch.update(playerRef, {
+      ['leagues.' + leagueId + '.accepted']: firestore.FieldValue.delete(),
+      ['leagues.' + leagueId + '.clubId']: firestore.FieldValue.delete(),
+      ['leagues.' + leagueId + '.clubName']: firestore.FieldValue.delete(),
+      ['leagues.' + leagueId + '.manager']: firestore.FieldValue.delete(),
+    });
+  } else {
+    batch.update(playerRef, {
+      ['leagues.' + leagueId]: firestore.FieldValue.delete(),
+    });
+  }
 
   batch.update(clubRef, {
     ['roster.' + playerId]: firestore.FieldValue.delete(),

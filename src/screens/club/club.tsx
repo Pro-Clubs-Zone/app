@@ -147,15 +147,20 @@ export default function Club({navigation, route}: Props) {
       (player) => player.playerId !== selectedPlayer.playerId,
     );
 
-    await handleClubRequest(
-      selectedPlayer,
-      false,
-      club.clubName,
-      isPlayerAdmin,
-    );
-    setData(updatedList);
-    sortPlayers(updatedList);
-    setLoading(false);
+    try {
+      await handleClubRequest(
+        selectedPlayer,
+        false,
+        club.clubName,
+        isPlayerAdmin,
+      );
+      setData(updatedList);
+      sortPlayers(updatedList);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      throw new Error(err);
+    }
   };
 
   const onRemovePlayer = async (selectedPlayer: IPlayerRequestData) => {

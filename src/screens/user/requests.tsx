@@ -364,12 +364,7 @@ function MySentRequests({navigation, route}) {
     setLoading(true);
 
     const isAdmin = userData.leagues[myRequest.leagueId].admin;
-    const removeClubFromAdmin: Partial<IUserLeague> = {
-      accepted: firestore.FieldValue.delete(),
-      clubId: firestore.FieldValue.delete(),
-      clubName: firestore.FieldValue.delete(),
-      manager: firestore.FieldValue.delete(),
-    };
+
     const clubRef = db
       .collection('leagues')
       .doc(myRequest.leagueId)
@@ -384,19 +379,26 @@ function MySentRequests({navigation, route}) {
       batch.delete(clubRef);
     }
 
-    console.log('isadmin', isAdmin);
-
-    batch.set(
-      userRef,
-      {
-        leagues: {
-          [myRequest.leagueId]: isAdmin
-            ? removeClubFromAdmin
-            : firestore.FieldValue.delete(),
-        },
-      },
-      {merge: true},
-    );
+    if (isAdmin) {
+      batch.update(userRef, {
+        ['leagues.' +
+        myRequest.leagueId +
+        '.accepted']: firestore.FieldValue.delete(),
+        ['leagues.' +
+        myRequest.leagueId +
+        '.clubId']: firestore.FieldValue.delete(),
+        ['leagues.' +
+        myRequest.leagueId +
+        '.clubName']: firestore.FieldValue.delete(),
+        ['leagues.' +
+        myRequest.leagueId +
+        '.manager']: firestore.FieldValue.delete(),
+      });
+    } else {
+      batch.update(userRef, {
+        ['leagues.' + userRef]: firestore.FieldValue.delete(),
+      });
+    }
 
     let updatedUserData = {...userData};
     let updatedUserLeagues = {...context.userLeagues};
