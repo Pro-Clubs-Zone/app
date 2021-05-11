@@ -206,6 +206,9 @@ function LeagueRequests({navigation, route}) {
     try {
       setLoading(true);
       await handleLeagueRequest(selectedClub, acceptRequest, isAdmin);
+      let userLeagueCopy = {...context.userLeagues};
+      userLeagueCopy[selectedClub.leagueId].acceptedClubs += 1;
+      context.setUserLeagues(userLeagueCopy);
       setLoading(false);
     } catch (error) {
       console.log(error);
