@@ -4,6 +4,7 @@ import {IClubRequestData} from '../../../utils/interface';
 const handleLeagueRequest = async (
   {clubId, leagueId, managerId, name}: IClubRequestData,
   acceptRequest: boolean,
+  isAdmin: boolean,
 ) => {
   const db = firestore();
   const batch = db.batch();
@@ -36,9 +37,18 @@ const handleLeagueRequest = async (
       {merge: true},
     );
   } else {
-    batch.update(managerRef, {
-      [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
-    });
+    if (isAdmin) {
+      batch.update(managerRef, {
+        ['leagues.' + leagueId + '.accepted']: firestore.FieldValue.delete(),
+        ['leagues.' + leagueId + '.clubId']: firestore.FieldValue.delete(),
+        ['leagues.' + leagueId + '.clubName']: firestore.FieldValue.delete(),
+        ['leagues.' + leagueId + '.manager']: firestore.FieldValue.delete(),
+      });
+    } else {
+      batch.update(managerRef, {
+        [`leagues.${leagueId}`]: firestore.FieldValue.delete(),
+      });
+    }
     batch.delete(clubRef);
   }
 

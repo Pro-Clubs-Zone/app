@@ -45,7 +45,9 @@ export default function Clubs({navigation, route}: Props) {
 
   const leagueId = leagueContext.leagueId;
   const leagueAdmins = leagueContext.league.admins;
-
+  const isAdmin = Object.keys(leagueAdmins).some(
+    (adminUid) => adminUid === uid,
+  );
   const scheduled = route?.params?.scheduled;
 
   const sortClubs = (clubs: IClubRequestData[]) => {
@@ -99,8 +101,6 @@ export default function Clubs({navigation, route}: Props) {
 
       sortClubs(clubList);
 
-      const admins = leagueContext.league.admins;
-      const isAdmin = Object.keys(admins).some((adminUid) => adminUid === uid);
       const userClub = context.userData.leagues[leagueId].clubId;
 
       navigation.setOptions({
@@ -208,10 +208,16 @@ export default function Clubs({navigation, route}: Props) {
     setLoading(true);
 
     try {
-      await handleLeagueRequest(selectedClub, true);
+      await handleLeagueRequest(selectedClub, true, isAdmin);
       let leagueDataCopy = {...leagueContext.league};
       leagueDataCopy.acceptedClubs += 1;
       leagueContext.setLeague(leagueDataCopy);
+      // if (isAdmin) {
+      //   let userDataCopy = {...context.userData};
+      //   let userDataLeaguesCopy = userDataCopy.leagues;
+      //   userDataLeaguesCopy[leagueId].accepted = true;
+      //   context.setUserData(userDataCopy);
+      // }
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -223,7 +229,16 @@ export default function Clubs({navigation, route}: Props) {
   const onDeclineClub = async (selectedClub: IClubRequestData) => {
     setLoading(true);
     try {
-      await handleLeagueRequest(selectedClub, false);
+      await handleLeagueRequest(selectedClub, false, isAdmin);
+      if (isAdmin) {
+        let userDataCopy = {...context.userData};
+        let userDataLeaguesCopy = userDataCopy.leagues;
+        delete userDataLeaguesCopy[leagueId].clubId;
+        delete userDataLeaguesCopy[leagueId].accepted;
+        delete userDataLeaguesCopy[leagueId].clubName;
+        delete userDataLeaguesCopy[leagueId].manager;
+        context.setUserData(userDataCopy);
+      }
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -326,10 +341,7 @@ export default function Clubs({navigation, route}: Props) {
         )}
         ItemSeparatorComponent={() => <ListSeparator />}
         renderSectionHeader={({section: {title}}) => (
-          <ListHeading
-            col1={title}
-            col4={scheduled ? i18n._(t`Swap`) : i18n._(t`Manage`)}
-          />
+          <ListHeading col1={title} col4={i18n._(t`Manage`)} />
         )}
         ListEmptyComponent={() => (
           <EmptyState

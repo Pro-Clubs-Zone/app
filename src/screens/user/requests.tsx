@@ -7,7 +7,6 @@ import {
   IMyRequests,
   IPlayerRequestData,
   ISentRequest,
-  IUserLeague,
 } from '../../utils/interface';
 import {
   ListHeading,
@@ -46,9 +45,11 @@ export default function Requests({navigation, route}: Props) {
   const context = useContext(AppContext);
   let sentRequests = 0;
 
-  for (const league of Object.values(context.userData.leagues)) {
-    if (!league.accepted && league.clubId) {
-      sentRequests++;
+  if (context.userData.leagues) {
+    for (const league of Object.values(context.userData.leagues)) {
+      if (!league.accepted && league.clubId) {
+        sentRequests++;
+      }
     }
   }
 
@@ -181,12 +182,12 @@ function LeagueRequests({navigation, route}) {
   const uid = route.params.uid;
   const [loading, setLoading] = useState(false);
   const leagueRequests = useGetLeagueRequests(uid);
-
   const onHandleLeagueRequest = async (
     selectedClub: IClubRequestData,
     acceptRequest: boolean,
   ) => {
     const userLeague = context.userLeagues[selectedClub.leagueId];
+    const isAdmin = context.userData.leagues[selectedClub.leagueId].admin;
     if (userLeague.acceptedClubs === userLeague.teamNum) {
       return Alert.alert(
         i18n._(t`Team Limit Reached`),
@@ -204,19 +205,7 @@ function LeagueRequests({navigation, route}) {
     }
     try {
       setLoading(true);
-      await handleLeagueRequest(selectedClub, acceptRequest);
-
-      // const currentLeagueData = {...context.userLeagues};
-      // if (acceptRequest) {
-      //   currentLeagueData[selectedClub.leagueId].clubs[
-      //     selectedClub.clubId
-      //   ].accepted = true;
-      // } else {
-      //   delete currentLeagueData[selectedClub.leagueId].clubs[
-      //     selectedClub.clubId
-      //   ];
-      // }
-      // context.setUserLeagues(currentLeagueData);
+      await handleLeagueRequest(selectedClub, acceptRequest, isAdmin);
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -226,7 +215,7 @@ function LeagueRequests({navigation, route}) {
     }
   };
 
-  const onOpenActionSheet = (item: IClubRequestData, title: string) => {
+  const onOpenActionSheet = (item: IClubRequestData) => {
     const options = [i18n._(t`Accept`), i18n._(t`Decline`), i18n._(t`Cancel`)];
     const destructiveButtonIndex = 1;
     const cancelButtonIndex = 2;
@@ -257,11 +246,11 @@ function LeagueRequests({navigation, route}) {
         sections={leagueRequests.data}
         stickySectionHeadersEnabled={true}
         keyExtractor={(item) => item.clubId}
-        renderItem={({item, section}) => (
+        renderItem={({item}) => (
           <TwoLine
             title={item.name}
             sub={item.managerUsername}
-            onPress={() => onOpenActionSheet(item, section.title)}
+            onPress={() => onOpenActionSheet(item)}
             rightDefaultIcon
           />
         )}
@@ -297,61 +286,63 @@ function MySentRequests({navigation, route}) {
 
   useEffect(() => {
     const requests: IMyRequests[] = [];
-    for (const [leagueId, league] of Object.entries(userData.leagues)) {
-      const leagueName = context.userLeagues[leagueId].name;
-      let requestData: IMyRequests = {
-        title: '',
-        data: [],
-      };
-
-      if (!league.accepted && league.clubId) {
-        const myRequestData: ISentRequest = {
-          accepted: league.accepted,
-          clubId: league.clubId,
-          leagueId: leagueId,
-          leagueName: leagueName,
-          clubName: league.clubName,
-          manager: league.manager,
+    if (userData.leagues) {
+      for (const [leagueId, league] of Object.entries(userData.leagues)) {
+        const leagueName = context.userLeagues[leagueId].name;
+        let requestData: IMyRequests = {
+          title: '',
+          data: [],
         };
-        if (league.manager) {
-          if (requests.length === 0) {
-            requestData = {
-              title: i18n._(t`League Requests`),
-              data: [myRequestData],
-            };
-            requests.push(requestData);
+
+        if (!league.accepted && league.clubId) {
+          const myRequestData: ISentRequest = {
+            accepted: league.accepted,
+            clubId: league.clubId,
+            leagueId: leagueId,
+            leagueName: leagueName,
+            clubName: league.clubName,
+            manager: league.manager,
+          };
+          if (league.manager) {
+            if (requests.length === 0) {
+              requestData = {
+                title: i18n._(t`League Requests`),
+                data: [myRequestData],
+              };
+              requests.push(requestData);
+            } else {
+              requests.map((section, index) => {
+                if (section.title === 'League Requests') {
+                  requests[index].data.push(myRequestData);
+                } else {
+                  requestData = {
+                    title: i18n._(t`League Requests`),
+                    data: [myRequestData],
+                  };
+                  requests.push(requestData);
+                }
+              });
+            }
           } else {
-            requests.map((section, index) => {
-              if (section.title === 'League Requests') {
-                requests[index].data.push(myRequestData);
-              } else {
-                requestData = {
-                  title: i18n._(t`League Requests`),
-                  data: [myRequestData],
-                };
-                requests.push(requestData);
-              }
-            });
-          }
-        } else {
-          if (requests.length === 0) {
-            requestData = {
-              title: i18n._(t`Club Requests`),
-              data: [myRequestData],
-            };
-            requests.push(requestData);
-          } else {
-            requests.map((section, index) => {
-              if (section.title === 'Club Requests') {
-                requests[index].data.push(myRequestData);
-              } else {
-                requestData = {
-                  title: i18n._(t`Club Requests`),
-                  data: [myRequestData],
-                };
-                requests.push(requestData);
-              }
-            });
+            if (requests.length === 0) {
+              requestData = {
+                title: i18n._(t`Club Requests`),
+                data: [myRequestData],
+              };
+              requests.push(requestData);
+            } else {
+              requests.map((section, index) => {
+                if (section.title === 'Club Requests') {
+                  requests[index].data.push(myRequestData);
+                } else {
+                  requestData = {
+                    title: i18n._(t`Club Requests`),
+                    data: [myRequestData],
+                  };
+                  requests.push(requestData);
+                }
+              });
+            }
           }
         }
       }
@@ -396,7 +387,7 @@ function MySentRequests({navigation, route}) {
       });
     } else {
       batch.update(userRef, {
-        ['leagues.' + userRef]: firestore.FieldValue.delete(),
+        ['leagues.' + myRequest.leagueId]: firestore.FieldValue.delete(),
       });
     }
 
