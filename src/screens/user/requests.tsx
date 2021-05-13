@@ -289,7 +289,7 @@ function MySentRequests({navigation, route}) {
 
   useEffect(() => {
     const requests: IMyRequests[] = [];
-    if (userData.leagues) {
+    if (userData.leagues && context.userLeagues) {
       for (const [leagueId, league] of Object.entries(userData.leagues)) {
         const leagueName = context.userLeagues[leagueId].name;
         let requestData: IMyRequests = {

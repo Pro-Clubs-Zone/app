@@ -29,6 +29,7 @@ export default function Settings() {
           setTempData(value);
         }
       } catch (e) {
+        console.log(e);
         throw new Error(e);
       }
     };
@@ -40,6 +41,7 @@ export default function Settings() {
       await AsyncStorage.setItem('@language', data);
       i18n.activate(data);
     } catch (e) {
+      console.log(e);
       throw new Error(e);
     }
   };
