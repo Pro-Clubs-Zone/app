@@ -61,7 +61,7 @@ export default function SubmitMatch({navigation}: Props) {
   const [selectedPlayers, setSelectedPlayers] = useState<
     Array<PlayerStatsInfo>
   >([]);
-  const [motm, setMotm] = useState<string>();
+  const [motm, setMotm] = useState<string>(null);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 

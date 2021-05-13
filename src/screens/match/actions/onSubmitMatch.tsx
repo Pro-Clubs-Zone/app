@@ -47,9 +47,6 @@ const submitMatch = async (
     notSubmittedPlayers.push(player.id);
   });
 
-  const matchDoc = await matchRef.get();
-  let matchData: IMatch = matchDoc.data() as IMatch;
-
   let submissionData: {
     submissions: {};
     players?: {};
@@ -67,36 +64,39 @@ const submitMatch = async (
       ...notSubmittedPlayers,
     );
   }
-  if (motm !== undefined) {
+  if (motm) {
     submissionData.motmSubmissions = motmSubmission;
   }
 
-  await matchRef.set(submissionData, {merge: true});
+  try {
+    await matchRef.set(submissionData, {merge: true});
+    const matchDoc = await matchRef.get();
+    let matchData: IMatch = matchDoc.data() as IMatch;
 
-  if (
-    matchData.submissions &&
-    Object.keys(matchData.submissions).length === 1
-  ) {
-    const controlMatch = firFunc.httpsCallable('matchSubmission');
+    if (matchData.submissionCount === 2) {
+      const controlMatch = firFunc.httpsCallable('matchSubmission');
 
-    let match: IMatch = {
-      ...initialMatchData,
-      ...matchData,
-      submissions: {...matchData.submissions, ...teamSubmission},
-    };
+      let match: IMatch = {
+        ...initialMatchData,
+        ...matchData,
+        submissions: {...matchData.submissions, ...teamSubmission},
+      };
 
-    if (motm !== undefined) {
-      match.motmSubmissions = {...matchData.motmSubmissions, ...motmSubmission};
-    }
+      if (motm) {
+        match.motmSubmissions = {
+          ...matchData.motmSubmissions,
+          ...motmSubmission,
+        };
+      }
 
-    try {
       const submissionResult = await controlMatch({match: match});
       return submissionResult.data;
-    } catch (error) {
-      throw new Error(error);
+    } else {
+      return 'First Submission';
     }
-  } else {
-    return 'First Submission';
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
   }
 };
 

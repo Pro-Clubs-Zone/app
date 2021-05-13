@@ -71,7 +71,7 @@ export default function TransferHistory({navigation, route}: Props) {
 
   const convertDate = (milliseconds: string) => {
     const date = new Date(Number(milliseconds));
-    const convertedDate = `${date.getDate()}.${date.getMonth()}`;
+    const convertedDate = `${date.getDate()}/${date.getMonth()} - ${date.getHours()}:${date.getMinutes()}`;
 
     return convertedDate;
   };
@@ -85,7 +85,10 @@ export default function TransferHistory({navigation, route}: Props) {
       data={data}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={() => (
-        <ListHeading col1={i18n._(t`Transfer`)} col4={i18n._(t`Day/Month`)} />
+        <ListHeading
+          col1={i18n._(t`Transfer`)}
+          col4={i18n._(t`Day/Month - Time`)}
+        />
       )}
       ListEmptyComponent={() => (
         <EmptyState

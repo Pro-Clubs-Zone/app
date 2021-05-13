@@ -15,8 +15,8 @@ type Props = {
   data: IMatchNavData;
   children?: any;
   submitTitle?: any;
-  onPressHome: () => void;
-  onPressAway: () => void;
+  onPressHome?: () => void;
+  onPressAway?: () => void;
 };
 
 const ScoreBoard = ({
