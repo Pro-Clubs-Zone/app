@@ -46,7 +46,7 @@ msgstr "¿Ya tiene una cuenta?"
 msgid "Are you sure you want to leave this club? This action can't be undone"
 msgstr "¿Estás seguro de que quieres dejar este club? Esta acción no se puede deshacer"
 
-#: src/screens/match/finishedMatch.tsx:265
+#: src/screens/match/finishedMatch.tsx:306
 msgid "Are you sure you want to remove player stats submission for this match?"
 msgstr "¿Estás seguro de que quieres eliminar el envío de estadísticas de los jugadores para este partido?"
 
@@ -102,6 +102,7 @@ msgstr "No se puede acceder al almacenamiento"
 #: src/screens/league/leaguePreview.tsx:78
 #: src/screens/league/leaguePreview.tsx:110
 #: src/screens/league/leagueTeam.tsx:185
+#: src/screens/match/finishedMatch.tsx:98
 #: src/screens/match/upcomingMatch.tsx:96
 #: src/screens/match/upcomingMatch.tsx:105
 #: src/screens/user/requests.tsx:72
@@ -127,9 +128,10 @@ msgstr "Consulta los líderes de la liga"
 #: src/screens/league/leagueTeam.tsx:77
 #: src/screens/league/leagueTeam.tsx:86
 #: src/screens/league/leagueTeam.tsx:126
-#: src/screens/match/finishedMatch.tsx:60
-#: src/screens/match/finishedMatch.tsx:255
-#: src/screens/match/finishedMatch.tsx:271
+#: src/screens/match/finishedMatch.tsx:62
+#: src/screens/match/finishedMatch.tsx:85
+#: src/screens/match/finishedMatch.tsx:296
+#: src/screens/match/finishedMatch.tsx:312
 #: src/screens/match/submitMatch.tsx:155
 #: src/screens/match/submitMatch.tsx:211
 #: src/screens/match/submitMatch.tsx:211
@@ -144,7 +146,7 @@ msgstr "Consulta los líderes de la liga"
 msgid "Close"
 msgstr "Cerrar"
 
-#: src/screens/match/finishedMatch.tsx:144
+#: src/screens/match/finishedMatch.tsx:186
 msgid "Club"
 msgstr "Club"
 
@@ -291,8 +293,8 @@ msgstr "GD"
 msgid "Get Reset Link"
 msgstr "Obtener el enlace de reinicio"
 
-#: src/screens/match/finishedMatch.tsx:158
-#: src/screens/match/finishedMatch.tsx:162
+#: src/screens/match/finishedMatch.tsx:200
+#: src/screens/match/finishedMatch.tsx:204
 msgid "Goals"
 msgstr "Objetivos"
 
@@ -429,7 +431,7 @@ msgstr "Cargando"
 msgid "MOTM"
 msgstr "MOTM"
 
-#: src/screens/match/finishedMatch.tsx:120
+#: src/screens/match/finishedMatch.tsx:162
 msgid "Man of the Match"
 msgstr "Hombre del partido"
 
@@ -442,8 +444,8 @@ msgstr "Gestionar las solicitudes recibidas y enviadas"
 msgid "Manager"
 msgstr "Director técnico "
 
-#: src/screens/match/finishedMatch.tsx:214
-#: src/screens/match/finishedMatch.tsx:218
+#: src/screens/match/finishedMatch.tsx:256
+#: src/screens/match/finishedMatch.tsx:260
 msgid "Manager uploaded no images"
 msgstr "El entrenador no ha subido ninguna imagen"
 
@@ -517,7 +519,7 @@ msgstr "No hay clubes en la liga"
 msgid "No Fixtures"
 msgstr "No hay cruces"
 
-#: src/screens/match/finishedMatch.tsx:154
+#: src/screens/match/finishedMatch.tsx:196
 msgid "No MOTM"
 msgstr "No hay MOTM"
 
@@ -535,8 +537,8 @@ msgstr "No hay ligas públicas"
 msgid "No Upcoming Matches"
 msgstr "No hay próximos partidos"
 
-#: src/screens/match/finishedMatch.tsx:159
-#: src/screens/match/finishedMatch.tsx:163
+#: src/screens/match/finishedMatch.tsx:201
+#: src/screens/match/finishedMatch.tsx:205
 msgid "No goalscorers"
 msgstr "Sin goleadores"
 
@@ -544,10 +546,10 @@ msgstr "Sin goleadores"
 msgid "No players yet"
 msgstr "Todavía no hay jugadores"
 
-#: src/screens/match/finishedMatch.tsx:214
-#: src/screens/match/finishedMatch.tsx:218
-#: src/screens/match/finishedMatch.tsx:320
-#: src/screens/match/finishedMatch.tsx:324
+#: src/screens/match/finishedMatch.tsx:256
+#: src/screens/match/finishedMatch.tsx:260
+#: src/screens/match/finishedMatch.tsx:361
+#: src/screens/match/finishedMatch.tsx:365
 msgid "No screenshots"
 msgstr "No hay capturas de pantalla"
 
@@ -615,7 +617,7 @@ msgid "Platform"
 msgstr "Plataforma"
 
 #: src/screens/league/leaguePreview.tsx:110
-#: src/screens/match/finishedMatch.tsx:128
+#: src/screens/match/finishedMatch.tsx:170
 msgid "Player"
 msgstr "Jugador"
 
@@ -623,12 +625,12 @@ msgstr "Jugador"
 msgid "Player Performance"
 msgstr "Rendimiento de los jugadores"
 
-#: src/screens/match/finishedMatch.tsx:290
+#: src/screens/match/finishedMatch.tsx:331
 msgid "Player performance stats submission for this match was removed"
 msgstr "Se ha eliminado el envío de estadísticas de rendimiento de los jugadores para este partido"
 
-#: src/screens/match/finishedMatch.tsx:320
-#: src/screens/match/finishedMatch.tsx:324
+#: src/screens/match/finishedMatch.tsx:361
+#: src/screens/match/finishedMatch.tsx:365
 msgid "Players uploaded no images"
 msgstr "Los jugadores no han subido ninguna imagen"
 
@@ -648,7 +650,7 @@ msgstr "Problema de procesamiento de la imagen"
 msgid "Public League"
 msgstr "Liga pública"
 
-#: src/screens/match/finishedMatch.tsx:149
+#: src/screens/match/finishedMatch.tsx:191
 msgid "Rating"
 msgstr "Clasificación"
 
@@ -666,7 +668,7 @@ msgstr "Las solicitudes de liga recibidas aparecerán aquí"
 #: src/screens/club/clubSettings.tsx:88
 #: src/screens/league/clubs.tsx:220
 #: src/screens/league/leagueTeam.tsx:121
-#: src/screens/match/finishedMatch.tsx:267
+#: src/screens/match/finishedMatch.tsx:308
 #: src/screens/user/requests.tsx:294
 msgid "Remove"
 msgstr "Eliminar"
@@ -682,7 +684,7 @@ msgstr "Eliminar el club"
 msgid "Remove Player"
 msgstr "Retirar al jugador"
 
-#: src/screens/match/finishedMatch.tsx:313
+#: src/screens/match/finishedMatch.tsx:354
 msgid "Remove Player Stat"
 msgstr "Eliminar la estadística del jugador"
 
@@ -694,7 +696,7 @@ msgstr "Retirar la solicitud"
 msgid "Removing League..."
 msgstr "Eliminación de la Liga..."
 
-#: src/screens/match/finishedMatch.tsx:265
+#: src/screens/match/finishedMatch.tsx:306
 msgid "Removing player stats"
 msgstr "Eliminación de las estadísticas de los jugadores"
 
@@ -798,7 +800,7 @@ msgstr "Iniciar sesión para continuar"
 msgid "Social"
 msgstr "Social"
 
-#: src/screens/match/finishedMatch.tsx:296
+#: src/screens/match/finishedMatch.tsx:337
 #: src/screens/match/submitMatch.tsx:209
 #: src/screens/match/submitMatch.tsx:209
 #: src/screens/match/submitMatch.tsx:246
@@ -813,7 +815,7 @@ msgstr "Algo salió mal"
 msgid "Stats submitted"
 msgstr "Estadísticas presentadas"
 
-#: src/screens/match/finishedMatch.tsx:290
+#: src/screens/match/finishedMatch.tsx:331
 msgid "Submission Removed"
 msgstr "Presentación eliminada"
 
@@ -825,7 +827,7 @@ msgstr "Enviar"
 msgid "Submit Match"
 msgstr "Enviar partido"
 
-#: src/screens/match/finishedMatch.tsx:116
+#: src/screens/match/finishedMatch.tsx:158
 #: src/screens/match/submitStats.tsx:257
 msgid "Submit Stats"
 msgstr "Enviar estadísticas"
@@ -960,8 +962,8 @@ msgstr "{0} Equipos"
 msgid "{0} clubs / {1} matches"
 msgstr "{0} clubes / {1} partidos"
 
-#: src/screens/match/finishedMatch.tsx:158
-#: src/screens/match/finishedMatch.tsx:162
+#: src/screens/match/finishedMatch.tsx:200
+#: src/screens/match/finishedMatch.tsx:204
 msgid "{0} goalscorers"
 msgstr "{0} goleadores"
 
@@ -1023,11 +1025,11 @@ msgstr "Inscríbase ahora."
 msgid "Single"
 msgstr "Solo"
 
-#: src/screens/match/finishedMatch.tsx:53
+#: src/screens/match/finishedMatch.tsx:78
 msgid "Skip Stats Submission"
 msgstr "Omitir la presentación de estadísticas"
 
-#: src/screens/match/finishedMatch.tsx:55
+#: src/screens/match/finishedMatch.tsx:80
 msgid "Skip Submission"
 msgstr "Omitir la presentación"
 
@@ -1035,7 +1037,7 @@ msgstr "Omitir la presentación"
 msgid "Verification link sent"
 msgstr "Enlace de verificación enviado"
 
-#: src/screens/match/finishedMatch.tsx:53
+#: src/screens/match/finishedMatch.tsx:78
 msgid "You are about to skip stats submission for this match. This action can't be undone."
 msgstr "Estás a punto de omitir el envío de estadísticas para este partido. Esta acción no se puede deshacer."
 
@@ -1210,16 +1212,16 @@ msgid "Report bugs, request features or just come to say hi!"
 msgstr "¡Informar error, solicite características o simplemente ven a saludar!\n"
 ""
 
-#: src/screens/user/settings.tsx:60
-#: src/screens/user/settings.tsx:60
+#: src/screens/user/settings.tsx:62
+#: src/screens/user/settings.tsx:62
 msgid "Language"
 msgstr "Idioma"
 
-#: src/screens/user/settings.tsx:63
+#: src/screens/user/settings.tsx:65
 msgid "Update"
 msgstr "Actualizar"
 
-#: src/screens/league/transferHistory.tsx:65
+#: src/screens/league/transferHistory.tsx:70
 msgid "All transfer history will appear here"
 msgstr "Todo el historial de transferencias aparecerá aquí"
 
@@ -1227,7 +1229,7 @@ msgstr "Todo el historial de transferencias aparecerá aquí"
 msgid "Manage"
 msgstr "Gestionar"
 
-#: src/screens/league/transferHistory.tsx:65
+#: src/screens/league/transferHistory.tsx:70
 msgid "Transfer"
 msgstr "Transferencia"
 
@@ -1253,7 +1255,7 @@ msgstr "{0} Lista"
 msgid "{acceptedClubs}/{teamNum} Teams.{0}Not enough teams to schedule matches"
 msgstr "{acceptedClubs}/{teamNum} Teams.{0}Not enough teams to schedule matches"
 
-#: src/screens/league/transferHistory.tsx:65
+#: src/screens/league/transferHistory.tsx:70
 msgid "No Transfers"
 msgstr "Sin transferencias"
 
@@ -1279,7 +1281,27 @@ msgid "Send request to {clubName} to join?"
 msgstr "Enviar solicitud a {clubName} para unirse?"
 
 #: src/screens/league/transferHistory.tsx:65
-#: src/screens/league/transferHistory.tsx:65
+#: src/screens/league/transferHistory.tsx:70
 msgid "Day/Month - Time"
 msgstr "Día/Mes - Hora"
+
+#: src/screens/match/finishedMatch.tsx:60
+msgid "Match is unpublished"
+msgstr "El partido es inédito"
+
+#: src/screens/match/finishedMatch.tsx:93
+msgid "Reset match"
+msgstr "Reiniciar el partido"
+
+#: src/screens/match/finishedMatch.tsx:91
+msgid "Reset match result"
+msgstr "Restablecer el resultado del partido"
+
+#: src/screens/match/finishedMatch.tsx:60
+msgid "This match has been successfully unpublished"
+msgstr "Este partido ha sido anulado con éxito"
+
+#: src/screens/match/finishedMatch.tsx:91
+msgid "WARNING: You are about to reset result and unpublish this match"
+msgstr "ADVERTENCIA: Está a punto de restablecer el resultado y anular la publicación de este partido"
 
