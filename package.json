@@ -16,7 +16,7 @@
     "android-release": "npx react-native run-android --variant=devRelease --appIdSuffix=dev",
     "android-assemble": "cd android && ./gradlew clean && ./gradlew assembleProdRelease",
     "lingui": "lingui extract && lingui compile",
-    "version": "react-native-version"
+    "version": "react-native-version -a --skip-tag"
   },
   "dependencies": {
     "@contentful/rich-text-html-renderer": "^14.1.2",
