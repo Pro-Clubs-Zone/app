@@ -76,18 +76,10 @@ const submitMatch = async (
     if (matchData.submissionCount === 2) {
       const controlMatch = firFunc.httpsCallable('matchSubmission');
 
-      let match: IMatch = {
+      let match = {
         ...initialMatchData,
         ...matchData,
-        submissions: {...matchData.submissions, ...teamSubmission},
       };
-
-      if (motm) {
-        match.motmSubmissions = {
-          ...matchData.motmSubmissions,
-          ...motmSubmission,
-        };
-      }
 
       const submissionResult = await controlMatch({match: match});
       return submissionResult.data;

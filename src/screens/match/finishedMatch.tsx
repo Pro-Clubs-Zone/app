@@ -61,7 +61,10 @@ export type ImageProps = ImageURISource & {
 
 const Tab = createMaterialTopTabNavigator<FinishedMatchStack>();
 
+const firFunc = functions();
+
 export default function FinishedMatch({navigation}: Props) {
+  const [loading, setLoading] = useState(false);
   const matchContext = useContext(MatchContext);
   const context = useContext(AppContext);
   const user = useContext(AuthContext);
@@ -73,6 +76,8 @@ export default function FinishedMatch({navigation}: Props) {
     matchData.players &&
     uid in matchData.players &&
     matchData.players[uid].submitted === false;
+
+  const isAdmin = matchContext.match.admin;
 
   const onSkipSubmission = async () => {
     await skipStatsSubmission(matchData.leagueId, matchData.matchId, uid);
@@ -89,6 +94,34 @@ export default function FinishedMatch({navigation}: Props) {
     }
     navigation.goBack();
   };
+
+  const onUndoMatch = async () => {
+    setLoading(true);
+    try {
+      const undoMatch = firFunc.httpsCallable('undoPublishedMatch');
+      await undoMatch({match: matchData});
+      Alert.alert(
+        i18n._(t`Match is unpublished`),
+        i18n._(t`This match has been successfully unpublished`),
+        [
+          {
+            text: i18n._(t`Close`),
+            style: 'cancel',
+            onPress: () => {
+              setLoading(false);
+              navigation.goBack();
+            },
+          },
+        ],
+        {cancelable: false},
+      );
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      throw new Error(err);
+    }
+  };
+
   const showSkipAlert = () => {
     Alert.alert(
       i18n._(t`Skip Stats Submission`),
@@ -110,6 +143,27 @@ export default function FinishedMatch({navigation}: Props) {
     );
   };
 
+  const showUndoAlert = () => {
+    Alert.alert(
+      i18n._(t`Reset match result`),
+      i18n._(
+        t`WARNING: You are about to reset result and unpublish this match`,
+      ),
+      [
+        {
+          text: i18n._(t`Reset match`),
+          onPress: () => onUndoMatch(),
+          style: 'destructive',
+        },
+        {
+          text: i18n._(t`Cancel`),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+  };
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -120,14 +174,23 @@ export default function FinishedMatch({navigation}: Props) {
           {isPlayer && (
             <IconButton name="account-cancel" onPress={() => showSkipAlert()} />
           )}
-          <IconButton
-            name="message-alert-outline"
-            onPress={() => shareMatchDetails(matchData)}
-          />
+          {isAdmin && (
+            <IconButton name="undo-variant" onPress={() => showUndoAlert()} />
+          )}
+          {!isAdmin && (
+            <IconButton
+              name="message-alert-outline"
+              onPress={() => shareMatchDetails(matchData)}
+            />
+          )}
         </View>
       ),
     });
   }, [matchContext]);
+
+  if (loading) {
+    return <FullScreenLoading visible={true} />;
+  }
 
   return (
     <Tab.Navigator lazy={true}>
@@ -423,8 +486,6 @@ function PlayerScreenshots({navigation}: Props) {
 
   const windowWidth = useWindowDimensions().width;
   // const windowHeight = useWindowDimensions().height;
-
-  const firFunc = functions();
 
   useEffect(() => {
     const getImages = async () => {
