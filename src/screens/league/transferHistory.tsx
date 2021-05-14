@@ -71,7 +71,12 @@ export default function TransferHistory({navigation, route}: Props) {
 
   const convertDate = (milliseconds: string) => {
     const date = new Date(Number(milliseconds));
-    const convertedDate = `${date.getDate()}/${date.getMonth()} - ${date.getHours()}:${date.getMinutes()}`;
+    const convertedDate = date.toLocaleString('en-GB', {
+      hour: '2-digit',
+      minute: '2-digit',
+      day: '2-digit',
+      month: 'numeric',
+    });
 
     return convertedDate;
   };
