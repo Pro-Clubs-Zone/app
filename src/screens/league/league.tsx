@@ -116,8 +116,6 @@ export default function LeagueStack({navigation, route}: Props) {
   };
 
   useEffect(() => {
-    console.log('league');
-
     const getLeagueData = async () => {
       try {
         const leagueRef = db.collection('leagues').doc(leagueId);

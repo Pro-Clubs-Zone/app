@@ -14,6 +14,7 @@ import {LeagueContext} from '../../context/leagueContext';
 import {t} from '@lingui/macro';
 import i18n from '../../utils/i18n';
 import sendPlayerRequest from './actions/sendPlayerRequest';
+import analytics from '@react-native-firebase/analytics';
 
 type ScreenNavigationProp = StackNavigationProp<LeagueStackType, 'Join Club'>;
 
@@ -32,10 +33,10 @@ export default function JoinClub({navigation}: Props) {
   const user = useContext(AuthContext);
   const leagueContext = useContext(LeagueContext);
   const leagueId = leagueContext.leagueId;
-  const leagueRef = db.collection('leagues').doc(leagueId);
-  const leagueClubs = leagueRef.collection('clubs');
 
   useEffect(() => {
+    const leagueRef = db.collection('leagues').doc(leagueId);
+    const leagueClubs = leagueRef.collection('clubs');
     let retrievedClubs: ClubListItem[] = [];
     leagueClubs
       .where('accepted', '==', true)
@@ -46,7 +47,11 @@ export default function JoinClub({navigation}: Props) {
         });
         setData(retrievedClubs);
       })
-      .then(() => {
+      .then(async () => {
+        await analytics().logScreenView({
+          screen_name: 'Join Club',
+          screen_class: 'League Preview',
+        });
         setLoading(false);
       });
   }, [leagueContext]);
