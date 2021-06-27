@@ -44,7 +44,7 @@ export default function CreateLeague({navigation}: Props) {
   };
   const [data, setData] = useState<ILeague>(leagueInfoDefault as ILeague);
   const [loading, setLoading] = useState<boolean>(false);
-  const [hasLeague, setHasLeague] = useState<boolean>(false);
+  const [userLeaguesCount, setUserLeaguesCount] = useState(0);
   const [tempData, setTempData] = useState({
     platform: data.platform,
     teamNum: data.teamNum,
@@ -90,11 +90,13 @@ export default function CreateLeague({navigation}: Props) {
 
   useEffect(() => {
     if (userLeagues) {
+      let userCreatedLegues = 0;
       for (const league of Object.values(userLeagues)) {
         if (league.admin) {
-          return setHasLeague(true);
+          userCreatedLegues++;
         }
       }
+      setUserLeaguesCount(userCreatedLegues);
     }
   }, [userLeagues]);
 
@@ -163,7 +165,7 @@ export default function CreateLeague({navigation}: Props) {
   const showLimitAlert = () => {
     Alert.alert(
       i18n._(t`League Limit Reached`),
-      i18n._(t`Contact PRZ to create more than one league.`),
+      i18n._(t`Contact PRZ to create more than two leagues.`),
       [
         {
           text: i18n._(t`Close`),
@@ -428,14 +430,16 @@ export default function CreateLeague({navigation}: Props) {
           </View>
           <SwitchLabel
             title={i18n._(t`Public League`)}
-            // subtitle={
-            //   user?.currentUser?.emailVerified
-            //     ? i18n._(t`Everyone can send requests to join`)
-            //     : i18n._(t`Verify your email to enable this option`)
-            // }
-            subtitle={i18n._(t`Contact PRZ to enable this option`)}
-            // disabled={!user?.currentUser?.emailVerified}
-            disabled={true}
+            subtitle={
+              user?.currentUser?.emailVerified
+                ? i18n._(
+                    t`League will be visible on league explorer and anyone can send request`,
+                  )
+                : i18n._(t`Verify your email to enable this option`)
+            }
+            //     subtitle={i18n._(t`Contact PRZ to enable this option`)}
+            disabled={!user?.currentUser?.emailVerified}
+            //   disabled={true}
             value={!data.private}
             onValueChange={() => setData({...data, private: !data.private})}
           />
@@ -472,13 +476,7 @@ export default function CreateLeague({navigation}: Props) {
           />
         </FormContent>
         <BigButton
-          onPress={
-            hasLeague
-              ? !userData?.premium
-                ? showLimitAlert
-                : onCreateLeague
-              : onCreateLeague
-          }
+          onPress={userLeaguesCount === 2 ? showLimitAlert : onCreateLeague}
           title={i18n._(t`Create League`)}
         />
       </FormView>
