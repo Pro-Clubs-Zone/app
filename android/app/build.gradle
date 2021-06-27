@@ -135,8 +135,8 @@ android {
         applicationId "com.proclubszone"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 34
-        versionName "2.7.0"
+        versionCode 35
+        versionName "2.7.1"
         multiDexEnabled true
     }
     splits {
