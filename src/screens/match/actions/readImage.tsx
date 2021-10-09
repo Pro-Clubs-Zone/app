@@ -316,34 +316,95 @@ export default async function readImage(uri: string, isGK: boolean) {
   if (!isGK) {
     cropData = [
       {
-        offset: {x: 1029, y: 240},
-        size: {width: 195, height: 96},
+        //Rating
+        offset: {x: 554, y: 216},
+        size: {width: 60, height: 48},
+      },
+      { 
+        // Goals
+        offset: {x: 1710, y: 291},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 802, y: 484},
-        size: {width: 120, height: 72},
-      },
-
-      {
-        offset: {x: 802, y: 592},
-        size: {width: 120, height: 180},
+        // Assist
+        offset: {x: 1710, y: 330},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 802, y: 808},
-        size: {width: 120, height: 108},
+        // Shots
+        offset: {x: 1710, y: 369},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 1549, y: 484},
-        size: {width: 120, height: 108},
+        // Shot accuracy %
+        offset: {x: 1710, y: 408},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 1549, y: 628},
-        size: {width: 120, height: 72},
+        // Passes
+        offset: {x: 1710, y: 447},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 1549, y: 736},
-        size: {width: 120, height: 108},
+        // Pass Accuracy %
+        offset: {x: 1710, y: 486},
+        size: {width: 75, height: 36},
       },
+      {
+        // Dribbles
+        offset: {x: 1710, y: 525},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Dribble Success Rate %
+        offset: {x: 1710, y: 564},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Tackles
+        offset: {x: 1710, y: 603},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Tackle Success Rate %
+        offset: {x: 1710, y: 642},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Offsides
+        offset: {x: 1710, y: 681},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Fouls Commited
+        offset: {x: 1710, y: 720},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Possesion won
+        offset: {x: 1710, y: 759},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Possesion Lost
+        offset: {x: 1710, y: 798},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Minutes Played
+        offset: {x: 1710, y: 837},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Distance Covered
+        offset: {x: 1710, y: 876},
+        size: {width: 75, height: 36},
+      },
+      {
+        // Distance Sprinted
+        offset: {x: 1710, y: 915},
+        size: {width: 75, height: 36},
+    },
     ];
   } else {
     cropData = [
