@@ -2,207 +2,96 @@ import {ImageCropData, NativeModules, Platform} from 'react-native';
 import TesseractOcr from 'react-native-tesseract-ocr';
 import ImageEditor from '@react-native-community/image-editor';
 import RNFS from 'react-native-fs';
-import {
-  CommonPlayerStats,
-  GoalkeeperStats,
-  OutfieldPlayerStats,
-} from '../../../utils/interface';
+import {GoalkeeperStats, OutfieldPlayerStats} from '../../../utils/interface';
 const {RNImageOCR} = NativeModules;
 
 export default async function readImage(uri: string, isGK: boolean) {
-  let playerStats: OutfieldPlayerStats | GoalkeeperStats = {};
+  let playerStats = {} as OutfieldPlayerStats & GoalkeeperStats;
 
-  const sortStats = (data: string[], sectionIndex: number) => {
-    const sortPasses = (commonPlayerData: string[]) => {
-      let player: CommonPlayerStats = {};
-
-      commonPlayerData.forEach((stat, index) => {
-        switch (index) {
-          case 0:
-            player.assists = Number(stat);
-            break;
-          case 1:
-            player.completedShortPasses = Number(stat);
-            break;
-          case 2:
-            player.completedMediumPasses = Number(stat);
-            break;
-          case 3:
-            player.completedLongPasses = Number(stat);
-            break;
-          case 4:
-            player.failedShortPasses = Number(stat);
-            break;
-          case 5:
-            player.failedMediumPasses = Number(stat);
-            break;
-          case 6:
-            player.failedLongPasses = Number(stat);
-            break;
-          case 7:
-            player.keyPasses = Number(stat);
-            break;
-          case 8:
-            player.successfulCrosses = Number(stat);
-            break;
-          case 9:
-            player.failedCrosses = Number(stat);
-        }
-      });
-
-      return player;
-    };
-
-    const sortPositioning = (commonPlayerData: string[]) => {
-      let player: CommonPlayerStats = {};
-
-      commonPlayerData.forEach((stat, index) => {
-        switch (index) {
-          case 0:
-            player.interceptions = Number(stat);
-            break;
-          case 1:
-            player.blocks = Number(stat);
-            break;
-          case 2:
-            player.outOfPosition = Number(stat);
-        }
-      });
-
-      return player;
-    };
-
-    const sortBallRetention = (commonPlayerData: string[]) => {
-      let player: CommonPlayerStats = {};
-
-      commonPlayerData.forEach((stat, index) => {
-        switch (index) {
-          case 0:
-            player.possessionWon = Number(stat);
-            break;
-          case 1:
-            player.possessionLost = Number(stat);
-            break;
-          case 2:
-            player.clearances = Number(stat);
-            break;
-          case 3:
-            player.headersWon = Number(stat);
-            break;
-          case 4:
-            player.heardersLost = Number(stat);
-        }
-      });
-
-      return player;
-    };
-
+  const sortStats = (data: string, sectionIndex: number) => {
     if (!isGK) {
-      let outfieldPlayer: OutfieldPlayerStats = {};
-
       switch (sectionIndex) {
         case 0: // Rating
-          outfieldPlayer.rating = parseFloat(data[sectionIndex]);
+          playerStats.rating = parseFloat(data);
           break;
-        case 1: // Shooting
-          data.forEach((stat, index) => {
-            switch (index) {
-              case 0:
-                outfieldPlayer.goals = Number(stat);
-                break;
-              case 1:
-                //   const statToNum = parseInt(stat[index], 10);
-                outfieldPlayer.shotsOnTarget = Number(stat);
-                break;
-              case 2:
-                outfieldPlayer.shotsOffTarget = Number(stat);
-            }
-          });
+        case 1:
+          playerStats.goals = Number(data);
           break;
-        case 2: // Passes
-          const passes = sortPasses(data);
-          outfieldPlayer = {...outfieldPlayer, ...passes};
+        case 2:
+          playerStats.assists = Number(data);
           break;
-        case 3: // Movement
-          data.forEach((stat, index) => {
-            switch (index) {
-              case 0:
-                outfieldPlayer.keyDribbles = Number(stat);
-                break;
-              case 1:
-                outfieldPlayer.fouled = Number(stat);
-                break;
-              case 2:
-                outfieldPlayer.successfulDribbles = Number(stat);
-            }
-          });
+        case 3:
+          playerStats.shots = Number(data);
           break;
-        case 4: //Tackling
-          data.forEach((stat, index) => {
-            switch (index) {
-              case 0:
-                outfieldPlayer.wonTackles = Number(stat);
-                break;
-              case 1:
-                outfieldPlayer.lostTackles = Number(stat);
-                break;
-              case 2:
-                outfieldPlayer.fouls = Number(stat);
-                break;
-              case 3:
-                outfieldPlayer.penaltiesConceded = Number(stat);
-            }
-          });
+        case 4:
+          playerStats.shotsAccuracy = Number(data);
           break;
-        case 5: // Positioning
-          const positioning = sortPositioning(data);
-          outfieldPlayer = {...outfieldPlayer, ...positioning};
+        case 5:
+          playerStats.passes = Number(data);
           break;
-        case 6: // Ball retention
-          const ballRetention = sortBallRetention(data);
-          outfieldPlayer = {...outfieldPlayer, ...ballRetention};
+        case 6:
+          playerStats.passAccuracy = Number(data);
+          break;
+        case 7:
+          playerStats.dribbles = Number(data);
+          break;
+        case 8:
+          playerStats.dribblesSuccessRate = Number(data);
+          break;
+        case 9:
+          playerStats.tackles = Number(data);
+          break;
+        case 10:
+          playerStats.tackleSuccessRate = Number(data);
+          break;
+        case 11:
+          playerStats.offsides = Number(data);
+          break;
+        case 12:
+          playerStats.fouls = Number(data);
+          break;
+        case 13:
+          playerStats.possessionWon = Number(data);
+          break;
+        case 14:
+          playerStats.possessionLost = Number(data);
+          break;
+        case 15:
+          playerStats.minutesPlayed = Number(data);
+          break;
+        case 16:
+          playerStats.distanceCovered = parseFloat(data);
+          break;
+        case 17:
+          playerStats.distanceSprinted = parseFloat(data);
       }
-
-      return outfieldPlayer;
     } else {
-      let goalkeeper: GoalkeeperStats = {};
       switch (sectionIndex) {
         case 0: // Rating
-          goalkeeper.rating = parseFloat(data[sectionIndex]);
+          playerStats.rating = parseFloat(data);
           break;
-        case 1: // Goalkeeping
-          data.forEach((stat, index) => {
-            switch (index) {
-              case 0:
-                goalkeeper.goalsConceded = Number(stat);
-                break;
-              case 1:
-                goalkeeper.shotsCaught = Number(stat);
-                break;
-              case 2:
-                goalkeeper.shotsParried = Number(stat);
-                break;
-              case 3:
-                goalkeeper.crossesCaught = Number(stat);
-                break;
-              case 4:
-                goalkeeper.ballsStriped = Number(stat);
-            }
-          });
+        case 1:
+          playerStats.shotsAgainst = Number(data);
           break;
-        case 2: // Passes
-          const passes = sortPasses(data);
-          goalkeeper = {...goalkeeper, ...passes};
+        case 2:
+          playerStats.shotsOnTarget = Number(data);
           break;
-        case 3: // Positioning
-          const positioning = sortPositioning(data);
-          goalkeeper = {...goalkeeper, ...positioning};
+        case 3:
+          playerStats.saves = Number(data);
           break;
-        case 4: // Ball retention
-          const ballRetention = sortBallRetention(data);
-          goalkeeper = {...goalkeeper, ...ballRetention};
+        case 4:
+          playerStats.goalsConceded = Number(data);
+          break;
+        case 5:
+          playerStats.saveSuccessRate = Number(data);
+          break;
+        case 6:
+          playerStats.shootoutSaves = Number(data);
+          break;
+        case 7:
+          playerStats.shootoutGoalsConceded = Number(data);
+          break;
       }
-      return goalkeeper;
     }
   };
 
@@ -250,27 +139,25 @@ export default async function readImage(uri: string, isGK: boolean) {
           console.log('fixed', value, valueIndex);
           return formattedData.push('6.3');
         }
-        console.log('trimmer', value, valueIndex);
+        //   console.log('trimmer', value, valueIndex);
         formattedData.push(value);
       });
     }
 
-    console.log('formatted', formattedData, index);
+    console.log('formatted', formattedData[0], index);
 
-    if (isGK && index === 3 && formattedData.length === 1) {
+    if (isGK && index === 4 && Number(formattedData[0]) > 10) {
       throw new Error(
         'If you played as an outfield player, disable switch in options below.',
       );
     }
-    if (!isGK && index === 2 && formattedData.length === 0) {
+    if (!isGK && !formattedData[0]) {
       throw new Error(
         'If you played as a goalkeeper, enable switch in options below.',
       );
     }
 
-    const sortedData = sortStats(formattedData, index);
-
-    playerStats = {...playerStats, ...sortedData};
+    sortStats(formattedData[0], index);
   };
 
   const getTextFromImageAndroid = async (croppedUri: string, index: number) => {
@@ -320,7 +207,7 @@ export default async function readImage(uri: string, isGK: boolean) {
         offset: {x: 554, y: 216},
         size: {width: 60, height: 48},
       },
-      { 
+      {
         // Goals
         offset: {x: 1710, y: 291},
         size: {width: 75, height: 36},
@@ -404,29 +291,49 @@ export default async function readImage(uri: string, isGK: boolean) {
         // Distance Sprinted
         offset: {x: 1710, y: 915},
         size: {width: 75, height: 36},
-    },
+      },
     ];
   } else {
     cropData = [
       {
-        offset: {x: 1029, y: 240},
-        size: {width: 195, height: 96},
+        //Rating
+        offset: {x: 554, y: 216},
+        size: {width: 60, height: 48},
       },
       {
-        offset: {x: 802, y: 448},
-        size: {width: 120, height: 144},
+        //Shots against
+        offset: {x: 1754, y: 328},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 1549, y: 436},
-        size: {width: 120, height: 180},
+        //Shots on target
+        offset: {x: 1754, y: 368},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 1549, y: 652},
-        size: {width: 120, height: 72},
+        //Saves
+        offset: {x: 1754, y: 407},
+        size: {width: 75, height: 36},
       },
       {
-        offset: {x: 1549, y: 760},
-        size: {width: 120, height: 108},
+        //Goals conceded
+        offset: {x: 1754, y: 446},
+        size: {width: 75, height: 36},
+      },
+      {
+        //save success rate
+        offset: {x: 1754, y: 485},
+        size: {width: 75, height: 36},
+      },
+      {
+        //Shootout saves
+        offset: {x: 1754, y: 524},
+        size: {width: 75, height: 36},
+      },
+      {
+        //Shootout goals conceded
+        offset: {x: 1754, y: 563},
+        size: {width: 75, height: 36},
       },
     ];
   }

@@ -63,47 +63,36 @@ export interface PlayerStatsInfo {
   matches?: number;
 }
 
-export interface CommonPlayerStats {
+export interface GoalkeeperStats {
   rating: any;
+  shotsAgainst: any;
+  shotsOnTarget: any;
+  saves: any;
+  goalsConceded: any;
+  saveSuccessRate: any;
+  shootoutSaves: any;
+  shootoutGoalsConceded: any;
+}
+
+export interface OutfieldPlayerStats {
+  rating: any;
+  goals: any;
   assists: any;
-  completedShortPasses: any;
-  completedMediumPasses: any;
-  completedLongPasses: any;
-  failedShortPasses: any;
-  failedMediumPasses: any;
-  failedLongPasses: any;
-  keyPasses: any;
-  successfulCrosses: any;
-  failedCrosses: any;
-  interceptions: any;
-  blocks: any;
-  outOfPosition: any;
+  shots: any;
+  shotsAccuracy: any;
+  passes: any;
+  passAccuracy: any;
+  dribbles: any;
+  dribblesSuccessRate: any;
+  tackles: any;
+  tackleSuccessRate: any;
+  offsides: any;
+  fouls: any;
   possessionWon: any;
   possessionLost: any;
-  clearances: any;
-  headersWon: any;
-  heardersLost: any;
-}
-
-export interface GoalkeeperStats extends CommonPlayerStats {
-  goalsConceded: any;
-  shotsCaught: any;
-  shotsParried: any;
-  crossesCaught: any;
-  ballsStriped: any;
-}
-
-export interface OutfieldPlayerStats extends CommonPlayerStats {
-  goals: any;
-  shotsOnTarget: any;
-  shotsOffTarget: any;
-  keyDribbles: any;
-  fouled: any;
-  successfulDribbles: any;
-  wonTackles: any;
-  lostTackles: any;
-  fouls: any;
-  penaltiesConceded: any;
+  minutesPlayed: any;
+  distanceCovered: any;
+  distanceSprinted: any;
 }
 
 export interface FixtureList extends IFlatList {
