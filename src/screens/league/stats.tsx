@@ -38,27 +38,28 @@ export default function Stats() {
 
     let dataStructure: SectionData[] = [
       {
-        title: 'Goalscorers',
+        title: 'Top Goalscorers',
         data: [],
       },
       {
-        title: 'Assists',
+        title: 'Top Assists',
         data: [],
       },
       {
         title: 'MOTMs',
         data: [],
       },
+
       {
-        title: 'Key Passes',
+        title: 'Most Dribbles',
         data: [],
       },
       {
-        title: 'Key Dribbles',
+        title: 'Most Tackles',
         data: [],
       },
       {
-        title: 'Won Tackles',
+        title: 'Most Saves',
         data: [],
       },
       {
@@ -70,7 +71,7 @@ export default function Stats() {
         data: [],
       },
       {
-        title: 'Appearances',
+        title: 'Most Appearances',
         data: [],
       },
     ];
@@ -82,10 +83,10 @@ export default function Stats() {
       assists: [],
       motm: [],
       matches: [],
-      keyPasses: [],
-      keyDribbles: [],
-      wonTackles: [],
+      dribbles: [],
+      tackles: [],
       rating: [],
+      saves: [],
       goalsConceded: [],
     };
 
@@ -133,9 +134,9 @@ export default function Stats() {
         addStats('goals', player.goals, 0);
         addStats('assists', player.assists, 1);
         addStats('motm', player.motm as number, 2);
-        addStats('keyPasses', player.keyPasses, 3);
-        addStats('keyDribbles', player.keyDribbles, 4);
-        addStats('wonTackles', player.wonTackles, 5);
+        addStats('dribbles', player.dribbles, 3);
+        addStats('tackles', player.tackles, 4);
+        addStats('saves', player.saves, 5);
         addStats('goalsConceded', player.goalsConceded, 6);
         addStats('rating', player.rating, 7);
         addStats('matches', player.matches, 8);
