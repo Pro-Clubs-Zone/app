@@ -267,13 +267,7 @@ export default function SubmitStats({navigation}: Props) {
           true,
         );
       } catch (error) {
-        showAlert(
-          i18n._(t`Problem processing image`),
-          i18n._(
-            t`Make sure you are uploading screenshot made in-game from your console`,
-          ),
-          false,
-        );
+        showAlert(i18n._(t`Problem processing image`), error.message, false);
         throw new Error(error);
       }
     } else {
