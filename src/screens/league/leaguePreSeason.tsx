@@ -199,6 +199,9 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       </CardSmallContainer>
       <CardMedium
         title={i18n._(t`Invite Clubs`)}
+        subTitle={i18n._(
+          t`Invite managers to create clubs. League can be scheduled once enough clubs are created.`,
+        )}
         onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
       />
       <CardMedium
