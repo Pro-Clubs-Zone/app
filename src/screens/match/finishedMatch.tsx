@@ -546,6 +546,7 @@ function PlayerScreenshots({navigation}: Props) {
       [
         {
           text: i18n._(t`Remove`),
+          style: 'destructive',
           onPress: () =>
             onRemovePlayerSubmission(matchImage.name, matchImage.clubId),
         },
