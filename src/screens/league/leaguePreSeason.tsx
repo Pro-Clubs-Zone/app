@@ -70,42 +70,26 @@ export default function LeaguePreSeason({navigation, route}: Props) {
   }, [navigation, newLeague]);
 
   const onScheduleMatches = () => {
-    if (leagueComplete) {
-      Alert.alert(
-        i18n._(t`Schedule Matches`),
-        i18n._(
-          t`Are you sure you want to schedule matches and start the league?`,
-        ),
-        [
-          {
-            text: i18n._(t`Schedule`),
-            style: 'destructive',
-            onPress: () => {
-              scheduleMatches();
-            },
+    Alert.alert(
+      i18n._(t`Schedule Matches`),
+      i18n._(
+        t`Schedule matches and start the league. If not enough clubs joined, bot clubs will be created.`,
+      ),
+      [
+        {
+          text: i18n._(t`Schedule`),
+          style: 'default',
+          onPress: () => {
+            scheduleMatches();
           },
-          {
-            text: i18n._(t`Cancel`),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: false},
-      );
-    } else {
-      Alert.alert(
-        i18n._(t`Schedule Matches`),
-        i18n._(
-          t`You can schedule matches once the league has ${teamNum} teams`,
-        ),
-        [
-          {
-            text: i18n._(t`Close`),
-            style: 'cancel',
-          },
-        ],
-        {cancelable: false},
-      );
-    }
+        },
+        {
+          text: i18n._(t`Cancel`),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
   };
 
   const scheduleMatches = async () => {
@@ -116,6 +100,8 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       await functionRef({
         matchNum: league.matchNum,
         leagueId: leagueId,
+        acceptedClubs: league.acceptedClubs,
+        teamNum: league.teamNum,
       });
       await analytics().logEvent('schedule_league', {
         platform: league.platform,
@@ -200,7 +186,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
       <CardMedium
         title={i18n._(t`Invite Clubs`)}
         subTitle={i18n._(
-          t`Invite managers to create clubs. League can be scheduled once enough clubs are created.`,
+          t`Invite managers to create clubs.${`\n`}This can be done also after scheduling a league.`,
         )}
         onPress={() => shareLeagueLink(leagueContext.league.name, leagueId)}
       />
@@ -211,7 +197,7 @@ export default function LeaguePreSeason({navigation, route}: Props) {
           leagueComplete
             ? i18n._(t`League is full and matches can be scheduled`)
             : i18n._(
-                t`${acceptedClubs}/${teamNum} Teams.${`\n`}Not enough teams to schedule matches`,
+                t`${acceptedClubs}/${teamNum} Teams.${`\n`}You can schedule a league with bot clubs that can be replaced later.`,
               )
         }
       />

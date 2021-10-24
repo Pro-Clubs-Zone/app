@@ -315,7 +315,7 @@ export default function Clubs({navigation, route}: Props) {
         ref={ref}
         single={true}
         showFooter={false}
-        title={i18n._(t`New Requests`)}
+        title={i18n._(t`Swap a club`)}
       />
       <SectionList
         sections={sectionedData}
